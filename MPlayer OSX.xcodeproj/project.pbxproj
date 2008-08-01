@@ -1,0 +1,785 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		37B4F8290CDF359D00941094 /* Build MPlayer PPC noaltivec */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 37B4F82B0CDF359D00941094 /* Build configuration list for PBXAggregateTarget "Build MPlayer PPC noaltivec" */;
+			buildPhases = (
+				37B4F82A0CDF359D00941094 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "Build MPlayer PPC noaltivec";
+			productName = "Build MPlayer PPC";
+		};
+		37B9DF1A0C2E923700211F5E /* Build MPlayer PPC */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 37B9DF1B0C2E925600211F5E /* Build configuration list for PBXAggregateTarget "Build MPlayer PPC" */;
+			buildPhases = (
+				37B9DF220C2E929100211F5E /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "Build MPlayer PPC";
+			productName = "Build MPlayer PPC";
+		};
+		37B9DF1E0C2E926D00211F5E /* Build MPlayer Intel */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 37B9DF1F0C2E928000211F5E /* Build configuration list for PBXAggregateTarget "Build MPlayer Intel" */;
+			buildPhases = (
+				37B9DF240C2E92A300211F5E /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "Build MPlayer Intel";
+			productName = "Build MPlayer Intel";
+		};
+		37B9DF260C2E93F800211F5E /* Build MPlayer Universal */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 37B9DF270C2E941700211F5E /* Build configuration list for PBXAggregateTarget "Build MPlayer Universal" */;
+			buildPhases = (
+				37BFD4150CCD659900FCABD6 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "Build MPlayer Universal";
+			productName = "Build MPlayer Universal";
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		372E8226086A431900FC39B4 /* PlayListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 372E8225086A431900FC39B4 /* PlayListController.m */; };
+		3747F27D087EF9EC00980B71 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3747F27C087EF9EC00980B71 /* Foundation.framework */; };
+		3747F280087EFA0700980B71 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3747F27F087EFA0700980B71 /* AppKit.framework */; };
+		3747F282087EFA4200980B71 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3747F281087EFA4200980B71 /* Carbon.framework */; };
+		3747F284087EFA5D00980B71 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3747F283087EFA5D00980B71 /* OpenGL.framework */; };
+		3747F286087EFA6A00980B71 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3747F285087EFA6A00980B71 /* QuartzCore.framework */; };
+		377E032F085E3ED500D64A26 /* audio.icns in Resources */ = {isa = PBXBuildFile; fileRef = 377E0311085E3ED500D64A26 /* audio.icns */; };
+		377E0330085E3ED500D64A26 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 377E0312085E3ED500D64A26 /* icon.icns */; };
+		377E0331085E3ED500D64A26 /* info.png in Resources */ = {isa = PBXBuildFile; fileRef = 377E0313085E3ED500D64A26 /* info.png */; };
+		377E0332085E3ED500D64A26 /* movie.icns in Resources */ = {isa = PBXBuildFile; fileRef = 377E0314085E3ED500D64A26 /* movie.icns */; };
+		377E0336085E3ED500D64A26 /* play_mode_0.png in Resources */ = {isa = PBXBuildFile; fileRef = 377E0318085E3ED500D64A26 /* play_mode_0.png */; };
+		377E0337085E3ED500D64A26 /* play_mode_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 377E0319085E3ED500D64A26 /* play_mode_1.png */; };
+		377E0338085E3ED500D64A26 /* play_mode_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 377E031A085E3ED500D64A26 /* play_mode_2.png */; };
+		377E033A085E3ED500D64A26 /* playing_dvd.png in Resources */ = {isa = PBXBuildFile; fileRef = 377E031C085E3ED500D64A26 /* playing_dvd.png */; };
+		377E033B085E3ED500D64A26 /* playing_state.png in Resources */ = {isa = PBXBuildFile; fileRef = 377E031D085E3ED500D64A26 /* playing_state.png */; };
+		377E033C085E3ED500D64A26 /* playing_stream.png in Resources */ = {isa = PBXBuildFile; fileRef = 377E031E085E3ED500D64A26 /* playing_stream.png */; };
+		377E033D085E3ED500D64A26 /* scrub_bar_badge.tif in Resources */ = {isa = PBXBuildFile; fileRef = 377E031F085E3ED500D64A26 /* scrub_bar_badge.tif */; };
+		377E033E085E3ED500D64A26 /* scrub_bar_ends.tif in Resources */ = {isa = PBXBuildFile; fileRef = 377E0320085E3ED500D64A26 /* scrub_bar_ends.tif */; };
+		377E033F085E3ED500D64A26 /* scrub_bar_run.tif in Resources */ = {isa = PBXBuildFile; fileRef = 377E0321085E3ED500D64A26 /* scrub_bar_run.tif */; };
+		377E0344085E3ED500D64A26 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 377E0326085E3ED500D64A26 /* settings.png */; };
+		377E0347085E3ED500D64A26 /* subtitles.icns in Resources */ = {isa = PBXBuildFile; fileRef = 377E0329085E3ED500D64A26 /* subtitles.icns */; };
+		377E0348085E3ED500D64A26 /* volume0.png in Resources */ = {isa = PBXBuildFile; fileRef = 377E032A085E3ED500D64A26 /* volume0.png */; };
+		377E034A085E3ED500D64A26 /* volume2.png in Resources */ = {isa = PBXBuildFile; fileRef = 377E032C085E3ED500D64A26 /* volume2.png */; };
+		377E034B085E3ED500D64A26 /* volume3.png in Resources */ = {isa = PBXBuildFile; fileRef = 377E032D085E3ED500D64A26 /* volume3.png */; };
+		377E036F085E480E00D64A26 /* MplayerInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E036A085E480E00D64A26 /* MplayerInterface.m */; };
+		377E0371085E480E00D64A26 /* ScrubbingBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E036E085E480E00D64A26 /* ScrubbingBar.m */; };
+		377E037D085E482B00D64A26 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E0374085E482B00D64A26 /* AppController.m */; };
+		377E037E085E482B00D64A26 /* PlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E0376085E482B00D64A26 /* PlayerController.m */; };
+		377E0380085E482B00D64A26 /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E037A085E482B00D64A26 /* PreferencesController.m */; };
+		377E0381085E482B00D64A26 /* SettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E037C085E482B00D64A26 /* SettingsController.m */; };
+		378749400891B7A60068D97D /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 378749150891B7A60068D97D /* Fonts */; };
+		379740A10875CA980049E91B /* VideoOpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 379740A00875CA980049E91B /* VideoOpenGLView.m */; };
+		37B934DC088FDF9200C81536 /* PlaylistTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 37B934DB088FDF9200C81536 /* PlaylistTableView.m */; };
+		37BFD48F0CCD7D5900FCABD6 /* External_Binaries in Resources */ = {isa = PBXBuildFile; fileRef = 37BFD48B0CCD7D5900FCABD6 /* External_Binaries */; };
+		37C093ED088429AE00D06F8B /* PlayerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 37C093EB088429AE00D06F8B /* PlayerWindow.m */; };
+		37DCF87B0888624D00DBF422 /* play_button_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 37DCF8790888624D00DBF422 /* play_button_off.png */; };
+		37DCF87C0888624D00DBF422 /* play_button_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 37DCF87A0888624D00DBF422 /* play_button_on.png */; };
+		37DCF88A088868B300DBF422 /* gotob_button_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 37DCF880088868B300DBF422 /* gotob_button_off.png */; };
+		37DCF88B088868B300DBF422 /* gotob_button_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 37DCF881088868B300DBF422 /* gotob_button_on.png */; };
+		37DCF88C088868B300DBF422 /* gotoe_button_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 37DCF882088868B300DBF422 /* gotoe_button_off.png */; };
+		37DCF88D088868B300DBF422 /* gotoe_button_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 37DCF883088868B300DBF422 /* gotoe_button_on.png */; };
+		37DCF88E088868B300DBF422 /* pause_button_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 37DCF884088868B300DBF422 /* pause_button_off.png */; };
+		37DCF88F088868B300DBF422 /* pause_button_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 37DCF885088868B300DBF422 /* pause_button_on.png */; };
+		37DCF890088868B300DBF422 /* rwd_button_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 37DCF886088868B300DBF422 /* rwd_button_off.png */; };
+		37DCF891088868B300DBF422 /* rwd_button_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 37DCF887088868B300DBF422 /* rwd_button_on.png */; };
+		37DCF892088868B400DBF422 /* stop_button_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 37DCF888088868B300DBF422 /* stop_button_off.png */; };
+		37DCF893088868B400DBF422 /* stop_button_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 37DCF889088868B300DBF422 /* stop_button_on.png */; };
+		37DCF89808886A2800DBF422 /* ffwd_button_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 37DCF89608886A2800DBF422 /* ffwd_button_off.png */; };
+		37DCF89908886A2800DBF422 /* ffwd_button_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 37DCF89708886A2800DBF422 /* ffwd_button_on.png */; };
+		37EA49C40861CCAB0026216A /* volume1.png in Resources */ = {isa = PBXBuildFile; fileRef = 37EA49C30861CCAB0026216A /* volume1.png */; };
+		37EA49FF0861CD840026216A /* MPlayer OSX Help in Resources */ = {isa = PBXBuildFile; fileRef = 37EA49EE0861CD840026216A /* MPlayer OSX Help */; };
+		37EA4A310861D0980026216A /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 37EA4A2F0861D0980026216A /* MainMenu.nib */; };
+		37EA4A340861D1400026216A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37EA4A320861D1400026216A /* InfoPlist.strings */; };
+		37EA4AB6086218D50026216A /* volumeKnobOff.png in Resources */ = {isa = PBXBuildFile; fileRef = 37EA4AB5086218D50026216A /* volumeKnobOff.png */; };
+		37EA4ABE086220530026216A /* volumeKnobOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 37EA4ABD086220520026216A /* volumeKnobOn.png */; };
+		37EA4B6C086256590026216A /* VolumeSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 37EA4AA4086214030026216A /* VolumeSlider.m */; };
+		37EA4BC2086271480026216A /* scrub_bar_anim.png in Resources */ = {isa = PBXBuildFile; fileRef = 37EA4BC1086271480026216A /* scrub_bar_anim.png */; };
+		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Sources/main.m; sourceTree = "<group>"; };
+		32CA4F630368D1EE00C91783 /* MPlayer OSX_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "MPlayer OSX_Prefix.pch"; path = "Sources/MPlayer OSX_Prefix.pch"; sourceTree = "<group>"; };
+		371875E50B2307130096E1ED /* MPlayer OSX PPC-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "MPlayer OSX PPC-Info.plist"; path = "Resources/MPlayer OSX PPC-Info.plist"; sourceTree = "<group>"; };
+		371878190B230ABD0096E1ED /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
+		372E8224086A431900FC39B4 /* PlayListController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PlayListController.h; path = Sources/Controllers/PlayListController.h; sourceTree = "<group>"; };
+		372E8225086A431900FC39B4 /* PlayListController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = PlayListController.m; path = Sources/Controllers/PlayListController.m; sourceTree = "<group>"; };
+		372E8238086A43CD00FC39B4 /* PlayerController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PlayerController.h; path = Sources/Controllers/PlayerController.h; sourceTree = "<group>"; };
+		3747F27C087EF9EC00980B71 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		3747F27F087EFA0700980B71 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		3747F281087EFA4200980B71 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		3747F283087EFA5D00980B71 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		3747F285087EFA6A00980B71 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = /System/Library/Frameworks/QuartzCore.framework; sourceTree = "<absolute>"; };
+		377E0311085E3ED500D64A26 /* audio.icns */ = {isa = PBXFileReference; explicitFileType = image.icns; name = audio.icns; path = Resources/Graphics/audio.icns; sourceTree = "<group>"; };
+		377E0312085E3ED500D64A26 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = icon.icns; path = Resources/Graphics/icon.icns; sourceTree = "<group>"; };
+		377E0313085E3ED500D64A26 /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = info.png; path = Resources/Graphics/info.png; sourceTree = "<group>"; };
+		377E0314085E3ED500D64A26 /* movie.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = movie.icns; path = Resources/Graphics/movie.icns; sourceTree = "<group>"; };
+		377E0318085E3ED500D64A26 /* play_mode_0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = play_mode_0.png; path = Resources/Graphics/play_mode_0.png; sourceTree = "<group>"; };
+		377E0319085E3ED500D64A26 /* play_mode_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = play_mode_1.png; path = Resources/Graphics/play_mode_1.png; sourceTree = "<group>"; };
+		377E031A085E3ED500D64A26 /* play_mode_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = play_mode_2.png; path = Resources/Graphics/play_mode_2.png; sourceTree = "<group>"; };
+		377E031C085E3ED500D64A26 /* playing_dvd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = playing_dvd.png; path = Resources/Graphics/playing_dvd.png; sourceTree = "<group>"; };
+		377E031D085E3ED500D64A26 /* playing_state.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = playing_state.png; path = Resources/Graphics/playing_state.png; sourceTree = "<group>"; };
+		377E031E085E3ED500D64A26 /* playing_stream.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = playing_stream.png; path = Resources/Graphics/playing_stream.png; sourceTree = "<group>"; };
+		377E031F085E3ED500D64A26 /* scrub_bar_badge.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = scrub_bar_badge.tif; path = Resources/Graphics/scrub_bar_badge.tif; sourceTree = "<group>"; };
+		377E0320085E3ED500D64A26 /* scrub_bar_ends.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = scrub_bar_ends.tif; path = Resources/Graphics/scrub_bar_ends.tif; sourceTree = "<group>"; };
+		377E0321085E3ED500D64A26 /* scrub_bar_run.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = scrub_bar_run.tif; path = Resources/Graphics/scrub_bar_run.tif; sourceTree = "<group>"; };
+		377E0326085E3ED500D64A26 /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = settings.png; path = Resources/Graphics/settings.png; sourceTree = "<group>"; };
+		377E0329085E3ED500D64A26 /* subtitles.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = subtitles.icns; path = Resources/Graphics/subtitles.icns; sourceTree = "<group>"; };
+		377E032A085E3ED500D64A26 /* volume0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = volume0.png; path = Resources/Graphics/volume0.png; sourceTree = "<group>"; };
+		377E032C085E3ED500D64A26 /* volume2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = volume2.png; path = Resources/Graphics/volume2.png; sourceTree = "<group>"; };
+		377E032D085E3ED500D64A26 /* volume3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = volume3.png; path = Resources/Graphics/volume3.png; sourceTree = "<group>"; };
+		377E0369085E480E00D64A26 /* MplayerInterface.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = MplayerInterface.h; path = Sources/Classes/MplayerInterface.h; sourceTree = "<group>"; };
+		377E036A085E480E00D64A26 /* MplayerInterface.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = MplayerInterface.m; path = Sources/Classes/MplayerInterface.m; sourceTree = "<group>"; };
+		377E036D085E480E00D64A26 /* ScrubbingBar.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ScrubbingBar.h; path = Sources/Classes/ScrubbingBar.h; sourceTree = "<group>"; };
+		377E036E085E480E00D64A26 /* ScrubbingBar.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ScrubbingBar.m; path = Sources/Classes/ScrubbingBar.m; sourceTree = "<group>"; };
+		377E0373085E482B00D64A26 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AppController.h; path = Sources/Controllers/AppController.h; sourceTree = "<group>"; };
+		377E0374085E482B00D64A26 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AppController.m; path = Sources/Controllers/AppController.m; sourceTree = "<group>"; };
+		377E0376085E482B00D64A26 /* PlayerController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = PlayerController.m; path = Sources/Controllers/PlayerController.m; sourceTree = "<group>"; };
+		377E0379085E482B00D64A26 /* PreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PreferencesController.h; path = Sources/Controllers/PreferencesController.h; sourceTree = "<group>"; };
+		377E037A085E482B00D64A26 /* PreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = PreferencesController.m; path = Sources/Controllers/PreferencesController.m; sourceTree = "<group>"; };
+		377E037B085E482B00D64A26 /* SettingsController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SettingsController.h; path = Sources/Controllers/SettingsController.h; sourceTree = "<group>"; };
+		377E037C085E482B00D64A26 /* SettingsController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SettingsController.m; path = Sources/Controllers/SettingsController.m; sourceTree = "<group>"; };
+		378749150891B7A60068D97D /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = Resources/Fonts; sourceTree = "<group>"; };
+		3797409F0875CA980049E91B /* VideoOpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = VideoOpenGLView.h; path = Sources/Classes/VideoOpenGLView.h; sourceTree = "<group>"; };
+		379740A00875CA980049E91B /* VideoOpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = VideoOpenGLView.m; path = Sources/Classes/VideoOpenGLView.m; sourceTree = "<group>"; };
+		37B934DA088FDF9200C81536 /* PlaylistTableView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PlaylistTableView.h; path = Sources/Classes/PlaylistTableView.h; sourceTree = "<group>"; };
+		37B934DB088FDF9200C81536 /* PlaylistTableView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = PlaylistTableView.m; path = Sources/Classes/PlaylistTableView.m; sourceTree = "<group>"; };
+		37BFD48B0CCD7D5900FCABD6 /* External_Binaries */ = {isa = PBXFileReference; lastKnownFileType = folder; path = External_Binaries; sourceTree = "<group>"; };
+		37C093EB088429AE00D06F8B /* PlayerWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = PlayerWindow.m; path = Sources/Classes/PlayerWindow.m; sourceTree = "<group>"; };
+		37C093EC088429AE00D06F8B /* PlayerWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PlayerWindow.h; path = Sources/Classes/PlayerWindow.h; sourceTree = "<group>"; };
+		37DCF8790888624D00DBF422 /* play_button_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = play_button_off.png; path = Resources/Graphics/play_button_off.png; sourceTree = "<group>"; };
+		37DCF87A0888624D00DBF422 /* play_button_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = play_button_on.png; path = Resources/Graphics/play_button_on.png; sourceTree = "<group>"; };
+		37DCF880088868B300DBF422 /* gotob_button_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gotob_button_off.png; path = Resources/Graphics/gotob_button_off.png; sourceTree = "<group>"; };
+		37DCF881088868B300DBF422 /* gotob_button_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gotob_button_on.png; path = Resources/Graphics/gotob_button_on.png; sourceTree = "<group>"; };
+		37DCF882088868B300DBF422 /* gotoe_button_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gotoe_button_off.png; path = Resources/Graphics/gotoe_button_off.png; sourceTree = "<group>"; };
+		37DCF883088868B300DBF422 /* gotoe_button_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gotoe_button_on.png; path = Resources/Graphics/gotoe_button_on.png; sourceTree = "<group>"; };
+		37DCF884088868B300DBF422 /* pause_button_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pause_button_off.png; path = Resources/Graphics/pause_button_off.png; sourceTree = "<group>"; };
+		37DCF885088868B300DBF422 /* pause_button_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pause_button_on.png; path = Resources/Graphics/pause_button_on.png; sourceTree = "<group>"; };
+		37DCF886088868B300DBF422 /* rwd_button_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = rwd_button_off.png; path = Resources/Graphics/rwd_button_off.png; sourceTree = "<group>"; };
+		37DCF887088868B300DBF422 /* rwd_button_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = rwd_button_on.png; path = Resources/Graphics/rwd_button_on.png; sourceTree = "<group>"; };
+		37DCF888088868B300DBF422 /* stop_button_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = stop_button_off.png; path = Resources/Graphics/stop_button_off.png; sourceTree = "<group>"; };
+		37DCF889088868B300DBF422 /* stop_button_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = stop_button_on.png; path = Resources/Graphics/stop_button_on.png; sourceTree = "<group>"; };
+		37DCF89608886A2800DBF422 /* ffwd_button_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ffwd_button_off.png; path = Resources/Graphics/ffwd_button_off.png; sourceTree = "<group>"; };
+		37DCF89708886A2800DBF422 /* ffwd_button_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ffwd_button_on.png; path = Resources/Graphics/ffwd_button_on.png; sourceTree = "<group>"; };
+		37EA49C30861CCAB0026216A /* volume1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = volume1.png; path = Resources/Graphics/volume1.png; sourceTree = "<group>"; };
+		37EA49EF0861CD840026216A /* English */ = {isa = PBXFileReference; lastKnownFileType = folder; name = English; path = "Resources/English.lproj/MPlayer OSX Help"; sourceTree = "<group>"; };
+		37EA4A300861D0980026216A /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/MainMenu.nib; sourceTree = "<group>"; };
+		37EA4A330861D1400026216A /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		37EA4AA3086214020026216A /* VolumeSlider.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = VolumeSlider.h; path = Sources/Classes/VolumeSlider.h; sourceTree = "<group>"; };
+		37EA4AA4086214030026216A /* VolumeSlider.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = VolumeSlider.m; path = Sources/Classes/VolumeSlider.m; sourceTree = "<group>"; };
+		37EA4AB5086218D50026216A /* volumeKnobOff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = volumeKnobOff.png; path = Resources/Graphics/volumeKnobOff.png; sourceTree = "<group>"; };
+		37EA4ABD086220520026216A /* volumeKnobOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = volumeKnobOn.png; path = Resources/Graphics/volumeKnobOn.png; sourceTree = "<group>"; };
+		37EA4BC1086271480026216A /* scrub_bar_anim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = scrub_bar_anim.png; path = Resources/Graphics/scrub_bar_anim.png; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* MPlayer OSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MPlayer OSX.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				3747F27D087EF9EC00980B71 /* Foundation.framework in Frameworks */,
+				3747F280087EFA0700980B71 /* AppKit.framework in Frameworks */,
+				3747F282087EFA4200980B71 /* Carbon.framework in Frameworks */,
+				3747F284087EFA5D00980B71 /* OpenGL.framework in Frameworks */,
+				3747F286087EFA6A00980B71 /* QuartzCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080E96DDFE201D6D7F000001 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				37B934DA088FDF9200C81536 /* PlaylistTableView.h */,
+				37B934DB088FDF9200C81536 /* PlaylistTableView.m */,
+				377E0369085E480E00D64A26 /* MplayerInterface.h */,
+				377E036A085E480E00D64A26 /* MplayerInterface.m */,
+				377E036D085E480E00D64A26 /* ScrubbingBar.h */,
+				377E036E085E480E00D64A26 /* ScrubbingBar.m */,
+				37EA4AA3086214020026216A /* VolumeSlider.h */,
+				37EA4AA4086214030026216A /* VolumeSlider.m */,
+				3797409F0875CA980049E91B /* VideoOpenGLView.h */,
+				379740A00875CA980049E91B /* VideoOpenGLView.m */,
+				37C093EB088429AE00D06F8B /* PlayerWindow.m */,
+				37C093EC088429AE00D06F8B /* PlayerWindow.h */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107320486CEB800E47090 /* MPlayer OSX.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* MPlayer OSX */ = {
+			isa = PBXGroup;
+			children = (
+				377E0372085E481700D64A26 /* Controllers */,
+				080E96DDFE201D6D7F000001 /* Classes */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = "MPlayer OSX";
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				32CA4F630368D1EE00C91783 /* MPlayer OSX_Prefix.pch */,
+				29B97316FDCFA39411CA2CEA /* main.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				37BFD48B0CCD7D5900FCABD6 /* External_Binaries */,
+				371875E50B2307130096E1ED /* MPlayer OSX PPC-Info.plist */,
+				378749150891B7A60068D97D /* Fonts */,
+				37DCF89608886A2800DBF422 /* ffwd_button_off.png */,
+				37DCF89708886A2800DBF422 /* ffwd_button_on.png */,
+				37DCF880088868B300DBF422 /* gotob_button_off.png */,
+				37DCF881088868B300DBF422 /* gotob_button_on.png */,
+				37DCF882088868B300DBF422 /* gotoe_button_off.png */,
+				37DCF883088868B300DBF422 /* gotoe_button_on.png */,
+				37DCF884088868B300DBF422 /* pause_button_off.png */,
+				37DCF885088868B300DBF422 /* pause_button_on.png */,
+				37DCF886088868B300DBF422 /* rwd_button_off.png */,
+				37DCF887088868B300DBF422 /* rwd_button_on.png */,
+				37DCF888088868B300DBF422 /* stop_button_off.png */,
+				37DCF889088868B300DBF422 /* stop_button_on.png */,
+				37DCF8790888624D00DBF422 /* play_button_off.png */,
+				37DCF87A0888624D00DBF422 /* play_button_on.png */,
+				37EA4BC1086271480026216A /* scrub_bar_anim.png */,
+				377E0313085E3ED500D64A26 /* info.png */,
+				37EA4ABD086220520026216A /* volumeKnobOn.png */,
+				37EA4AB5086218D50026216A /* volumeKnobOff.png */,
+				37EA4A320861D1400026216A /* InfoPlist.strings */,
+				37EA4A2F0861D0980026216A /* MainMenu.nib */,
+				37EA49EE0861CD840026216A /* MPlayer OSX Help */,
+				377E0311085E3ED500D64A26 /* audio.icns */,
+				377E0312085E3ED500D64A26 /* icon.icns */,
+				377E0314085E3ED500D64A26 /* movie.icns */,
+				377E0318085E3ED500D64A26 /* play_mode_0.png */,
+				377E0319085E3ED500D64A26 /* play_mode_1.png */,
+				377E031A085E3ED500D64A26 /* play_mode_2.png */,
+				377E031C085E3ED500D64A26 /* playing_dvd.png */,
+				377E031D085E3ED500D64A26 /* playing_state.png */,
+				377E031E085E3ED500D64A26 /* playing_stream.png */,
+				377E031F085E3ED500D64A26 /* scrub_bar_badge.tif */,
+				377E0320085E3ED500D64A26 /* scrub_bar_ends.tif */,
+				377E0321085E3ED500D64A26 /* scrub_bar_run.tif */,
+				377E0326085E3ED500D64A26 /* settings.png */,
+				377E0329085E3ED500D64A26 /* subtitles.icns */,
+				377E032A085E3ED500D64A26 /* volume0.png */,
+				37EA49C30861CCAB0026216A /* volume1.png */,
+				377E032C085E3ED500D64A26 /* volume2.png */,
+				377E032D085E3ED500D64A26 /* volume3.png */,
+				8D1107310486CEB800E47090 /* Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				371878190B230ABD0096E1ED /* QuickTime.framework */,
+				3747F285087EFA6A00980B71 /* QuartzCore.framework */,
+				3747F283087EFA5D00980B71 /* OpenGL.framework */,
+				3747F281087EFA4200980B71 /* Carbon.framework */,
+				3747F27F087EFA0700980B71 /* AppKit.framework */,
+				3747F27C087EF9EC00980B71 /* Foundation.framework */,
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		377E0372085E481700D64A26 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				372E8238086A43CD00FC39B4 /* PlayerController.h */,
+				372E8224086A431900FC39B4 /* PlayListController.h */,
+				372E8225086A431900FC39B4 /* PlayListController.m */,
+				377E0373085E482B00D64A26 /* AppController.h */,
+				377E0374085E482B00D64A26 /* AppController.m */,
+				377E0376085E482B00D64A26 /* PlayerController.m */,
+				377E0379085E482B00D64A26 /* PreferencesController.h */,
+				377E037A085E482B00D64A26 /* PreferencesController.m */,
+				377E037B085E482B00D64A26 /* SettingsController.h */,
+				377E037C085E482B00D64A26 /* SettingsController.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D1107260486CEB800E47090 /* MPlayer OSX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 377E024C085E333600D64A26 /* Build configuration list for PBXNativeTarget "MPlayer OSX" */;
+			buildPhases = (
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "MPlayer OSX";
+			productInstallPath = "$(HOME)/Applications";
+			productName = "MPlayer OSX";
+			productReference = 8D1107320486CEB800E47090 /* MPlayer OSX.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 377E0250085E333600D64A26 /* Build configuration list for PBXProject "MPlayer OSX" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				Korean,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* MPlayer OSX */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D1107260486CEB800E47090 /* MPlayer OSX */,
+				37B9DF1A0C2E923700211F5E /* Build MPlayer PPC */,
+				37B9DF1E0C2E926D00211F5E /* Build MPlayer Intel */,
+				37B9DF260C2E93F800211F5E /* Build MPlayer Universal */,
+				37B4F8290CDF359D00941094 /* Build MPlayer PPC noaltivec */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				377E032F085E3ED500D64A26 /* audio.icns in Resources */,
+				377E0330085E3ED500D64A26 /* icon.icns in Resources */,
+				377E0331085E3ED500D64A26 /* info.png in Resources */,
+				377E0332085E3ED500D64A26 /* movie.icns in Resources */,
+				377E0336085E3ED500D64A26 /* play_mode_0.png in Resources */,
+				377E0337085E3ED500D64A26 /* play_mode_1.png in Resources */,
+				377E0338085E3ED500D64A26 /* play_mode_2.png in Resources */,
+				377E033A085E3ED500D64A26 /* playing_dvd.png in Resources */,
+				377E033B085E3ED500D64A26 /* playing_state.png in Resources */,
+				377E033C085E3ED500D64A26 /* playing_stream.png in Resources */,
+				377E033D085E3ED500D64A26 /* scrub_bar_badge.tif in Resources */,
+				377E033E085E3ED500D64A26 /* scrub_bar_ends.tif in Resources */,
+				377E033F085E3ED500D64A26 /* scrub_bar_run.tif in Resources */,
+				377E0344085E3ED500D64A26 /* settings.png in Resources */,
+				377E0347085E3ED500D64A26 /* subtitles.icns in Resources */,
+				377E0348085E3ED500D64A26 /* volume0.png in Resources */,
+				377E034A085E3ED500D64A26 /* volume2.png in Resources */,
+				377E034B085E3ED500D64A26 /* volume3.png in Resources */,
+				37EA49C40861CCAB0026216A /* volume1.png in Resources */,
+				37EA49FF0861CD840026216A /* MPlayer OSX Help in Resources */,
+				37EA4A310861D0980026216A /* MainMenu.nib in Resources */,
+				37EA4A340861D1400026216A /* InfoPlist.strings in Resources */,
+				37EA4AB6086218D50026216A /* volumeKnobOff.png in Resources */,
+				37EA4ABE086220530026216A /* volumeKnobOn.png in Resources */,
+				37EA4BC2086271480026216A /* scrub_bar_anim.png in Resources */,
+				37DCF87B0888624D00DBF422 /* play_button_off.png in Resources */,
+				37DCF87C0888624D00DBF422 /* play_button_on.png in Resources */,
+				37DCF88A088868B300DBF422 /* gotob_button_off.png in Resources */,
+				37DCF88B088868B300DBF422 /* gotob_button_on.png in Resources */,
+				37DCF88C088868B300DBF422 /* gotoe_button_off.png in Resources */,
+				37DCF88D088868B300DBF422 /* gotoe_button_on.png in Resources */,
+				37DCF88E088868B300DBF422 /* pause_button_off.png in Resources */,
+				37DCF88F088868B300DBF422 /* pause_button_on.png in Resources */,
+				37DCF890088868B300DBF422 /* rwd_button_off.png in Resources */,
+				37DCF891088868B300DBF422 /* rwd_button_on.png in Resources */,
+				37DCF892088868B400DBF422 /* stop_button_off.png in Resources */,
+				37DCF893088868B400DBF422 /* stop_button_on.png in Resources */,
+				37DCF89808886A2800DBF422 /* ffwd_button_off.png in Resources */,
+				37DCF89908886A2800DBF422 /* ffwd_button_on.png in Resources */,
+				378749400891B7A60068D97D /* Fonts in Resources */,
+				37BFD48F0CCD7D5900FCABD6 /* External_Binaries in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		37B4F82A0CDF359D00941094 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "setenv BUILD_ARCH=build/mplayer_ppc\nsetenv NEXT_ROOT=/Developer/SDKs/MacOSX10.4u.sdk\nsetenv MACOSX_DEPLOYMENT_TARGET=10.4\nsetenv CFLAGS=\"-mmacosx-version-min=10.4 -isystem /Developer/SDKs/MacOSX10.4u.sdk -I/usr/local/include\"\nsetenv LDFLAGS=\"-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk -L/usr/local/lib\"\ncd mplayer\n./configure --enable-cross-compile --cc=\"cc -arch ppc\" --host-cc=\"cc -arch i386\" --target=ppc-darwin --disable-win32dll --disable-altivec --with-extraincdir=/usr/local/include --with-extralibdir=/usr/local/lib\nmake clean\nmake\nmv mplayer ../External_Binaries/mplayer_noaltivec.app/Contents/MacOS/mplayer\ncd ..\nexit 0";
+		};
+		37B9DF220C2E929100211F5E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export NEXT_ROOT=/Developer/SDKs/MacOSX10.4u.sdk\nexport MACOSX_DEPLOYMENT_TARGET=10.4\nexport CFLAGS=\"-mmacosx-version-min=10.4 -isystem /Developer/SDKs/MacOSX10.4u.sdk -I/Users/nicolas/Source/MPlayer/usr/local/ppc/include\"\nexport LDFLAGS=\"-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk -L/Users/nicolas/Source/MPlayer/usr/local/ppc/lib -lxml2\"\nexport CXXFLAGS=\"-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk -I/Users/nicolas/Source/MPlayer/usr/local/ppc/include -L/Users/nicolas/Source/MPlayer/usr/local/ppc/lib -arch ppc\"\nexport FREETYPE_CFLAGS=\"-I/Users/nicolas/Source/MPlayer/usr/local/ppc/include/freetype2\"\nexport FREETYPE_LIBS=\"-L/Users/nicolas/Source/MPlayer/usr/local/ppc/lib -lfreetype\"\n--with-expat-lib=/Developer/SDKs/MacOSX10.4u.sdk/usr/X11R6/lib/\ncd mplayer\nCC=\"gcc -arch ppc\" ./configure --disable-shared --host=powerpc-apple-darwin9.1.0 --build=powerpc-apple-darwin9.1.0 --with-expat-lib=/Developer/SDKs/MacOSX10.4u.sdk/usr/X11R6/lib/ --prefix=/Users/nicolas/Source/MPlayer/usr/local/ppc\n\n./configure --enable-cross-compile --cc=\"cc -arch ppc\" --host-cc=\"cc -arch i386\" --target=ppc-darwin --disable-win32dll --enable-altivec\nmake clean\nmake\nmv mplayer ./mplayer_ppc\ncd ..\nexit 0";
+		};
+		37B9DF240C2E92A300211F5E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export NEXT_ROOT=/Developer/SDKs/MacOSX10.4u.sdk\nexport MACOSX_DEPLOYMENT_TARGET=10.4\nexport CFLAGS=\"-mmacosx-version-min=10.4 -isystem /Developer/SDKs/MacOSX10.4u.sdk -I/opt/local/include\"\nexport LDFLAGS=\"-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk -L/opt/local/lib\"\nexport CXXFLAGS=\"-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk -I/opt/local/include -L/opt/local/lib\"\nexport FREETYPE_CFLAGS=\"-I/opt/local/include/freetype2\"\nexport FREETYPE_LIBS=\"-L/opt/local/lib -lfreetype\"\nexport LIBXML2_CFLAGS=\"-I/opt/local/include/libxml2\"\nexport LIBXML2_CFLAGS=\"-I/opt/local/include/libxml2\"\n\ncd mplayer\n./configure --disable-shared --prefix=/opt/local\n\n./configure\nmake clean\nmake\nmv mplayer ./mplayer_i386\ncd ..\nexit 0";
+		};
+		37BFD4150CCD659900FCABD6 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "lipo -create ./mplayer/mplayer_i386 ./mplayer/mplayer_ppc -output ./External_Binaries/mplayer.app/Contents/MacOS/mplayer\nexit 0";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072D0486CEB800E47090 /* main.m in Sources */,
+				377E036F085E480E00D64A26 /* MplayerInterface.m in Sources */,
+				377E0371085E480E00D64A26 /* ScrubbingBar.m in Sources */,
+				377E037D085E482B00D64A26 /* AppController.m in Sources */,
+				377E037E085E482B00D64A26 /* PlayerController.m in Sources */,
+				377E0380085E482B00D64A26 /* PreferencesController.m in Sources */,
+				377E0381085E482B00D64A26 /* SettingsController.m in Sources */,
+				37EA4B6C086256590026216A /* VolumeSlider.m in Sources */,
+				372E8226086A431900FC39B4 /* PlayListController.m in Sources */,
+				379740A10875CA980049E91B /* VideoOpenGLView.m in Sources */,
+				37C093ED088429AE00D06F8B /* PlayerWindow.m in Sources */,
+				37B934DC088FDF9200C81536 /* PlaylistTableView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		37EA49EE0861CD840026216A /* MPlayer OSX Help */ = {
+			isa = PBXVariantGroup;
+			children = (
+				37EA49EF0861CD840026216A /* English */,
+			);
+			name = "MPlayer OSX Help";
+			sourceTree = "<group>";
+		};
+		37EA4A2F0861D0980026216A /* MainMenu.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				37EA4A300861D0980026216A /* English */,
+			);
+			name = MainMenu.nib;
+			sourceTree = "<group>";
+		};
+		37EA4A320861D1400026216A /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				37EA4A330861D1400026216A /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		377E024D085E333600D64A26 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Sources/MPlayer OSX_Prefix.pch";
+				GCC_WARN_ABOUT_MISSING_NEWLINE = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = Resources/Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PREBINDING = NO;
+				PRODUCT_NAME = "MPlayer OSX";
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		377E024E085E333600D64A26 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Sources/MPlayer OSX_Prefix.pch";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = Resources/Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PREBINDING = NO;
+				PRODUCT_NAME = "MPlayer OSX";
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		377E0251085E333600D64A26 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				COPY_PHASE_STRIP = NO;
+				GCC_DEBUGGING_SYMBOLS = used;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = "";
+				GCC_OPTIMIZATION_LEVEL = 0;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				YACC_GENERATE_DEBUGGING_DIRECTIVES = YES;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		377E0252085E333600D64A26 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_MODEL_TUNING = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Release;
+		};
+		37B4F82C0CDF359D00941094 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Build MPlayer PPC";
+			};
+			name = Debug;
+		};
+		37B4F82D0CDF359D00941094 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Build MPlayer PPC";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		37B9DF1C0C2E925600211F5E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Build MPlayer PPC";
+			};
+			name = Debug;
+		};
+		37B9DF1D0C2E925600211F5E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Build MPlayer PPC";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		37B9DF200C2E928000211F5E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Build MPlayer Intel";
+			};
+			name = Debug;
+		};
+		37B9DF210C2E928000211F5E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Build MPlayer Intel";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		37B9DF280C2E941700211F5E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Build MPlayer Universal";
+			};
+			name = Debug;
+		};
+		37B9DF290C2E941700211F5E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Build MPlayer Universal";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		377E024C085E333600D64A26 /* Build configuration list for PBXNativeTarget "MPlayer OSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				377E024D085E333600D64A26 /* Debug */,
+				377E024E085E333600D64A26 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		377E0250085E333600D64A26 /* Build configuration list for PBXProject "MPlayer OSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				377E0251085E333600D64A26 /* Debug */,
+				377E0252085E333600D64A26 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		37B4F82B0CDF359D00941094 /* Build configuration list for PBXAggregateTarget "Build MPlayer PPC noaltivec" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37B4F82C0CDF359D00941094 /* Debug */,
+				37B4F82D0CDF359D00941094 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		37B9DF1B0C2E925600211F5E /* Build configuration list for PBXAggregateTarget "Build MPlayer PPC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37B9DF1C0C2E925600211F5E /* Debug */,
+				37B9DF1D0C2E925600211F5E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		37B9DF1F0C2E928000211F5E /* Build configuration list for PBXAggregateTarget "Build MPlayer Intel" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37B9DF200C2E928000211F5E /* Debug */,
+				37B9DF210C2E928000211F5E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		37B9DF270C2E941700211F5E /* Build configuration list for PBXAggregateTarget "Build MPlayer Universal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37B9DF280C2E941700211F5E /* Debug */,
+				37B9DF290C2E941700211F5E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}

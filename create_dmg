@@ -1,0 +1,12 @@
+#!/bin/sh
+
+DATE=`date +%y%m%d`
+VOLUME="MPlayer"
+FILES=./dist
+VERSION=dev-SVN-$DATE
+
+DMG="$VOLUME-$VERSION.dmg"
+
+# Create tmp disk image
+hdiutil create $DMG -srcfolder $FILES/ -ov -volname $VOLUME
+

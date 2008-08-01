@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8">
+		<title>Tips and tricks</title>
+		<meta name="robots" content="anchors">
+		<link href="css/stylesheet.css" type="text/css" rel="stylesheet" media="all">
+	</head>
+
+	<body>
+		<div id="banner">
+			<div id="machelp"><a class="bread" href="index.html">MPlayer OSX Help</a></div>
+		</div>
+		<div id="mainbox">
+			<div id="caticon"><img src="gfx/icon.png" alt="MPlayer icon" height="32" width="32" border="0"></div>
+			<div id="pagetitle"><h4>Tips and tricks</h4></div>
+			<p1>Unleash the full power of MPlayer, and customize to your hearts need, using these helpful tricks</p1>
+			<br>
+			<br>
+			<table class="dots" width="100%" border="0" cellspacing="0" cellpadding="5" summary="Two column table with heading">
+				<tr>
+					<td class="blue" colspan="2">
+						<h5><b>Using the command line MPlayer</b></h5>
+					</td>
+				</tr>
+				<tr>
+					<td valign="center">
+						<p1>
+						To use the command line version of mplayer without any hussle, we suggest you create a link to the binary file
+						contained in the MPlayer OSX.app bundle. To do that, just type the following into your terminal:
+<pre>
+ln -s /Applications/MPlayer OSX.app/Contents/Resources/External_Binaries/mplayer.app/Contents/MacOS/mplayer /usr/local/bin/mplayer
+</pre>
+						This will create a symlink to the mplayer command line binary, and place it into /usr/local/bin. (You can place it
+						anywhere you like, but traditionally, user made binaries, that are not part of the distribution are placed in
+						/usr/local/bin)
+						<p1>
+					</td>
+				</tr>
+			</table>
+			<br>
+			<table class="dots" width="100%" border="0" cellspacing="0" cellpadding="5" summary="Two column table with heading">
+				<tr>
+					<td class="blue" colspan="2">
+						<h5><b>MPlayer configuration file</b></h5>
+					</td>
+				</tr>
+				<tr>
+					<td valign="center">
+						<p1>
+						Mplayer will by default look for a configuration file when launched. The recommended place to store your configuration
+						file is in <b>~/.mplayer/config</b> (if your user name is "mike", than this would be
+						<b>/Users/mike/.mplayer/config</b>). If you want to customize MPlayer, and make sure, that the settings stay, you
+						need to define them in the configuration file. The syntax is <b>config_option</b> = <b>value</b>.
+						</p1>
+					</td>
+				</tr>
+			</table>
+			<br>
+			<table class="dots" width="100%" border="0" cellspacing="0" cellpadding="5" summary="Two column table with heading">
+				<tr>
+					<td class="blue" colspan="2">
+						<h5><b>Improve subtitle visibility</b></h5>
+					</td>
+				</tr>
+				<tr>
+					<td valign="center">
+						<p1>
+						todo
+						</p1>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>

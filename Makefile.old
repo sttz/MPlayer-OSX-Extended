@@ -1,0 +1,26 @@
+# export NEXT_ROOT=/Developer/SDKs/MacOSX10.3.9.sdk
+# export MACOSX_DEPLOYMENT_TARGET=10.3
+# CFLAGS="-isystem /Developer/SDKs/MacOSX10.3.9.sdk/usr/include/gcc/darwin/3.3 -isystem /Developer/SDKs/MacOSX10.3.9.sdk/usr/include"
+# LDFLAGS="-L/Developer/SDKs/MacOSX10.3.9.sdk/usr/lib/gcc/darwin/3.3"
+# ./configure --with-termcaplib=ncurses.5 --disable-gl --disable-x11
+# ./configure --with-termcaplib=ncurses.5 --disable-gl --disable-x11 --disable-altivec
+
+all:
+	xcodebuild -target "MPlayer OSX" -buildstyle Deployment install SYMROOT=build_ppc
+	rm -rf build_ppc/Release
+	mv build_ppc/UninstalledProducts build_ppc/Release
+	chmod -R u+w build_ppc/Release
+	# Remove unnecessary files
+	find build_ppc/Release -name .svn -exec rm -rf '{}' ';' -prune
+
+dist:	all
+	rm -rf dist
+	mkdir dist
+	cp *.rtf dist/
+	cp *.webloc dist/
+	./create_dmg no_uni
+
+clean:
+	xcodebuild clean SYMROOT=build_ppc
+	rm -rf build_ppc *.dmg dist
+

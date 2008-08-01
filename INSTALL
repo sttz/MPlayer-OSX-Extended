@@ -1,0 +1,84 @@
+Welcome to MPlayer OS X, The Movie Player for Mac OS X.
+
+This application is a Mac OS X-specific version of MPlayer, so you may
+want to read the accompanying README.mplayer.txt document.
+
+This document is for getting you started in a few minutes building
+from source code. It does not attempt to explain the usage of the
+application as the included help files exist for that purpose.  It
+cannot answer all of your questions. If you have problems, please
+read the documentation in DOCS/HTML/en/index.html, which should help
+you solve most of your problems.  Also read the man page to learn
+how to use MPlayer.
+
+
+Requirements:
+- You need a Mac running Mac OS 10.4 or better (XCode project 
+is not working under XCode 1.5)
+- You need the XCode 2.x development environment (available at
+  http://developer.apple.com)
+- Experience with the Mac OS X Terminal environment
+
+
+______________________
+STEP0: Getting MPlayer
+~~~~~~~~~~~~~~~~~~~~~~
+
+Binary versions of the Official releases, prereleases and SVN snapshots,
+as well as fonts for the OSD and codec packages are available from the
+download section of our homepage at
+
+  http://www.mplayerhq.hu/homepage/dload.html
+
+To build MPlayer from source code, you must first open up Terminal, 
+select and navigate to your base build directory and checkout the latest
+sources from CVS (you will require both the main and mplayerosx
+modules):
+
+  svn checkout svn://svn.mplayerhq.hu/mplayer/trunk/ main
+  svn checkout svn://svn.mplayerhq.hu/mplayerosx/trunk/ mplayerosx
+
+Directories named 'main' and 'mplayerosx' will be created.
+
+
+__________________________
+STEP1: Configuring MPlayer
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The first step is to set the target OS version to '10.3' in the environment
+variable MACOSX_DEPLOYMENT_TARGET.  If you use the bash shell (or a
+variant), the command should look like this
+
+  export MACOSX_DEPLOYMENT_TARGET=10.3
+
+
+________________________
+STEP2: Compiling MPlayer
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now you can start the compilation by navigating to 'mplayerosx' (if you
+are not already there) and executing:
+
+  make mplayer
+
+When this completes, still in 'mplayerosx' execute:
+
+  make
+  make dist
+
+
+____________________________________________
+STEP3: Installing and Using the Application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Step 4 should have yielded a compressed, mountable archive (.dmg).  At
+this point, it will be simplest to switch to the Finder and navigate
+to the 'mplayerosx' directory.  Double-click the .dmg to mount it and
+double-click the MPlayer OS X Installer and follow the instructions on
+screen to complete the installation.  Finally, navigate to the
+Applications folder and double-click it there to run it.
+
+Any further questions you may have are probably answered in the rest of
+the documentation.  The places to start reading are the man page,
+DOCS/HTML/en/index.html and DOCS/HTML/en/faq.html. If you find a bug,
+please report it, but first read DOCS/HTML/en/bugreports.html.

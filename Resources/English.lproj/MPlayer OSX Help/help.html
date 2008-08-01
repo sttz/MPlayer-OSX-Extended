@@ -1,0 +1,116 @@
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8">
+		<title>Solving Problems</title>
+		<meta name="robots" content="anchors">
+		<link href="css/stylesheet.css" type="text/css" rel="stylesheet" media="all">
+	</head>
+
+	<body>
+		<div id="banner">
+			<div id="machelp"><a class="bread" href="index.html">MPlayer OSX Help</a></div>
+		</div>
+		<div id="mainbox">
+			<div id="caticon"><img src="gfx/icon.png" alt="MPlayer icon" height="32" width="32" border="0"></div>
+			<div id="pagetitle"><h4>Solving Problems</h4></div>
+			<p1>Having problems with something? Read on, and you may find the answer here</p1>
+			<br>
+			<br>
+			<table class="dots" width="100%" border="0" cellspacing="0" cellpadding="5" summary="Two column table with heading">
+				<tr>
+					<td class="blue" colspan="2">
+						<h5><b>How do i get subtitles working?</b></h5>
+					</td>
+				</tr>
+				<tr>
+					<td valign="center">
+						<p1>
+						MPlayer has excellent support for subtitles. It can decode and use almost any format of subtitles
+						there is. And getting them to work, is as easy as downloading the right font package.
+						
+						In order to obtain the font package, point your favorite browser to 
+						<a href="http://www.mplayerhq.hu/homepage/design7/dload.html">the MPlayer download page</a>, and download the font 
+						package that is right for you. (they differ in the encoding used, more on that later).
+						After downloading the font package, open it in the Finder. (if you have StuffIT Expander installed, it should unpack
+						automatically). You should now have a folder containing the fonts in different sizes.
+						
+						Now, you need to move the subtitle folder of the right size, to the MPlayer application. To do this, just ctrl-click
+						on the MPlayer OSX package, and choose "Show package contents". Now got to "Contents" -&gt; "Resources" -&gt; "Fonts", and
+						drag and drop the subtitle folder here.
+						
+						Now just restart MPlayer OSX, go to preferences, and choose the font you just installed to be used for subtitles
+						<p1>
+					</td>
+				</tr>
+			</table>
+			<br>
+			<table class="dots" width="100%" border="0" cellspacing="0" cellpadding="5" summary="Two column table with heading">
+				<tr>
+					<td class="blue" colspan="2">
+						<h5><b>Which encoding is right for me?</b></h5>
+					</td>
+				</tr>
+				<tr>
+					<td valign="center">
+						<p1>
+						In order for subtitles to display correctly, you need to be using the right encoding for your font package.
+						<ul>
+							<li><b>Western (ISO 8859-1)</b>: Use this encoding if you are going to use only english subtitles, that do not
+							contain any non-standard characters</li>
+							<li><b>Central European (ISO 8859-2)</b>: Use this encoding if you use Slovak, Czech, Polish, Hungarian, etc...subtitles.
+							But you must make sure, that the subtitles are actually encoded using this codepage, otherwise the diacritics
+							will not display correctly</li>
+							<li><b>Central European (CP1250)</b>: This is the encoding that you should use, if you use Slovak, Czech, or other Central
+							European language subtitle file. CP1250 is a windows version of the ISO-8859-2 encoding scheme, and 99% of 
+							subtitle files are encoded using this encoding scheme. <em>This is the recommended encoding to use for your font package</em></li>
+							<li><b>Greek (ISO 8859-7)</b>: For cyrilic, and similar text subtitle files</li>
+						</ul>
+						</p1>
+					</td>
+				</tr>
+			</table>
+			<br>
+			<table class="dots" width="100%" border="0" cellspacing="0" cellpadding="5" summary="Two column table with heading">
+				<tr>
+					<td class="blue" colspan="2">
+						<h5><b>The subtitles work when I use the GUI, but not when I run MPlayer from the command line. How come?</b></h5>
+					</td>
+				</tr>
+				<tr>
+					<td valign="center">
+						<p1>
+						The reason is simple: MPlayer cannot find the right font to use. You need to copy the folder containing the font of the
+						size and encoding you want (see <b>"How do I get subtitles working"</b>) into ~/.mplayer/font. <br/>
+						E.g. mv ~/Desktop/font-arial-cp1250/font-arial-18-cp1250/ ~/.mplayer/font
+						</p1>
+					</td>
+				</tr>
+			</table>
+			<br>
+			<table class="dots" width="100%" border="0" cellspacing="0" cellpadding="5" summary="Two column table with heading">
+				<tr>
+					<td class="blue" colspan="2">
+						<h5><b>Help, seeking does not work</b></h5>
+					</td>
+				</tr>
+				<tr>
+					<td valign="center">
+						<p1>
+						The most probable cause of this is a missing index. Each movie file has an index, either at the beginning or the end
+						of the file (depending on the format of the movie), which stores metadata used for seeking. If you cannot seek in the
+						movie you are watching, it most likely means, that the index is missing, or the movie file is in some way corrupted.
+						But do not fear, fixing this in MPlayer is a snap...
+						</p1>
+						<br/><br/>
+						<p1>
+						You need to run mplayer from the command line (see <a href="tipstricks.html">Tips and tricks</a>), and you need to
+						specify the option <b>-idx</b> or <b>-forceidx</b>. This will cause the index to be rebuilt, allowing you to seek in
+						the movie.
+						</p1>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>
