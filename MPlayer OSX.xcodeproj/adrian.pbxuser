@@ -117,10 +117,12 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 239286027;
-			PBXWorkspaceStateSaveDate = 239286027;
+			PBXPerProjectTemplateStateSaveDate = 239286601;
+			PBXWorkspaceStateSaveDate = 239286601;
 		};
 		perUserProjectItems = {
+			3A7DAF700E43395F00A2F937 /* PBXTextBookmark */ = 3A7DAF700E43395F00A2F937 /* PBXTextBookmark */;
+			3A7DAF7E0E433A4B00A2F937 /* PBXTextBookmark */ = 3A7DAF7E0E433A4B00A2F937 /* PBXTextBookmark */;
 			3AA9029B0E432BA800A543B2 /* PBXTextBookmark */ = 3AA9029B0E432BA800A543B2 /* PBXTextBookmark */;
 			3AA9029C0E432BA800A543B2 /* PBXTextBookmark */ = 3AA9029C0E432BA800A543B2 /* PBXTextBookmark */;
 			3AA9029D0E432BA800A543B2 /* PBXTextBookmark */ = 3AA9029D0E432BA800A543B2 /* PBXTextBookmark */;
@@ -244,9 +246,9 @@
 	};
 	379740A00875CA980049E91B /* VideoOpenGLView.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {950, 6606}}";
-			sepNavSelRange = "{9590, 17}";
-			sepNavVisRange = "{9479, 978}";
+			sepNavIntBoundsRect = "{{0, 0}, {961, 6830}}";
+			sepNavSelRange = "{10562, 45}";
+			sepNavVisRange = "{10388, 221}";
 			sepNavWindowFrame = "{{569, 62}, {971, 832}}";
 		};
 	};
@@ -437,6 +439,24 @@
 		location = "MPlayer OSX";
 		modificationTime = 238863920.646944;
 		state = 2;
+	};
+	3A7DAF700E43395F00A2F937 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "warning: no '-switchFullscreen:' method found";
+		fRef = 379740A00875CA980049E91B /* VideoOpenGLView.m */;
+		rLen = 1;
+		rLoc = 463;
+		rType = 1;
+	};
+	3A7DAF7E0E433A4B00A2F937 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 379740A00875CA980049E91B /* VideoOpenGLView.m */;
+		name = "VideoOpenGLView.m: 464";
+		rLen = 45;
+		rLoc = 10562;
+		rType = 0;
+		vrLen = 184;
+		vrLoc = 10423;
 	};
 	3AA9029B0E432BA800A543B2 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
