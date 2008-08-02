@@ -3,14 +3,14 @@
 <plist version="1.0">
 <dict>
 	<key>IBFramework Version</key>
-	<string>629</string>
+	<string>670</string>
 	<key>IBLastKnownRelativeProjectPath</key>
-	<string>../../../MPlayer OSX.xcodeproj</string>
+	<string>../../MPlayer OSX.xcodeproj</string>
 	<key>IBOldestOS</key>
 	<integer>5</integer>
 	<key>IBOpenObjects</key>
 	<array>
-		<integer>1817</integer>
+		<integer>1819</integer>
 	</array>
 	<key>IBSystem Version</key>
 	<string>9E17</string>

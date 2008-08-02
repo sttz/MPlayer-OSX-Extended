@@ -186,12 +186,7 @@
 		[params addObject:@"-audiofile"];
 		[params addObject:myAudioFile];
 	}
-	
-	// add font file
-	if (myFontFile) {
-		[params addObject:@"-font"];
-		[params addObject:myFontFile];
-	}
+
 	
 	
 	
@@ -365,6 +360,11 @@
 	if (embeddedFonts) {
 		[params addObject:@"-embeddedfonts"];
 	}
+	// add font file
+	if (myFontFile) {
+		[params addObject:@"-font"];
+		[params addObject:myFontFile];
+	}
 	// subtitles encoding
 	if (subEncoding) {
 		[params addObject:@"-subcp"];
@@ -375,6 +375,8 @@
 		[params addObject:@"-subfont-text-scale"];
 		[params addObject:[NSString stringWithFormat:@"%d",subScale]];
 	}
+	// always enable fontconfig
+	[params addObject:@"-fontconfig"];
 	
 	
 	

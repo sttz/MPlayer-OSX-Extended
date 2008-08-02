@@ -184,9 +184,11 @@
 	[self initFontMenu];
 	
 	// subtitles font
-	if ([thePrefs objectForKey:@"SubtitlesFontPath"]) {
-		[subFontMenu selectItemAtIndex:[subFontMenu indexOfItemWithRepresentedObject:
-				[thePrefs objectForKey:@"SubtitlesFontPath"]]];
+	if ([thePrefs objectForKey:@"SubtitlesFontName"]) {
+		//[subFontMenu selectItemAtIndex:[subFontMenu indexOfItemWithRepresentedObject:
+		//		[thePrefs objectForKey:@"SubtitlesFontPath"]]];
+		[subFontMenu selectItemAtIndex:[subFontMenu indexOfItemWithTitle:
+		 		[thePrefs objectForKey:@"SubtitlesFontName"]]];
 		if ([subFontMenu indexOfSelectedItem] < 0)
 			[subFontMenu selectItemAtIndex:0];
 	}
@@ -346,14 +348,14 @@
 			{
 				[subFontMenu addItemWithTitle:[[path lastPathComponent] stringByDeletingPathExtension]];
 				[[subFontMenu lastItem] setTag:1];
-				[[subFontMenu lastItem] setRepresentedObject:[fontPath stringByAppendingPathComponent:path]];
+				//[[subFontMenu lastItem] setRepresentedObject:[fontPath stringByAppendingPathComponent:path]];
 			}
-			else if ([[path lastPathComponent] caseInsensitiveCompare:@"font.desc"] == NSOrderedSame)
+			/*else if ([[path lastPathComponent] caseInsensitiveCompare:@"font.desc"] == NSOrderedSame)
 			{
 				[subFontMenu addItemWithTitle:[path stringByDeletingLastPathComponent]];
 				[[subFontMenu lastItem] setTag:2];
-				[[subFontMenu lastItem] setRepresentedObject:path];
-			}
+				//[[subFontMenu lastItem] setRepresentedObject:path];
+			}*/
 		}
 		
 		// if last item is not separator then add it
@@ -489,9 +491,10 @@
 	
 	// subtitles font
 	if ([subFontMenu indexOfSelectedItem] <= 0)
-		[thePrefs removeObjectForKey:@"SubtitlesFontPath"];
+		[thePrefs removeObjectForKey:@"SubtitlesFontName"];
 	else
-		[thePrefs setObject:[[subFontMenu selectedItem] representedObject] forKey:@"SubtitlesFontPath"];
+		[thePrefs setObject:[subFontMenu titleOfSelectedItem] forKey:@"SubtitlesFontName"];
+		//[thePrefs setObject:[[subFontMenu selectedItem] representedObject] forKey:@"SubtitlesFontPath"];
 	
 	// subtitles encoding
 	[thePrefs setObject:[subEncodingMenu titleOfSelectedItem]

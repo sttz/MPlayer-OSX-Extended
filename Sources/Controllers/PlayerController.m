@@ -529,18 +529,18 @@
 		[myPlayer setEmbeddedFonts: [preferences boolForKey:@"EmbeddedFonts"]];
 	
 	// subtitle font path
-	if ([preferences objectForKey:@"SubtitlesFontPath"])
+	if ([preferences objectForKey:@"SubtitlesFontName"])
 	{
 		// if subtitles font is specified, set the font
-		[myPlayer setFontFile:[preferences objectForKey:@"SubtitlesFontPath"]];
+		[myPlayer setFontFile:[preferences objectForKey:@"SubtitlesFontName"]];
 		
-		if ([[[preferences objectForKey:@"SubtitlesFontPath"] lastPathComponent] caseInsensitiveCompare:@"font.desc"] == NSOrderedSame)
+		/*if ([[[preferences objectForKey:@"SubtitlesFontPath"] lastPathComponent] caseInsensitiveCompare:@"font.desc"] == NSOrderedSame)
 		{
 			// if prerendered font selected
 			[myPlayer setSubtitlesScale:0];
 		}
 		else
-		{
+		{*/
 		// if true type font selected
 			// set subtitles size
 			if ([preferences objectForKey:@"SubtitlesSize"]) {
@@ -562,7 +562,7 @@
 					break;
 				}
 			}
-		}
+		//}
 	}
 	else {
 	// if ther's no subtitles font
