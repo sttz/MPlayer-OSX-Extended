@@ -154,6 +154,8 @@
 			<dict>
 				<key>appController</key>
 				<string>id</string>
+				<key>audioStreamMenu</key>
+				<string>id</string>
 				<key>playButton</key>
 				<string>NSButton</string>
 				<key>playButtonToolbar</key>
@@ -186,12 +188,16 @@
 				<string>id</string>
 				<key>statsStatusBox</key>
 				<string>id</string>
+				<key>subtitleStreamMenu</key>
+				<string>id</string>
 				<key>timeTextField</key>
 				<string>id</string>
 				<key>timeTextFieldToolbar</key>
 				<string>id</string>
 				<key>videoOpenGLView</key>
 				<string>VideoOpenGLView</string>
+				<key>videoStreamMenu</key>
+				<string>id</string>
 				<key>volumeIconImage</key>
 				<string>id</string>
 				<key>volumeIconImageToolbar</key>

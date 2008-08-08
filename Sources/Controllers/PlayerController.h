@@ -48,6 +48,11 @@
     IBOutlet id statsDroppedBox;
     IBOutlet id statsStatusBox;
 	
+	// stream menus
+	IBOutlet id videoStreamMenu;
+	IBOutlet id audioStreamMenu;
+	IBOutlet id subtitleStreamMenu;
+	
 	// properties
 	MplayerInterface *myPlayer;
 	
@@ -99,6 +104,15 @@
 - (IBAction)displayStats:(id)sender;
 - (IBAction)takeScreenshot:(id)sender;
 - (void)sendKeyEvent:(int)event;
+
+- (void)clearStreamMenus;
+- (void)fillStreamMenus;
+- (void)videoMenuAction:(id)sender;
+- (void)audioMenuAction:(id)sender;
+- (void)subtitleMenuAction:(id)sender;
+- (void)newVideoStreamId:(unsigned int)streamId;
+- (void)newAudioStreamId:(unsigned int)streamId;
+- (void)newSubtitleStreamId:(unsigned int)streamId forType:(SubtitleType)type;
 
 // notification observers
 - (void) appFinishedLaunching;

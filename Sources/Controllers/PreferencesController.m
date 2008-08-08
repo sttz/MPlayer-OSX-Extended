@@ -12,6 +12,7 @@
 // other controllers
 #import "AppController.h"
 #import "PlayerController.h"
+#import "LanguageCodes.h"
 
 @implementation PreferencesController
 
@@ -21,7 +22,6 @@
 - (void) reloadValues
 {
 	NSUserDefaults *thePrefs = [appController preferences];
-	
 	
 	// ** Playback
 	

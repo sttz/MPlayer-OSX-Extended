@@ -17,7 +17,8 @@
 
 
 #import <Cocoa/Cocoa.h>
- 
+#import "MovieInfo.h"
+
 // Notifications posted by MplayerInterface
 	// 	@"MIPlayerTerminatedNotification"	mplayer has been terminated
 	// 	@"MIInfoReadyNotification"			notification has been updated
@@ -158,8 +159,11 @@
 	BOOL windowedVO;
 	int myOutputReadMode;				// defines playback output form 
 	NSMutableArray *myCommandsBuffer;	// store cmds that cannot be send immediatelly
-	NSMutableDictionary *myInfo;	// dict filled by -identify command
+	NSString *lastUnparsedLine;
+	//NSMutableDictionary *myInfo;	// dict filled by -identify command
 	BOOL isFullscreen;				// currently playing fullscreen
+	
+	MovieInfo *info;
 }
 // interface
 // init and uninit
@@ -244,8 +248,8 @@
 
 // info
 - (void) loadInfoBeforePlayback:(BOOL)aBool;		// enables using of -identify param for playback
-- (NSDictionary *) loadInfo;						// gets info returned by -identify (don't work during playback)
-- (NSDictionary *) info;							// returns the content of info dictionary 
+- (MovieInfo *) loadInfo;						// gets info returned by -identify (don't work during playback)
+- (MovieInfo *) info;							// returns the content of info dictionary 
 - (int) status;
 - (float) seconds;									// returns number of seconds, elapsed
 - (BOOL) changesNeedsRestart;						// retuns YES if changes needs restart
@@ -270,4 +274,9 @@
 // notification handlers
 - (void) mplayerTerminated;
 - (void) readOutputC:(NSNotification *)notification;
+
+// helper
+-(NSString *)parseDefine:(NSString *)searchFor inLine:(NSString *)line;
+-(NSArray *)splitString:(NSString *)string byCharactersInSet:(NSCharacterSet *)set;
+
 @end

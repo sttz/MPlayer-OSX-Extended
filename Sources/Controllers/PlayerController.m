@@ -24,7 +24,7 @@
 
 /************************************************************************************/
 -(void)awakeFromNib
-{
+{	
 	NSUserDefaults *prefs = [appController preferences];
     NSString *playerPath;
 	saveTime = YES;
@@ -261,7 +261,7 @@
 - (BOOL)preflightItem:(NSMutableDictionary *)anItem
 {
 	BOOL result;
-	NSDictionary *theInfo;
+	MovieInfo *theInfo;
 
 	// set movie
 	[myPlayer setMovieFile:[anItem objectForKey:@"MovieFile"]];
@@ -269,7 +269,7 @@
 	theInfo = [myPlayer loadInfo];
 	
 	if (theInfo) {
-		[anItem addEntriesFromDictionary:theInfo];
+		[anItem setObject:theInfo forKey:@"MovieInfo"];
 		result = YES;
 	}
 	else
@@ -341,7 +341,7 @@
 		[myPlayingItem removeObjectForKey:@"LastSeconds"];
 
 	// load info before playback only if it was not previously loaded
-	if ([myPlayingItem objectForKey:@"ID_FILENAME"])
+	if ([myPlayingItem objectForKey:@"MovieInfo"])
 		loadInfo = NO;
 	else
 		loadInfo = YES;
@@ -353,7 +353,12 @@
 	// its enough to load info only once so disable it
 	if (loadInfo)
 		[myPlayer loadInfoBeforePlayback:NO];
-		
+	
+	// query selected streams
+	/*[myPlayer sendCommands:[NSArray arrayWithObjects:
+							@"get_property sub_demux",@"get_property switch_audio",@"get_property switch_video",
+							@"get_property sub_file",nil]];*/
+	
 	[playListController updateView];
 }
 
@@ -707,12 +712,12 @@
 			[myPlayer setMovieSize:NSMakeSize(2, 0)];
 			break;
 		case 3 :		// fit screen it (it is set before actual playback)
-			if ([myPlayingItem objectForKey:@"ID_VIDEO_WIDTH"] &&
-				[myPlayingItem objectForKey:@"ID_VIDEO_HEIGHT"]) {
+			if ([MovieInfo fromDictionary:myPlayingItem]->width &&
+				[MovieInfo fromDictionary:myPlayingItem]->height) {
 				NSSize screenSize = [[NSScreen mainScreen] visibleFrame].size;
 				double theWidth = ((screenSize.height - 28) /	// 28 pixels for window caption
-						[[myPlayingItem objectForKey:@"ID_VIDEO_HEIGHT"] intValue] *
-						[[myPlayingItem objectForKey:@"ID_VIDEO_WIDTH"] intValue]);
+						[MovieInfo fromDictionary:myPlayingItem]->height *
+						[MovieInfo fromDictionary:myPlayingItem]->width);
 				if (theWidth < screenSize.width)
 					[myPlayer setMovieSize:NSMakeSize(theWidth, 0)];
 				else
@@ -950,6 +955,220 @@
 		[myPlayer takeScreenshot];
 	}
 }
+/************************************************************************************/
+- (void)clearStreamMenus {
+	
+	NSMenu *menu;
+	int j;
+	
+	for (j = 0; j < 3; j++) {
+		
+		switch (j) {
+			case 0:
+				menu = [videoStreamMenu submenu];
+				[videoStreamMenu setEnabled:NO];
+				break;
+			case 1:
+				menu = [audioStreamMenu submenu];
+				[audioStreamMenu setEnabled:NO];
+				break;
+			case 2:
+				menu = [subtitleStreamMenu submenu];
+				[subtitleStreamMenu setEnabled:NO];
+				break;
+		}
+		
+		while ([menu numberOfItems] > 0) {
+			[menu removeItemAtIndex:0];
+		}
+		
+	}
+	
+}
+/************************************************************************************/
+- (void)fillStreamMenus {
+	
+	MovieInfo *mi = [[MovieInfo fromDictionary:myPlayingItem] retain];
+	
+	if (mi != nil) {
+		
+		// clear menus
+		[self clearStreamMenus];
+		
+		// video stream menu
+		NSEnumerator *en = [mi getVideoStreamsEnumerator];
+		NSNumber *key;
+		NSMenu *menu = [videoStreamMenu submenu];
+		NSMenuItem* newItem;
+			
+		while ((key = [en nextObject])) {
+			newItem = [[NSMenuItem alloc]
+					   initWithTitle:[mi descriptionForVideoStream:[key intValue]]
+					   action:NULL
+					   keyEquivalent:@""];
+			[newItem setRepresentedObject:key];
+			[newItem setAction:@selector(videoMenuAction:)];
+			[menu addItem:newItem];
+			[newItem release];
+		}
+		
+		if ([menu numberOfItems] > 0)
+			[videoStreamMenu setEnabled:YES];
+		else
+			[videoStreamMenu setEnabled:NO];
+		
+		
+		// audio stream menu
+		en = [mi getAudioStreamsEnumerator];
+		menu = [audioStreamMenu submenu];
+		
+		while ((key = [en nextObject])) {
+			newItem = [[NSMenuItem alloc]
+					   initWithTitle:[mi descriptionForAudioStream:[key intValue]]
+					   action:NULL
+					   keyEquivalent:@""];
+			[newItem setRepresentedObject:key];
+			[newItem setAction:@selector(audioMenuAction:)];
+			[menu addItem:newItem];
+			[newItem release];
+		}
+		
+		if ([menu numberOfItems] > 0)
+			[audioStreamMenu setEnabled:YES];
+		else
+			[audioStreamMenu setEnabled:NO];
+		
+		
+		// subtitle stream menu
+		// demux subtitles
+		en = [mi getSubtitleStreamsEnumeratorForType:SubtitleTypeDemux];
+		menu = [subtitleStreamMenu submenu];
+		
+		while ((key = [en nextObject])) {
+			newItem = [[NSMenuItem alloc]
+					   initWithTitle:[mi descriptionForSubtitleStream:[key intValue] andType:SubtitleTypeDemux]
+					   action:NULL
+					   keyEquivalent:@""];
+			[newItem setRepresentedObject:[NSArray arrayWithObjects: [NSNumber numberWithInt:SubtitleTypeDemux], key, nil]];
+			[newItem setAction:@selector(subtitleMenuAction:)];
+			[menu addItem:newItem];
+			[newItem release];
+		}
+		
+		if ([mi subtitleCountForType:SubtitleTypeDemux] > 0 && [mi subtitleCountForType:SubtitleTypeFile] > 0)
+			[menu addItem:[NSMenuItem separatorItem]];
+		
+		// file subtitles
+		en = [mi getSubtitleStreamsEnumeratorForType:SubtitleTypeFile];
+		
+		while ((key = [en nextObject])) {
+			newItem = [[NSMenuItem alloc]
+					   initWithTitle:[mi descriptionForSubtitleStream:[key intValue] andType:SubtitleTypeFile]
+					   action:NULL
+					   keyEquivalent:@""];
+			[newItem setRepresentedObject:[NSArray arrayWithObjects: [NSNumber numberWithInt:SubtitleTypeFile], key, nil]];
+			[newItem setAction:@selector(subtitleMenuAction:)];
+			[menu addItem:newItem];
+			[newItem release];
+		}
+		
+		if ([menu numberOfItems] > 0)
+			[subtitleStreamMenu setEnabled:YES];
+		else
+			[subtitleStreamMenu setEnabled:NO];
+		
+		[mi release];
+	}
+}
+/************************************************************************************/
+- (void)videoMenuAction:(id)sender {
+	
+	[myPlayer sendCommands:[NSArray arrayWithObjects:
+		[NSString stringWithFormat:@"set_property switch_video %d",[[sender representedObject] intValue]],
+		@"get_property switch_video",
+		nil]];
+}
+- (void)audioMenuAction:(id)sender {
+	
+	[myPlayer sendCommands:[NSArray arrayWithObjects:
+			[NSString stringWithFormat:@"set_property switch_audio %d",[[sender representedObject] intValue]],
+			@"get_property switch_audio",
+			nil]];
+}
+- (void)subtitleMenuAction:(id)sender {
+	
+	NSArray *props = [sender representedObject];
+	
+	if ([[props objectAtIndex:0] intValue] == SubtitleTypeDemux)
+		[myPlayer sendCommands:[NSArray arrayWithObjects:
+				[NSString stringWithFormat:@"set_property sub_demux %d",[[props objectAtIndex:1] intValue]],
+				@"get_property sub_demux",
+				nil]];
+	else
+		[myPlayer sendCommands:[NSArray arrayWithObjects:
+				[NSString stringWithFormat:@"set_property sub_file %d",[[props objectAtIndex:1] intValue]],
+				@"get_property sub_file",
+				nil]];
+	
+}
+/************************************************************************************/
+- (void)newVideoStreamId:(unsigned int)streamId {
+	
+	if (streamId != -1) {
+		
+		int index = [[videoStreamMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:streamId]];
+		
+		if (index != -1) {
+			
+			NSArray *items = [[videoStreamMenu submenu] itemArray];
+			int i;
+			for (i = 0; i < [items count]; i++) {
+				[[[videoStreamMenu submenu] itemAtIndex:i] setState:NSOffState];
+			}
+			
+			[[[videoStreamMenu submenu] itemAtIndex:index] setState:NSOnState];
+		}
+	}
+}
+
+- (void)newAudioStreamId:(unsigned int)streamId {
+	
+	if (streamId != -1) {
+		
+		int index = [[audioStreamMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:streamId]];
+		
+		if (index != -1) {
+			
+			NSArray *items = [[audioStreamMenu submenu] itemArray];
+			int i;
+			for (i = 0; i < [items count]; i++) {
+				[[[audioStreamMenu submenu] itemAtIndex:i] setState:NSOffState];
+			}
+			
+			[[[audioStreamMenu submenu] itemAtIndex:index] setState:NSOnState];
+		}
+	}
+}
+
+- (void)newSubtitleStreamId:(unsigned int)streamId forType:(SubtitleType)type {
+	
+	if (streamId != -1) {
+		
+		int index = [[subtitleStreamMenu submenu] indexOfItemWithRepresentedObject:[NSArray arrayWithObjects: [NSNumber numberWithInt:type], [NSNumber numberWithInt:streamId], nil]];
+		
+		if (index != -1) {
+			
+			NSArray *items = [[subtitleStreamMenu submenu] itemArray];
+			int i;
+			for (i = 0; i < [items count]; i++) {
+				[[[subtitleStreamMenu submenu] itemAtIndex:i] setState:NSOffState];
+			}
+			
+			
+			[[[subtitleStreamMenu submenu] itemAtIndex:index] setState:NSOnState];
+		}
+	}
+}
 /************************************************************************************
  NOTIFICATION OBSERVERS
  ************************************************************************************/
@@ -1010,7 +1229,7 @@
 {
 	// the info dictionary should now be ready to be imported
 	if ([myPlayer info] && myPlayingItem) {
-		[myPlayingItem addEntriesFromDictionary:[myPlayer info]];
+		[myPlayingItem setObject:[myPlayer info] forKey:@"MovieInfo"];
 	}
 	[playListController updateView];
 }
@@ -1028,16 +1247,18 @@
 	NSMutableDictionary *playingItem = myPlayingItem;
 	
 	// reset Idle time - Carbon PowerManager calls
-	if ([playingItem objectForKey:@"ID_VIDEO_FORMAT"])	// if there is a video
+	if ([[MovieInfo fromDictionary:playingItem] isVideo])	// if there is a video
 		UpdateSystemActivity (UsrActivity);		// do not dim the display
 /*	else									// if there's only audio
 		UpdateSystemActivity (OverallAct);		// avoid sleeping only
 */
+	
 	// status did change
 	if ([notification userInfo] && [[notification userInfo] objectForKey:@"PlayerStatus"]) {
-		NSString *status = NULL;
+		NSString *status = @"";
 		// status is changing
 		// switch Play menu item title and playbutton image
+		
 		switch ([[[notification userInfo] objectForKey:@"PlayerStatus"] unsignedIntValue]) {
 		case kOpening :
 		case kBuffering :
@@ -1057,9 +1278,11 @@
 			[playButtonToolbar setAlternateImage:playImageOn];
 			break;
 		}
+		
 		switch ([[[notification userInfo] objectForKey:@"PlayerStatus"] unsignedIntValue]) {
 		case kOpening :
 		{
+			
 			NSMutableString *path = [[NSMutableString alloc] init];
 			[path appendString:@"MPlayer OSX - "];
 			
@@ -1074,14 +1297,14 @@
 
 			[playerWindow setTitle:path];
 			[path release];
-	
+			
 			// progress bars
 			[scrubbingBar setStyle:NSScrubbingBarProgressStyle];
 			[scrubbingBar setIndeterminate:YES];
 			[scrubbingBarToolbar setStyle:NSScrubbingBarProgressStyle];
 			[scrubbingBarToolbar setIndeterminate:YES];
-		}
 			break;
+		}
 		case kBuffering :
 			status = NSLocalizedString(@"Buffering",nil);
 			// progress bars
@@ -1101,21 +1324,28 @@
 			[scrubbingBarToolbar setIndeterminate:NO];
 			break;
 		case kPlaying :
-			status = NSLocalizedString(@"Playing",nil);
-			// set default state of scrubbing bar
-			[scrubbingBar setStyle:NSScrubbingBarEmptyStyle];
-			[scrubbingBar setIndeterminate:NO];
-			[scrubbingBar setMaxValue:100];
-			
-			[scrubbingBarToolbar setStyle:NSScrubbingBarEmptyStyle];
-			[scrubbingBarToolbar setIndeterminate:NO];
-			[scrubbingBarToolbar setMaxValue:100];
-			
-			if ([playingItem objectForKey:@"ID_LENGTH"]) {
-				if ([[playingItem objectForKey:@"ID_LENGTH"] intValue] > 0) {
-					[scrubbingBar setMaxValue: [[playingItem objectForKey:@"ID_LENGTH"] intValue]];
+			if (playingItem != NULL) {
+				status = NSLocalizedString(@"Playing",nil);
+				// set default state of scrubbing bar
+				[scrubbingBar setStyle:NSScrubbingBarEmptyStyle];
+				[scrubbingBar setIndeterminate:NO];
+				[scrubbingBar setMaxValue:100];
+				
+				[scrubbingBarToolbar setStyle:NSScrubbingBarEmptyStyle];
+				[scrubbingBarToolbar setIndeterminate:NO];
+				[scrubbingBarToolbar setMaxValue:100];
+				
+				// Populate menus with found streams
+				[self fillStreamMenus];
+				// Request the selected streams
+				[myPlayer sendCommands:[NSArray arrayWithObjects:
+										@"get_property switch_video",@"get_property switch_audio",
+										@"get_property sub_demux",@"get_property sub_file",nil]];
+				
+				if ([MovieInfo fromDictionary:playingItem]->length > 0) {
+					[scrubbingBar setMaxValue: [MovieInfo fromDictionary:playingItem]->length];
 					[scrubbingBar setStyle:NSScrubbingBarPositionStyle];
-					[scrubbingBarToolbar setMaxValue: [[playingItem objectForKey:@"ID_LENGTH"] intValue]];
+					[scrubbingBarToolbar setMaxValue: [MovieInfo fromDictionary:playingItem]->length];
 					[scrubbingBarToolbar setStyle:NSScrubbingBarPositionStyle];
 				}
 			}
@@ -1162,6 +1392,24 @@
 		//[statusBox setStringValue:status];
 	}
 	
+	// responses from commands
+	if ([notification userInfo]) {
+		
+		// Streams
+		if ([[notification userInfo] objectForKey:@"VideoStreamId"])
+			[self newVideoStreamId:[[[notification userInfo] objectForKey:@"VideoStreamId"] intValue]];
+		
+		if ([[notification userInfo] objectForKey:@"AudioStreamId"])
+			[self newAudioStreamId:[[[notification userInfo] objectForKey:@"AudioStreamId"] intValue]];
+		
+		if ([[notification userInfo] objectForKey:@"SubDemuxStreamId"])
+			[self newSubtitleStreamId:[[[notification userInfo] objectForKey:@"VideoStreamId"] intValue] forType:SubtitleTypeDemux];
+		
+		if ([[notification userInfo] objectForKey:@"SubFileStreamId"])
+			[self newSubtitleStreamId:[[[notification userInfo] objectForKey:@"SubFileStreamId"] intValue] forType:SubtitleTypeFile];
+		
+	}
+	
 	seconds = (int)[myPlayer seconds];
 	
 	// update values
@@ -1180,21 +1428,16 @@
 	case kPlaying :
 		if ([[scrubbingBar window] isVisible]) 
 		{
-			if ([playingItem objectForKey:@"ID_LENGTH"])
-				if ([[playingItem objectForKey:@"ID_LENGTH"] intValue] > 0)
-					[scrubbingBar setDoubleValue:[myPlayer seconds]];
-				else
-					[scrubbingBar setDoubleValue:0];
+			
+			if ([MovieInfo fromDictionary:playingItem]->length > 0)
+				[scrubbingBar setDoubleValue:[myPlayer seconds]];
 			else
 				[scrubbingBar setDoubleValue:0];
 		}
 		if ([[scrubbingBarToolbar window] isVisible]) 
 		{
-			if ([playingItem objectForKey:@"ID_LENGTH"])
-				if ([[playingItem objectForKey:@"ID_LENGTH"] intValue] > 0)
-					[scrubbingBarToolbar setDoubleValue:[myPlayer seconds]];
-				else
-					[scrubbingBarToolbar setDoubleValue:0];
+			if ([MovieInfo fromDictionary:playingItem]->length > 0)
+				[scrubbingBarToolbar setDoubleValue:[myPlayer seconds]];
 			else
 				[scrubbingBarToolbar setDoubleValue:0];
 		}
@@ -1230,9 +1473,8 @@
 {
 	if ([myPlayer status] == kPlaying || [myPlayer status] == kPaused) {
 		int theMode = MIPercentSeekingMode;
-		if ([myPlayingItem objectForKey:@"ID_LENGTH"])
-			if ([[myPlayingItem objectForKey:@"ID_LENGTH"] floatValue] != 0)
-				theMode = MIAbsoluteSeekingMode;
+		if ([MovieInfo fromDictionary:myPlayingItem]->length > 0)
+			theMode = MIAbsoluteSeekingMode;
 
 		[myPlayer seek:[[[notification userInfo] 
 				objectForKey:@"SBClickedValue"] floatValue] mode:theMode];

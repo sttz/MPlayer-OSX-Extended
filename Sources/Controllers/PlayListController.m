@@ -66,6 +66,8 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 		{
 			[myData addObject: [(NSDictionary *)[tmpArray objectAtIndex:i] mutableCopy] ];
 		}
+		
+		[tmpArray release];
 	}
 	else
 	{
@@ -299,12 +301,9 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	//get total time
 	for(i=0; i<[myData count]; i++)
 	{
-		if ([[myData objectAtIndex:i] objectForKey:@"ID_LENGTH"])
+		if ([MovieInfo fromDictionary:[myData objectAtIndex:i]]->length > 0)
 		{
-			if ([[[myData objectAtIndex:i] objectForKey:@"ID_LENGTH"] intValue] > 0)
-			{
-				totalTime += [[[myData objectAtIndex:i] objectForKey:@"ID_LENGTH"] intValue];
-			}
+			totalTime += [MovieInfo fromDictionary:[myData objectAtIndex:i]]->length;
 		}
 	}
 
@@ -390,7 +389,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 - (IBAction)displayItemSettings:(id)sender
 {
 	// if there is no info records for the item ged it first
-	if (![[self selectedItem] objectForKey:@"ID_FILENAME"])
+	if (![[self selectedItem] objectForKey:@"MovieInfo"])
 		[playerController preflightItem:[self selectedItem]];
 		
 	//NSMutableDictionary *myItem = [NSMutableDictionary dictionaryWithDictionary:[self selectedItem]];
@@ -434,15 +433,11 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	}
 	// movie length column
 	if ([[tableColumn identifier] isEqualToString:@"time"]) {
-		if ([[myData objectAtIndex:row] objectForKey:@"ID_LENGTH"])
-			if ([[[myData objectAtIndex:row] objectForKey:@"ID_LENGTH"] intValue] > 0) {
-				int seconds = [[[myData objectAtIndex:row]
-						objectForKey:@"ID_LENGTH"] intValue];
-				return [NSString stringWithFormat:@"%01d:%02d:%02d",
-						seconds/3600,(seconds%3600)/60,seconds%60];
-			}
-			else
-				return @"--:--:--";
+		if ([MovieInfo fromDictionary:[myData objectAtIndex:row]]->length > 0) {
+			int seconds = [MovieInfo fromDictionary:[myData objectAtIndex:row]]->length;
+			return [NSString stringWithFormat:@"%01d:%02d:%02d",
+					seconds/3600,(seconds%3600)/60,seconds%60];
+		}
 		else
 			return @"--:--:--";
 	}

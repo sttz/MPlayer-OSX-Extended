@@ -38,7 +38,7 @@
 	
 	myPathToPlayer = [aPath retain];
 
-	myInfo = [[NSMutableDictionary dictionary] retain];
+	info = [[MovieInfo alloc] init];
 	myCommandsBuffer = [[NSMutableArray array] retain];
 	mySeconds = 0;
 	myVolume = 100;
@@ -97,6 +97,8 @@
 	windowedVO = NO;
 	isFullscreen = NO;
 	
+	lastUnparsedLine = @"";
+	
 	return self;
 }
 
@@ -124,8 +126,8 @@
 		[addParams release];
 	if (myCommandsBuffer)
 		[myCommandsBuffer release];
-	if (myInfo)
-		[myInfo release];
+	if (info)
+		[info release];
 	if (audioLanguages)
 		[audioLanguages release];
 	if (subtitleLanguages)
@@ -136,6 +138,8 @@
 		[audioCodecs release];
 	if (equalizerValues)
 		[equalizerValues release];
+	if (lastUnparsedLine)
+		[lastUnparsedLine release];
 	
 	[super dealloc];
 }
@@ -463,7 +467,10 @@
 		[params addObject:@"identify=4:demux=6"];
 	}
 	
-	[myInfo removeAllObjects];				// prepare it for getting new values
+	
+	[info release];
+	info = [[MovieInfo alloc] init];		// prepare it for getting new values
+	NSLog(@"Audios: %@",[NSNumber numberWithInt:[info audioStreamCount]]);
 	[myCommandsBuffer removeAllObjects];	// empty buffer before launch
 	settingsChanged = NO;					// every startup settings has been made
 	
@@ -1114,10 +1121,11 @@
 	useIdentifyForPlayback = aBool;
 }
 /************************************************************************************/
-- (NSDictionary *) loadInfo
+- (MovieInfo *) loadInfo
 {
-	// clear the dictionary
-	[myInfo removeAllObjects];
+	// clear the class
+	[info release];
+	info = [[MovieInfo alloc] init];
 	
 	// run mplayer for identify
 	if (myMovieFile)
@@ -1126,14 +1134,14 @@
 	// wait until it exits
 	[self waitUntilExit];
 	
-	if ([myInfo count] > 0)
-		return myInfo;
+	if ([info containsInfo])
+		return info;
 	return nil;
 }
 /************************************************************************************/
-- (NSDictionary *) info
+- (MovieInfo *) info
 {
-	return myInfo;
+	return info;
 }
 /************************************************************************************/
 - (int) status
@@ -1207,8 +1215,7 @@
 {
 	int i;
 	for (i=0; i < [aCommands count]; i++) {
-		[self sendToMplayersInput:[[aCommands objectAtIndex:i]
-				stringByAppendingString:@"\n"]];
+		[self sendCommand:[aCommands objectAtIndex:i]];
 	}
 }
 /************************************************************************************/
@@ -1282,7 +1289,6 @@
 	// enable bind-at-launch behavior for dyld to use DLL codecs
     [env setObject:@"1" forKey:@"DYLD_BIND_AT_LAUNCH"];
     // set fontconfig path
-	NSLog(@"FONTCONFIG_PATH: %s", [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"fonts"] UTF8String] );
 	[env setObject:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"fonts"] forKey:@"FONTCONFIG_PATH"];
 	// Apply environment variables
 	[myMplayerTask setEnvironment:env];
@@ -1297,6 +1303,7 @@
 	// activate notification for available data at output
 	[[[myMplayerTask standardOutput] fileHandleForReading]
 			readInBackgroundAndNotify];
+	
 	// reset output read mode
 	myOutputReadMode = 0;
 	// launch mplayer task
@@ -1381,8 +1388,12 @@
 /************************************************************************************/
 - (void)readOutputC:(NSNotification *)notification
 {
+	
+	NSAutoreleasePool * pool = [NSAutoreleasePool new];
+	
 	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-	unsigned dataLength = [(NSData *)[[notification userInfo]
+	
+	/*unsigned dataLength = [(NSData *)[[notification userInfo]
 			objectForKey:@"NSFileHandleNotificationDataItem"] length] / sizeof(char);
 	char *stringPtr = NULL, *dataPtr = malloc([(NSData *)[[notification userInfo]
 			objectForKey:@"NSFileHandleNotificationDataItem"] length] + sizeof(char));
@@ -1390,23 +1401,66 @@
 	// load data and terminate it with null character
 	[[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"]
 				getBytes:(void *)dataPtr];
-	*(dataPtr+dataLength) = '\0';
+	*(dataPtr+dataLength) = '\0';*/
 	
 	// register for another read
 	[[[myMplayerTask standardOutput] fileHandleForReading]
 			readInBackgroundAndNotify];	
 	
+	NSString *data = [[NSString alloc] 
+						initWithData:[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"] 
+						encoding:NSUTF8StringEncoding];
+	
+	const char *stringPtr;
+	NSString *line;
+	NSString *result;
+	int subtitleFileId = -1;
+	
+	// Create newline character set
+	NSMutableCharacterSet *newlineCharacterSet = (id)[NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
+    [newlineCharacterSet formIntersectionWithCharacterSet:[[NSCharacterSet whitespaceCharacterSet] invertedSet]];
+	
+	// Split data by newline characters
+	NSArray *myLines = [self splitString:data byCharactersInSet:newlineCharacterSet];
+	
+	int lineIndex = -1;
+	
 	while (1) {
 		char *tempPtr;
 		
 		// get the one line of data
-		if (stringPtr == NULL)
+		/*if (stringPtr == NULL)
 			stringPtr = strtok((char *)dataPtr,"\n\r");
 		else
 			stringPtr = strtok(NULL,"\n\r");
 		
 		if  (stringPtr == NULL)
+			break;*/
+		
+		// make an NSString for this line
+		//printf("%s\n",stringPtr);
+		//line = [NSString stringWithCString:stringPtr];
+		
+		// Read next line of data
+		lineIndex++;
+		// check if end reached (save last unfinished line)
+		if (lineIndex >= [myLines count] - 1) {
+			[lastUnparsedLine release];
+			lastUnparsedLine = [[myLines objectAtIndex:lineIndex] retain];
 			break;
+		}
+		// load line
+		line = [myLines objectAtIndex:lineIndex];
+		// prepend unfinished line
+		if (lastUnparsedLine != @"") {
+			line = [lastUnparsedLine stringByAppendingString:line];
+			lastUnparsedLine = @"";
+		}
+		
+		// create cstring for legacy code
+		stringPtr = [line lossyCString];
+		
+		//NSLog(@"Output: %@",line);
 		
 		if (strstr(stringPtr, "A:") == stringPtr ||
 				strstr(stringPtr, "V:") == stringPtr) {
@@ -1529,6 +1583,32 @@
 			else
 				continue;
 		}
+		
+		// parse current streams
+		result = [self parseDefine:@"ANS_switch_video=" inLine:line];
+		if (result != nil) {
+			[userInfo setObject:[NSNumber numberWithInt:[result intValue]] forKey:@"VideoStreamId"];
+			continue;
+		}
+		
+		result = [self parseDefine:@"ANS_switch_audio=" inLine:line];
+		if (result != nil) {
+			[userInfo setObject:[NSNumber numberWithInt:[result intValue]] forKey:@"AudioStreamId"];
+			continue;
+		}
+		
+		result = [self parseDefine:@"ANS_sub_demux=" inLine:line];
+		if (result != nil) {
+			[userInfo setObject:[NSNumber numberWithInt:[result intValue]] forKey:@"SubDemuxStreamId"];
+			continue;
+		}
+		
+		result = [self parseDefine:@"ANS_sub_file=" inLine:line];
+		if (result != nil) {
+			[userInfo setObject:[NSNumber numberWithInt:[result intValue]] forKey:@"SubFileStreamId"];
+			continue;
+		}
+		
 /*	
 		// if we don't have output mode try to parse playback output and get output mode
 		if (myOutputReadMode == 0) {
@@ -1616,24 +1696,24 @@
 				myCacheUsage = cacheUsage;
 			}
 			// if the string is longer then supposed divide it and continue
-			printf("%s\n",stringPtr);
+			/*printf("%s\n",stringPtr);
 			if (strlen(stringPtr) > 32) {
 				*(stringPtr + 31) = '\0';
 				stringPtr = (stringPtr + 32);
 			}
-			else								// if string is not longer than supposed
+			else	*/							// if string is not longer than supposed
 				continue; 						// continue on next line
 		}
 		// get format of audio
 		if (strstr(stringPtr, MI_AUDIO_FILE_STRING) != NULL) {
-			[myInfo setObject:@"Audio" forKey:@"ID_FILE_FORMAT"];
+			info->fileFormat = @"Audio";
 			continue; 							// continue on next line	
 		}
 		// get format of movie
 		tempPtr = strstr(stringPtr, " file format detected.");
 		if (tempPtr != NULL) {
 			*(tempPtr) = '\0';
-			[myInfo setObject:[NSString stringWithCString:stringPtr] forKey:@"ID_FILE_FORMAT"];
+			info->fileFormat = [NSString stringWithCString:stringPtr];
 			continue; 							// continue on next line	
 		}
 		
@@ -1651,15 +1731,209 @@
 			continue; 							// continue on next line	
 		}
 		
-		// getting -identif parameters
-		if (strncmp(stringPtr, "ID_", 3) == 0)
+		// getting length
+		result = [self parseDefine:@"ID_LENGTH=" inLine:line];
+		if (result != nil) {
+			info->length = [result intValue];
+			continue;
+		}
+		
+		// movie width and height
+		result = [self parseDefine:@"ID_VIDEO_WIDTH=" inLine:line];
+		if (result != nil) {
+			info->width = [result intValue];
+			continue;
+		}
+		result = [self parseDefine:@"ID_VIDEO_HEIGHT=" inLine:line];
+		if (result != nil) {
+			info->height = [result intValue];
+			continue;
+		}
+		
+		// filename
+		result = [self parseDefine:@"ID_FILENAME=" inLine:line];
+		if (result != nil) {
+			info->filename = result;
+			continue;
+		}
+		
+		// video format
+		result = [self parseDefine:@"ID_VIDEO_FORMAT=" inLine:line];
+		if (result != nil) {
+			info->videoForamt = result;
+			continue;
+		}
+		
+		// video codec
+		result = [self parseDefine:@"ID_VIDEO_CODEC=" inLine:line];
+		if (result != nil) {
+			info->videoCodec = result;
+			continue;
+		}
+		
+		// video bitrate
+		result = [self parseDefine:@"ID_VIDEO_BITRATE=" inLine:line];
+		if (result != nil) {
+			info->videoBitrate = [result intValue];
+			continue;
+		}
+		
+		// video fps
+		result = [self parseDefine:@"ID_VIDEO_FPS=" inLine:line];
+		if (result != nil) {
+			info->videoFPS = [result floatValue];
+			continue;
+		}
+		
+		// video aspect
+		result = [self parseDefine:@"ID_VIDEO_ASPECT=" inLine:line];
+		if (result != nil) {
+			info->videoAspect = [result floatValue];
+			continue;
+		}
+		
+		// audio format
+		result = [self parseDefine:@"ID_AUDIO_FORMAT=" inLine:line];
+		if (result != nil) {
+			info->audioFormat = result;
+			continue;
+		}
+		
+		// audio codec
+		result = [self parseDefine:@"ID_AUDIO_CODEC=" inLine:line];
+		if (result != nil) {
+			info->audioCodec = result;
+			continue;
+		}
+		
+		// audio bitrate
+		result = [self parseDefine:@"ID_AUDIO_BITRATE=" inLine:line];
+		if (result != nil) {
+			info->audioBitrate = [result intValue];
+			continue;
+		}
+		
+		// audio sample rate
+		result = [self parseDefine:@"ID_AUDIO_RATE=" inLine:line];
+		if (result != nil) {
+			info->audioSampleRate = [result intValue];
+			continue;
+		}
+		
+		// audio channels
+		result = [self parseDefine:@"ID_AUDIO_NCH=" inLine:line];
+		if (result != nil) {
+			info->audioChannels = [result intValue];
+			continue;
+		}
+		
+		// video streams
+		result = [self parseDefine:@"ID_VIDEO_ID=" inLine:line];
+		if (result != nil) {
+			[info newVideoStream:[result intValue]];
+			continue;
+		}
+		
+		result = [self parseDefine:@"ID_VID_" inLine:line];
+		if (result != nil) {
+			
+			unsigned int videoStreamId = [result intValue];
+			
+			if (videoStreamId < 10)
+				result = [result substringFromIndex:1];
+			else
+				result = [result substringFromIndex:2];
+			
+			if ([result hasPrefix:@"_NAME"]) {
+				
+				[info setVideoStreamName:[result substringFromIndex:6] forId:videoStreamId];
+				continue;
+			}
+			
+		}
+		
+		// audio streams
+		result = [self parseDefine:@"ID_AUDIO_ID=" inLine:line];
+		if (result != nil) {
+			[info newAudioStream:[result intValue]];
+			continue;
+		}
+		
+		result = [self parseDefine:@"ID_AID_" inLine:line];
+		if (result != nil) {
+			
+			unsigned int audioStreamId = [result intValue];
+			
+			if (audioStreamId < 10)
+				result = [result substringFromIndex:1];
+			else
+				result = [result substringFromIndex:2];
+			
+			if ([result hasPrefix:@"_NAME"]) {
+				
+				[info setAudioStreamName:[result substringFromIndex:6] forId:audioStreamId];
+				continue;
+			} else if ([result hasPrefix:@"_LANG"]) {
+				
+				[info setAudioStreamLanguage:[result substringFromIndex:6] forId:audioStreamId];
+				continue;
+			}
+			
+		}
+		
+		// subtitle demux streams
+		result = [self parseDefine:@"ID_SUBTITLE_ID=" inLine:line];
+		if (result != nil) {
+			[info newSubtitleStream:[result intValue] forType:SubtitleTypeDemux];
+			continue;
+		}
+		
+		result = [self parseDefine:@"ID_SID_" inLine:line];
+		if (result != nil) {
+			
+			unsigned int subtitleStreamId = [result intValue];
+			
+			if (subtitleStreamId < 10)
+				result = [result substringFromIndex:1];
+			else
+				result = [result substringFromIndex:2];
+			
+			if ([result hasPrefix:@"_NAME"]) {
+				
+				[info setSubtitleStreamName:[result substringFromIndex:6] forId:subtitleStreamId andType:SubtitleTypeDemux];
+				continue;
+			} else if ([result hasPrefix:@"_LANG"]) {
+				
+				[info setSubtitleStreamLanguage:[result substringFromIndex:6] forId:subtitleStreamId andType:SubtitleTypeDemux];
+				continue;
+			}
+			
+		}
+		
+		// subtitle file streams
+		result = [self parseDefine:@"ID_FILE_SUB_ID=" inLine:line];
+		if (result != nil) {
+			[info newSubtitleStream:[result intValue] forType:SubtitleTypeFile];
+			subtitleFileId = [result intValue];
+			continue;
+		}
+		
+		result = [self parseDefine:@"ID_FILE_SUB_FILENAME=" inLine:line];
+		if (result != nil) {
+			
+			[info setSubtitleStreamName:[result lastPathComponent] forId:subtitleFileId andType:SubtitleTypeFile];
+			continue;
+		}
+		
+		// getting other unparsed -identify parameters
+		if ([line length] > 3 && [[line substringToIndex: 3] isEqualToString:@"ID_"])
 		{
-			char *valString = strchr(stringPtr, '=');	// find the equation mark
-			if (valString != NULL)
+			NSArray *parts = [line componentsSeparatedByString:@"="];
+			
+			if ([parts count] == 2)
 			{
-				*valString = '\0';					// replace it with null char
-				valString++;						// and the value starts by next char
-				[myInfo setObject:[NSString stringWithCString:valString] forKey:[NSString stringWithCString:stringPtr]];
+				NSLog(@"IDENTIFY: %@ = %@ (%@)",[[parts objectAtIndex:0] substringFromIndex:3],[parts objectAtIndex:1],line);
+				[info setInfo:[parts objectAtIndex:1] forKey:[[parts objectAtIndex:0] substringFromIndex:3]];
 			}
 			continue; 							// continue on next line	
 		}
@@ -1693,6 +1967,7 @@
 		
 		// print unused output
 		printf("%s\n",stringPtr);
+		
 	} // while
 	
 	// post notification if there is anything in user info
@@ -1705,7 +1980,55 @@
 		[userInfo removeAllObjects];
 	}
 
-	free((char *)dataPtr);
+	//free((char *)dataPtr);
+	[data release];
+	[pool release];
+}
+
+-(NSString *)parseDefine:(NSString *)searchFor inLine:(NSString *)line {
+	
+	if ([line length] > [searchFor length] && [[line substringToIndex: [searchFor length]] isEqualToString:searchFor]) {
+		return [line substringFromIndex:[searchFor length]];
+	} else
+		return nil;
+}
+
+-(NSArray *)splitString:(NSString *)string byCharactersInSet:(NSCharacterSet *)set {
+	
+	NSAutoreleasePool * pool = [NSAutoreleasePool new];
+	NSMutableArray * result = [NSMutableArray array];
+	NSScanner * scanner = [NSScanner scannerWithString:string];
+	NSString * chunk = nil;
+	BOOL endsWithMatch;
+	
+	// Don't ignore whitespace and newlines
+	[scanner setCharactersToBeSkipped: nil];
+	
+	// Check beginning of string for match
+	if ([scanner scanCharactersFromSet:set intoString:NULL]) {
+		
+		[result addObject:@""];
+	}
+	
+	// Loop over string and split
+	while([scanner scanUpToCharactersFromSet:set intoString:&chunk]) {
+		
+		[result addObject:chunk];
+		// Scan to the end of character occurences
+		endsWithMatch = [scanner scanCharactersFromSet:set intoString:NULL];
+	}
+	
+	// Check end of string for match
+	if (endsWithMatch) {
+		
+		[result addObject: @""];
+	}
+	
+	result = [result copy];
+	[pool release];
+	result = [result autorelease];
+	return result; 
+	
 }
 
 @end

@@ -84,7 +84,7 @@
 		377E037E085E482B00D64A26 /* PlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E0376085E482B00D64A26 /* PlayerController.m */; };
 		377E0380085E482B00D64A26 /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E037A085E482B00D64A26 /* PreferencesController.m */; };
 		377E0381085E482B00D64A26 /* SettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E037C085E482B00D64A26 /* SettingsController.m */; };
-		378749400891B7A60068D97D /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 378749150891B7A60068D97D /* Fonts */; };
+		378749400891B7A60068D97D /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 378749150891B7A60068D97D /* fonts */; };
 		379740A10875CA980049E91B /* VideoOpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 379740A00875CA980049E91B /* VideoOpenGLView.m */; };
 		37B934DC088FDF9200C81536 /* PlaylistTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 37B934DB088FDF9200C81536 /* PlaylistTableView.m */; };
 		37BFD48F0CCD7D5900FCABD6 /* External_Binaries in Resources */ = {isa = PBXBuildFile; fileRef = 37BFD48B0CCD7D5900FCABD6 /* External_Binaries */; };
@@ -111,6 +111,9 @@
 		37EA4ABE086220530026216A /* volumeKnobOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 37EA4ABD086220520026216A /* volumeKnobOn.png */; };
 		37EA4B6C086256590026216A /* VolumeSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 37EA4AA4086214030026216A /* VolumeSlider.m */; };
 		37EA4BC2086271480026216A /* scrub_bar_anim.png in Resources */ = {isa = PBXBuildFile; fileRef = 37EA4BC1086271480026216A /* scrub_bar_anim.png */; };
+		3A0943290E44F8E300E6753F /* MovieInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A0943280E44F8E300E6753F /* MovieInfo.m */; };
+		3A09436C0E45043000E6753F /* LanguageCodes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A09436B0E45043000E6753F /* LanguageCodes.m */; };
+		3A0943FC0E450E3500E6753F /* iso-639-3.tab in Resources */ = {isa = PBXBuildFile; fileRef = 3A0943FB0E450E3500E6753F /* iso-639-3.tab */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
@@ -158,7 +161,7 @@
 		377E037A085E482B00D64A26 /* PreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = PreferencesController.m; path = Sources/Controllers/PreferencesController.m; sourceTree = "<group>"; };
 		377E037B085E482B00D64A26 /* SettingsController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SettingsController.h; path = Sources/Controllers/SettingsController.h; sourceTree = "<group>"; };
 		377E037C085E482B00D64A26 /* SettingsController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SettingsController.m; path = Sources/Controllers/SettingsController.m; sourceTree = "<group>"; };
-		378749150891B7A60068D97D /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = Resources/Fonts; sourceTree = "<group>"; };
+		378749150891B7A60068D97D /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fonts; path = Resources/fonts; sourceTree = "<group>"; };
 		3797409F0875CA980049E91B /* VideoOpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = VideoOpenGLView.h; path = Sources/Classes/VideoOpenGLView.h; sourceTree = "<group>"; };
 		379740A00875CA980049E91B /* VideoOpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = VideoOpenGLView.m; path = Sources/Classes/VideoOpenGLView.m; sourceTree = "<group>"; };
 		37B934DA088FDF9200C81536 /* PlaylistTableView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PlaylistTableView.h; path = Sources/Classes/PlaylistTableView.h; sourceTree = "<group>"; };
@@ -189,6 +192,11 @@
 		37EA4AB5086218D50026216A /* volumeKnobOff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = volumeKnobOff.png; path = Resources/Graphics/volumeKnobOff.png; sourceTree = "<group>"; };
 		37EA4ABD086220520026216A /* volumeKnobOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = volumeKnobOn.png; path = Resources/Graphics/volumeKnobOn.png; sourceTree = "<group>"; };
 		37EA4BC1086271480026216A /* scrub_bar_anim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = scrub_bar_anim.png; path = Resources/Graphics/scrub_bar_anim.png; sourceTree = "<group>"; };
+		3A0943270E44F8E300E6753F /* MovieInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MovieInfo.h; path = Sources/Classes/MovieInfo.h; sourceTree = "<group>"; };
+		3A0943280E44F8E300E6753F /* MovieInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MovieInfo.m; path = Sources/Classes/MovieInfo.m; sourceTree = "<group>"; };
+		3A09436A0E45043000E6753F /* LanguageCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LanguageCodes.h; path = Sources/Classes/LanguageCodes.h; sourceTree = "<group>"; };
+		3A09436B0E45043000E6753F /* LanguageCodes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LanguageCodes.m; path = Sources/Classes/LanguageCodes.m; sourceTree = "<group>"; };
+		3A0943FB0E450E3500E6753F /* iso-639-3.tab */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "iso-639-3.tab"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* MPlayer OSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MPlayer OSX.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -225,6 +233,10 @@
 				379740A00875CA980049E91B /* VideoOpenGLView.m */,
 				37C093EB088429AE00D06F8B /* PlayerWindow.m */,
 				37C093EC088429AE00D06F8B /* PlayerWindow.h */,
+				3A0943270E44F8E300E6753F /* MovieInfo.h */,
+				3A0943280E44F8E300E6753F /* MovieInfo.m */,
+				3A09436A0E45043000E6753F /* LanguageCodes.h */,
+				3A09436B0E45043000E6753F /* LanguageCodes.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -277,9 +289,10 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3A0943FB0E450E3500E6753F /* iso-639-3.tab */,
 				37BFD48B0CCD7D5900FCABD6 /* External_Binaries */,
 				371875E50B2307130096E1ED /* MPlayer OSX PPC-Info.plist */,
-				378749150891B7A60068D97D /* Fonts */,
+				378749150891B7A60068D97D /* fonts */,
 				37DCF89608886A2800DBF422 /* ffwd_button_off.png */,
 				37DCF89708886A2800DBF422 /* ffwd_button_on.png */,
 				37DCF880088868B300DBF422 /* gotob_button_off.png */,
@@ -342,11 +355,11 @@
 		377E0372085E481700D64A26 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				372E8238086A43CD00FC39B4 /* PlayerController.h */,
 				372E8224086A431900FC39B4 /* PlayListController.h */,
 				372E8225086A431900FC39B4 /* PlayListController.m */,
 				377E0373085E482B00D64A26 /* AppController.h */,
 				377E0374085E482B00D64A26 /* AppController.m */,
+				372E8238086A43CD00FC39B4 /* PlayerController.h */,
 				377E0376085E482B00D64A26 /* PlayerController.m */,
 				377E0379085E482B00D64A26 /* PreferencesController.h */,
 				377E037A085E482B00D64A26 /* PreferencesController.m */,
@@ -449,8 +462,9 @@
 				37DCF893088868B400DBF422 /* stop_button_on.png in Resources */,
 				37DCF89808886A2800DBF422 /* ffwd_button_off.png in Resources */,
 				37DCF89908886A2800DBF422 /* ffwd_button_on.png in Resources */,
-				378749400891B7A60068D97D /* Fonts in Resources */,
+				378749400891B7A60068D97D /* fonts in Resources */,
 				37BFD48F0CCD7D5900FCABD6 /* External_Binaries in Resources */,
+				3A0943FC0E450E3500E6753F /* iso-639-3.tab in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -528,6 +542,8 @@
 				379740A10875CA980049E91B /* VideoOpenGLView.m in Sources */,
 				37C093ED088429AE00D06F8B /* PlayerWindow.m in Sources */,
 				37B934DC088FDF9200C81536 /* PlaylistTableView.m in Sources */,
+				3A0943290E44F8E300E6753F /* MovieInfo.m in Sources */,
+				3A09436C0E45043000E6753F /* LanguageCodes.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
