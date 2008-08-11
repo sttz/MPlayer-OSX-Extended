@@ -93,6 +93,7 @@
 	useIdentifyForPlayback = NO;
 	myOutputReadMode = 0;
 	myUpdateStatistics = NO;
+	isPreflight = NO;
 	
 	windowedVO = NO;
 	isFullscreen = NO;
@@ -1121,22 +1122,18 @@
 	useIdentifyForPlayback = aBool;
 }
 /************************************************************************************/
-- (MovieInfo *) loadInfo
+- (void) loadInfo
 {
 	// clear the class
 	[info release];
 	info = [[MovieInfo alloc] init];
 	
+	// Set preflight mode
+	isPreflight = YES;
+	NSLog(@"load info: %@",myMovieFile);
 	// run mplayer for identify
 	if (myMovieFile)
 		[self runMplayerWithParams:[NSArray arrayWithObjects:myMovieFile, @"-msglevel", @"identify=4:demux=6", @"-frames",@"0", @"-ao", @"null", @"-vo", @"null", nil]];
-	
-	// wait until it exits
-	[self waitUntilExit];
-	
-	if ([info containsInfo])
-		return info;
-	return nil;
 }
 /************************************************************************************/
 - (MovieInfo *) info
@@ -1208,6 +1205,7 @@
  ************************************************************************************/
 - (void)sendCommand:(NSString *)aCommand
 {
+	//NSLog(@"Command: %@",aCommand);
 	[self sendToMplayersInput:[aCommand stringByAppendingString:@"\n"]];
 }
 /************************************************************************************/
@@ -1360,6 +1358,7 @@
 		}
 		restartingPlayer = NO;
 		isRunning = NO;
+		isPreflight = NO;
 	}
 	
 	returnCode = [myMplayerTask terminationStatus];
@@ -1388,7 +1387,6 @@
 /************************************************************************************/
 - (void)readOutputC:(NSNotification *)notification
 {
-	
 	NSAutoreleasePool * pool = [NSAutoreleasePool new];
 	
 	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
@@ -1446,7 +1444,8 @@
 		// check if end reached (save last unfinished line)
 		if (lineIndex >= [myLines count] - 1) {
 			[lastUnparsedLine release];
-			lastUnparsedLine = [[myLines objectAtIndex:lineIndex] retain];
+			if (lineIndex < [myLines count])
+				lastUnparsedLine = [[myLines objectAtIndex:lineIndex] retain];
 			break;
 		}
 		// load line
@@ -1655,7 +1654,17 @@
 			[[NSNotificationCenter defaultCenter] removeObserver:self
 					name: NSFileHandleReadCompletionNotification
 					object:[[myMplayerTask standardOutput] fileHandleForReading]];
-
+			
+			// post notification for finish of parsing
+			NSMutableDictionary *preflightInfo = [NSMutableDictionary dictionaryWithCapacity:2];
+			[preflightInfo setObject:myMovieFile forKey:@"MovieFile"];
+			[preflightInfo setObject:info forKey:@"MovieInfo"];
+			
+			[[NSNotificationCenter defaultCenter]
+				 postNotificationName:@"MIFinishedParsing"
+				 object:self
+				 userInfo:preflightInfo];
+			
 			// when player is not restarting
 			if (!restartingPlayer) {
 				// save value to userInfo
@@ -1706,14 +1715,14 @@
 		}
 		// get format of audio
 		if (strstr(stringPtr, MI_AUDIO_FILE_STRING) != NULL) {
-			info->fileFormat = @"Audio";
+			[info setFileFormat:@"Audio"];
 			continue; 							// continue on next line	
 		}
 		// get format of movie
 		tempPtr = strstr(stringPtr, " file format detected.");
 		if (tempPtr != NULL) {
 			*(tempPtr) = '\0';
-			info->fileFormat = [NSString stringWithCString:stringPtr];
+			[info setFileFormat:[NSString stringWithCString:stringPtr]];
 			continue; 							// continue on next line	
 		}
 		
@@ -1734,96 +1743,96 @@
 		// getting length
 		result = [self parseDefine:@"ID_LENGTH=" inLine:line];
 		if (result != nil) {
-			info->length = [result intValue];
+			[info setLength:[result intValue]];
 			continue;
 		}
 		
 		// movie width and height
 		result = [self parseDefine:@"ID_VIDEO_WIDTH=" inLine:line];
 		if (result != nil) {
-			info->width = [result intValue];
+			[info setVideoWidth:[result intValue]];
 			continue;
 		}
 		result = [self parseDefine:@"ID_VIDEO_HEIGHT=" inLine:line];
 		if (result != nil) {
-			info->height = [result intValue];
+			[info setVideoHeight:[result intValue]];
 			continue;
 		}
 		
 		// filename
 		result = [self parseDefine:@"ID_FILENAME=" inLine:line];
 		if (result != nil) {
-			info->filename = result;
+			[info setFilename:result];
 			continue;
 		}
 		
 		// video format
 		result = [self parseDefine:@"ID_VIDEO_FORMAT=" inLine:line];
 		if (result != nil) {
-			info->videoForamt = result;
+			[info setVideoFormat:result];
 			continue;
 		}
 		
 		// video codec
 		result = [self parseDefine:@"ID_VIDEO_CODEC=" inLine:line];
 		if (result != nil) {
-			info->videoCodec = result;
+			[info setVideoCodec:result];
 			continue;
 		}
 		
 		// video bitrate
 		result = [self parseDefine:@"ID_VIDEO_BITRATE=" inLine:line];
 		if (result != nil) {
-			info->videoBitrate = [result intValue];
+			[info setVideoBitrate:[result intValue]];
 			continue;
 		}
 		
 		// video fps
 		result = [self parseDefine:@"ID_VIDEO_FPS=" inLine:line];
 		if (result != nil) {
-			info->videoFPS = [result floatValue];
+			[info setVideoFps:[result floatValue]];
 			continue;
 		}
 		
 		// video aspect
 		result = [self parseDefine:@"ID_VIDEO_ASPECT=" inLine:line];
 		if (result != nil) {
-			info->videoAspect = [result floatValue];
+			[info setVideoAspect:[result floatValue]];
 			continue;
 		}
 		
 		// audio format
 		result = [self parseDefine:@"ID_AUDIO_FORMAT=" inLine:line];
 		if (result != nil) {
-			info->audioFormat = result;
+			[info setAudioFormat:result];
 			continue;
 		}
 		
 		// audio codec
 		result = [self parseDefine:@"ID_AUDIO_CODEC=" inLine:line];
 		if (result != nil) {
-			info->audioCodec = result;
+			[info setAudioCodec:result];
 			continue;
 		}
 		
 		// audio bitrate
 		result = [self parseDefine:@"ID_AUDIO_BITRATE=" inLine:line];
 		if (result != nil) {
-			info->audioBitrate = [result intValue];
+			[info setAudioBitrate:[result intValue]];
 			continue;
 		}
 		
 		// audio sample rate
 		result = [self parseDefine:@"ID_AUDIO_RATE=" inLine:line];
 		if (result != nil) {
-			info->audioSampleRate = [result intValue];
+			[info setAudioSampleRate:[result floatValue]];
 			continue;
 		}
 		
 		// audio channels
 		result = [self parseDefine:@"ID_AUDIO_NCH=" inLine:line];
 		if (result != nil) {
-			info->audioChannels = [result intValue];
+			[info setAudioChannels:[result intValue]];
 			continue;
 		}
 		
@@ -1971,7 +1980,7 @@
 	} // while
 	
 	// post notification if there is anything in user info
-	if ([userInfo count] > 0) {
+	if (!isPreflight && [userInfo count] > 0) {
 		// post notification
 		[[NSNotificationCenter defaultCenter]
 				postNotificationName:@"MIStateUpdatedNotification"

@@ -32,11 +32,12 @@ typedef enum _SubtitleType {
 	// Chapter Streams
 	NSMutableDictionary *chapter;
 	
-@public
-	
 	// name
 	NSString *filename;
 	NSString *name;
+	NSString *filesize;
+	NSString *fileModificationDate;
+	NSString *fileCreationDate;
 	
 	// formats
 	NSString *fileFormat;
@@ -45,8 +46,8 @@ typedef enum _SubtitleType {
 	NSString *videoForamt;
 	NSString *videoCodec;
 	unsigned int videoBitrate;
-	unsigned int width;
-	unsigned int height;
+	unsigned int videoWidth;
+	unsigned int videoHeight;
 	float videoFPS;
 	float videoAspect;
 	
@@ -54,7 +55,7 @@ typedef enum _SubtitleType {
 	NSString *audioFormat;
 	NSString *audioCodec;
 	unsigned int audioBitrate;
-	unsigned int audioSampleRate;
+	float audioSampleRate;
 	unsigned int audioChannels;
 	
 	// length
@@ -72,6 +73,41 @@ typedef enum _SubtitleType {
 // format methods
 -(BOOL)isVideo;
 
+// basic info
+-(void)setFilename:(NSString *)aString;
+-(NSString *)filename;
+-(void)setFileFormat:(NSString *)aString;
+-(NSString *)fileFormat;
+
+-(void)setVideoFormat:(NSString *)aString;
+-(NSString *)videoForamt;
+-(void)setVideoCodec:(NSString *)aString;
+-(NSString *)videoCodec;
+-(void)setVideoBitrate:(unsigned int)aUint;
+-(unsigned int)videoBitrate;
+-(void)setVideoWidth:(unsigned int)aUint;
+-(unsigned int)videoWidth;
+-(void)setVideoHeight:(unsigned int)aUint;
+-(unsigned int)videoHeight;
+-(void)setVideoFps:(float)aFloat;
+-(float)videoFps;
+-(void)setVideoAspect:(float)aFloat;
+-(float)videoAspect;
+
+-(void)setAudioFormat:(NSString *)aString;
+-(NSString *)audioForamt;
+-(void)setAudioCodec:(NSString *)aString;
+-(NSString *)audioCodec;
+-(void)setAudioBitrate:(unsigned int)aUint;
+-(unsigned int)audioBitrate;
+-(void)setAudioSampleRate:(float)aFloat;
+-(float)audioSampleRate;
+-(void)setAudioChannels:(unsigned int)aUint;
+-(unsigned int)audioChannels;
+
+-(void)setLength:(unsigned int)aUint;
+-(unsigned int)length;
+  
 // Set and get info
 -(void)setInfo:(NSString *)value forKey:(NSString *)key;
 -(NSString *)getInfoForKey:(NSString *)key;

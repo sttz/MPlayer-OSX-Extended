@@ -53,27 +53,8 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	[playListTable setDoubleAction:@selector(doubleClick:)];
 	[playListTable setVerticalMotionCanBeginDrag:YES];
 	
-	// load playlist from preferences
-	if ((NSArray *)CFPreferencesCopyAppValue((CFStringRef)@"PlayList", kCFPreferencesCurrentApplication))
-	{
-		int i;
-		// if play list exists load playlist from preferences
-		NSArray * tmpArray = [[NSMutableArray alloc] initWithArray:(NSArray *)CFPreferencesCopyAppValue((CFStringRef)@"PlayList", kCFPreferencesCurrentApplication)];
-		myData = [[NSMutableArray alloc] init];
-		
-		//make item mutable
-		for(i=0; i<[tmpArray count]; i++)
-		{
-			[myData addObject: [(NSDictionary *)[tmpArray objectAtIndex:i] mutableCopy] ];
-		}
-		
-		[tmpArray release];
-	}
-	else
-	{
-		// if no playilist found
-		myData = [[NSMutableArray alloc] init];	// create new one
-	}
+	// create preflight queue
+	preflightQueue = [[NSMutableArray alloc] init];
 	
     // register for dragged types
 	[playListTable registerForDraggedTypes:[NSArray 
@@ -100,6 +81,12 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 			selector: @selector(updateView) 
 			name: NSTableViewSelectionDidChangeNotification
 			object:playListTable];
+	
+	// register for end of preflight notification
+	[[NSNotificationCenter defaultCenter] addObserver: self
+			selector: @selector(processResultOfPreflight:) 
+			name: @"MIFinishedParsing"
+			object:[playerController preflightInterface]];
 	
 	// preset status column for displaying pictures
 	[[playListTable tableColumnWithIdentifier:@"status"] setDataCell:[[NSImageCell alloc] initImageCell:nil]];
@@ -156,11 +143,10 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
     [toolbar setDisplayMode: NSToolbarDisplayModeIconOnly];
     [playListWindow setToolbar:toolbar];
 	
-	//display if set in pref
-	if ([[appController preferences] objectForKey:@"PlaylistOnStartup"]) 
+	//display if set in pref or if playlist was opened on last quit
+	if ([[appController preferences] boolForKey:@"PlaylistOnStartup"] || [[appController preferences] boolForKey:@"PlaylistOpen"]) 
 	{
-		if ([[appController preferences] boolForKey:@"PlaylistOnStartup"])
-			[self displayWindow:nil];
+		[self displayWindow:nil];
 	}
 }
 
@@ -230,9 +216,11 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 /************************************************************************************/
 - (void) appendItem:(NSMutableDictionary *)anItem
 {
-	if (anItem)
-		[myData addObject:anItem];
-			[playListTable reloadData];
+	if (anItem) {
+		
+		[preflightQueue addObject:anItem];
+		[playerController preflightItem:anItem];
+	}
 
 }
 /************************************************************************************/
@@ -301,9 +289,9 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	//get total time
 	for(i=0; i<[myData count]; i++)
 	{
-		if ([MovieInfo fromDictionary:[myData objectAtIndex:i]]->length > 0)
+		if ([[MovieInfo fromDictionary:[myData objectAtIndex:i]] length] > 0)
 		{
-			totalTime += [MovieInfo fromDictionary:[myData objectAtIndex:i]]->length;
+			totalTime += [[MovieInfo fromDictionary:[myData objectAtIndex:i]] length];
 		}
 	}
 
@@ -433,8 +421,8 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	}
 	// movie length column
 	if ([[tableColumn identifier] isEqualToString:@"time"]) {
-		if ([MovieInfo fromDictionary:[myData objectAtIndex:row]]->length > 0) {
-			int seconds = [MovieInfo fromDictionary:[myData objectAtIndex:row]]->length;
+		if ([[MovieInfo fromDictionary:[myData objectAtIndex:row]] length] > 0) {
+			int seconds = [[MovieInfo fromDictionary:[myData objectAtIndex:row]] length];
 			return [NSString stringWithFormat:@"%01d:%02d:%02d",
 					seconds/3600,(seconds%3600)/60,seconds%60];
 		}
@@ -640,8 +628,17 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 					[filenameBox setStringValue:[[insertList objectAtIndex:i] lastPathComponent]];
 					[progressBar setDoubleValue:(i+1)];
 				}
+				
+				// save insert row
+				[myItem	setObject:[NSNumber numberWithInt:insertIndex] forKey:@"InsertIndex"];
+				
+				// add to queue
+				[preflightQueue addObject:myItem];
+				
+				insertIndex++;
+				
 				// preflight the item and insert it if ok
-				if ([playerController preflightItem:myItem])
+				/*if ([playerController preflightItem:myItem])
 				{
 					// insert item in to playlist
 					[myData insertObject:myItem atIndex:insertIndex];
@@ -652,7 +649,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 						[tv selectRow:insertIndex byExtendingSelection:YES];
 
 					insertIndex++;
-				}
+				}*/
 			}
 			// if progress was created then release it
 			if (progressSession != 0)
@@ -662,8 +659,63 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 			}
 		}
     }
+	
+	// start to preflight items
+	if ([preflightQueue count] > 0)
+		[playerController preflightItem:[preflightQueue objectAtIndex:0]];
+	
 	[self updateView];
 	return YES;
+}
+
+- (void) processResultOfPreflight:(NSNotification *)notification {
+	
+	// process item
+	if ([notification userInfo] && [[notification userInfo] objectForKey:@"MovieInfo"] && [[notification userInfo] objectForKey:@"MovieFile"]) {
+		
+		// find item in queue
+		int i, queueIndex = -1;
+		for (i = 0; i < [preflightQueue count]; i++) {
+			if ([[preflightQueue objectAtIndex:i] objectForKey:@"MovieFile"] == [[notification userInfo] objectForKey:@"MovieFile"]) {
+				queueIndex = i;
+				break;
+			}
+		}
+		
+		// extract movieinfo
+		MovieInfo *info = [MovieInfo fromDictionary:[notification userInfo]];
+		
+		// check if found and if preflight was successful
+		if (queueIndex > -1 && [info containsInfo]) {
+			
+			// save MovieInfo
+			[[preflightQueue objectAtIndex:queueIndex] setObject:info forKey:@"MovieInfo"];
+			
+			int insertIndex;
+			if ([[preflightQueue objectAtIndex:queueIndex] objectForKey:@"InsertIndex"])
+				insertIndex = [[[preflightQueue objectAtIndex:queueIndex] objectForKey:@"InsertIndex"] intValue];
+			else
+				insertIndex = [myData count];
+			
+			// insert item in to playlist
+			[myData insertObject:[preflightQueue objectAtIndex:queueIndex] atIndex:insertIndex];
+			// manage selection
+			if ([playListTable selectedRow] == -1)
+				[playListTable selectRow:insertIndex byExtendingSelection:NO];
+			else
+				[playListTable selectRow:insertIndex byExtendingSelection:YES];
+			
+		}
+		
+		// remove item from queue
+		[preflightQueue removeObjectAtIndex:queueIndex];
+	}
+	
+	// process next item
+	if ([preflightQueue count] > 0)
+		[playerController preflightItem:[preflightQueue objectAtIndex:0]];
+	else
+		[self updateView];
 }
 /************************************************************************************/
 // handle drags inside the table
@@ -737,6 +789,34 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
  ************************************************************************************/
 - (void) appFinishedLaunching
 {
+	// load playlist from preferences
+	if ((NSArray *)CFPreferencesCopyAppValue((CFStringRef)@"PlayList", kCFPreferencesCurrentApplication))
+	{
+		int i;
+		// if play list exists load playlist from preferences
+		NSArray * tmpArray = [[NSMutableArray alloc] initWithArray:(NSArray *)CFPreferencesCopyAppValue((CFStringRef)@"PlayList", kCFPreferencesCurrentApplication)];
+		myData = [[NSMutableArray alloc] init];
+		
+		//make item mutable
+		for(i=0; i<[tmpArray count]; i++)
+		{
+			// add to preflight queue
+			[preflightQueue addObject:[(NSDictionary *)[tmpArray objectAtIndex:i] mutableCopy]];
+			//[myData addObject: [(NSDictionary *)[tmpArray objectAtIndex:i] mutableCopy] ];
+		}
+		
+		// preflight first item
+		if ([preflightQueue count] > 0)
+			[playerController preflightItem:[preflightQueue objectAtIndex:0]];
+		
+		[tmpArray release];
+	}
+	else
+	{
+		// if no playilist found
+		myData = [[NSMutableArray alloc] init];	// create new one
+	}
+	
 	[self applyPrefs];
 }
 /************************************************************************************/
@@ -748,6 +828,15 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 /************************************************************************************/
 - (void)appTerminating
 {
+	// save current playlist window state
+	[[appController preferences] setBool:[playListWindow isVisible] forKey:@"PlaylistOpen"];
+	
+	// Remove MovieInfo from items
+	int i;
+	for (i = 0; i < [myData count]; i++) {
+		[[myData objectAtIndex:i] removeObjectForKey:@"MovieInfo"];
+	}
+	
 	// save playlist to prefs
 	CFPreferencesSetAppValue((CFStringRef)@"PlayList", (CFPropertyListRef)myData, kCFPreferencesCurrentApplication);
 	CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication);
@@ -758,6 +847,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	[playMode0Image release];
 	[playMode1Image release];
 	[playMode2Image release];
+	
  }
 
 - (void)windowWillClose:(NSNotification *)aNotification
@@ -817,7 +907,8 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 // throw away our toolbar items dictionary
 - (void) dealloc
 {
-    [toolbarItems release];
+    [preflightQueue release];
+	[toolbarItems release];
     [super dealloc];
 }
 @end

@@ -29,9 +29,10 @@
 	subfile = [[NSMutableDictionary alloc] initWithCapacity:1];
 	chapter = [[NSMutableDictionary alloc] initWithCapacity:5];
 	
+	videoHeight = 0;
+	videoWidth = 0;
+	
 	length = 0;
-	width = 0;
-	height = 0;
 	
 	return [super init];
 }
@@ -56,12 +57,127 @@
 
 -(BOOL)containsInfo {
 	
-	return ([info count] > 0);
+	return (fileFormat != nil && filename != nil);
 }
 
 -(BOOL)isVideo {
 	
 	return (videoForamt != nil && videoForamt != @"");
+}
+
+// **************************************************** //
+
+-(void)setFilename:(NSString *)aString {
+	filename = [aString retain];
+	
+	// filesystem attributes
+	NSDictionary *attr = [[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES];
+	if (attr != nil) {
+		filesize = [attr objectForKey:NSFileSize];
+		fileModificationDate = [attr objectForKey:NSFileModificationDate];
+		fileCreationDate = [attr objectForKey:NSFileCreationDate];
+	}
+}
+-(NSString *)filename {
+	return filename;
+}
+
+-(void)setFileFormat:(NSString *)aString {
+	fileFormat = [aString retain];
+}
+-(NSString *)fileFormat {
+	return fileFormat;
+}
+
+-(void)setVideoFormat:(NSString *)aString {
+	videoForamt = [aString retain];
+}
+-(NSString *)videoForamt {
+	return videoForamt;
+}
+
+-(void)setVideoCodec:(NSString *)aString {
+	videoCodec = [aString retain];
+}
+-(NSString *)videoCodec {
+	return videoCodec;
+}
+
+-(void)setVideoBitrate:(unsigned int)aUint {
+	videoBitrate = aUint;
+}
+-(unsigned int)videoBitrate {
+	return videoBitrate;
+}
+
+-(void)setVideoWidth:(unsigned int)aUint {
+	videoWidth = aUint;
+}
+-(unsigned int)videoWidth {
+	return videoWidth;
+}
+
+-(void)setVideoHeight:(unsigned int)aUint {
+	videoHeight = aUint;
+}
+-(unsigned int)videoHeight {
+	return videoHeight;
+}
+
+-(void)setVideoFps:(float)aFloat {
+	videoFPS = aFloat;
+}
+-(float)videoFps {
+	return videoFPS;
+}
+
+-(void)setVideoAspect:(float)aFloat {
+	videoAspect = aFloat;
+}
+-(float)videoAspect {
+	return videoAspect;
+}
+
+-(void)setAudioFormat:(NSString *)aString {
+	audioFormat = [aString retain];
+}
+-(NSString *)audioForamt {
+	return audioFormat;
+}
+
+-(void)setAudioCodec:(NSString *)aString {
+	audioCodec = [aString retain];
+}
+-(NSString *)audioCodec {
+	return audioCodec;
+}
+
+-(void)setAudioBitrate:(unsigned int)aUint {
+	audioBitrate = aUint;
+}
+-(unsigned int)audioBitrate {
+	return audioBitrate;
+}
+
+-(void)setAudioSampleRate:(float)aFloat {
+	audioSampleRate = aFloat;
+}
+-(float)audioSampleRate {
+	return audioSampleRate;
+}
+
+-(void)setAudioChannels:(unsigned int)aUint {
+	audioChannels = aUint;
+}
+-(unsigned int)audioChannels {
+	return audioChannels;
+}
+
+-(void)setLength:(unsigned int)aUint {
+	length = aUint;
+}
+-(unsigned int)length {
+	return length;
 }
 
 // **************************************************** //
@@ -228,6 +344,10 @@
 	else
 		return subfile;
 }
+
+// **************************************************** //
+
+
 
 // **************************************************** //
 

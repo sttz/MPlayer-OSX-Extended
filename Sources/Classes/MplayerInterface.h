@@ -23,6 +23,7 @@
 	// 	@"MIPlayerTerminatedNotification"	mplayer has been terminated
 	// 	@"MIInfoReadyNotification"			notification has been updated
 	// 	@"MIStateUpdatedNotification"		status updated
+	// 	@"MIFinishedParsing"				parsing of output has finished
 
 // status update notification info keys
 	//	@"PlayerStatus"				NSNumber - int (player status constants)
@@ -130,6 +131,7 @@
 	
 	// properties
 	BOOL myRebuildIndex;
+	BOOL isPreflight;
 	
 	// state variables
 	int	myState;				// player state
@@ -248,7 +250,7 @@
 
 // info
 - (void) loadInfoBeforePlayback:(BOOL)aBool;		// enables using of -identify param for playback
-- (MovieInfo *) loadInfo;						// gets info returned by -identify (don't work during playback)
+- (void) loadInfo;						// gets info returned by -identify (don't work during playback)
 - (MovieInfo *) info;							// returns the content of info dictionary 
 - (int) status;
 - (float) seconds;									// returns number of seconds, elapsed

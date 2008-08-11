@@ -99,38 +99,41 @@
 		[encodingMenu selectItemWithTitle:NSLocalizedString(@"default",nil)];
 	
 	// info strings
+	MovieInfo *info = [MovieInfo fromDictionary:myItem];
+	
 	// file format
-	if ([myItem objectForKey:@"ID_FILE_FORMAT"])
-		[fileFormatBox setStringValue:[myItem objectForKey:@"ID_FILE_FORMAT"]];
+	NSLog(@"info: %@",info);
+	if ([info fileFormat])
+		[fileFormatBox setStringValue:[info fileFormat]];
 	else
 		[fileFormatBox setStringValue:NSLocalizedString(@"N/A",nil)];
 	
 	// movie file path
-	if ([myItem objectForKey:@"MovieFile"])
-		[movieFileBox setStringValue:[myItem objectForKey:@"MovieFile"]];
+	if ([info filename])
+		[movieFileBox setStringValue:[info filename]];
 	
 	// video format string
 	[theString setString:@""];
-	if ([myItem objectForKey:@"ID_VIDEO_FORMAT"]) {
-		[theString appendString:[myItem objectForKey:@"ID_VIDEO_FORMAT"]];
+	if ([info videoForamt]) {
+		[theString appendString:[info videoForamt]];
 		[theString appendString:@", "];
 	}
-	if ([myItem objectForKey:@"ID_VIDEO_BITRATE"]) {
+	if ([info videoBitrate] > 0) {
 		[theString appendString:
 				[NSString stringWithFormat:@"%3.1f kbps",
-						([[myItem objectForKey:@"ID_VIDEO_BITRATE"] floatValue]/1000)]];
+						([info videoBitrate]/1000)]];
 		[theString appendString:@", "];
 	}
-	if ([myItem objectForKey:@"ID_VIDEO_WIDTH"] && [myItem objectForKey:@"ID_VIDEO_HEIGHT"]) {
-		[theString appendString:[myItem objectForKey:@"ID_VIDEO_WIDTH"]];
+	if ([info videoWidth] > 0 && [info videoHeight] > 0) {
+		[theString appendString:[NSString stringWithFormat:@"%i",[info videoWidth]]];
 		[theString appendString:@" x "];
-		[theString appendString:[myItem objectForKey:@"ID_VIDEO_HEIGHT"]];
+		[theString appendString:[NSString stringWithFormat:@"%i",[info videoHeight]]];
 		[theString appendString:@", "];
 	}
-	if ([myItem objectForKey:@"ID_VIDEO_FPS"]) {
+	if ([info videoFps] > 0) {
 		[theString appendString:[NSString
 				stringWithFormat:@"%2.1f fps",
-					[[myItem objectForKey:@"ID_VIDEO_FPS"] floatValue]]];
+					[info videoFps]]];
 		[theString appendString:@", "];
 	}
 	if ([theString length] > 0)
@@ -141,25 +144,24 @@
 	
 	// audio format string
 	[theString setString:@""];
-	if ([myItem objectForKey:@"ID_AUDIO_CODEC"]) {
-		[theString appendString:[myItem objectForKey:@"ID_AUDIO_CODEC"]];
+	if ([info audioCodec]) {
+		[theString appendString:[info audioCodec]];
 		[theString appendString:@", "];
 	}
-	if ([myItem objectForKey:@"ID_AUDIO_BITRATE"]) {
+	if ([info audioBitrate] > 0) {
 		[theString appendString:
 				[NSString stringWithFormat:@"%d kbps",
-						([[myItem objectForKey:@"ID_AUDIO_BITRATE"] intValue]/1000)]];
+						([info audioBitrate]/1000)]];
 		[theString appendString:@", "];
 	}
-	if ([myItem objectForKey:@"ID_AUDIO_RATE"]) {
+	if ([info audioSampleRate] > 0) {
 		[theString appendString:
 				[NSString stringWithFormat:@"%2.1f kHz",
-						([[myItem objectForKey:@"ID_AUDIO_RATE"] floatValue]/1000)]];
+						([info audioSampleRate]/1000)]];
 		[theString appendString:@", "];
 	}
-	if ([myItem objectForKey:@"ID_AUDIO_NCH"]) {
-		int myInt = [[myItem objectForKey:@"ID_AUDIO_NCH"] intValue];
-		switch (myInt) {
+	if ([info audioChannels]) {
+		switch ([info audioChannels]) {
 		case 1 :
 			[theString appendString:@"Mono"];
 			break;
@@ -167,7 +169,7 @@
 			[theString appendString:@"Stereo"];
 			break;
 		default :
-			[theString appendString:[NSString stringWithFormat:@"%d chanels",myInt]];
+			[theString appendString:[NSString stringWithFormat:@"%d chanels",[info audioChannels]]];
 			break;
 		}
 		[theString appendString:@", "];
@@ -179,10 +181,9 @@
 		[audioFormatBox setStringValue:@"N/A"];
 	
 	// length string
-	if ([myItem objectForKey:@"ID_LENGTH"]) {
-		int seconds = [[myItem objectForKey:@"ID_LENGTH"] intValue];
+	if ([info length] > 0) {
 		[lengthBox setStringValue:[NSString stringWithFormat:@"%01d:%02d:%02d",
-				seconds/3600,(seconds%3600)/60,seconds%60]];
+				[info length]/3600,([info length]%3600)/60,[info length]%60]];
 	}
 	else
 		[lengthBox setStringValue:@"N/A"];

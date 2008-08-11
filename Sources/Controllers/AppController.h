@@ -26,6 +26,9 @@
 	IBOutlet id video_tsBox;
 	IBOutlet id video_tsbutton;
 	
+	IBOutlet id closeMenuItem;
+	IBOutlet id playerWindow;
+	
 	// other outlets
 	IBOutlet id theApp;
 }
@@ -48,6 +51,7 @@
 - (IBAction) applyLocation:(id)sender;
 - (IBAction) cancelLocation:(id)sender;
 - (IBAction) donate:(id)sender;
+- (IBAction) closeWindow:(id)sender;
 
 // bundle access
 - (NSArray *) typeExtensionsForName:(NSString *)typeName;

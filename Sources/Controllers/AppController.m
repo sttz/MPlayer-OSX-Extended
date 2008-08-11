@@ -122,8 +122,7 @@
 					setObject:[[[thePanel filenames] objectAtIndex:i]
 					stringByDeletingLastPathComponent]
 					forKey:@"DefaultDirectory"];
-			if ([playerController preflightItem:theItem])
-				[playListController appendItem:theItem];
+			[playListController appendItem:theItem];
 		}
     }
 }
@@ -236,6 +235,16 @@
 - (IBAction) donate:(id)sender
 {
 	[[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: @"https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=nicolas%2eplourde%40gmail%2ecom&item_name=MPlayer%20OSX%20Donation"]];
+}
+
+- (IBAction) closeWindow:(id)sender {
+	
+	if ([NSApp keyWindow]) {
+		if ([NSApp keyWindow] == playerWindow && [playerController isPlaying])
+			[playerController stop:self];
+		else
+			[[NSApp keyWindow] performClose:self];
+	}
 }
 
 /************************************************************************************

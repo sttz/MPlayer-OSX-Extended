@@ -123,6 +123,8 @@
 		<dict>
 			<key>ACTIONS</key>
 			<dict>
+				<key>audioMenuAction</key>
+				<string>id</string>
 				<key>changeVolume</key>
 				<string>id</string>
 				<key>displayStats</key>
@@ -141,9 +143,13 @@
 				<string>id</string>
 				<key>stop</key>
 				<string>id</string>
+				<key>subtitleMenuAction</key>
+				<string>id</string>
 				<key>switchFullscreen</key>
 				<string>id</string>
 				<key>takeScreenshot</key>
+				<string>id</string>
+				<key>videoMenuAction</key>
 				<string>id</string>
 			</dict>
 			<key>CLASS</key>
@@ -491,6 +497,8 @@
 				<string>id</string>
 				<key>cancelVIDEO_TSLocation</key>
 				<string>id</string>
+				<key>closeWindow</key>
+				<string>id</string>
 				<key>displayLogWindow</key>
 				<string>id</string>
 				<key>displayPlayList</key>
@@ -512,6 +520,8 @@
 			<string>ObjC</string>
 			<key>OUTLETS</key>
 			<dict>
+				<key>closeMenuItem</key>
+				<string>id</string>
 				<key>locationBox</key>
 				<string>id</string>
 				<key>locationPanel</key>
@@ -519,6 +529,8 @@
 				<key>playListController</key>
 				<string>id</string>
 				<key>playerController</key>
+				<string>id</string>
+				<key>playerWindow</key>
 				<string>id</string>
 				<key>theApp</key>
 				<string>id</string>

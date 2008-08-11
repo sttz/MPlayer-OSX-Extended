@@ -113,7 +113,7 @@
 		37EA4BC2086271480026216A /* scrub_bar_anim.png in Resources */ = {isa = PBXBuildFile; fileRef = 37EA4BC1086271480026216A /* scrub_bar_anim.png */; };
 		3A0943290E44F8E300E6753F /* MovieInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A0943280E44F8E300E6753F /* MovieInfo.m */; };
 		3A09436C0E45043000E6753F /* LanguageCodes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A09436B0E45043000E6753F /* LanguageCodes.m */; };
-		3A0943FC0E450E3500E6753F /* iso-639-3.tab in Resources */ = {isa = PBXBuildFile; fileRef = 3A0943FB0E450E3500E6753F /* iso-639-3.tab */; };
+		3A96C95A0E4E20B800B7B261 /* iso-639-3.tab in Resources */ = {isa = PBXBuildFile; fileRef = 3A96C9590E4E20B800B7B261 /* iso-639-3.tab */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
@@ -196,7 +196,7 @@
 		3A0943280E44F8E300E6753F /* MovieInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MovieInfo.m; path = Sources/Classes/MovieInfo.m; sourceTree = "<group>"; };
 		3A09436A0E45043000E6753F /* LanguageCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LanguageCodes.h; path = Sources/Classes/LanguageCodes.h; sourceTree = "<group>"; };
 		3A09436B0E45043000E6753F /* LanguageCodes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LanguageCodes.m; path = Sources/Classes/LanguageCodes.m; sourceTree = "<group>"; };
-		3A0943FB0E450E3500E6753F /* iso-639-3.tab */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "iso-639-3.tab"; sourceTree = "<group>"; };
+		3A96C9590E4E20B800B7B261 /* iso-639-3.tab */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "iso-639-3.tab"; path = "Resources/iso-639-3.tab"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* MPlayer OSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MPlayer OSX.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -289,13 +289,13 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				3A0943FB0E450E3500E6753F /* iso-639-3.tab */,
 				37BFD48B0CCD7D5900FCABD6 /* External_Binaries */,
 				371875E50B2307130096E1ED /* MPlayer OSX PPC-Info.plist */,
 				378749150891B7A60068D97D /* fonts */,
 				37DCF89608886A2800DBF422 /* ffwd_button_off.png */,
 				37DCF89708886A2800DBF422 /* ffwd_button_on.png */,
 				37DCF880088868B300DBF422 /* gotob_button_off.png */,
+				3A96C9590E4E20B800B7B261 /* iso-639-3.tab */,
 				37DCF881088868B300DBF422 /* gotob_button_on.png */,
 				37DCF882088868B300DBF422 /* gotoe_button_off.png */,
 				37DCF883088868B300DBF422 /* gotoe_button_on.png */,
@@ -464,7 +464,7 @@
 				37DCF89908886A2800DBF422 /* ffwd_button_on.png in Resources */,
 				378749400891B7A60068D97D /* fonts in Resources */,
 				37BFD48F0CCD7D5900FCABD6 /* External_Binaries in Resources */,
-				3A0943FC0E450E3500E6753F /* iso-639-3.tab in Resources */,
+				3A96C95A0E4E20B800B7B261 /* iso-639-3.tab in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

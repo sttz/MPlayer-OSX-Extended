@@ -55,6 +55,7 @@
 	
 	// properties
 	MplayerInterface *myPlayer;
+	MplayerInterface *myPreflightPlayer;
 	
 	// actual movie parametters
 	NSMutableDictionary *myPlayingItem;
@@ -75,7 +76,7 @@
 
 // interface
 - (IBAction)displayWindow:(id)sender;
-- (BOOL) preflightItem:(NSMutableDictionary *)anItem;
+- (void) preflightItem:(NSMutableDictionary *)anItem;
 - (void) playItem:(NSMutableDictionary *)anItem;
 - (NSMutableDictionary *) playingItem;
 - (BOOL) isRunning;
@@ -91,6 +92,8 @@
 - (void) setSubtitlesEncoding;
 - (void) setVideoEqualizer;
 - (NSNumber *) gammaValue:(NSNumber *)input;
+- (MplayerInterface *)playerInterface;
+- (MplayerInterface *)preflightInterface;
 
 // player control actions
 - (IBAction)changeVolume:(id)sender;
@@ -113,6 +116,7 @@
 - (void)newVideoStreamId:(unsigned int)streamId;
 - (void)newAudioStreamId:(unsigned int)streamId;
 - (void)newSubtitleStreamId:(unsigned int)streamId forType:(SubtitleType)type;
+- (void)disableMenuItemsInMenu:(NSMenu *)menu;
 
 // notification observers
 - (void) appFinishedLaunching;

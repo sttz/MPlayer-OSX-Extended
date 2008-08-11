@@ -56,7 +56,9 @@
 	IBOutlet NSView *playerNextToolbarView;
 	IBOutlet NSView *playerScrubToolbarView;
 	IBOutlet NSView *playerVolumeToolbarView;
-
+	
+	NSMutableArray *preflightQueue;
+	
 	bool isOpen;
 }
 //window 
@@ -103,6 +105,8 @@
 - (void) appFinishedLaunching;
 - (void) appShouldTerminate;
 - (void) appTerminating;
+
+- (void) processResultOfPreflight:(NSNotification *)notification;
 
 //Required NSToolbar delegate methods
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag;    
