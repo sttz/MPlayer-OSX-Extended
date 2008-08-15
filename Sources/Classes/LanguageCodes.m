@@ -20,7 +20,7 @@ static NSMutableDictionary *codes_3;
 	NSString *content = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
 	
 	if (content == nil) {
-		NSLog(@"Failed to read language codes at %@",path);
+		[Debug log:ASL_LEVEL_WARNING withMessage:@"Failed to read language codes at %@", path];
 		return FALSE;
 	}
 	

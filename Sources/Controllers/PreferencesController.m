@@ -605,7 +605,7 @@
 	if(result == 0)
 	{
 		system("defaults delete hu.mplayerhq.mplayerosx");
-		NSLog(@"User Default Deleted");
+		[Debug log:ASL_LEVEL_WARNING withMessage:@"User Default Deleted"];
 		NSRunAlertPanel(@"Alert", @"Default preferences restored, MPlayer OSX will close", @"Done", nil, nil);
 		exit(0);
 	}

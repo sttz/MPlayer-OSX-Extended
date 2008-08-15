@@ -14,7 +14,7 @@
 // **************************************************** //
 
 +(MovieInfo *)fromDictionary:(NSDictionary *)dict {
-	return [dict objectForKey:@"MovieInfo"];
+	return [[[dict objectForKey:@"MovieInfo"] retain] autorelease];
 }
 
 // **************************************************** //

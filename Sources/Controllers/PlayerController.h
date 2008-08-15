@@ -16,6 +16,9 @@
 #import "MplayerInterface.h"
 #import "VideoOpenGLView.h"
 
+#define		volumePollInterval		3.0f
+#define		volumeStep				10.0
+
 @interface PlayerController : NSObject
 {
 	// other controllers outlets
@@ -30,15 +33,18 @@
 	IBOutlet NSButton *playButtonToolbar;
     IBOutlet id volumeSlider;
 	IBOutlet id volumeSliderToolbar;
-	IBOutlet id volumeIconImage;
-	IBOutlet id volumeIconImageToolbar;
+	IBOutlet id volumeButton;
+	IBOutlet id volumeButtonToolbar;
 	IBOutlet id scrubbingBar;
 	IBOutlet id scrubbingBarToolbar;
 	IBOutlet id timeTextField;
 	IBOutlet id timeTextFieldToolbar;
 	IBOutlet id playListButton;
 	IBOutlet VideoOpenGLView *videoOpenGLView;
-
+	IBOutlet id audioWindowMenu;
+	IBOutlet id subtitleWindowMenu;
+	IBOutlet id toggleMuteMenu;
+	
 	// statistics panel outlets
 	IBOutlet id statsPanel;
     IBOutlet id statsAVsyncBox;
@@ -53,6 +59,13 @@
 	IBOutlet id audioStreamMenu;
 	IBOutlet id subtitleStreamMenu;
 	
+	// playback menu
+	IBOutlet id playMenuItem;
+	IBOutlet id stopMenuItem;
+	IBOutlet id skipEndMenuItem;
+	IBOutlet id skipBeginningMenuItem;
+	
+	
 	// properties
 	MplayerInterface *myPlayer;
 	MplayerInterface *myPreflightPlayer;
@@ -64,6 +77,12 @@
 	unsigned movieSeconds;		// stores actual movie seconds for further use
 	BOOL  fullscreenStatus;
 	BOOL isOntop;
+	BOOL continuousPlayback;
+	BOOL playingFromPlaylist;
+	
+	// volume
+	double muteLastVolume;
+	double lastVolumePoll;
 	
 	// images
 	NSImage *playImageOff;
@@ -87,6 +106,9 @@
 - (BOOL) changesRequireRestart;
 - (void) applyChangesWithRestart:(BOOL)restart;
 
+- (void) playFromPlaylist:(NSMutableDictionary *)anItem;
+- (void) stopFromPlaylist;
+
 // misc
 - (void) setMovieSize;
 - (void) setSubtitlesEncoding;
@@ -96,7 +118,6 @@
 - (MplayerInterface *)preflightInterface;
 
 // player control actions
-- (IBAction)changeVolume:(id)sender;
 - (IBAction)playPause:(id)sender;
 - (IBAction)seekBack:(id)sender;
 - (IBAction)seekFwd:(id)sender;
@@ -106,6 +127,12 @@
 - (IBAction)switchFullscreen:(id)sender;
 - (IBAction)displayStats:(id)sender;
 - (IBAction)takeScreenshot:(id)sender;
+- (void) setVolume:(double)volume;
+- (void) applyVolume:(double)volume;
+- (IBAction)toggleMute:(id)sender;
+- (IBAction)changeVolume:(id)sender;
+- (IBAction)increaseVolume:(id)sender;
+- (IBAction)decreaseVolume:(id)sender;
 - (void)sendKeyEvent:(int)event;
 
 - (void)clearStreamMenus;

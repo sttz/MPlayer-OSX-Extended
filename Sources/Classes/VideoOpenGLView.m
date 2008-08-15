@@ -49,14 +49,14 @@
 	shm_id = shmget(9849, image_width*image_height*image_bytes, 0666);
 	if (shm_id == -1)
 	{
-		NSLog(@"Failed to get shared memory id from mplayer (shmget)");
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to get shared memory id from mplayer (shmget)"];
 		return 0;
 	}
 
 	image_data = shmat(shm_id, NULL, 0);
 	if (!image_data)
 	{
-		NSLog(@"Failed to map shared memory from mplayer (shmat)");
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to map shared memory from mplayer (shmat)"];
 		return 0;
 	}
 	
@@ -65,15 +65,15 @@
 	//Setup CoreVideo Texture
 	error = CVPixelBufferCreateWithBytes( NULL, image_width, image_height, kYUVSPixelFormat, image_buffer, image_width*image_bytes, NULL, NULL, NULL, &currentFrameBuffer);
 	if(error != kCVReturnSuccess)
-		NSLog(@"Failed to create Pixel Buffer(%d)\n", error);
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to create Pixel Buffer (%d)", error];
 	
 	error = CVOpenGLTextureCacheCreate(NULL, 0, [[self openGLContext] CGLContextObj], [[self pixelFormat] CGLPixelFormatObj], 0, &textureCache);
 	if(error != kCVReturnSuccess)
-		NSLog(@"Failed to create OpenGL texture Cache(%d)\n", error);
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to create OpenGL texture Cache (%d)", error];
 	
 	error = CVOpenGLTextureCacheCreateTextureFromImage(	NULL, textureCache, currentFrameBuffer, 0, &texture);
 	if(error != kCVReturnSuccess)
-		NSLog(@"Failed to create OpenGL texture(%d)\n", error);
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to create OpenGL texture (%d)", error];
 	
 	//Bring window to front
 	[[self window] makeKeyAndOrderFront:nil];
@@ -107,18 +107,22 @@
 	//if(image_data != NULL)
 	{
 		if (shmdt(image_data) == -1)
-			NSLog(@"shmdt: ");
+			[Debug log:ASL_LEVEL_ERR withMessage:@"shmdt: "];
 	}
 
 	free(image_buffer);
+}
+
+/* 
+	Close OpenGL view
+*/
+- (void) close
+{
 	
-    if( [playListController getPlayMode] != 2)
-    {
-    
 	//exit fullscreen
 	if(isFullscreen)
 		[self toggleFullscreen];
-		
+	
 	image_width = 0;
 	image_height = 0;
 	image_bytes = 0;
@@ -130,8 +134,8 @@
 	frame.size.width = minSize.width;
 	frame.size.height = minSize.height+20; //+title bar height
 	[[self window] setFrame:frame display:YES animate:YES];
-    }
 }
+
 
 /*
 	Resize OpenGL view to fit movie
@@ -149,7 +153,7 @@
 		win_frame.size.width += (image_height*image_aspect - mov_frame.size.width);
 		
 	win_frame.size.height += (image_height - mov_frame.size.height);
-	[[self window] setFrame:win_frame display:YES animate:NO];
+	[[self window] setFrame:win_frame display:YES animate:YES];
 }
 
 /*
@@ -157,7 +161,8 @@
 */ 
 - (void) drawRect: (NSRect *) bounds
 {
-	[self doRender];
+	//[self doRender];
+	[self clear];
 	[[self openGLContext] flushBuffer];
 }
 
@@ -205,8 +210,8 @@
 		else
 		{
 			//Render Video Texture
-			CVOpenGLTextureGetCleanTexCoords(texture, lowerLeft, lowerRight, upperRight, upperLeft);	
-		
+			CVOpenGLTextureGetCleanTexCoords(texture, lowerLeft, lowerRight, upperRight, upperLeft);
+			
 			glEnable(CVOpenGLTextureGetTarget(texture));
 			glBindTexture(CVOpenGLTextureGetTarget(texture), CVOpenGLTextureGetName(texture));
 		

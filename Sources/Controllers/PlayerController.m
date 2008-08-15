@@ -145,21 +145,11 @@
 	[scrubbingBarToolbar setIndeterminate:NO];
 
 	// set volume to the last used value
-	if ([prefs objectForKey:@"LastAudioVolume"]) {
-		[volumeSlider setDoubleValue:[[prefs objectForKey:@"LastAudioVolume"] doubleValue]];
-		[volumeSliderToolbar setDoubleValue:[[prefs objectForKey:@"LastAudioVolume"] doubleValue]];
-		[myPlayer setVolume:[[prefs objectForKey:@"LastAudioVolume"] intValue]];
-	}
+	if ([prefs objectForKey:@"LastAudioVolume"])
+		[self setVolume:[[prefs objectForKey:@"LastAudioVolume"] doubleValue]];
 	else
-	{
-		[volumeSlider setDoubleValue:50];
-		[volumeSliderToolbar setDoubleValue:50];
-		[myPlayer setVolume:50];
-	}
+		[self setVolume:50];
 	
-	[self changeVolume:volumeSlider];
-	[self changeVolume:volumeSliderToolbar];
-
 	[self displayWindow:self];
 		
 	//setup drag & drop
@@ -264,7 +254,6 @@
 	// set movie
 	[myPreflightPlayer setMovieFile:[anItem objectForKey:@"MovieFile"]];
 	// perform preflight
-	NSLog(@"Preflight: %@ on %@",[anItem objectForKey:@"MovieFile"],myPlayer);
 	[myPreflightPlayer loadInfo];
 }
 /************************************************************************************/
@@ -281,6 +270,7 @@
 	if (aPath) {
 		// stops mplayer if it is running
 		if ([myPlayer isRunning]) {
+			continuousPlayback = YES;	// don't close view
 			saveTime = NO;		// don't save time
 			[myPlayer stop];
 			[playListController updateView];
@@ -337,18 +327,32 @@
 	[myPlayer loadInfoBeforePlayback:loadInfo];
 
 	// start playback
-	[myPlayer play];
+	if (loadInfo)
+		[myPlayer play];
+	else
+		[myPlayer playWithInfo:[myPlayingItem objectForKey:@"MovieInfo"]];
 	
 	// its enough to load info only once so disable it
 	if (loadInfo)
 		[myPlayer loadInfoBeforePlayback:NO];
 	
-	// query selected streams
-	/*[myPlayer sendCommands:[NSArray arrayWithObjects:
-							@"get_property sub_demux",@"get_property switch_audio",@"get_property switch_video",
-							@"get_property sub_file",nil]];*/
-	
 	[playListController updateView];
+}
+
+/************************************************************************************/
+- (void) playFromPlaylist:(NSMutableDictionary *)anItem
+{
+	
+	playingFromPlaylist = YES;
+	[self playItem:anItem];
+}
+
+/************************************************************************************/
+- (void) stopFromPlaylist
+{
+	
+	playingFromPlaylist = NO;
+	[videoOpenGLView close];
 }
 
 /************************************************************************************/
@@ -395,11 +399,15 @@
 	
 	// audio languages
 	if ([[preferences stringForKey:@"AudioLanguages"] length] > 0)
-		[myPlayer setAduioLanguages: [preferences stringForKey:@"AudioLanguages"]];
+		[myPlayer setAudioLanguages: [preferences stringForKey:@"AudioLanguages"]];
+	else
+		[myPlayer setAudioLanguages:nil];
 	
 	// subtitle languages
 	if ([[preferences stringForKey:@"SubtitleLanguages"] length] > 0)
 		[myPlayer setSubtitleLanguages: [preferences stringForKey:@"SubtitleLanguages"]];
+	else
+		[myPlayer setSubtitleLanguages:nil];
 	
 	// correct pts
 	if ([preferences objectForKey:@"CorrectPTS"])
@@ -509,6 +517,8 @@
 	// video codecs
 	if ([[preferences stringForKey:@"VideoCodecs"] length] > 0)
 		[myPlayer setVideoCodecs: [preferences stringForKey:@"VideoCodecs"]];
+	else
+		[myPlayer setVideoCodecs:nil];
 	
 	// framedrop
 	if ([preferences objectForKey:@"Framedrop"])
@@ -594,6 +604,8 @@
 	// audio codecs
 	if ([[preferences stringForKey:@"AudioCodecs"] length] > 0)
 		[myPlayer setAudioCodecs: [preferences stringForKey:@"AudioCodecs"]];
+	else
+		[myPlayer setAudioCodecs:nil];
 	
 	// hrtf filter
 	if ([preferences objectForKey:@"HRTFFilter"])
@@ -795,38 +807,91 @@
 /************************************************************************************
  ACTIONS
  ************************************************************************************/
-- (IBAction)changeVolume:(id)sender
+// Apply volume and send it to mplayer
+- (void) setVolume:(double)volume
 {
+	
+	[self applyVolume:volume];
+	
+	[myPlayer setVolume:[[NSNumber numberWithDouble:volume] intValue]];
+	[myPlayer applySettingsWithRestart:NO];
+}
+
+// Apply volume to images and sliders (don't send it to mplayer)
+- (void) applyVolume:(double)volume
+{
+	
 	NSImage *volumeImage;
 	
-	[[appController preferences] setObject:[NSNumber numberWithDouble:[sender doubleValue]] forKey:@"LastAudioVolume"];
-
+	[[appController preferences] setObject:[NSNumber numberWithDouble:volume] forKey:@"LastAudioVolume"];
+	
 	//set volume icon
-	[sender setDoubleValue:[sender doubleValue]];
-	
-	if([sender doubleValue] == 0)
+	if(volume == 0)
 		volumeImage = [[NSImage imageNamed:@"volume0"] retain];
-
-	if( ([sender doubleValue] > 66) )
-		volumeImage = [[NSImage imageNamed:@"volume3"] retain];
-		
-	if( ([sender doubleValue] > 33) && ([sender doubleValue] < 67) )
-		volumeImage = [[NSImage imageNamed:@"volume2"] retain];
-
-	if( ([sender doubleValue] > 0) && ([sender doubleValue] < 34) )
-		volumeImage = [[NSImage imageNamed:@"volume1"] retain];
-
-
-	[volumeSlider setDoubleValue:[sender doubleValue]];
-	[volumeSliderToolbar setDoubleValue:[sender doubleValue]];
-	[volumeIconImage setImage:volumeImage];
-	[volumeIconImageToolbar setImage:volumeImage];
-	[volumeIconImage display];
-	[volumeIconImageToolbar display];
-	[volumeImage release];
 	
-	[myPlayer setVolume:[sender intValue]];
-	[myPlayer applySettingsWithRestart:NO];
+	if(volume > 66)
+		volumeImage = [[NSImage imageNamed:@"volume3"] retain];
+	
+	if(volume > 33 && volume < 67)
+		volumeImage = [[NSImage imageNamed:@"volume2"] retain];
+	
+	if(volume > 0 && volume < 34)
+		volumeImage = [[NSImage imageNamed:@"volume1"] retain];
+	
+	
+	[volumeSlider setDoubleValue:volume];
+	[volumeSliderToolbar setDoubleValue:volume];
+	[volumeButton setImage:volumeImage];
+	[volumeButtonToolbar setImage:volumeImage];
+	[volumeButton display];
+	[volumeButtonToolbar display];
+	
+	[toggleMuteMenu setState:(volume == 0)];
+	
+	[volumeImage release];
+}
+
+// Volume change action from sliders
+- (IBAction)changeVolume:(id)sender
+{
+	
+	[self setVolume:[sender doubleValue]];
+}
+
+// Volume change from menus
+- (IBAction)increaseVolume:(id)sender
+{
+	
+	double newVolume = [[appController preferences] floatForKey:@"LastAudioVolume"] + volumeStep;
+	if (newVolume > 100)
+		newVolume = 100;
+		
+	[self setVolume:newVolume];
+}
+
+- (IBAction)decreaseVolume:(id)sender
+{
+	
+	double newVolume = [[appController preferences] floatForKey:@"LastAudioVolume"] - volumeStep;
+	if (newVolume < 0)
+		newVolume = 0;
+	
+	[self setVolume:newVolume];
+}
+
+// Toggle mute action from buttons
+- (IBAction)toggleMute:(id)sender
+{
+	
+	if ([volumeSlider doubleValue] == 0) {
+		
+		[self setVolume:muteLastVolume];
+		
+	} else {
+		
+		muteLastVolume = [volumeSlider doubleValue];
+		[self setVolume:0];
+	}
 }
 
 /************************************************************************************/
@@ -907,11 +972,14 @@
 /************************************************************************************/
 - (IBAction)stop:(id)sender
 {
+	
 	saveTime = NO;		// if user stops player, don't save time
 	
 	[myPlayer stop];
 		
 	[playListController updateView];
+	
+	[videoOpenGLView close];
 }
 
 /************************************************************************************/
@@ -1034,10 +1102,25 @@
 			[newItem release];
 		}
 		
-		if ([menu numberOfItems] > 0)
+		if ([menu numberOfItems] > 0) {
+			
+			// Copy menu for window popup
+			NSMenu *other = [menu copy];
+			newItem = [[NSMenuItem alloc]
+					   initWithTitle:@"A"
+					   action:NULL
+					   keyEquivalent:@""];
+			[other insertItem:newItem atIndex:0];
+			[newItem release];
+			
+			[audioWindowMenu setMenu:other];
+			
 			[audioStreamMenu setEnabled:YES];
-		else
+			[audioWindowMenu setEnabled:YES];
+		} else {
 			[audioStreamMenu setEnabled:NO];
+			[audioWindowMenu setEnabled:NO];
+		}
 		
 		
 		// subtitle stream menu
@@ -1088,10 +1171,25 @@
 			[newItem release];
 		}
 		
-		if ([menu numberOfItems] > 1)
+		if ([menu numberOfItems] > 1) {
+			
+			// Copy menu for window popup
+			NSMenu *other = [menu copy];
+			newItem = [[NSMenuItem alloc]
+					   initWithTitle:@"S"
+					   action:NULL
+					   keyEquivalent:@""];
+			[other insertItem:newItem atIndex:0];
+			[newItem release];
+			
+			[subtitleWindowMenu setMenu:other];
+			
 			[subtitleStreamMenu setEnabled:YES];
-		else
+			[subtitleWindowMenu setEnabled:YES];
+		} else {
 			[subtitleStreamMenu setEnabled:NO];
+			[subtitleWindowMenu setEnabled:NO];
+		}
 		
 		[mi release];
 	}
@@ -1148,30 +1246,37 @@
 - (void)newAudioStreamId:(unsigned int)streamId {
 	
 	[self disableMenuItemsInMenu:[audioStreamMenu submenu]];
+	[self disableMenuItemsInMenu:[audioWindowMenu menu]];
 	
 	if (streamId != -1) {
 		
 		int index = [[audioStreamMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:streamId]];
 		
-		if (index != -1)
+		if (index != -1) {
 			[[[audioStreamMenu submenu] itemAtIndex:index] setState:NSOnState];
+			[[[audioWindowMenu menu] itemAtIndex:(index+1)] setState:NSOnState];
+		}
 	}
 }
 
 - (void)newSubtitleStreamId:(unsigned int)streamId forType:(SubtitleType)type {
 	
 	[self disableMenuItemsInMenu:[subtitleStreamMenu submenu]];
+	[self disableMenuItemsInMenu:[subtitleWindowMenu menu]];
 	
 	if (streamId != -1) {
 		
 		int index = [[subtitleStreamMenu submenu] indexOfItemWithRepresentedObject:[NSArray arrayWithObjects: [NSNumber numberWithInt:type], [NSNumber numberWithInt:streamId], nil]];
 		
-		if (index != -1)
+		if (index != -1) {
 			[[[subtitleStreamMenu submenu] itemAtIndex:index] setState:NSOnState];
+			[[[subtitleWindowMenu menu] itemAtIndex:(index+1)] setState:NSOnState];
+		}
 	
 	} else {
 		
 		[[[subtitleStreamMenu submenu] itemAtIndex:0] setState:NSOnState];
+		[[[subtitleWindowMenu menu] itemAtIndex:1] setState:NSOnState];
 	}
 }
 
@@ -1282,6 +1387,10 @@
 			[playButton setAlternateImage:pauseImageOn];
 			[playButtonToolbar setImage:pauseImageOff];
 			[playButtonToolbar setAlternateImage:pauseImageOn];
+			[playMenuItem setTitle:@"Pause"];
+			[stopMenuItem setEnabled:YES];
+			[skipBeginningMenuItem setEnabled:YES];
+			[skipEndMenuItem setEnabled:YES];
 			break;
 		case kPaused :
 		case kStopped :
@@ -1290,6 +1399,10 @@
 			[playButton setAlternateImage:playImageOn];
 			[playButtonToolbar setImage:playImageOff];
 			[playButtonToolbar setAlternateImage:playImageOn];
+			[playMenuItem setTitle:@"Play"];
+			[stopMenuItem setEnabled:NO];
+			[skipBeginningMenuItem setEnabled:NO];
+			[skipEndMenuItem setEnabled:NO];
 			break;
 		}
 		
@@ -1298,7 +1411,7 @@
 		{
 			
 			NSMutableString *path = [[NSMutableString alloc] init];
-			[path appendString:@"MPlayer OSX - "];
+			[path appendString:@"MPlayer OSX Extended - "];
 			
 			if ([playingItem objectForKey:@"ItemTitle"])
 			{
@@ -1371,7 +1484,7 @@
 		case kStopped :
 		case kFinished :
 			//Set win title
-			[playerWindow setTitle:@"MPlayer OSX"];
+			[playerWindow setTitle:@"MPlayer OSX Extended"];
 			// reset status panel
 			status = NSLocalizedString(@"N/A",nil);
 			[statsCPUUsageBox setStringValue:status];
@@ -1390,16 +1503,35 @@
 			[scrubbingBarToolbar setStyle:NSScrubbingBarEmptyStyle];
 			[scrubbingBarToolbar setDoubleValue:0];
 			[scrubbingBarToolbar setIndeterminate:NO];
+			// disable stream menus
+			[videoStreamMenu setEnabled:NO];
+			[audioStreamMenu setEnabled:NO];
+			[subtitleStreamMenu setEnabled:NO];
+			[audioWindowMenu setEnabled:NO];
+			[subtitleWindowMenu setEnabled:NO];
 			// release the retained playing item
 			[playingItem autorelease];
 			myPlayingItem = nil;
 			// update state of playlist
 			[playListController updateView];
-			// if playback finished itself (not by user) let playListController know
-			if ([[[notification userInfo]
-					objectForKey:@"PlayerStatus"] unsignedIntValue] == kFinished)
-				[playListController finishedPlayingItem:playingItem];
-
+			// Playlist mode
+			if (playingFromPlaylist) {
+				// if playback finished itself (not by user) let playListController know
+				if ([[[notification userInfo]
+						objectForKey:@"PlayerStatus"] unsignedIntValue] == kFinished)
+					[playListController finishedPlayingItem:playingItem];
+				// close view otherwise
+				else if (!continuousPlayback)
+					[self stopFromPlaylist];
+				else
+					continuousPlayback = NO;
+			// Regular play mode
+			} else {
+				if (!continuousPlayback)
+					[videoOpenGLView close];
+				else
+					continuousPlayback = NO;
+			}
 			break;
 		}
 		[statsStatusBox setStringValue:status];
@@ -1423,6 +1555,9 @@
 		
 		if ([[notification userInfo] objectForKey:@"SubFileStreamId"])
 			[self newSubtitleStreamId:[[[notification userInfo] objectForKey:@"SubFileStreamId"] intValue] forType:SubtitleTypeFile];
+		
+		if ([[notification userInfo] objectForKey:@"Volume"])
+			[self applyVolume:[[[notification userInfo] objectForKey:@"Volume"] doubleValue]];
 		
 	}
 	
@@ -1480,6 +1615,14 @@
 						[myPlayer postProcLevel]]];
 			}
 		}
+		// poll volume
+		double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - lastVolumePoll);
+		if (timeDifference > volumePollInterval) {
+			
+			lastVolumePoll = [NSDate timeIntervalSinceReferenceDate];
+			[myPlayer sendCommand:@"get_property volume"];
+		}
+			
 		break;
 	case kPaused :
 		break;

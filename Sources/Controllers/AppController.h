@@ -12,6 +12,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import <asl.h>
 
 @interface AppController : NSObject
 {

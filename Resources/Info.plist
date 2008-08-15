@@ -105,7 +105,7 @@
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
-	<string>MPlayer OSX</string>
+	<string>MPlayer OSX Extended</string>
 	<key>CFBundleHelpBookFolder</key>
 	<string>MPlayer OSX Help</string>
 	<key>CFBundleHelpBookName</key>
@@ -113,7 +113,7 @@
 	<key>CFBundleIconFile</key>
 	<string>icon</string>
 	<key>CFBundleIdentifier</key>
-	<string>hu.mplayerhq.mplayerosx.newprefs</string>
+	<string>hu.mplayerhq.mplayerosx.extended</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>
@@ -121,7 +121,7 @@
 	<key>CFBundleSignature</key>
 	<string>MPHQ</string>
 	<key>CFBundleVersion</key>
-	<string>1.0 rc2</string>
+	<string>1.0 ext5</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>

@@ -74,7 +74,6 @@
 {
 	if(isFullscreen)
 	{
-		NSLog(@"hide mouse");
 		CGDisplayHideCursor(kCGDirectMainDisplay);
 	}
     osdTimer = nil;

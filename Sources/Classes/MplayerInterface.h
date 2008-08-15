@@ -19,6 +19,8 @@
 #import <Cocoa/Cocoa.h>
 #import "MovieInfo.h"
 
+#import "Debug.h"
+
 // Notifications posted by MplayerInterface
 	// 	@"MIPlayerTerminatedNotification"	mplayer has been terminated
 	// 	@"MIInfoReadyNotification"			notification has been updated
@@ -173,7 +175,8 @@
 - (id) initWithPathToPlayer:(NSString *)aPath;		// init with movie file path
 
 // playback controls (take effect imediately)
-- (void) play;										// play item from saved time
+- (void) playWithInfo:(MovieInfo *)mf;				// play item from saved time
+- (void) play;
 - (void) stop;										// stops playback
 - (void) pause;										// pause / unpause playback
 - (void) seek:(float)seconds mode:(int)aMode;		// seek in movie
@@ -189,7 +192,7 @@
 - (void) setFontFile:(NSString *)aFile;
 
 // playback
-- (void) setAduioLanguages:(NSString *)langString;
+- (void) setAudioLanguages:(NSString *)langString;
 - (void) setSubtitleLanguages:(NSString *)langString;
 - (void) setCorrectPTS:(BOOL)aBool;
 - (void) setCacheSize:(unsigned int)kilobytes;

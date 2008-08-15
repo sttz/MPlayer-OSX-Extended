@@ -32,12 +32,17 @@
 	IBOutlet id settingsButton;
 	IBOutlet id playModeButton;
 	IBOutlet id playListCount;
+	IBOutlet id preflightBusy;
 	
 	// preflight panel
 	IBOutlet id preflightPanel;
 	IBOutlet id filenameBox;
 	IBOutlet id progressBar;
-
+	
+	// menu
+	IBOutlet id playNextMenuItem;
+	IBOutlet id playPreviousMenuItem;
+	
     // data
 	NSMutableArray *myData;
 	int myPlayMode;
@@ -88,6 +93,7 @@
 - (IBAction)cancelPreflight:(id)sender;
 - (IBAction)playPrevious:(id)sender;
 - (IBAction)playNext:(id)sender;
+- (void) removeItemAtIndex:(unsigned int)index;
 
 // TableView data access methods
 - (int)numberOfRowsInTableView:(NSTableView *)tableView;
@@ -106,6 +112,7 @@
 - (void) appShouldTerminate;
 - (void) appTerminating;
 
+- (void) startPreflight;
 - (void) processResultOfPreflight:(NSNotification *)notification;
 
 //Required NSToolbar delegate methods

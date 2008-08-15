@@ -11,6 +11,8 @@
 #import "PlayerWindow.h"
 #import "PlayListController.h"
 
+#import "Debug.h"
+
 // MPlayer OS X VO Protocol
 @protocol MPlayerOSXVOProto
 - (int) startWithWidth: (bycopy int)width
@@ -83,6 +85,7 @@
 - (NSEvent *) readNextEvent;
 - (int) startWithWidth: (int)width withHeight: (int)height withBytes: (int)bytes withAspect: (int)aspect;
 - (void) stop;
+- (void) close;
 - (void) render;
 - (void) doRender;
 - (void) clear;

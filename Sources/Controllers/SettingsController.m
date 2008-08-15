@@ -102,7 +102,6 @@
 	MovieInfo *info = [MovieInfo fromDictionary:myItem];
 	
 	// file format
-	NSLog(@"info: %@",info);
 	if ([info fileFormat])
 		[fileFormatBox setStringValue:[info fileFormat]];
 	else

@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "Debug.h"
 
 @interface LanguageCodes : NSObject {
 	

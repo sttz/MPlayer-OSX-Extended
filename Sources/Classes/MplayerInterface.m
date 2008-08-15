@@ -148,7 +148,7 @@
 /************************************************************************************
  PLAYBACK CONTROL
  ************************************************************************************/
-- (void) play
+- (void) playWithInfo:(MovieInfo *)mf
 {
 	NSMutableArray *params = [NSMutableArray array];
 	NSMutableArray *videoFilters = [NSMutableArray array];
@@ -390,7 +390,7 @@
 	if (!enableAudio)
 		[params addObject:@"-nosound"];
 	// audio codecs
-	if (videoCodecs) {
+	if (audioCodecs) {
 		[params addObject:@"-ac"];
 		[params addObject:audioCodecs];
 	}
@@ -468,14 +468,26 @@
 		[params addObject:@"identify=4:demux=6"];
 	}
 	
+	// MovieInfo
+	if (mf == nil && (info == nil || ![myMovieFile isEqualToString:[info filename]])) {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Create new MovieInfo"];
+		[info release];
+		info = [[MovieInfo alloc] init];		// prepare it for getting new values
+	} else if (mf != nil)
+		info = mf;
 	
-	[info release];
-	info = [[MovieInfo alloc] init];		// prepare it for getting new values
-	NSLog(@"Audios: %@",[NSNumber numberWithInt:[info audioStreamCount]]);
 	[myCommandsBuffer removeAllObjects];	// empty buffer before launch
 	settingsChanged = NO;					// every startup settings has been made
 	
+	// Disable preflight mode
+	isPreflight = NO;
+	
 	[self runMplayerWithParams:params];
+}
+/************************************************************************************/
+- (void) play
+{
+	[self playWithInfo:nil];
 }
 /************************************************************************************/
 - (void) stop
@@ -678,7 +690,7 @@
 /************************************************************************************
  PLAYBACK
  ************************************************************************************/
-- (void) setAduioLanguages:(NSString *)langString
+- (void) setAudioLanguages:(NSString *)langString
 {
 	if (audioLanguages != langString) {
 		audioLanguages = langString;
@@ -1130,7 +1142,7 @@
 	
 	// Set preflight mode
 	isPreflight = YES;
-	NSLog(@"load info: %@",myMovieFile);
+	
 	// run mplayer for identify
 	if (myMovieFile)
 		[self runMplayerWithParams:[NSArray arrayWithObjects:myMovieFile, @"-msglevel", @"identify=4:demux=6", @"-frames",@"0", @"-ao", @"null", @"-vo", @"null", nil]];
@@ -1205,7 +1217,6 @@
  ************************************************************************************/
 - (void)sendCommand:(NSString *)aCommand
 {
-	//NSLog(@"Command: %@",aCommand);
 	[self sendToMplayersInput:[aCommand stringByAppendingString:@"\n"]];
 }
 /************************************************************************************/
@@ -1292,11 +1303,11 @@
 	[myMplayerTask setEnvironment:env];
 
 	//Print Command line to console
-	NSLog(@"Path to MPlayer: %s", [myPathToPlayer UTF8String] );
+	[Debug log:ASL_LEVEL_INFO withMessage:@"Path to MPlayer: %@", myPathToPlayer];
 	int count = 0;
 	
 	for(count = 0; count < [aParams count]; count++ )
-		NSLog(@"Arg: %s", [[aParams objectAtIndex:count] UTF8String] );
+		[Debug log:ASL_LEVEL_INFO withMessage:@"Arg: %@", [aParams objectAtIndex:count]];
 
 	// activate notification for available data at output
 	[[[myMplayerTask standardOutput] fileHandleForReading]
@@ -1335,6 +1346,7 @@
 /************************************************************************************
  NOTIFICATION HANDLERS
  ************************************************************************************/
+// Even after mplayer is terminated, readOutputC: might still be called with unparsed output!
 - (void)mplayerTerminated
 {
 	int returnCode, bReadLog;
@@ -1358,7 +1370,6 @@
 		}
 		restartingPlayer = NO;
 		isRunning = NO;
-		isPreflight = NO;
 	}
 	
 	returnCode = [myMplayerTask terminationStatus];
@@ -1366,7 +1377,7 @@
 	//abnormal mplayer task termination
 	if (returnCode != 0)
 	{
-		NSLog(@"Abnormal playback error. mplayer returned error code: %d", returnCode);
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Abnormal playback error. mplayer returned error code: %d", returnCode];
 		bReadLog = NSRunAlertPanel(@"Playback Error", @"Abnormal playback termination. Check log file for more information.", @"Open Log", @"Continue", nil);
 		
 		//Open Log file
@@ -1380,7 +1391,7 @@
 			finderOpenTask = [NSTask launchedTaskWithLaunchPath:@"/usr/bin/open" arguments:finderOpenArg];
 			
 			if (!finderOpenTask)
-				NSLog(@"Failed to launch the console.app");
+				[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to launch the console.app"];
 		}
 	}
 }
@@ -1436,7 +1447,6 @@
 			break;*/
 		
 		// make an NSString for this line
-		//printf("%s\n",stringPtr);
 		//line = [NSString stringWithCString:stringPtr];
 		
 		// Read next line of data
@@ -1456,10 +1466,10 @@
 			lastUnparsedLine = @"";
 		}
 		
+		//[Debug log:ASL_LEVEL_ERR withMessage:@"readOutputC: %@",line];
+		
 		// create cstring for legacy code
 		stringPtr = [line lossyCString];
-		
-		//NSLog(@"Output: %@",line);
 		
 		if (strstr(stringPtr, "A:") == stringPtr ||
 				strstr(stringPtr, "V:") == stringPtr) {
@@ -1554,6 +1564,7 @@
 				
 				// if the line was parsed then post notification and continue on next line
 				if (myOutputReadMode > 0) {
+					
 					// if it was not playing before (launched or unpaused)
 					if (myState != kPlaying) {
 						myState = kPlaying;
@@ -1608,6 +1619,13 @@
 			continue;
 		}
 		
+		// current volume
+		result = [self parseDefine:@"ANS_volume=" inLine:line];
+		if (result != nil) {
+			[userInfo setObject:[NSNumber numberWithDouble:[result doubleValue]] forKey:@"Volume"];
+			continue;
+		}
+		
 /*	
 		// if we don't have output mode try to parse playback output and get output mode
 		if (myOutputReadMode == 0) {
@@ -1635,7 +1653,7 @@
 		if (strstr(stringPtr, MI_PAUSED_STRING) != NULL) {
 			myState = kPaused;		
 			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
-			printf("%s\n",stringPtr);
+			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
 			
 			continue; 							// continue on next line
 		}
@@ -1674,14 +1692,14 @@
 			myOutputReadMode = 0;				// reset output read mode
 			
 			restartingPlayer = NO;
-			printf("%s\n",stringPtr);
+			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
 			continue;							// continue on next line
 		}
 		
 		// if player is playing then do not bother with parse anything else
 		if (myOutputReadMode > 0) {
 			// print unused line
-			printf("%s\n",stringPtr);
+			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
 			continue;
 		}
 		
@@ -1690,7 +1708,7 @@
 		if (strncmp(stringPtr, MI_OPENING_STRING, 8) == 0) {
 			myState = kOpening;
 			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
-			printf("%s\n",stringPtr);
+			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
 			continue; 							// continue on next line	
 		}
 		
@@ -1705,7 +1723,7 @@
 				myCacheUsage = cacheUsage;
 			}
 			// if the string is longer then supposed divide it and continue
-			/*printf("%s\n",stringPtr);
+			/*[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
 			if (strlen(stringPtr) > 32) {
 				*(stringPtr + 31) = '\0';
 				stringPtr = (stringPtr + 32);
@@ -1736,7 +1754,7 @@
 						forKey:@"CacheUsage"];
 				myCacheUsage = cacheUsage;
 			}
-			printf("%s\n",stringPtr);
+			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
 			continue; 							// continue on next line	
 		}
 		
@@ -1941,7 +1959,7 @@
 			
 			if ([parts count] == 2)
 			{
-				NSLog(@"IDENTIFY: %@ = %@ (%@)",[[parts objectAtIndex:0] substringFromIndex:3],[parts objectAtIndex:1],line);
+				[Debug log:ASL_LEVEL_INFO withMessage:@"IDENTIFY: %@ = %@", [[parts objectAtIndex:0] substringFromIndex:3], [parts objectAtIndex:1]];
 				[info setInfo:[parts objectAtIndex:1] forKey:[[parts objectAtIndex:0] substringFromIndex:3]];
 			}
 			continue; 							// continue on next line	
@@ -1950,8 +1968,8 @@
 		// mkv chapters
 		
 		
-		// mplayer is starting playback
-		if (strstr(stringPtr, MI_STARTING_STRING) != NULL) {
+		// mplayer is starting playback -- ignore for preflight
+		if (strstr(stringPtr, MI_STARTING_STRING) != NULL && !isPreflight) {
 			myState = kPlaying;
 			myLastUpdate = [NSDate timeIntervalSinceReferenceDate];
 			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
@@ -1970,12 +1988,12 @@
 					postNotificationName:@"MIInfoReadyNotification"
 					object:self
 					userInfo:nil];
-			printf("%s\n",stringPtr);
+			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
 			continue;
 		}
 		
 		// print unused output
-		printf("%s\n",stringPtr);
+		[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
 		
 	} // while
 	

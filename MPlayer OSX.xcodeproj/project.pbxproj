@@ -113,6 +113,7 @@
 		37EA4BC2086271480026216A /* scrub_bar_anim.png in Resources */ = {isa = PBXBuildFile; fileRef = 37EA4BC1086271480026216A /* scrub_bar_anim.png */; };
 		3A0943290E44F8E300E6753F /* MovieInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A0943280E44F8E300E6753F /* MovieInfo.m */; };
 		3A09436C0E45043000E6753F /* LanguageCodes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A09436B0E45043000E6753F /* LanguageCodes.m */; };
+		3A38D3C50E50E45A00C1E468 /* Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A38D3C40E50E45A00C1E468 /* Debug.m */; };
 		3A96C95A0E4E20B800B7B261 /* iso-639-3.tab in Resources */ = {isa = PBXBuildFile; fileRef = 3A96C9590E4E20B800B7B261 /* iso-639-3.tab */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -122,7 +123,6 @@
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Sources/main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* MPlayer OSX_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "MPlayer OSX_Prefix.pch"; path = "Sources/MPlayer OSX_Prefix.pch"; sourceTree = "<group>"; };
-		371875E50B2307130096E1ED /* MPlayer OSX PPC-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "MPlayer OSX PPC-Info.plist"; path = "Resources/MPlayer OSX PPC-Info.plist"; sourceTree = "<group>"; };
 		371878190B230ABD0096E1ED /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
 		372E8224086A431900FC39B4 /* PlayListController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PlayListController.h; path = Sources/Controllers/PlayListController.h; sourceTree = "<group>"; };
 		372E8225086A431900FC39B4 /* PlayListController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = PlayListController.m; path = Sources/Controllers/PlayListController.m; sourceTree = "<group>"; };
@@ -196,9 +196,11 @@
 		3A0943280E44F8E300E6753F /* MovieInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MovieInfo.m; path = Sources/Classes/MovieInfo.m; sourceTree = "<group>"; };
 		3A09436A0E45043000E6753F /* LanguageCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LanguageCodes.h; path = Sources/Classes/LanguageCodes.h; sourceTree = "<group>"; };
 		3A09436B0E45043000E6753F /* LanguageCodes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LanguageCodes.m; path = Sources/Classes/LanguageCodes.m; sourceTree = "<group>"; };
+		3A38D3C30E50E45A00C1E468 /* Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Debug.h; path = Sources/Classes/Debug.h; sourceTree = "<group>"; };
+		3A38D3C40E50E45A00C1E468 /* Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Debug.m; path = Sources/Classes/Debug.m; sourceTree = "<group>"; };
 		3A96C9590E4E20B800B7B261 /* iso-639-3.tab */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "iso-639-3.tab"; path = "Resources/iso-639-3.tab"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* MPlayer OSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MPlayer OSX.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1107320486CEB800E47090 /* MPlayer OSX Extended.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MPlayer OSX Extended.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,6 +239,8 @@
 				3A0943280E44F8E300E6753F /* MovieInfo.m */,
 				3A09436A0E45043000E6753F /* LanguageCodes.h */,
 				3A09436B0E45043000E6753F /* LanguageCodes.m */,
+				3A38D3C30E50E45A00C1E468 /* Debug.h */,
+				3A38D3C40E50E45A00C1E468 /* Debug.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -259,7 +263,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* MPlayer OSX.app */,
+				8D1107320486CEB800E47090 /* MPlayer OSX Extended.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -290,7 +294,6 @@
 			isa = PBXGroup;
 			children = (
 				37BFD48B0CCD7D5900FCABD6 /* External_Binaries */,
-				371875E50B2307130096E1ED /* MPlayer OSX PPC-Info.plist */,
 				378749150891B7A60068D97D /* fonts */,
 				37DCF89608886A2800DBF422 /* ffwd_button_off.png */,
 				37DCF89708886A2800DBF422 /* ffwd_button_on.png */,
@@ -372,9 +375,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8D1107260486CEB800E47090 /* MPlayer OSX */ = {
+		8D1107260486CEB800E47090 /* MPlayer OSX Extended */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 377E024C085E333600D64A26 /* Build configuration list for PBXNativeTarget "MPlayer OSX" */;
+			buildConfigurationList = 377E024C085E333600D64A26 /* Build configuration list for PBXNativeTarget "MPlayer OSX Extended" */;
 			buildPhases = (
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
@@ -384,10 +387,10 @@
 			);
 			dependencies = (
 			);
-			name = "MPlayer OSX";
+			name = "MPlayer OSX Extended";
 			productInstallPath = "$(HOME)/Applications";
 			productName = "MPlayer OSX";
-			productReference = 8D1107320486CEB800E47090 /* MPlayer OSX.app */;
+			productReference = 8D1107320486CEB800E47090 /* MPlayer OSX Extended.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -409,7 +412,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8D1107260486CEB800E47090 /* MPlayer OSX */,
+				8D1107260486CEB800E47090 /* MPlayer OSX Extended */,
 				37B9DF1A0C2E923700211F5E /* Build MPlayer PPC */,
 				37B9DF1E0C2E926D00211F5E /* Build MPlayer Intel */,
 				37B9DF260C2E93F800211F5E /* Build MPlayer Universal */,
@@ -544,6 +547,7 @@
 				37B934DC088FDF9200C81536 /* PlaylistTableView.m in Sources */,
 				3A0943290E44F8E300E6753F /* MovieInfo.m in Sources */,
 				3A09436C0E45043000E6753F /* LanguageCodes.m in Sources */,
+				3A38D3C50E50E45A00C1E468 /* Debug.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -593,7 +597,8 @@
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				PREBINDING = NO;
-				PRODUCT_NAME = "MPlayer OSX";
+				PRODUCT_NAME = "MPlayer OSX Extended";
+				STRIP_INSTALLED_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
 			};
@@ -612,7 +617,8 @@
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				PREBINDING = NO;
-				PRODUCT_NAME = "MPlayer OSX";
+				PRODUCT_NAME = "MPlayer OSX Extended";
+				STRIP_INSTALLED_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = NO;
 			};
@@ -741,7 +747,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		377E024C085E333600D64A26 /* Build configuration list for PBXNativeTarget "MPlayer OSX" */ = {
+		377E024C085E333600D64A26 /* Build configuration list for PBXNativeTarget "MPlayer OSX Extended" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				377E024D085E333600D64A26 /* Debug */,

@@ -229,7 +229,7 @@
 	finderOpenArg = [NSArray arrayWithObject:logPath];
 	finderOpenTask = [NSTask launchedTaskWithLaunchPath:@"/usr/bin/open" arguments:finderOpenArg];
 	if (!finderOpenTask)
-		NSLog(@"Failed to launch the console.app");
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to launch the console.app"];
 }
 
 - (IBAction) donate:(id)sender
@@ -387,7 +387,7 @@
 			return NSTerminateCancel;
 	}
 	
-	NSLog(@"===================== MPlayer OSX Terminated =====================");
+	[Debug log:ASL_LEVEL_INFO withMessage:@"===================== MPlayer OSX Terminated ====================="];
 	
 	return NSTerminateNow;
 }

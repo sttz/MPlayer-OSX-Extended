@@ -7,15 +7,18 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "Debug.h"
 
 int main(int argc, char *argv[])
 {
-	id pool = [NSAutoreleasePool new];
-	NSString *logPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Logs/MPlayerOSX.log"];
-	freopen([logPath fileSystemRepresentation], "a", stderr);
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
+	
+	[Debug init];
+	[Debug logToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Logs/MPlayerOSX.log"]];
+	
+	[Debug log:ASL_LEVEL_INFO withMessage: @"===================== MPlayer OSX Started ====================="];
+    
 	[pool release];
 	
-	NSLog(@"===================== MPlayer OSX Started =====================");
-    
 	return NSApplicationMain(argc,  (const char **) argv);
 }

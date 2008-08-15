@@ -11,6 +11,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "Debug.h"
 
 @interface PreferencesController : NSObject
 {
