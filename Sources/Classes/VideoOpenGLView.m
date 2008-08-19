@@ -6,6 +6,7 @@
 
 //Custom Class
 #import "VideoOpenGLView.h"
+#import "PlayerController.h"
 
 @implementation VideoOpenGLView
 
@@ -90,11 +91,8 @@
 	}
     
 	//Play in fullscreen
-	if ([[appController preferences] objectForKey:@"FullscreenByDefault"])
-	{
-		if ([[[appController preferences] objectForKey:@"FullscreenByDefault"] isEqualToString:@"YES"])
-			[self toggleFullscreen];
-	}
+	if ([playerController startInFullscreen])
+		[self toggleFullscreen];
 	
 	return 1;
 }
@@ -336,8 +334,13 @@
 	NSWindow *window = [self window];
     NSRect fsRect;
     
-	screen_frame = [[window screen] frame];
-    fsRect = [[window screen] frame];
+	int fullscreenId = [playerController fullscreenDeviceId];
+	if (fullscreenId == -1)
+		screen_frame = [[window screen] frame];
+	else
+		screen_frame = [[[NSScreen screens] objectAtIndex:fullscreenId] frame];
+		
+    fsRect = screen_frame;
     fsRect.origin.x = 0;
 	fsRect.origin.y = 0;
 
@@ -350,7 +353,7 @@
 		[fullscreenWindow setFrame:screen_frame display:YES animate:NO];
 		[fullscreenWindow setAcceptsMouseMovedEvents:YES];
 		[[fullscreenWindow contentView] setFrame: fsRect];
-		[fullscreenWindow setFullscreen:YES];
+		[(PlayerWindow*)fullscreenWindow setFullscreen:YES];
 
 		//enter kiosk mode
 		SetSystemUIMode( kUIModeAllHidden, kUIOptionAutoShowMenuBar);
@@ -374,7 +377,7 @@
 		
 		//destroy fullscreen window
 		[fullscreenWindow orderOut:nil];
-		[fullscreenWindow setFullscreen:NO];
+		[(PlayerWindow*)fullscreenWindow setFullscreen:NO];
 
 		[self reshape];		
 		[window setFrame:old_win_frame display:YES animate:NO];
@@ -386,7 +389,7 @@
 		CGDisplayShowCursor(kCGDirectMainDisplay);
 		hideMouse = NO;
 	}
-
+	
 	[self reshape];
 }
 

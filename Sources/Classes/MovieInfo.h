@@ -140,6 +140,14 @@ typedef enum _SubtitleType {
 -(NSEnumerator *)getSubtitleStreamsEnumeratorForType:(SubtitleType)type;
 -(NSString *)descriptionForSubtitleStream:(unsigned int)streamId andType:(SubtitleType)type;
 
+// Set and get chapters
+-(void)newChapter:(unsigned int)chapterId from:(float)fromSec to:(float)toSec withName:(NSString *)chapterName;
+-(NSString *)nameForChapter:(unsigned int)chapterId;
+-(float)startOfChapter:(unsigned int)chapterId;
+-(float)endOfChapter:(unsigned int)chapterId;
+-(unsigned int)chapterCount;
+-(NSEnumerator *)getChaptersEnumerator;
+
 -(NSMutableDictionary *)subDictForType:(SubtitleType)type;
 
 @end

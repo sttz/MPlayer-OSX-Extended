@@ -46,6 +46,12 @@
 	// Filters
 	IBOutlet id deinterlace;
 	IBOutlet id postprocessing;
+	// Subtitles
+	IBOutlet id assSubtitles;
+	IBOutlet id embeddedFonts;
+	IBOutlet id subFontMenu;
+	IBOutlet id subEncodingMenu;
+	IBOutlet id subSizeBox;
 	
 	// ** Audio
 	// General
@@ -54,12 +60,6 @@
 	// Filters
 	IBOutlet id hrtfFilter;
 	IBOutlet id karaokeFilter;
-	// Subtitles
-	IBOutlet id assSubtitles;
-	IBOutlet id embeddedFonts;
-	IBOutlet id subFontMenu;
-	IBOutlet id subEncodingMenu;
-	IBOutlet id subSizeMenu;
 	
 	// ** Display
 	// Display
@@ -72,6 +72,7 @@
 	IBOutlet id videoAspectMenu;
 	IBOutlet id videoAspectBox;
 	// Output
+	IBOutlet id fullscreenSameAsPlayer;
 	IBOutlet id fullscreenDeviceId;
 	IBOutlet id deviceIdStepper;
 	IBOutlet id videoDriverMenu;

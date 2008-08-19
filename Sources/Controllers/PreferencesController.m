@@ -117,6 +117,9 @@
 		[videoAspectBox setStringValue:@""];
 	
 	// fullscreen device
+	if ([thePrefs objectForKey:@"FullscreenDeviceSameAsPlayer"])
+		[fullscreenSameAsPlayer setState:[thePrefs boolForKey:@"FullscreenDeviceSameAsPlayer"]];
+	
 	if ([thePrefs objectForKey:@"FullscreenDevice"])
 		[fullscreenDeviceId setIntValue:[[thePrefs
 				objectForKey:@"FullscreenDevice"] unsignedIntValue]];
@@ -205,11 +208,11 @@
 		[subEncodingMenu selectItemAtIndex:0];
 	
 	// subtitles size
-	if ([thePrefs objectForKey:@"SubtitlesSize"])
-		[subSizeMenu selectItemAtIndex:
-				[[thePrefs objectForKey:@"SubtitlesSize"] intValue]];
+	if ([thePrefs objectForKey:@"SubtitlesScale"])
+		[subSizeBox setIntValue:
+				[[thePrefs objectForKey:@"SubtitlesScale"] intValue]];
 	else
-		[subSizeMenu selectItemWithTitle:NSLocalizedString(@"normal",nil)];
+		[subSizeBox setIntValue:100];
 	
 	// ass at the beginning of filter chain
 	if ([thePrefs objectForKey:@"ASSPreFilter"])
@@ -383,7 +386,7 @@
 {
 	NSUserDefaults *thePrefs = [appController preferences];
 	
-	[thePrefs setObject:@"customSVN20080721ast" forKey:@"Version"];
+	[thePrefs setObject:@"ext6" forKey:@"Version"];
 	
 	// *** Playback
 	
@@ -444,6 +447,8 @@
 			forKey:@"CustomVideoAspect"];
 	
 	// fullscreen device id
+	[thePrefs setBool:[fullscreenSameAsPlayer state] forKey:@"FullscreenDeviceSameAsPlayer"];
+	
 	if ([fullscreenDeviceId intValue] >= 0)
 		[thePrefs setObject:[NSNumber numberWithInt:[fullscreenDeviceId intValue]]
 				forKey:@"FullscreenDevice"];
@@ -501,8 +506,8 @@
 			forKey:@"SubtitlesEncoding"];
 	
 	// subtitles size
-	[thePrefs setObject:[NSNumber numberWithInt:[subSizeMenu indexOfSelectedItem]]
-			forKey:@"SubtitlesSize"];
+	[thePrefs setObject:[NSNumber numberWithInt:[subSizeBox intValue]]
+			forKey:@"SubtitlesScale"];
 	
 	// ass pre filter
 	[thePrefs setBool:[assPreFilter state] forKey:@"ASSPreFilter"];
@@ -635,10 +640,19 @@
 	else
 		[videoAspectBox setEnabled:NO];
 	
+	// fullscreen device
+	if ([fullscreenSameAsPlayer state] == NSOffState) {
+		[fullscreenDeviceId setEnabled:YES];
+		[deviceIdStepper setEnabled:YES];
+	} else {
+		[fullscreenDeviceId setEnabled:NO];
+		[deviceIdStepper setEnabled:NO];
+	}
+	
 	// ** Video
 	
 	// enable subtitles settings deppending on selected font
-	switch ([[subFontMenu selectedItem] tag]) {
+	/*switch ([[subFontMenu selectedItem] tag]) {
 	case 1 : // truetype font
 		[subSizeMenu setEnabled:YES];
 		[subEncodingMenu setEnabled:YES];
@@ -647,7 +661,7 @@
 		[subSizeMenu setEnabled:NO];
 		[subEncodingMenu setEnabled:NO];
 		break;
-	}
+	}*/
 	
 	// ** Advanced
 	

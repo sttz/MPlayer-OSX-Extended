@@ -133,11 +133,19 @@
 				<string>id</string>
 				<key>changeVolume</key>
 				<string>id</string>
+				<key>chapterMenuAction</key>
+				<string>id</string>
+				<key>cycleAudioStreams</key>
+				<string>id</string>
+				<key>cycleSubtitleStreams</key>
+				<string>id</string>
 				<key>decreaseVolume</key>
 				<string>id</string>
 				<key>displayStats</key>
 				<string>id</string>
 				<key>displayWindow</key>
+				<string>id</string>
+				<key>fullscreenMenuAction</key>
 				<string>id</string>
 				<key>increaseVolume</key>
 				<string>id</string>
@@ -150,6 +158,10 @@
 				<key>seekEnd</key>
 				<string>id</string>
 				<key>seekFwd</key>
+				<string>id</string>
+				<key>seekNext</key>
+				<string>id</string>
+				<key>seekPrevious</key>
 				<string>id</string>
 				<key>stop</key>
 				<string>id</string>
@@ -172,9 +184,21 @@
 			<dict>
 				<key>appController</key>
 				<string>id</string>
+				<key>audioCycleButton</key>
+				<string>id</string>
 				<key>audioStreamMenu</key>
 				<string>id</string>
 				<key>audioWindowMenu</key>
+				<string>id</string>
+				<key>chapterMenu</key>
+				<string>id</string>
+				<key>chapterWindowMenu</key>
+				<string>id</string>
+				<key>fullscreenButton</key>
+				<string>id</string>
+				<key>fullscreenMenu</key>
+				<string>id</string>
+				<key>fullscreenWindowMenu</key>
 				<string>id</string>
 				<key>playButton</key>
 				<string>NSButton</string>
@@ -215,6 +239,8 @@
 				<key>statsStatusBox</key>
 				<string>id</string>
 				<key>stopMenuItem</key>
+				<string>id</string>
+				<key>subtitleCycleButton</key>
 				<string>id</string>
 				<key>subtitleStreamMenu</key>
 				<string>id</string>
@@ -371,6 +397,8 @@
 				<string>id</string>
 				<key>fullscreenDeviceId</key>
 				<string>id</string>
+				<key>fullscreenSameAsPlayer</key>
+				<string>id</string>
 				<key>hrtfFilter</key>
 				<string>id</string>
 				<key>karaokeFilter</key>
@@ -395,7 +423,7 @@
 				<string>id</string>
 				<key>subFontMenu</key>
 				<string>id</string>
-				<key>subSizeMenu</key>
+				<key>subSizeBox</key>
 				<string>id</string>
 				<key>subtitleLanguages</key>
 				<string>id</string>

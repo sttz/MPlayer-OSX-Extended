@@ -697,7 +697,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 }
 
 - (void) processResultOfPreflight:(NSNotification *)notification {
-	[Debug log:ASL_LEVEL_DEBUG withMessage:@"Preflight Result: %@", [notification userInfo]];
+	
 	// process item
 	if ([notification userInfo] && [[notification userInfo] objectForKey:@"MovieInfo"] && [[notification userInfo] objectForKey:@"MovieFile"]) {
 		

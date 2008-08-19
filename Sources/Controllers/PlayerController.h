@@ -16,7 +16,7 @@
 #import "MplayerInterface.h"
 #import "VideoOpenGLView.h"
 
-#define		volumePollInterval		3.0f
+#define		pollInterval			3.0f
 #define		volumeStep				10.0
 
 @interface PlayerController : NSObject
@@ -44,6 +44,9 @@
 	IBOutlet id audioWindowMenu;
 	IBOutlet id subtitleWindowMenu;
 	IBOutlet id toggleMuteMenu;
+	IBOutlet id audioCycleButton;
+	IBOutlet id subtitleCycleButton;
+	IBOutlet id fullscreenButton;
 	
 	// statistics panel outlets
 	IBOutlet id statsPanel;
@@ -59,6 +62,13 @@
 	IBOutlet id audioStreamMenu;
 	IBOutlet id subtitleStreamMenu;
 	
+	// chapter menu
+	IBOutlet id chapterMenu;
+	IBOutlet id chapterWindowMenu;
+	
+	IBOutlet id fullscreenMenu;
+	IBOutlet id fullscreenWindowMenu;
+	
 	// playback menu
 	IBOutlet id playMenuItem;
 	IBOutlet id stopMenuItem;
@@ -72,6 +82,7 @@
 	
 	// actual movie parametters
 	NSMutableDictionary *myPlayingItem;
+	MovieInfo *movieInfo;
 	BOOL saveTime;
 	int playerStatus;
 	unsigned movieSeconds;		// stores actual movie seconds for further use
@@ -79,10 +90,15 @@
 	BOOL isOntop;
 	BOOL continuousPlayback;
 	BOOL playingFromPlaylist;
+	int currentChapter;
+	
+	// preferences
+	int fullscreenDeviceId;
+	BOOL fullscreenDeviceLocked;
 	
 	// volume
 	double muteLastVolume;
-	double lastVolumePoll;
+	double lastPoll;
 	
 	// images
 	NSImage *playImageOff;
@@ -105,6 +121,8 @@
 - (void) applySettings;
 - (BOOL) changesRequireRestart;
 - (void) applyChangesWithRestart:(BOOL)restart;
+- (BOOL) startInFullscreen;
+- (int) fullscreenDeviceId;
 
 - (void) playFromPlaylist:(NSMutableDictionary *)anItem;
 - (void) stopFromPlaylist;
@@ -121,9 +139,10 @@
 - (IBAction)playPause:(id)sender;
 - (IBAction)seekBack:(id)sender;
 - (IBAction)seekFwd:(id)sender;
-- (IBAction)seekBegin:(id)sender;
-- (IBAction)seekEnd:(id)sender;
+- (IBAction)seekPrevious:(id)sender;
+- (IBAction)seekNext:(id)sender;
 - (IBAction)stop:(id)sender;
+- (void)cleanUpAfterStop;
 - (IBAction)switchFullscreen:(id)sender;
 - (IBAction)displayStats:(id)sender;
 - (IBAction)takeScreenshot:(id)sender;
@@ -135,15 +154,31 @@
 - (IBAction)decreaseVolume:(id)sender;
 - (void)sendKeyEvent:(int)event;
 
+- (void)goToChapter:(unsigned int)chapter;
+- (void)skipToNextChapter;
+- (void)skipToPreviousChapter;
+
 - (void)clearStreamMenus;
 - (void)fillStreamMenus;
 - (void)videoMenuAction:(id)sender;
 - (void)audioMenuAction:(id)sender;
 - (void)subtitleMenuAction:(id)sender;
+- (IBAction)cycleAudioStreams:(id)sender;
+- (IBAction)cycleSubtitleStreams:(id)sender;
 - (void)newVideoStreamId:(unsigned int)streamId;
 - (void)newAudioStreamId:(unsigned int)streamId;
 - (void)newSubtitleStreamId:(unsigned int)streamId forType:(SubtitleType)type;
 - (void)disableMenuItemsInMenu:(NSMenu *)menu;
+
+- (void)clearChapterMenu;
+- (void)fillChapterMenu;
+- (void)chapterMenuAction:(id)sender;
+- (void)selectChapterForTime:(int)seconds;
+
+- (void)clearFullscreenMenu;
+- (void)fillFullscreenMenu;
+- (void)fullscreenMenuAction:(id)sender;
+- (void)selectFullscreenDevice;
 
 // notification observers
 - (void) appFinishedLaunching;

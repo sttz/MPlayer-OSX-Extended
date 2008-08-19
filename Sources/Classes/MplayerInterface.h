@@ -166,6 +166,7 @@
 	NSString *lastUnparsedLine;
 	//NSMutableDictionary *myInfo;	// dict filled by -identify command
 	BOOL isFullscreen;				// currently playing fullscreen
+	int subtitleFileId;				// since sub file identify output is not numberede, we need to cache the id
 	
 	MovieInfo *info;
 }
@@ -272,16 +273,20 @@
 // advenced
 - (void)sendCommand:(NSString *)aCommand;
 - (void)sendCommands:(NSArray *)aCommands;
+- (void)sendCommandQuietly:(NSString *)command;
+- (void)sendCommandsQuietly:(NSArray *)commands;
 - (void)runMplayerWithParams:(NSArray *)aParams;
 - (void)sendToMplayersInput:(NSString *)aCommand;
 - (void)terminateMplayer;
+
+- (void)reactivateOsdAfterDelay;
+- (void)reactivateOsd;
 
 // notification handlers
 - (void) mplayerTerminated;
 - (void) readOutputC:(NSNotification *)notification;
 
 // helper
--(NSString *)parseDefine:(NSString *)searchFor inLine:(NSString *)line;
 -(NSArray *)splitString:(NSString *)string byCharactersInSet:(NSCharacterSet *)set;
 
 @end

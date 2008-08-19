@@ -347,7 +347,37 @@
 
 // **************************************************** //
 
+-(void)newChapter:(unsigned int)chapterId from:(float)fromSec to:(float)toSec withName:(NSString *)chapterName {
+	
+	[chapter setObject:[NSArray arrayWithObjects: 
+						[NSNumber numberWithFloat:fromSec], [NSNumber numberWithFloat:toSec], chapterName, nil] 
+				forKey:[NSNumber numberWithUnsignedInt:chapterId]];	
+}
 
+-(NSString *)nameForChapter:(unsigned int)chapterId {
+	
+	return [[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]] objectAtIndex:2];
+}
+
+-(float)startOfChapter:(unsigned int)chapterId {
+	
+	return [[[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]] objectAtIndex:0] floatValue];
+}
+
+-(float)endOfChapter:(unsigned int)chapterId {
+	
+	return [[[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]] objectAtIndex:1] floatValue];
+}
+
+-(unsigned int)chapterCount {
+
+	return [chapter count];
+}
+
+-(NSEnumerator *)getChaptersEnumerator {
+	
+	return [[[chapter allKeys] sortedArrayUsingSelector:@selector(compare:)] objectEnumerator];
+}
 
 // **************************************************** //
 

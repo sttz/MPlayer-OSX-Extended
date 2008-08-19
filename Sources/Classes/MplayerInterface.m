@@ -8,6 +8,7 @@
  */
 
 #import "MplayerInterface.h"
+#import <RegexKit/RegexKit.h> 
 
 // directly parsed mplayer output strings
 // strings that are used to get certain data from output are not included
@@ -18,6 +19,11 @@
 #define MI_OPENING_STRING			"Playing "
 #define MI_AUDIO_FILE_STRING		"Audio file detected."
 #define MI_STARTING_STRING			"Starting playback..."
+
+#define MI_DEFINE_REGEX				@"^ID_(.*)=(.*)$"
+#define MI_REPLY_REGEX				@"^ANS_(.*)=(.*)$"
+#define MI_STREAM_REGEX				@"^ID_(.*)_(\\d+)_(.*)=(.*)$"
+#define MI_MKVCHP_REGEX				@"^\\[mkv\\] Chapter (\\d+) from (\\d+):(\\d+):(\\d+\\.\\d+) to (\\d+):(\\d+):(\\d+\\.\\d+), (.+)$"
 
 #define MI_REFRESH_LIMIT			10
 
@@ -376,9 +382,14 @@
 		[params addObject:subEncoding];
 	}
 	// subtitles scale
-	if (subScale != 0) {
-		[params addObject:@"-subfont-text-scale"];
-		[params addObject:[NSString stringWithFormat:@"%d",subScale]];
+	if (subScale > 0) {
+		if (assSubtitles) {
+			[params addObject:@"-ass-font-scale"];
+			[params addObject:[NSString stringWithFormat:@"%.3f",(subScale/100.0)]];
+		} else {
+			[params addObject:@"-subfont-text-scale"];
+			[params addObject:[NSString stringWithFormat:@"%.3f",((subScale/100.0)*5.0)]];
+		}
 	}
 	// always enable fontconfig
 	[params addObject:@"-fontconfig"];
@@ -470,7 +481,6 @@
 	
 	// MovieInfo
 	if (mf == nil && (info == nil || ![myMovieFile isEqualToString:[info filename]])) {
-		[Debug log:ASL_LEVEL_ERR withMessage:@"Create new MovieInfo"];
 		[info release];
 		info = [[MovieInfo alloc] init];		// prepare it for getting new values
 	} else if (mf != nil)
@@ -983,6 +993,9 @@
 			subEncoding = [aEncoding retain];
 			settingsChanged = YES;
 		}
+	} else {
+		[subEncoding release];
+		subEncoding = nil;
 	}
 }
 /************************************************************************************/
@@ -1217,6 +1230,7 @@
  ************************************************************************************/
 - (void)sendCommand:(NSString *)aCommand
 {
+	[Debug log:ASL_LEVEL_DEBUG withMessage:@"Send Command: %@",aCommand];
 	[self sendToMplayersInput:[aCommand stringByAppendingString:@"\n"]];
 }
 /************************************************************************************/
@@ -1226,6 +1240,35 @@
 	for (i=0; i < [aCommands count]; i++) {
 		[self sendCommand:[aCommands objectAtIndex:i]];
 	}
+}
+/************************************************************************************/
+- (void)sendCommandsQuietly:(NSArray *)commands {
+	
+	[self sendCommand:@"osd 0"];
+	
+	int i;
+	for (i=0; i < [commands count]; i++) {
+		[self sendCommand:[commands objectAtIndex:i]];
+	}
+	
+	[self reactivateOsdAfterDelay];
+}
+/************************************************************************************/
+- (void)sendCommandQuietly:(NSString *)command {
+	
+	[self sendCommand:@"osd 0"];
+	[self sendCommand:command];
+	[self reactivateOsdAfterDelay];
+}
+/************************************************************************************/
+- (void)reactivateOsdAfterDelay {
+	
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(reactivateOsd) object:nil];
+	[self performSelector:@selector(reactivateOsd) withObject:self afterDelay:1.2];
+}
+
+- (void)reactivateOsd {
+	[self sendCommand:@"osd 1"];
 }
 /************************************************************************************/
 - (void) takeScreenshot
@@ -1315,6 +1358,10 @@
 	
 	// reset output read mode
 	myOutputReadMode = 0;
+	
+	// reset subtitle file id
+	subtitleFileId = 0;
+	
 	// launch mplayer task
 	[myMplayerTask launch];
 	isRunning = YES;
@@ -1422,8 +1469,21 @@
 	
 	const char *stringPtr;
 	NSString *line;
-	NSString *result;
-	int subtitleFileId = -1;
+	
+	// For ID_ and ANS_ matching
+	NSString *idName;
+	NSString *idValue;
+	
+	// For stream matching
+	NSString *streamType;
+	int streamId;
+	NSString *streamInfoName;
+	NSString *streamInfoValue;
+	
+	// For mkv chapter matching
+	int chapterId;
+	float chapterTime[6];
+	NSString *chapterName;
 	
 	// Create newline character set
 	NSMutableCharacterSet *newlineCharacterSet = (id)[NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
@@ -1465,6 +1525,9 @@
 			line = [lastUnparsedLine stringByAppendingString:line];
 			lastUnparsedLine = @"";
 		}
+		// skip empty lines
+		if ([[line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length] == 0)
+			continue;
 		
 		//[Debug log:ASL_LEVEL_ERR withMessage:@"readOutputC: %@",line];
 		
@@ -1594,38 +1657,6 @@
 				continue;
 		}
 		
-		// parse current streams
-		result = [self parseDefine:@"ANS_switch_video=" inLine:line];
-		if (result != nil) {
-			[userInfo setObject:[NSNumber numberWithInt:[result intValue]] forKey:@"VideoStreamId"];
-			continue;
-		}
-		
-		result = [self parseDefine:@"ANS_switch_audio=" inLine:line];
-		if (result != nil) {
-			[userInfo setObject:[NSNumber numberWithInt:[result intValue]] forKey:@"AudioStreamId"];
-			continue;
-		}
-		
-		result = [self parseDefine:@"ANS_sub_demux=" inLine:line];
-		if (result != nil) {
-			[userInfo setObject:[NSNumber numberWithInt:[result intValue]] forKey:@"SubDemuxStreamId"];
-			continue;
-		}
-		
-		result = [self parseDefine:@"ANS_sub_file=" inLine:line];
-		if (result != nil) {
-			[userInfo setObject:[NSNumber numberWithInt:[result intValue]] forKey:@"SubFileStreamId"];
-			continue;
-		}
-		
-		// current volume
-		result = [self parseDefine:@"ANS_volume=" inLine:line];
-		if (result != nil) {
-			[userInfo setObject:[NSNumber numberWithDouble:[result doubleValue]] forKey:@"Volume"];
-			continue;
-		}
-		
 /*	
 		// if we don't have output mode try to parse playback output and get output mode
 		if (myOutputReadMode == 0) {
@@ -1696,7 +1727,46 @@
 			continue;							// continue on next line
 		}
 		
-		// if player is playing then do not bother with parse anything else
+		
+		// parse command replies
+		if ([line isMatchedByRegex:MI_REPLY_REGEX]) {
+			
+			// extract matches
+			[line getCapturesWithRegexAndReferences:MI_REPLY_REGEX, @"${1}", &idName, @"${2}", &idValue, nil];
+			
+			// streams
+			if ([idName isEqualToString:@"switch_video"]) {
+				[userInfo setObject:[NSNumber numberWithInt:[idValue intValue]] forKey:@"VideoStreamId"];
+				continue;
+			}
+			
+			if ([idName isEqualToString:@"switch_audio"]) {
+				[userInfo setObject:[NSNumber numberWithInt:[idValue intValue]] forKey:@"AudioStreamId"];
+				continue;
+			}
+			
+			if ([idName isEqualToString:@"sub_demux"]) {
+				[userInfo setObject:[NSNumber numberWithInt:[idValue intValue]] forKey:@"SubDemuxStreamId"];
+				continue;
+			}
+			
+			if ([idName isEqualToString:@"sub_file"]) {
+				[userInfo setObject:[NSNumber numberWithInt:[idValue intValue]] forKey:@"SubFileStreamId"];
+				continue;
+			}
+			
+			// current volume
+			if ([idName isEqualToString:@"volume"]) {
+				[userInfo setObject:[NSNumber numberWithDouble:[idValue doubleValue]] forKey:@"Volume"];
+				continue;
+			}
+			
+			// unparsed ans lines
+			[Debug log:ASL_LEVEL_DEBUG withMessage:@"REPLY not matched : %@ = %@", idName, idValue];
+			continue;
+		}
+		
+		// *** if player is playing then do not bother with parse anything else
 		if (myOutputReadMode > 0) {
 			// print unused line
 			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
@@ -1758,215 +1828,208 @@
 			continue; 							// continue on next line	
 		}
 		
-		// getting length
-		result = [self parseDefine:@"ID_LENGTH=" inLine:line];
-		if (result != nil) {
-			[info setLength:[result intValue]];
-			continue;
-		}
 		
-		// movie width and height
-		result = [self parseDefine:@"ID_VIDEO_WIDTH=" inLine:line];
-		if (result != nil) {
-			[info setVideoWidth:[result intValue]];
-			continue;
-		}
-		result = [self parseDefine:@"ID_VIDEO_HEIGHT=" inLine:line];
-		if (result != nil) {
-			[info setVideoHeight:[result intValue]];
-			continue;
-		}
 		
-		// filename
-		result = [self parseDefine:@"ID_FILENAME=" inLine:line];
-		if (result != nil) {
-			[info setFilename:result];
-			continue;
-		}
 		
-		// video format
-		result = [self parseDefine:@"ID_VIDEO_FORMAT=" inLine:line];
-		if (result != nil) {
-			[info setVideoFormat:result];
-			continue;
-		}
 		
-		// video codec
-		result = [self parseDefine:@"ID_VIDEO_CODEC=" inLine:line];
-		if (result != nil) {
-			[info setVideoCodec:result];
-			continue;
-		}
-		
-		// video bitrate
-		result = [self parseDefine:@"ID_VIDEO_BITRATE=" inLine:line];
-		if (result != nil) {
-			[info setVideoBitrate:[result intValue]];
-			continue;
-		}
-		
-		// video fps
-		result = [self parseDefine:@"ID_VIDEO_FPS=" inLine:line];
-		if (result != nil) {
-			[info setVideoFps:[result floatValue]];
-			continue;
-		}
-		
-		// video aspect
-		result = [self parseDefine:@"ID_VIDEO_ASPECT=" inLine:line];
-		if (result != nil) {
-			[info setVideoAspect:[result floatValue]];
-			continue;
-		}
-		
-		// audio format
-		result = [self parseDefine:@"ID_AUDIO_FORMAT=" inLine:line];
-		if (result != nil) {
-			[info setAudioFormat:result];
-			continue;
-		}
-		
-		// audio codec
-		result = [self parseDefine:@"ID_AUDIO_CODEC=" inLine:line];
-		if (result != nil) {
-			[info setAudioCodec:result];
-			continue;
-		}
-		
-		// audio bitrate
-		result = [self parseDefine:@"ID_AUDIO_BITRATE=" inLine:line];
-		if (result != nil) {
-			[info setAudioBitrate:[result intValue]];
-			continue;
-		}
-		
-		// audio sample rate
-		result = [self parseDefine:@"ID_AUDIO_RATE=" inLine:line];
-		if (result != nil) {
-			[info setAudioSampleRate:[result floatValue]];
-			continue;
-		}
-		
-		// audio channels
-		result = [self parseDefine:@"ID_AUDIO_NCH=" inLine:line];
-		if (result != nil) {
-			[info setAudioChannels:[result intValue]];
-			continue;
-		}
-		
-		// video streams
-		result = [self parseDefine:@"ID_VIDEO_ID=" inLine:line];
-		if (result != nil) {
-			[info newVideoStream:[result intValue]];
-			continue;
-		}
-		
-		result = [self parseDefine:@"ID_VID_" inLine:line];
-		if (result != nil) {
+		// stream info
+		if ([line isMatchedByRegex:MI_STREAM_REGEX]) {
 			
-			unsigned int videoStreamId = [result intValue];
+			// extract matches
+			[line getCapturesWithRegexAndReferences:MI_STREAM_REGEX, 
+			 @"${1}", &streamType,
+			 @"${2:%d}", &streamId,
+			 @"${3}", &streamInfoName,
+			 @"${4}", &streamInfoValue, nil];
 			
-			if (videoStreamId < 10)
-				result = [result substringFromIndex:1];
-			else
-				result = [result substringFromIndex:2];
-			
-			if ([result hasPrefix:@"_NAME"]) {
+			// video streams
+			if ([streamType isEqualToString:@"VID"]) {
 				
-				[info setVideoStreamName:[result substringFromIndex:6] forId:videoStreamId];
+				if ([streamInfoName isEqualToString:@"NAME"]) {
+					
+					[info setVideoStreamName:streamInfoValue forId:streamId];
+					continue;
+				}
+			}
+			
+			// audio streams
+			if ([streamType isEqualToString:@"AID"]) {
+				
+				if ([streamInfoName isEqualToString:@"NAME"]) {
+					
+					[info setAudioStreamName:streamInfoValue forId:streamId];
+					continue;
+				}
+				
+				if ([streamInfoName isEqualToString:@"LANG"]) {
+					
+					[info setAudioStreamLanguage:streamInfoValue forId:streamId];
+					continue;
+				}
+			}
+			
+			// subtitle demuxer streams
+			if ([streamType isEqualToString:@"SID"]) {
+				
+				if ([streamInfoName isEqualToString:@"NAME"]) {
+					
+					[info setSubtitleStreamName:streamInfoValue forId:streamId andType:SubtitleTypeDemux];
+					continue;
+				}
+				
+				if ([streamInfoName isEqualToString:@"LANG"]) {
+					
+					[info setSubtitleStreamLanguage:streamInfoValue forId:streamId andType:SubtitleTypeDemux];
+					continue;
+				}
+			}
+			
+			// Unmatched stream lines
+			[Debug log:ASL_LEVEL_DEBUG withMessage:@"STREAM not matched: %@ for #%d, %@ = %@",streamType,streamId,streamInfoName,streamInfoValue];
+			continue;
+		}
+		
+		
+		// parse identify lines
+		if ([line isMatchedByRegex:MI_DEFINE_REGEX]) {
+			
+			// extract matches
+			[line getCapturesWithRegexAndReferences:MI_DEFINE_REGEX, @"${1}", &idName, @"${2}", &idValue, nil];
+			
+			// getting length
+			if ([idName isEqualToString:@"LENGTH"]) {
+				[info setLength:[idValue intValue]];
 				continue;
 			}
 			
-		}
-		
-		// audio streams
-		result = [self parseDefine:@"ID_AUDIO_ID=" inLine:line];
-		if (result != nil) {
-			[info newAudioStream:[result intValue]];
-			continue;
-		}
-		
-		result = [self parseDefine:@"ID_AID_" inLine:line];
-		if (result != nil) {
-			
-			unsigned int audioStreamId = [result intValue];
-			
-			if (audioStreamId < 10)
-				result = [result substringFromIndex:1];
-			else
-				result = [result substringFromIndex:2];
-			
-			if ([result hasPrefix:@"_NAME"]) {
-				
-				[info setAudioStreamName:[result substringFromIndex:6] forId:audioStreamId];
+			// movie width and height
+			if ([idName isEqualToString:@"VIDEO_WIDTH"]) {
+				[info setVideoWidth:[idValue intValue]];
 				continue;
-			} else if ([result hasPrefix:@"_LANG"]) {
-				
-				[info setAudioStreamLanguage:[result substringFromIndex:6] forId:audioStreamId];
+			}
+			if ([idName isEqualToString:@"VIDEO_HEIGHT"]) {
+				[info setVideoHeight:[idValue intValue]];
 				continue;
 			}
 			
-		}
-		
-		// subtitle demux streams
-		result = [self parseDefine:@"ID_SUBTITLE_ID=" inLine:line];
-		if (result != nil) {
-			[info newSubtitleStream:[result intValue] forType:SubtitleTypeDemux];
-			continue;
-		}
-		
-		result = [self parseDefine:@"ID_SID_" inLine:line];
-		if (result != nil) {
-			
-			unsigned int subtitleStreamId = [result intValue];
-			
-			if (subtitleStreamId < 10)
-				result = [result substringFromIndex:1];
-			else
-				result = [result substringFromIndex:2];
-			
-			if ([result hasPrefix:@"_NAME"]) {
-				
-				[info setSubtitleStreamName:[result substringFromIndex:6] forId:subtitleStreamId andType:SubtitleTypeDemux];
-				continue;
-			} else if ([result hasPrefix:@"_LANG"]) {
-				
-				[info setSubtitleStreamLanguage:[result substringFromIndex:6] forId:subtitleStreamId andType:SubtitleTypeDemux];
+			// filename
+			if ([idName isEqualToString:@"FILENAME"]) {
+				[info setFilename:idValue];
 				continue;
 			}
 			
-		}
-		
-		// subtitle file streams
-		result = [self parseDefine:@"ID_FILE_SUB_ID=" inLine:line];
-		if (result != nil) {
-			[info newSubtitleStream:[result intValue] forType:SubtitleTypeFile];
-			subtitleFileId = [result intValue];
-			continue;
-		}
-		
-		result = [self parseDefine:@"ID_FILE_SUB_FILENAME=" inLine:line];
-		if (result != nil) {
-			
-			[info setSubtitleStreamName:[result lastPathComponent] forId:subtitleFileId andType:SubtitleTypeFile];
-			continue;
-		}
-		
-		// getting other unparsed -identify parameters
-		if ([line length] > 3 && [[line substringToIndex: 3] isEqualToString:@"ID_"])
-		{
-			NSArray *parts = [line componentsSeparatedByString:@"="];
-			
-			if ([parts count] == 2)
-			{
-				[Debug log:ASL_LEVEL_INFO withMessage:@"IDENTIFY: %@ = %@", [[parts objectAtIndex:0] substringFromIndex:3], [parts objectAtIndex:1]];
-				[info setInfo:[parts objectAtIndex:1] forKey:[[parts objectAtIndex:0] substringFromIndex:3]];
+			// video format
+			if ([idName isEqualToString:@"VIDEO_FORMAT"]) {
+				[info setVideoFormat:idValue];
+				continue;
 			}
-			continue; 							// continue on next line	
+			
+			// video codec
+			if ([idName isEqualToString:@"VIDEO_CODEC"]) {
+				[info setVideoCodec:idValue];
+				continue;
+			}
+			
+			// video bitrate
+			if ([idName isEqualToString:@"VIDEO_BITRATE"]) {
+				[info setVideoBitrate:[idValue intValue]];
+				continue;
+			}
+			
+			// video fps
+			if ([idName isEqualToString:@"VIDEO_FPS"]) {
+				[info setVideoFps:[idValue floatValue]];
+				continue;
+			}
+			
+			// video aspect
+			if ([idName isEqualToString:@"VIDEO_ASPECT"]) {
+				[info setVideoAspect:[idValue floatValue]];
+				continue;
+			}
+			
+			// audio format
+			if ([idName isEqualToString:@"AUDIO_FORMAT"]) {
+				[info setAudioFormat:idValue];
+				continue;
+			}
+			
+			// audio codec
+			if ([idName isEqualToString:@"AUDIO_CODEC"]) {
+				[info setAudioCodec:idValue];
+				continue;
+			}
+			
+			// audio bitrate
+			if ([idName isEqualToString:@"AUDIO_BITRATE"]) {
+				[info setAudioBitrate:[idValue intValue]];
+				continue;
+			}
+			
+			// audio sample rate
+			if ([idName isEqualToString:@"AUDIO_RATE"]) {
+				[info setAudioSampleRate:[idValue floatValue]];
+				continue;
+			}
+			
+			// audio channels
+			if ([idName isEqualToString:@"AUDIO_NCH"]) {
+				[info setAudioChannels:[idValue intValue]];
+				continue;
+			}
+			
+			// video streams
+			if ([idName isEqualToString:@"VIDEO_ID"]) {
+				[info newVideoStream:[idValue intValue]];
+				continue;
+			}
+			
+			// audio streams
+			if ([idName isEqualToString:@"AUDIO_ID"]) {
+				[info newAudioStream:[idValue intValue]];
+				continue;
+			}
+			
+			// subtitle demux streams
+			if ([idName isEqualToString:@"SUBTITLE_ID"]) {
+				[info newSubtitleStream:[idValue intValue] forType:SubtitleTypeDemux];
+				continue;
+			}
+			
+			// subtitle file streams
+			if ([idName isEqualToString:@"FILE_SUB_ID"]) {
+				[info newSubtitleStream:[idValue intValue] forType:SubtitleTypeFile];
+				subtitleFileId = [idValue intValue];
+				continue;
+			}
+			
+			if ([idName isEqualToString:@"FILE_SUB_FILENAME"]) {
+				[info setSubtitleStreamName:[idValue lastPathComponent] forId:subtitleFileId andType:SubtitleTypeFile];
+				continue;
+			}
+			
+			// Unmatched IDENTIFY lines
+			[Debug log:ASL_LEVEL_DEBUG withMessage:@"IDENTIFY not matched: %@ = %@", idName, idValue];
+			[info setInfo:idValue forKey:idName];
+			continue;
+			
 		}
+		
 		
 		// mkv chapters
-		
+		if ([line isMatchedByRegex:MI_MKVCHP_REGEX]) {
+			
+			// extract
+			[line getCapturesWithRegexAndReferences:MI_MKVCHP_REGEX, 
+					@"${1:%d}", &chapterId,
+					@"${2:%f}", &chapterTime[0], @"${3:%f}", &chapterTime[1], @"${4:%f}", &chapterTime[2],
+					@"${5:%f}", &chapterTime[3], @"${6:%f}", &chapterTime[4], @"${7:%f}", &chapterTime[5],
+					@"${8}", &chapterName, nil];
+			
+			[info newChapter:(chapterId+1) from:(chapterTime[0]*3600+chapterTime[1]*60+chapterTime[2])
+						  to:(chapterTime[3]*3600+chapterTime[4]*60+chapterTime[5]) withName:chapterName];
+			continue;
+		}
 		
 		// mplayer is starting playback -- ignore for preflight
 		if (strstr(stringPtr, MI_STARTING_STRING) != NULL && !isPreflight) {
@@ -2010,14 +2073,6 @@
 	//free((char *)dataPtr);
 	[data release];
 	[pool release];
-}
-
--(NSString *)parseDefine:(NSString *)searchFor inLine:(NSString *)line {
-	
-	if ([line length] > [searchFor length] && [[line substringToIndex: [searchFor length]] isEqualToString:searchFor]) {
-		return [line substringFromIndex:[searchFor length]];
-	} else
-		return nil;
 }
 
 -(NSArray *)splitString:(NSString *)string byCharactersInSet:(NSCharacterSet *)set {

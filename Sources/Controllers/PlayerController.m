@@ -30,8 +30,10 @@
 	saveTime = YES;
 	fullscreenStatus = NO;	// by default we play in window
 	isOntop = NO;
+	lastPoll = -pollInterval;
 	
-	//resize window 
+	//resize window
+	[playerWindow setContentMinSize:NSMakeSize(450, 78)]; // Temp workaround for IB always forgetting the min-size
 	[playerWindow setContentSize:[playerWindow contentMinSize] ];
 	
 	// make window ontop
@@ -144,8 +146,12 @@
 	[scrubbingBarToolbar setStyle:NSScrubbingBarEmptyStyle];
 	[scrubbingBarToolbar setIndeterminate:NO];
 
+	// set mute status and reload unmuted volume
+	if ([prefs objectForKey:@"LastAudioVolume"] && [prefs boolForKey:@"LastAudioMute"]) {
+		[self setVolume:0];
+		muteLastVolume = [prefs floatForKey:@"LastAudioVolume"];
 	// set volume to the last used value
-	if ([prefs objectForKey:@"LastAudioVolume"])
+	} else if ([prefs objectForKey:@"LastAudioVolume"])
 		[self setVolume:[[prefs objectForKey:@"LastAudioVolume"] doubleValue]];
 	else
 		[self setVolume:50];
@@ -154,6 +160,23 @@
 		
 	//setup drag & drop
 	[playerWindow registerForDraggedTypes:[NSArray arrayWithObjects: NSFilenamesPboardType, nil]];
+	
+	// load fullscreen defaults
+	if ([prefs boolForKey:@"FullscreenDeviceSameAsPlayer"])
+		fullscreenDeviceId = -1;
+	else
+		fullscreenDeviceId = [prefs integerForKey:@"FullscreenDevice"];
+	
+	
+	// fill fullscreen device menu
+	[self fillFullscreenMenu];
+	[self selectFullscreenDevice];
+	
+	// request notification for changes to monitor configuration
+	[[NSNotificationCenter defaultCenter] addObserver:self
+			selector:@selector(screensDidChange)
+			name:NSApplicationDidChangeScreenParametersNotification
+			object:NSApp];
 	
 	// apply prefs to player
 	[self applyPrefs];
@@ -292,7 +315,12 @@
 			[myPlayer setSubtitlesFile:aPath];
    		return;
 	}
-
+	
+	if (myPlayingItem)
+		[myPlayingItem release];
+	if (movieInfo)
+		[movieInfo release];
+	
 	// backup item that is playing
 	myPlayingItem = [anItem retain];
 	
@@ -352,7 +380,7 @@
 {
 	
 	playingFromPlaylist = NO;
-	[videoOpenGLView close];
+	[self cleanUpAfterStop];
 }
 
 /************************************************************************************/
@@ -421,7 +449,7 @@
 	
 	// *** Display
 	
-	// display type
+	// display type (force to fullscreen if overridden)
 	if ([preferences objectForKey:@"DisplayType"])
 		[myPlayer setDisplayType: [preferences integerForKey:@"DisplayType"]];
 	
@@ -475,9 +503,15 @@
 	else
 		[myPlayer setAspectRatio:0];
 	
-	// fullscreen device id
-	if ([preferences objectForKey:@"FullscreenDevice"])
-		[myPlayer setDeviceId: [preferences integerForKey:@"FullscreenDevice"]];
+	// fullscreen device id for not integrated video window
+	if ([[preferences objectForKey:@"VideoDriver"] intValue] != 0) {
+		// Same screen as player window
+		if (fullscreenDeviceId == -1)
+			[myPlayer setDeviceId: [[[[playerWindow screen] deviceDescription] objectForKey:@"NSScreenNumber"] intValue]];
+		// custom screen id
+		else
+			[myPlayer setDeviceId: fullscreenDeviceId];
+	}
 	
 	//vo driver
 	if ([preferences objectForKey:@"VideoDriver"])
@@ -545,33 +579,36 @@
 		[myPlayer setEmbeddedFonts: [preferences boolForKey:@"EmbeddedFonts"]];
 	
 	// subtitle font path
-	if ([preferences objectForKey:@"SubtitlesFontName"])
+	/*if ([preferences objectForKey:@"SubtitlesFontName"])
 	{
 		// if subtitles font is specified, set the font
 		[myPlayer setFontFile:[preferences objectForKey:@"SubtitlesFontName"]];
 		
-		/*if ([[[preferences objectForKey:@"SubtitlesFontPath"] lastPathComponent] caseInsensitiveCompare:@"font.desc"] == NSOrderedSame)
+		if ([[[preferences objectForKey:@"SubtitlesFontPath"] lastPathComponent] caseInsensitiveCompare:@"font.desc"] == NSOrderedSame)
 		{
 			// if prerendered font selected
 			[myPlayer setSubtitlesScale:0];
 		}
 		else
-		{*/
+		{
 		// if true type font selected
 			// set subtitles size
-			if ([preferences objectForKey:@"SubtitlesSize"]) {
+			if ([preferences objectForKey:@"SubtitlesScale"]) {
 				switch ([[preferences objectForKey:@"SubtitlesSize"] intValue]) {
-				case 0 : 		// smaller
-					[myPlayer setSubtitlesScale:3];
+				case 0 : 		// tiny
+					[myPlayer setSubtitlesScale:60];
 					break;
-				case 1 : 		// normal
-					[myPlayer setSubtitlesScale:4];
+				case 1 : 		// small
+					[myPlayer setSubtitlesScale:90];
 					break;
-				case 2 :		// larger
-					[myPlayer setSubtitlesScale:5];
+				case 2 :		// regular
+					[myPlayer setSubtitlesScale:100];
 					break;
-				case 3 :		// largest
-					[myPlayer setSubtitlesScale:7];
+				case 3 :		// large
+					[myPlayer setSubtitlesScale:110];
+					break;
+				case 0 : 		// huge
+					[myPlayer setSubtitlesScale:140];
 					break;
 				default :
 					[myPlayer setSubtitlesScale:0];
@@ -584,8 +621,18 @@
 	// if ther's no subtitles font
 		[myPlayer setFontFile:nil];
 		[myPlayer setSubtitlesScale:0];
-	}
-
+	}*/
+	
+	// subtitle font
+	if ([preferences objectForKey:@"SubtitlesFontName"])
+		[myPlayer setFontFile:[preferences objectForKey:@"SubtitlesFontName"]];
+	else
+		[myPlayer setFontFile:nil];
+	
+	// subtitle scale
+	if ([preferences objectForKey:@"SubtitlesScale"])
+		[myPlayer setSubtitlesScale:[preferences integerForKey:@"SubtitlesScale"]];
+	
 	// subtitle encoding
 	[self setSubtitlesEncoding];
 	
@@ -688,10 +735,7 @@
 		[myPlayer setRebuildIndex:NO];
 
 	// set subtitles encoding only if not default
-	if ([myPlayingItem objectForKey:@"SubtitlesEncoding"])
-		[self setSubtitlesEncoding];
-	else
-		[myPlayer setSubtitlesEncoding:nil];
+	[self setSubtitlesEncoding];
 }
 /************************************************************************************/
 - (BOOL) changesRequireRestart
@@ -725,12 +769,10 @@
 			[myPlayer setMovieSize:NSMakeSize(2, 0)];
 			break;
 		case 3 :		// fit screen it (it is set before actual playback)
-			if ([[MovieInfo fromDictionary:myPlayingItem] videoWidth] &&
-				[[MovieInfo fromDictionary:myPlayingItem] videoHeight]) {
+			if ([movieInfo videoWidth] && [movieInfo videoHeight]) {
 				NSSize screenSize = [[NSScreen mainScreen] visibleFrame].size;
 				double theWidth = ((screenSize.height - 28) /	// 28 pixels for window caption
-						[[MovieInfo fromDictionary:myPlayingItem] videoHeight] *
-						[[MovieInfo fromDictionary:myPlayingItem] videoWidth]);
+						[movieInfo videoHeight] * [movieInfo videoWidth]);
 				if (theWidth < screenSize.width)
 					[myPlayer setMovieSize:NSMakeSize(theWidth, 0)];
 				else
@@ -756,8 +798,9 @@
 - (void) setSubtitlesEncoding
 {
 	NSUserDefaults *preferences = [appController preferences];
-	if ([preferences objectForKey:@"SubtitlesFontPath"]) {
-		if ([[[preferences objectForKey:@"SubtitlesFontPath"] lastPathComponent]
+	
+	/*if ([preferences objectForKey:@"SubtitlesFontName"]) {
+		if ([[[preferences objectForKey:@"SubtitlesFontName"] lastPathComponent]
 				caseInsensitiveCompare:@"font.desc"] != NSOrderedSame) {
 		// if font is not a font.desc font then set subtitles encoding
 			if (myPlayingItem) {
@@ -773,7 +816,19 @@
 		}
 		else
 			[myPlayer setSubtitlesEncoding:nil];
-	}
+	}*/
+	
+	if (myPlayingItem && [myPlayingItem objectForKey:@"SubtitlesEncoding"]
+			&& ![[myPlayingItem objectForKey:@"SubtitlesEncoding"] isEqualToString:@"None"])
+		[myPlayer setSubtitlesEncoding:[myPlayingItem objectForKey:@"SubtitlesEncoding"]];
+	
+	else if ([preferences objectForKey:@"SubtitlesEncoding"] 
+				&& ![[preferences stringForKey:@"SubtitlesEncoding"] isEqualToString:@"None"])
+		[myPlayer setSubtitlesEncoding:[preferences objectForKey:@"SubtitlesEncoding"]];
+	
+	else
+		[myPlayer setSubtitlesEncoding:nil];
+	
 }
 /************************************************************************************/
 - (void) setVideoEqualizer
@@ -823,7 +878,11 @@
 	
 	NSImage *volumeImage;
 	
-	[[appController preferences] setObject:[NSNumber numberWithDouble:volume] forKey:@"LastAudioVolume"];
+	if (volume > 0)
+		[[appController preferences] setObject:[NSNumber numberWithDouble:volume] forKey:@"LastAudioVolume"];
+	
+	[[appController preferences] setBool:(volume == 0) forKey:@"LastAudioMute"];
+		
 	
 	//set volume icon
 	if(volume == 0)
@@ -937,7 +996,6 @@
 	[playListController updateView];
 }
 
-/************************************************************************************/
 - (IBAction)seekFwd:(id)sender
 {
 	if ([myPlayer isRunning])
@@ -953,19 +1011,54 @@
 	[myPlayer seek:10 mode:MIRelativeSeekingMode];
 }
 
-- (IBAction)seekBegin:(id)sender
+/************************************************************************************/
+- (IBAction)seekNext:(id)sender
 {
 	if ([myPlayer isRunning])
 	{
-		[myPlayer seek:0 mode:MIPercentSeekingMode];
+		if (movieInfo && [movieInfo chapterCount] > 0)
+			[self skipToNextChapter];
+		else
+			[myPlayer seek:100 mode:MIPercentSeekingMode];
 	}
 }
 
-- (IBAction)seekEnd:(id)sender
+- (IBAction)seekPrevious:(id)sender
 {
 	if ([myPlayer isRunning])
 	{
+		if (movieInfo && [movieInfo chapterCount] > 0)
+			[self skipToPreviousChapter];
+		else
+			[myPlayer seek:0 mode:MIPercentSeekingMode];
+	}
+}
+
+/************************************************************************************/
+- (void)skipToNextChapter {
+	
+	if ([myPlayer isRunning] && movieInfo && [movieInfo chapterCount] >= (currentChapter+1))
+		[self goToChapter:(currentChapter+1)];
+	else
 		[myPlayer seek:100 mode:MIPercentSeekingMode];
+}
+
+- (void)skipToPreviousChapter {
+	
+	if ([myPlayer isRunning] && movieInfo&& [movieInfo chapterCount] > 0 && currentChapter > 1)
+		[self goToChapter:(currentChapter-1)];
+	else
+		[myPlayer seek:0 mode:MIPercentSeekingMode];
+}
+
+- (void)goToChapter:(unsigned int)chapter {
+	
+	// only if playing
+	if ([myPlayer isRunning]) {
+		
+		currentChapter = chapter;
+		[myPlayer sendCommandQuietly:[NSString stringWithFormat:@"set_property chapter %d 1", currentChapter]];
+		lastPoll = 0; // force update of chapter menu
 	}
 }
 
@@ -979,8 +1072,17 @@
 		
 	[playListController updateView];
 	
-	[videoOpenGLView close];
+	[self cleanUpAfterStop];
 }
+
+/************************************************************************************/
+- (void)cleanUpAfterStop {
+	
+	[videoOpenGLView close];
+	[self clearStreamMenus];
+	[self clearChapterMenu];
+}
+
 
 /************************************************************************************/
 - (void)setOntop:(BOOL)aBool
@@ -1007,6 +1109,16 @@
 			[myPlayer setFullscreen:YES];
 		[myPlayer applySettingsWithRestart:NO];
 	}
+}
+/************************************************************************************/
+- (BOOL) startInFullscreen {
+	
+	NSUserDefaults *prefs = [appController preferences];
+	return ([prefs integerForKey:@"DisplayType"] == 3);
+}
+/************************************************************************************/
+- (int) fullscreenDeviceId {
+	return fullscreenDeviceId;
 }
 /************************************************************************************/
 - (IBAction)displayStats:(id)sender
@@ -1040,10 +1152,12 @@
 			case 1:
 				menu = [audioStreamMenu submenu];
 				[audioStreamMenu setEnabled:NO];
+				[audioCycleButton setEnabled:NO];
 				break;
 			case 2:
 				menu = [subtitleStreamMenu submenu];
 				[subtitleStreamMenu setEnabled:NO];
+				[subtitleCycleButton setEnabled:NO];
 				break;
 		}
 		
@@ -1057,47 +1171,41 @@
 /************************************************************************************/
 - (void)fillStreamMenus {
 	
-	MovieInfo *mi = [[MovieInfo fromDictionary:myPlayingItem] retain];
-	
-	if (mi != nil) {
+	if (movieInfo != nil) {
 		
 		// clear menus
 		[self clearStreamMenus];
 		
 		// video stream menu
-		NSEnumerator *en = [mi getVideoStreamsEnumerator];
+		NSEnumerator *en = [movieInfo getVideoStreamsEnumerator];
 		NSNumber *key;
 		NSMenu *menu = [videoStreamMenu submenu];
 		NSMenuItem* newItem;
-			
+		BOOL hasItems = NO;
+		
 		while ((key = [en nextObject])) {
 			newItem = [[NSMenuItem alloc]
-					   initWithTitle:[mi descriptionForVideoStream:[key intValue]]
-					   action:NULL
+					   initWithTitle:[movieInfo descriptionForVideoStream:[key intValue]]
+					   action:@selector(videoMenuAction:)
 					   keyEquivalent:@""];
 			[newItem setRepresentedObject:key];
-			[newItem setAction:@selector(videoMenuAction:)];
 			[menu addItem:newItem];
 			[newItem release];
 		}
 		
-		if ([menu numberOfItems] > 0)
-			[videoStreamMenu setEnabled:YES];
-		else
-			[videoStreamMenu setEnabled:NO];
-		
+		hasItems = ([menu numberOfItems] > 0);
+		[videoStreamMenu setEnabled:hasItems];
 		
 		// audio stream menu
-		en = [mi getAudioStreamsEnumerator];
+		en = [movieInfo getAudioStreamsEnumerator];
 		menu = [audioStreamMenu submenu];
 		
 		while ((key = [en nextObject])) {
 			newItem = [[NSMenuItem alloc]
-					   initWithTitle:[mi descriptionForAudioStream:[key intValue]]
-					   action:NULL
+					   initWithTitle:[movieInfo descriptionForAudioStream:[key intValue]]
+					   action:@selector(audioMenuAction:)
 					   keyEquivalent:@""];
 			[newItem setRepresentedObject:key];
-			[newItem setAction:@selector(audioMenuAction:)];
 			[menu addItem:newItem];
 			[newItem release];
 		}
@@ -1107,21 +1215,19 @@
 			// Copy menu for window popup
 			NSMenu *other = [menu copy];
 			newItem = [[NSMenuItem alloc]
-					   initWithTitle:@"A"
+					   initWithTitle:@""
 					   action:NULL
 					   keyEquivalent:@""];
 			[other insertItem:newItem atIndex:0];
 			[newItem release];
 			
 			[audioWindowMenu setMenu:other];
-			
-			[audioStreamMenu setEnabled:YES];
-			[audioWindowMenu setEnabled:YES];
-		} else {
-			[audioStreamMenu setEnabled:NO];
-			[audioWindowMenu setEnabled:NO];
 		}
 		
+		hasItems = ([menu numberOfItems] > 0);
+		[audioStreamMenu setEnabled:hasItems];
+		[audioWindowMenu setEnabled:hasItems];
+		[audioCycleButton setEnabled:([menu numberOfItems] > 1)];
 		
 		// subtitle stream menu
 		menu = [subtitleStreamMenu submenu];
@@ -1137,61 +1243,57 @@
 		[menu addItem:newItem];
 		[newItem release];
 		
-		if ([mi subtitleCountForType:SubtitleTypeDemux] > 0 || [mi subtitleCountForType:SubtitleTypeFile] > 0)
+		if ([movieInfo subtitleCountForType:SubtitleTypeDemux] > 0 || [movieInfo subtitleCountForType:SubtitleTypeFile] > 0)
 			[menu addItem:[NSMenuItem separatorItem]];
 		
 		// demux subtitles
-		en = [mi getSubtitleStreamsEnumeratorForType:SubtitleTypeDemux];
+		en = [movieInfo getSubtitleStreamsEnumeratorForType:SubtitleTypeDemux];
 		
 		while ((key = [en nextObject])) {
 			newItem = [[NSMenuItem alloc]
-					   initWithTitle:[mi descriptionForSubtitleStream:[key intValue] andType:SubtitleTypeDemux]
-					   action:NULL
+					   initWithTitle:[movieInfo descriptionForSubtitleStream:[key intValue] andType:SubtitleTypeDemux]
+					   action:@selector(subtitleMenuAction:)
 					   keyEquivalent:@""];
 			[newItem setRepresentedObject:[NSArray arrayWithObjects: [NSNumber numberWithInt:SubtitleTypeDemux], key, nil]];
-			[newItem setAction:@selector(subtitleMenuAction:)];
 			[menu addItem:newItem];
 			[newItem release];
 		}
 		
-		if ([mi subtitleCountForType:SubtitleTypeDemux] > 0 && [mi subtitleCountForType:SubtitleTypeFile] > 0)
+		if ([movieInfo subtitleCountForType:SubtitleTypeDemux] > 0 && [movieInfo subtitleCountForType:SubtitleTypeFile] > 0)
 			[menu addItem:[NSMenuItem separatorItem]];
 		
 		// file subtitles
-		en = [mi getSubtitleStreamsEnumeratorForType:SubtitleTypeFile];
+		en = [movieInfo getSubtitleStreamsEnumeratorForType:SubtitleTypeFile];
 		
 		while ((key = [en nextObject])) {
 			newItem = [[NSMenuItem alloc]
-					   initWithTitle:[mi descriptionForSubtitleStream:[key intValue] andType:SubtitleTypeFile]
-					   action:NULL
+					   initWithTitle:[movieInfo descriptionForSubtitleStream:[key intValue] andType:SubtitleTypeFile]
+					   action:@selector(subtitleMenuAction:)
 					   keyEquivalent:@""];
 			[newItem setRepresentedObject:[NSArray arrayWithObjects: [NSNumber numberWithInt:SubtitleTypeFile], key, nil]];
-			[newItem setAction:@selector(subtitleMenuAction:)];
 			[menu addItem:newItem];
 			[newItem release];
 		}
 		
-		if ([menu numberOfItems] > 1) {
+		if ([menu numberOfItems] > 0) {
 			
 			// Copy menu for window popup
 			NSMenu *other = [menu copy];
 			newItem = [[NSMenuItem alloc]
-					   initWithTitle:@"S"
+					   initWithTitle:@""
 					   action:NULL
 					   keyEquivalent:@""];
 			[other insertItem:newItem atIndex:0];
 			[newItem release];
 			
 			[subtitleWindowMenu setMenu:other];
-			
-			[subtitleStreamMenu setEnabled:YES];
-			[subtitleWindowMenu setEnabled:YES];
-		} else {
-			[subtitleStreamMenu setEnabled:NO];
-			[subtitleWindowMenu setEnabled:NO];
 		}
 		
-		[mi release];
+		hasItems = ([menu numberOfItems] > 0);
+		[subtitleStreamMenu setEnabled:hasItems];
+		[subtitleWindowMenu setEnabled:hasItems];
+		[subtitleCycleButton setEnabled:([menu numberOfItems] > 1)];
+		
 	}
 }
 /************************************************************************************/
@@ -1228,6 +1330,20 @@
 				@"get_property sub_file",
 				nil]];
 	
+}
+- (IBAction)cycleAudioStreams:(id)sender {
+	
+	[myPlayer sendCommands:[NSArray arrayWithObjects:
+							@"set_property switch_audio -2",
+							@"get_property switch_audio",
+							nil]];
+}
+- (IBAction)cycleSubtitleStreams:(id)sender {
+	
+	[myPlayer sendCommands:[NSArray arrayWithObjects:
+							@"sub_select",
+							@"get_property sub_demux",@"get_property sub_file",
+							nil]];
 }
 /************************************************************************************/
 - (void)newVideoStreamId:(unsigned int)streamId {
@@ -1287,6 +1403,220 @@
 	for (i = 0; i < [items count]; i++) {
 		[[menu itemAtIndex:i] setState:NSOffState];
 	}
+}
+/************************************************************************************/
+- (void)clearChapterMenu {
+	
+	[chapterMenu setEnabled:NO];
+	[chapterWindowMenu setEnabled:NO];
+	
+	while ([[chapterMenu submenu] numberOfItems] > 0) {
+		[[chapterMenu submenu] removeItemAtIndex:0];
+	}
+	while ([[chapterWindowMenu menu] numberOfItems] > 1) {
+		[[chapterWindowMenu menu] removeItemAtIndex:1];
+	}
+}
+/************************************************************************************/
+- (void)fillChapterMenu {
+	
+	if (movieInfo != nil) {
+		
+		[self clearChapterMenu];
+		
+		// video stream menu
+		NSEnumerator *en = [movieInfo getChaptersEnumerator];
+		NSNumber *key;
+		NSMenu *menu = [chapterMenu submenu];
+		NSMenuItem* newItem;
+		
+		while ((key = [en nextObject])) {
+			newItem = [[NSMenuItem alloc]
+					   initWithTitle:[NSString stringWithFormat:@"%d: %@", [key intValue], [movieInfo nameForChapter:[key intValue]]]
+					   action:@selector(chapterMenuAction:)
+					   keyEquivalent:@""];
+			[newItem setRepresentedObject:key];
+			[menu addItem:newItem];
+			[newItem release];
+		}
+		
+		if ([menu numberOfItems] > 0) {
+			
+			// Copy menu for window popup
+			NSMenu *other = [menu copy];
+			newItem = [[NSMenuItem alloc]
+					   initWithTitle:@"C"
+					   action:NULL
+					   keyEquivalent:@""];
+			[other insertItem:newItem atIndex:0];
+			[newItem release];
+			
+			[chapterWindowMenu setMenu:other];
+		}
+		
+		[chapterWindowMenu setEnabled:([menu numberOfItems] > 1)];
+		[chapterMenu setEnabled:([menu numberOfItems] > 0)];
+	}
+}
+/************************************************************************************/
+- (void)chapterMenuAction:(id)sender {
+	
+	[self goToChapter:[[sender representedObject] intValue]];
+}
+/************************************************************************************/
+- (void)selectChapterForTime:(int)seconds {
+	
+	[self disableMenuItemsInMenu:[chapterMenu submenu]];
+	[self disableMenuItemsInMenu:[chapterWindowMenu menu]];
+	
+	if (movieInfo) {
+		
+		NSEnumerator *en = [movieInfo getChaptersEnumerator];
+		NSNumber *key;
+		NSNumber *bestKey = nil;
+		float secf = seconds;
+		
+		while ((key = [en nextObject])) {
+			
+			if ([movieInfo startOfChapter:[key intValue]] < secf 
+					&& (bestKey == nil || [movieInfo startOfChapter:[bestKey intValue]] < [movieInfo startOfChapter:[key intValue]])) {
+				
+				bestKey = key;
+			}
+		}
+		
+		if (bestKey) {
+		
+			int index = [[chapterMenu submenu] indexOfItemWithRepresentedObject:bestKey];
+			
+			if (index != -1) {
+				
+				[[[chapterMenu submenu] itemAtIndex:index] setState:NSOnState];
+				[[[chapterWindowMenu menu] itemAtIndex:(index+1)] setState:NSOnState];
+				currentChapter = [bestKey intValue];
+				return;
+			}
+		}
+		
+	}
+	
+	currentChapter = 0;
+}
+/************************************************************************************/
+- (void)clearFullscreenMenu {
+	
+	[fullscreenMenu setEnabled:NO];
+	[fullscreenWindowMenu setEnabled:NO];
+	
+	while ([[fullscreenMenu submenu] numberOfItems] > 0) {
+		[[fullscreenMenu submenu] removeItemAtIndex:0];
+	}
+	while ([[fullscreenWindowMenu menu] numberOfItems] > 0) {
+		[[fullscreenWindowMenu menu] removeItemAtIndex:0];
+	}
+}
+/************************************************************************************/
+- (void)fillFullscreenMenu {
+	
+	[self clearFullscreenMenu];
+	
+	NSMenu *menu = [fullscreenMenu submenu];
+	NSMenuItem *newItem;
+	NSArray *screens = [NSScreen screens];
+	
+	// Add entry for same screen option (-1)
+	newItem = [[NSMenuItem alloc]
+			   initWithTitle:@"Same screen as player window"
+			   action:@selector(fullscreenMenuAction:)
+			   keyEquivalent:@""];
+	[newItem setRepresentedObject:[NSNumber numberWithInt:-1]];
+	[menu addItem:newItem];
+	[newItem release];
+	
+	// Add screens
+	int i;
+	for (i=0; i < [screens count]; i++) {
+		
+		newItem = [[NSMenuItem alloc]
+				   initWithTitle:[NSString stringWithFormat:@"Screen %d: %.0fx%.0f", i, [[screens objectAtIndex:i] frame].size.width, [[screens objectAtIndex:i] frame].size.height]
+				   action:@selector(fullscreenMenuAction:)
+				   keyEquivalent:@""];
+		[newItem setRepresentedObject:[NSNumber numberWithInt:i]];
+		[menu addItem:newItem];
+		[newItem release];
+	}
+	
+	if ([menu numberOfItems] > 0) {
+		
+		// Copy menu for window popup
+		NSMenu *other = [menu copy];
+		newItem = [[NSMenuItem alloc]
+				   initWithTitle:@""
+				   action:NULL
+				   keyEquivalent:@""];
+		[other insertItem:newItem atIndex:0];
+		[newItem release];
+		
+		[fullscreenWindowMenu setMenu:other];
+	}
+	
+	[fullscreenMenu setEnabled:([menu numberOfItems] > 0)];
+	[fullscreenWindowMenu setEnabled:([menu numberOfItems] > 0)];
+}
+/************************************************************************************/
+- (void)fullscreenMenuAction:(id)sender {
+	
+	NSUserDefaults *prefs = [appController preferences];
+	
+	// Inegrated doesn't need restart
+	if ([prefs integerForKey:@"VideoDriver"] == 0) {
+	
+		int devid = [[sender representedObject] intValue];
+		
+		if (devid >= -1 && devid < (int)[[NSScreen screens] count]) {
+			
+			fullscreenDeviceId = devid;
+			fullscreenDeviceLocked = YES; // Prevent screen changes from overriding
+			[self selectFullscreenDevice];
+		}
+	
+	// Restart playback for others
+	} else {
+		
+		[self applyChangesWithRestart:YES];
+	}
+}
+/************************************************************************************/
+- (void)selectFullscreenDevice {
+	
+	[self disableMenuItemsInMenu:[fullscreenMenu submenu]];
+	[self disableMenuItemsInMenu:[fullscreenWindowMenu menu]];
+	int devid = 0;
+	
+	if (fullscreenDeviceId < (int)[[NSScreen screens] count])
+		devid = fullscreenDeviceId;
+	else
+		devid = [[NSScreen screens] count] - 1;
+	
+	int index = [[fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:devid]];
+	
+	if (index != -1) {
+		
+		[[[fullscreenMenu submenu] itemAtIndex:index] setState:NSOnState];
+		[[[fullscreenWindowMenu menu] itemAtIndex:(index+1)] setState:NSOnState];
+	}
+}
+/************************************************************************************/
+- (void)screensDidChange {
+	
+	// Reset devide id to preferences value if not locked or unavailable
+	if (!fullscreenDeviceLocked || fullscreenDeviceId >= [[NSScreen screens] count]) {
+		NSUserDefaults *prefs = [appController preferences];
+		fullscreenDeviceId = [prefs integerForKey:@"FullscreenDevice"];
+	}
+	// Rebuild menu and select current id
+	[self fillFullscreenMenu];
+	[self selectFullscreenDevice];
 }
 /************************************************************************************
  NOTIFICATION OBSERVERS
@@ -1349,6 +1679,7 @@
 	// the info dictionary should now be ready to be imported
 	if ([myPlayer info] && myPlayingItem) {
 		[myPlayingItem setObject:[myPlayer info] forKey:@"MovieInfo"];
+		movieInfo = [[myPlayer info] retain];
 	}
 	[playListController updateView];
 }
@@ -1366,7 +1697,7 @@
 	NSMutableDictionary *playingItem = myPlayingItem;
 	
 	// reset Idle time - Carbon PowerManager calls
-	if ([[MovieInfo fromDictionary:playingItem] isVideo])	// if there is a video
+	if ([movieInfo isVideo])	// if there is a video
 		UpdateSystemActivity (UsrActivity);		// do not dim the display
 /*	else									// if there's only audio
 		UpdateSystemActivity (OverallAct);		// avoid sleeping only
@@ -1391,6 +1722,7 @@
 			[stopMenuItem setEnabled:YES];
 			[skipBeginningMenuItem setEnabled:YES];
 			[skipEndMenuItem setEnabled:YES];
+			[fullscreenButton setEnabled:YES];
 			break;
 		case kPaused :
 		case kStopped :
@@ -1403,6 +1735,7 @@
 			[stopMenuItem setEnabled:NO];
 			[skipBeginningMenuItem setEnabled:NO];
 			[skipEndMenuItem setEnabled:NO];
+			[fullscreenButton setEnabled:NO];
 			break;
 		}
 		
@@ -1462,17 +1795,18 @@
 				[scrubbingBarToolbar setIndeterminate:NO];
 				[scrubbingBarToolbar setMaxValue:100];
 				
-				// Populate menus with found streams
+				// Populate menus
 				[self fillStreamMenus];
+				[self fillChapterMenu];
 				// Request the selected streams
 				[myPlayer sendCommands:[NSArray arrayWithObjects:
 										@"get_property switch_video",@"get_property switch_audio",
 										@"get_property sub_demux",@"get_property sub_file",nil]];
 				
-				if ([[MovieInfo fromDictionary:playingItem] length] > 0) {
-					[scrubbingBar setMaxValue: [[MovieInfo fromDictionary:playingItem] length]];
+				if ([movieInfo length] > 0) {
+					[scrubbingBar setMaxValue: [movieInfo length]];
 					[scrubbingBar setStyle:NSScrubbingBarPositionStyle];
-					[scrubbingBarToolbar setMaxValue: [[MovieInfo fromDictionary:playingItem] length]];
+					[scrubbingBarToolbar setMaxValue: [movieInfo length]];
 					[scrubbingBarToolbar setStyle:NSScrubbingBarPositionStyle];
 				}
 			}
@@ -1512,6 +1846,8 @@
 			// release the retained playing item
 			[playingItem autorelease];
 			myPlayingItem = nil;
+			[movieInfo autorelease];
+			movieInfo = nil;
 			// update state of playlist
 			[playListController updateView];
 			// Playlist mode
@@ -1528,7 +1864,7 @@
 			// Regular play mode
 			} else {
 				if (!continuousPlayback)
-					[videoOpenGLView close];
+					[self cleanUpAfterStop];
 				else
 					continuousPlayback = NO;
 			}
@@ -1581,14 +1917,14 @@
 			if ([[scrubbingBar window] isVisible]) 
 			{
 				
-				if ([[MovieInfo fromDictionary:playingItem] length] > 0)
+				if ([movieInfo length] > 0)
 					[scrubbingBar setDoubleValue:[myPlayer seconds]];
 				else
 					[scrubbingBar setDoubleValue:0];
 			}
 			if ([[scrubbingBarToolbar window] isVisible]) 
 			{
-				if ([[MovieInfo fromDictionary:playingItem] length] > 0)
+				if ([movieInfo length] > 0)
 					[scrubbingBarToolbar setDoubleValue:[myPlayer seconds]];
 				else
 					[scrubbingBarToolbar setDoubleValue:0];
@@ -1615,12 +1951,13 @@
 						[myPlayer postProcLevel]]];
 			}
 		}
-		// poll volume
-		double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - lastVolumePoll);
-		if (timeDifference > volumePollInterval) {
+		// poll volume and chapter
+		double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - lastPoll);
+		if (timeDifference >= pollInterval) {
 			
-			lastVolumePoll = [NSDate timeIntervalSinceReferenceDate];
+			lastPoll = [NSDate timeIntervalSinceReferenceDate];
 			[myPlayer sendCommand:@"get_property volume"];
+			[self selectChapterForTime:seconds];
 		}
 			
 		break;
@@ -1634,7 +1971,7 @@
 {
 	if ([myPlayer status] == kPlaying || [myPlayer status] == kPaused) {
 		int theMode = MIPercentSeekingMode;
-		if ([[MovieInfo fromDictionary:myPlayingItem] length] > 0)
+		if ([movieInfo length] > 0)
 			theMode = MIAbsoluteSeekingMode;
 
 		[myPlayer seek:[[[notification userInfo] 

@@ -115,9 +115,24 @@
 		3A09436C0E45043000E6753F /* LanguageCodes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A09436B0E45043000E6753F /* LanguageCodes.m */; };
 		3A38D3C50E50E45A00C1E468 /* Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A38D3C40E50E45A00C1E468 /* Debug.m */; };
 		3A96C95A0E4E20B800B7B261 /* iso-639-3.tab in Resources */ = {isa = PBXBuildFile; fileRef = 3A96C9590E4E20B800B7B261 /* iso-639-3.tab */; };
+		3AFA914C0E5858B100B3998D /* RegexKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFA914B0E5858B100B3998D /* RegexKit.framework */; };
+		3AFA91750E58592B00B3998D /* RegexKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3AFA914B0E5858B100B3998D /* RegexKit.framework */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3AFA91540E5858EF00B3998D /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3AFA91750E58592B00B3998D /* RegexKit.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
@@ -199,6 +214,7 @@
 		3A38D3C30E50E45A00C1E468 /* Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Debug.h; path = Sources/Classes/Debug.h; sourceTree = "<group>"; };
 		3A38D3C40E50E45A00C1E468 /* Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Debug.m; path = Sources/Classes/Debug.m; sourceTree = "<group>"; };
 		3A96C9590E4E20B800B7B261 /* iso-639-3.tab */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "iso-639-3.tab"; path = "Resources/iso-639-3.tab"; sourceTree = "<group>"; };
+		3AFA914B0E5858B100B3998D /* RegexKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RegexKit.framework; path = Local/Frameworks/RegexKit.framework; sourceTree = SYSTEM_DEVELOPER_DIR; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* MPlayer OSX Extended.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MPlayer OSX Extended.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -214,6 +230,7 @@
 				3747F282087EFA4200980B71 /* Carbon.framework in Frameworks */,
 				3747F284087EFA5D00980B71 /* OpenGL.framework in Frameworks */,
 				3747F286087EFA6A00980B71 /* QuartzCore.framework in Frameworks */,
+				3AFA914C0E5858B100B3998D /* RegexKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,6 +265,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3AFA914B0E5858B100B3998D /* RegexKit.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 			);
 			name = "Linked Frameworks";
@@ -382,6 +400,7 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
+				3AFA91540E5858EF00B3998D /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -585,6 +604,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/Local/Frameworks\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -608,6 +632,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/Local/Frameworks\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
