@@ -91,6 +91,10 @@
 	BOOL continuousPlayback;
 	BOOL playingFromPlaylist;
 	int currentChapter;
+	int videoStreamId;
+	int audioStreamId;
+	int subtitleDemuxStreamId;
+	int subtitleFileStreamId;
 	
 	// preferences
 	int fullscreenDeviceId;
@@ -166,9 +170,9 @@
 - (void)subtitleMenuAction:(id)sender;
 - (IBAction)cycleAudioStreams:(id)sender;
 - (IBAction)cycleSubtitleStreams:(id)sender;
-- (void)newVideoStreamId:(unsigned int)streamId;
-- (void)newAudioStreamId:(unsigned int)streamId;
-- (void)newSubtitleStreamId:(unsigned int)streamId forType:(SubtitleType)type;
+- (void)newVideoStreamId:(int)streamId;
+- (void)newAudioStreamId:(int)streamId;
+- (void)newSubtitleStreamId:(int)streamId forType:(SubtitleType)type;
 - (void)disableMenuItemsInMenu:(NSMenu *)menu;
 
 - (void)clearChapterMenu;
@@ -180,6 +184,7 @@
 - (void)fillFullscreenMenu;
 - (void)fullscreenMenuAction:(id)sender;
 - (void)selectFullscreenDevice;
+- (void)menuWillOpen:(NSMenu *)menu;
 
 // notification observers
 - (void) appFinishedLaunching;

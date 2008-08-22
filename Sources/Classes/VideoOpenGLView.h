@@ -30,6 +30,8 @@
 	NSRect screen_frame;
 	bool isFullscreen;
 	bool switchingToFullscreen;
+	bool switchingInProgress;
+	bool isClosing;
 	bool useFullscreen;
 	bool isOntop;
 	bool isPlaying;
@@ -109,6 +111,7 @@
 - (void) reshape;
 - (void) resizeToMovie;
 - (void) close;
+- (void) finishClosing;
 - (void) setWindowSizeMult: (float)zoom;
 - (void) ontop;
 

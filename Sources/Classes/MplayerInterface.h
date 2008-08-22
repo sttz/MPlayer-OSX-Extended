@@ -241,7 +241,6 @@
 - (void) setVideoEqualizer:(NSArray *)values;
 - (void) setAdditionalParams:(NSArray *)params;
 
-
 //- (void) setVIDEO_TS:(BOOL)aBool;					// dvd folder
 
 - (void) setRebuildIndex:(BOOL)aBool;				// take effect after restarting playback

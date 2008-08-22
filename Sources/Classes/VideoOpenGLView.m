@@ -150,6 +150,11 @@
 - (void) toggleFullscreen
 {
 	
+	// wait until finished before switching again
+	if (switchingInProgress)
+		return;
+	switchingInProgress = YES;
+	
 	// Keep state in two variables to animate rect properly
 	if(!isFullscreen)
 	{
@@ -178,6 +183,13 @@
 	}
 	
 	[self adaptSize];
+	switchingInProgress = NO;
+	
+	// close view callback
+	if (isClosing) {
+		isClosing = NO;
+		[self performSelectorOnMainThread:@selector(finishClosing) withObject:nil waitUntilDone:NO];
+	}
 }
 
 /*
@@ -450,10 +462,19 @@
 */
 - (void) close
 {
-	//exit fullscreen
-	if(isFullscreen)
-		[self toggleFullscreenWindow];
+	// exit fullscreen and close with callback
+	if(isFullscreen) {
+		[self toggleFullscreen];
+		isClosing = YES;
+		return;
+	}
 	
+	// not fullscreen: close immediately
+	[self finishClosing];
+}
+
+- (void) finishClosing
+{
 	image_width = 0;
 	image_height = 0;
 	image_bytes = 0;
