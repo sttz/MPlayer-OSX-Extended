@@ -89,6 +89,13 @@
 	return fileFormat;
 }
 
+-(void)setIsSeekable:(BOOL)seek {
+	isSeekable = seek;
+}
+-(BOOL)isSeekable {
+	return isSeekable;
+}
+
 -(void)setVideoFormat:(NSString *)aString {
 	videoForamt = [aString retain];
 }

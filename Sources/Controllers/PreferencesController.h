@@ -52,6 +52,7 @@
 	IBOutlet id subFontMenu;
 	IBOutlet id subEncodingMenu;
 	IBOutlet id subSizeBox;
+	IBOutlet id subColorWell;
 	
 	// ** Audio
 	// General
@@ -108,6 +109,7 @@
 	IBOutlet id addParamsButton;
 	IBOutlet id addParamsBox;
 	
+	BOOL closeAfterApply;
 	
 }
 // misc
@@ -117,6 +119,7 @@
 // actions
 - (IBAction)displayPreferences:(id)sender;
 - (IBAction)applyPrefs:(id)sender;
+- (IBAction)applyAndClose:(id)sender;
 - (IBAction)cancelPrefs:(id)sender;
 - (IBAction)restorePrefs:(id)sender;
 - (IBAction)prefsChanged:(id)sender;

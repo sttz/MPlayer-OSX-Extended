@@ -116,6 +116,7 @@
 	NSString *subEncoding;
 	unsigned int subScale;
 	BOOL assPreFilter;
+	NSColor *subColor;
 	
 	// audio
 	BOOL enableAudio;
@@ -155,6 +156,7 @@
 	NSTask *myMplayerTask;
 	double myLastUpdate;			// date when last update notificationa was sent
 	BOOL settingsChanged;			// changed settings that requires player restart
+	BOOL videoOutChanged;
 	BOOL takeEffectImediately;		// changes have to take effect even in paused mode
 	BOOL restartingPlayer;			// set when player is teminated to be restarted
 	BOOL pausedOnRestart;			// set when paused during attemp to restart player
@@ -207,6 +209,7 @@
 - (void) setAspectRatio:(double)ratio;
 - (void) setMonitorAspectRatio:(double)ratio;
 - (void) setDeviceId:(unsigned int)dId;
+- (unsigned int)getDeviceId;
 - (void) setVideoOutModule:(int)module;
 - (void) setScreenshotPath:(int)mode;
 
@@ -223,6 +226,7 @@
 - (void) setSubtitlesEncoding:(NSString *)aEncoding;// sets subtitles file encoding
 - (void) setSubtitlesScale:(unsigned int)aScale;	// sets subtitle scale in % (see man mplayer)
 - (void) setAssPreFilter:(BOOL)aBool;
+- (void) setSubtitlesColor:(NSColor *)color;
 
 // audio
 - (void) setAudioEnabled:(BOOL)aBool;
@@ -259,6 +263,7 @@
 - (int) status;
 - (float) seconds;									// returns number of seconds, elapsed
 - (BOOL) changesNeedsRestart;						// retuns YES if changes needs restart
+- (BOOL) videoOutHasChanged;
 - (BOOL) isRunning;
 - (BOOL) isWindowed;
 

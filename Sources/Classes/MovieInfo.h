@@ -41,6 +41,7 @@ typedef enum _SubtitleType {
 	
 	// formats
 	NSString *fileFormat;
+	BOOL isSeekable;
 	
 	// video
 	NSString *videoForamt;
@@ -78,6 +79,8 @@ typedef enum _SubtitleType {
 -(NSString *)filename;
 -(void)setFileFormat:(NSString *)aString;
 -(NSString *)fileFormat;
+-(void)setIsSeekable:(BOOL)seek;
+-(BOOL)isSeekable;
 
 -(void)setVideoFormat:(NSString *)aString;
 -(NSString *)videoForamt;

@@ -12,8 +12,43 @@
 
 - (void) awakeFromNib
 {
+	isFullscreen = NO;
+	isOntop = NO;
+	keepAspect = YES;
+	panScan = NO;
+	hideMouse = NO;
+	isPlaying = NO;
+	
+	port1 = [NSPort port];
+	port2 = [NSPort port];
+	
+	[NSThread detachNewThreadSelector:@selector(threadMain:) toTarget:self withObject:[NSArray arrayWithObjects:port1, port2, nil]];
+}
+
+/*
+	Callback from render thread after server has been created
+ */
+- (void) connectToServer:(NSArray *)ports
+{
+	
+	NSConnection *client = [NSConnection connectionWithReceivePort:[ports objectAtIndex:1] sendPort:[ports objectAtIndex:0]];
+	threadProxy = [client rootProxy];
+}
+
+/*
+ 
+ METHODS IN SEPARATE THREAD
+ 
+ */
+
+- (void)threadMain:(NSArray *)ports
+{
+	NSAutoreleasePool * pool = [NSAutoreleasePool new];
+	
+	NSRunLoop* myRunLoop = [NSRunLoop currentRunLoop];
+	
 	long swapInterval = 1;
-			
+	
 	[[self openGLContext] setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
 	
 	//setup server connection for mplayer
@@ -21,21 +56,24 @@
     [serverConnection setRootObject:self];
     [serverConnection registerName:@"mplayerosx"];
 	
-	isFullscreen = NO;
-	isOntop = NO;
-	keepAspect = YES;
-	panScan = NO;
-	isPlaying = NO;
-	hideMouse = NO;
+	// setup server connection for thread communication
+	NSConnection *otherConnection = [[NSConnection alloc] initWithReceivePort:[ports objectAtIndex:0] sendPort:[ports objectAtIndex:1]];
+	[otherConnection setRootObject:self];
+	
+	// let client connect
+	[self performSelectorOnMainThread:@selector(connectToServer:) withObject:ports waitUntilDone:NO];
+	
+	[myRunLoop run];
+	
+	[pool release];
 }
 
-- (NSEvent *) readNextEvent
-{
-	return [NSApp nextEventMatchingMask:NSAnyEventMask untilDate:[NSDate dateWithTimeIntervalSinceNow:0.0001] inMode:NSEventTrackingRunLoopMode dequeue:YES];
-}
-
+/*
+	Initialize playback with size, depth and aspect
+ */
 - (int) startWithWidth: (int)width withHeight: (int)height withBytes: (int)bytes withAspect: (int)aspect
 {
+	
 	CVReturn error = kCVReturnSuccess;
 
 	image_width = width;
@@ -76,27 +114,20 @@
 	if(error != kCVReturnSuccess)
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to create OpenGL texture (%d)", error];
 	
-	//Bring window to front
-	[[self window] makeKeyAndOrderFront:nil];
-	[self resizeToMovie];
-	[self reshape];
+	// Start OpenGLView in GUI
+	[self performSelectorOnMainThread:@selector(startOpenGLView) withObject:nil waitUntilDone:NO];
 	
-    if(isFullscreen)
-	{
-		[fullscreenWindow makeKeyAndOrderFront:nil];
-		[[self openGLContext] setView: [fullscreenWindow contentView]];
-		[[self window] orderOut:nil];
-
-		isFullscreen = YES;
-	}
-    
-	//Play in fullscreen
-	if ([playerController startInFullscreen])
-		[self toggleFullscreen];
+	[self adaptSize];
+	
+	if(isFullscreen)
+		[[self openGLContext] setView:[fullscreenWindow contentView]];
 	
 	return 1;
 }
 
+/* 
+	Stop Playback
+ */
 - (void) stop;
 {
 	isPlaying = NO;
@@ -111,57 +142,42 @@
 	free(image_buffer);
 }
 
-/* 
-	Close OpenGL view
-*/
-- (void) close
-{
-	
-	//exit fullscreen
-	if(isFullscreen)
-		[self toggleFullscreen];
-	
-	image_width = 0;
-	image_height = 0;
-	image_bytes = 0;
-	image_aspect = 0;
-	
-	//resize window
-	NSRect frame = [[self window] frame];
-	NSSize minSize = [[self window]contentMinSize];
-	frame.size.width = minSize.width;
-	frame.size.height = minSize.height+20; //+title bar height
-	[[self window] setFrame:frame display:YES animate:YES];
-}
-
-
 /*
-	Resize OpenGL view to fit movie
-*/
-- (void) resizeToMovie
+	Toggle Between Windowed & Fullscreen Mode
+	1: Let the main thread switch the gui
+	2: Main thread calls back to adapt opengl context
+ */
+- (void) toggleFullscreen
 {
-	NSRect win_frame = [[self window] frame];
-	NSRect mov_frame = [self bounds];
-	NSSize minSize = [[self window]contentMinSize];
 	
-	//if movie is smaller then the UI use min size
-	if( (image_height*image_aspect) < minSize.width)
-		win_frame.size.width = minSize.width;
+	// Keep state in two variables to animate rect properly
+	if(!isFullscreen)
+	{
+		switchingToFullscreen = YES;
+	}
 	else
-		win_frame.size.width += (image_height*image_aspect - mov_frame.size.width);
-		
-	win_frame.size.height += (image_height - mov_frame.size.height);
-	[[self window] setFrame:win_frame display:YES animate:YES];
+	{
+		switchingToFullscreen = NO;
+		isFullscreen = NO;
+	}
+	
+	[self performSelectorOnMainThread:@selector(toggleFullscreenWindow) withObject:nil waitUntilDone:NO];
 }
 
-/*
-	redraw win rect
-*/ 
-- (void) drawRect: (NSRect *) bounds
+- (void) finishToggleFullscreen
 {
-	//[self doRender];
-	[self clear];
-	[[self openGLContext] flushBuffer];
+	if(switchingToFullscreen)
+	{
+		[[self openGLContext] setView: [fullscreenWindow contentView]];
+		isFullscreen = YES;
+	}
+	else
+	{
+		
+		[[self openGLContext] setView:self];
+	}
+	
+	[self adaptSize];
 }
 
 /*
@@ -175,7 +191,7 @@
 	glDepthMask(GL_FALSE);
 	glDisable(GL_CULL_FACE);
 
-	[self reshape];
+	[self adaptSize];
 }
 
 /*
@@ -246,7 +262,7 @@
 /*
 	reshape OpenGL viewport
 */ 
-- (void)reshape
+- (void)adaptSize
 {
 	NSRect frame;
 	uint32_t d_width;
@@ -303,6 +319,155 @@
 }
 
 /*
+	Update method, called in main thread and forwareded to render thread
+ */
+- (void) updateInThread
+{
+	//asl_log(NULL, NULL, ASL_LEVEL_ERR, "updateT");
+	[[self openGLContext] update];
+}
+
+/*
+	DrawRect method, called in main thread and forwareded to render thread
+ */
+- (void) drawRectInThread
+{
+	//asl_log(NULL, NULL, ASL_LEVEL_ERR, "drawRectT");
+	[self doRender];
+	//[self clear];
+	//[[self openGLContext] flushBuffer];
+}
+
+/*
+ 
+ METHODS IN MAIN THREAD
+ 
+ */
+
+
+/*
+	Start OpenGL view
+*/
+- (void) startOpenGLView
+{
+	//Bring window to front
+	//[[self window] makeKeyAndOrderFront:nil];
+	[self resizeToMovie];
+	
+    if(isFullscreen)
+	{
+		[fullscreenWindow makeKeyAndOrderFront:nil];
+		[[self window] orderOut:nil];
+		
+		isFullscreen = YES;
+	}
+    
+	//Play in fullscreen
+	if ([playerController startInFullscreen])
+		[self toggleFullscreen];
+}
+
+/*
+	Toggle fullscreen on the gui side
+ */
+- (void) toggleFullscreenWindow
+{
+	
+	static NSRect old_win_frame;
+	NSWindow *window = [self window];
+    NSRect fsRect;
+    
+	int fullscreenId = [playerController fullscreenDeviceId];
+	screen_frame = [[[NSScreen screens] objectAtIndex:fullscreenId] frame];
+	
+    fsRect = screen_frame;
+    fsRect.origin.x = 0;
+	fsRect.origin.y = 0;
+	
+	if(switchingToFullscreen)
+	{
+		//hide mouse
+		CGDisplayHideCursor(kCGDirectMainDisplay);
+		hideMouse = YES;
+		
+		[fullscreenWindow setFrame:screen_frame display:YES animate:NO];
+		[fullscreenWindow setAcceptsMouseMovedEvents:YES];
+		[[fullscreenWindow contentView] setFrame: fsRect];
+		[(PlayerWindow*)fullscreenWindow setFullscreen:YES];
+		
+		//enter kiosk mode
+		SetSystemUIMode( kUIModeAllHidden, kUIOptionAutoShowMenuBar);
+		
+		//resize window	
+		old_win_frame = [window frame];	
+		[window setFrame:screen_frame display:YES animate:YES];
+		
+		[fullscreenWindow makeKeyAndOrderFront:nil];
+		[window orderOut:nil];
+	}
+	else
+	{
+		[window makeKeyAndOrderFront:nil];
+		
+		//destroy fullscreen window
+		[fullscreenWindow orderOut:nil];
+		[(PlayerWindow*)fullscreenWindow setFullscreen:NO];
+		
+		[window setFrame:old_win_frame display:YES animate:YES];
+		
+		//exit kiosk mode
+		SetSystemUIMode( kUIModeNormal, 0);
+		
+		//show mouse
+		CGDisplayShowCursor(kCGDirectMainDisplay);
+		hideMouse = NO;
+	}
+	
+	[threadProxy performSelector:@selector(finishToggleFullscreen) withObject:nil afterDelay:0];
+}
+
+/*
+ Resize OpenGL view to fit movie
+ */
+- (void) resizeToMovie
+{
+	NSRect win_frame = [[self window] frame];
+	NSRect mov_frame = [self bounds];
+	NSSize minSize = [[self window]contentMinSize];
+	
+	//if movie is smaller then the UI use min size
+	if( (image_height*image_aspect) < minSize.width)
+		win_frame.size.width = minSize.width;
+	else
+		win_frame.size.width += (image_height*image_aspect - mov_frame.size.width);
+	
+	win_frame.size.height += (image_height - mov_frame.size.height);
+	[[self window] setFrame:win_frame display:YES animate:YES];
+}
+
+/*
+	Close OpenGL view
+*/
+- (void) close
+{
+	//exit fullscreen
+	if(isFullscreen)
+		[self toggleFullscreenWindow];
+	
+	image_width = 0;
+	image_height = 0;
+	image_bytes = 0;
+	image_aspect = 0;
+	
+	//resize window
+	NSRect frame = [[self window] frame];
+	NSSize minSize = [[self window]contentMinSize];
+	frame.size.width = minSize.width;
+	frame.size.height = minSize.height+20; //+title bar height
+	[[self window] setFrame:frame display:YES animate:YES];
+}
+
+/*
 	Resize Window with given zoom factor
 */
 - (void) setWindowSizeMult: (float)zoom
@@ -326,74 +491,6 @@
 }
 
 /*
-	Toggle Between Windowed & Fullscreen Mode
-*/
-- (void) toggleFullscreen
-{
-	static NSRect old_win_frame;
-	NSWindow *window = [self window];
-    NSRect fsRect;
-    
-	int fullscreenId = [playerController fullscreenDeviceId];
-	if (fullscreenId == -1)
-		screen_frame = [[window screen] frame];
-	else
-		screen_frame = [[[NSScreen screens] objectAtIndex:fullscreenId] frame];
-		
-    fsRect = screen_frame;
-    fsRect.origin.x = 0;
-	fsRect.origin.y = 0;
-
-	if(!isFullscreen)
-	{
-		//hide mouse
-		CGDisplayHideCursor(kCGDirectMainDisplay);
-		hideMouse = YES;
-
-		[fullscreenWindow setFrame:screen_frame display:YES animate:NO];
-		[fullscreenWindow setAcceptsMouseMovedEvents:YES];
-		[[fullscreenWindow contentView] setFrame: fsRect];
-		[(PlayerWindow*)fullscreenWindow setFullscreen:YES];
-
-		//enter kiosk mode
-		SetSystemUIMode( kUIModeAllHidden, kUIOptionAutoShowMenuBar);
-
-		//resize window	
-		old_win_frame = [window frame];	
-		[window setFrame:screen_frame display:YES animate:NO];
-		
-		[fullscreenWindow makeKeyAndOrderFront:nil];
-		[[self openGLContext] setView: [fullscreenWindow contentView]];
-		[window orderOut:nil];
-
-		isFullscreen = YES;
-	}
-	else
-	{
-		isFullscreen = NO;
-		
-		[[self openGLContext] setView: [window contentView]];
-		[window makeKeyAndOrderFront:nil];
-		
-		//destroy fullscreen window
-		[fullscreenWindow orderOut:nil];
-		[(PlayerWindow*)fullscreenWindow setFullscreen:NO];
-
-		[self reshape];		
-		[window setFrame:old_win_frame display:YES animate:NO];
-		
-		//exit kiosk mode
-		SetSystemUIMode( kUIModeNormal, 0);
-		
-		//show mouse
-		CGDisplayShowCursor(kCGDirectMainDisplay);
-		hideMouse = NO;
-	}
-	
-	[self reshape];
-}
-
-/*
 	Toggle ontop
 */
 - (void) ontop
@@ -409,6 +506,30 @@
 	}
 }
 
+/*
+	View changed: synchronized call to the render thread
+ */
+- (void) reshape
+{
+	//[Debug log:ASL_LEVEL_ERR withMessage:@"reshape"];
+	[threadProxy performSelector:@selector(adaptSize) withObject:nil afterDelay:0];
+}
+
+- (void) update
+{
+	//[Debug log:ASL_LEVEL_ERR withMessage:@"update"];
+	[threadProxy performSelector:@selector(updateInThread) withObject:nil afterDelay:0];
+}
+
+- (void) drawRect: (NSRect *) bounds
+{
+	//[Debug log:ASL_LEVEL_ERR withMessage:@"drawRect"];
+	[threadProxy performSelector:@selector(drawRectInThread) withObject:nil afterDelay:0];
+}
+
+/*
+	Menu Actions
+*/
 - (IBAction)MovieMenuAction:(id)sender
 {
 	if(isPlaying) 

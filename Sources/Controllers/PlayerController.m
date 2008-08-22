@@ -167,7 +167,6 @@
 	else
 		fullscreenDeviceId = [prefs integerForKey:@"FullscreenDevice"];
 	
-	
 	// fill fullscreen device menu
 	[self fillFullscreenMenu];
 	[self selectFullscreenDevice];
@@ -505,12 +504,7 @@
 	
 	// fullscreen device id for not integrated video window
 	if ([[preferences objectForKey:@"VideoDriver"] intValue] != 0) {
-		// Same screen as player window
-		if (fullscreenDeviceId == -1)
-			[myPlayer setDeviceId: [[[[playerWindow screen] deviceDescription] objectForKey:@"NSScreenNumber"] intValue]];
-		// custom screen id
-		else
-			[myPlayer setDeviceId: fullscreenDeviceId];
+		[myPlayer setDeviceId: [self fullscreenDeviceId]];
 	}
 	
 	//vo driver
@@ -636,6 +630,10 @@
 	// subtitle encoding
 	[self setSubtitlesEncoding];
 	
+	// subtitle color
+	if ([preferences objectForKey:@"SubtitlesColor"])
+		[myPlayer setSubtitlesColor:(NSColor *)[NSUnarchiver unarchiveObjectWithData:[preferences objectForKey:@"SubtitlesColor"]]];
+	
 	// ass pre filter
 	if ([preferences objectForKey:@"ASSPreFilter"])
 		[myPlayer setAssPreFilter: [preferences boolForKey:@"ASSPreFilter"]];
@@ -745,8 +743,18 @@
 	return NO;
 }
 /************************************************************************************/
+- (BOOL) movieIsSeekable
+{
+	if ([myPlayer isRunning] && movieInfo)
+		return [movieInfo isSeekable];
+	return NO;
+}
+/************************************************************************************/
 - (void) applyChangesWithRestart:(BOOL)restart
 {
+	if ([myPlayer videoOutHasChanged])
+		[videoOpenGLView close];
+	
 	[myPlayer applySettingsWithRestart:restart];	
 }
 
@@ -1101,13 +1109,40 @@
 /************************************************************************************/
 - (IBAction)switchFullscreen:(id)sender
 {
-    if ([myPlayer status] > 0) {
+	BOOL withRestart = NO;
+	
+	if ([myPlayer status] > 0) {
+		
+		NSUserDefaults *prefs = [appController preferences];
+		
+		// check if restart is needed (for non-integrated video and changed fullscreen device)
+		if (fullscreenDeviceId != [myPlayer getDeviceId] && [prefs integerForKey:@"VideoDriver"] != 0) {
+			
+			// Ask for restart if current movie is not seekable
+			if (movieInfo && ![movieInfo isSeekable]) {
+				
+				int result = NSRunAlertPanel(@"Alert", @"The fullscreen device id has changed. A restart is required.", @"Cancel", @"Restart", nil);
+				
+				if(result == 0)
+				{
+					withRestart = YES;
+				} else {
+					return;
+				}
+			
+			// Restart if current movie is seekable
+			} else {
+				
+				withRestart = YES;
+			}
+		}
+		
 		// if mplayer is playing
 		if ([myPlayer fullscreen])
 			[myPlayer setFullscreen:NO];
 		else
 			[myPlayer setFullscreen:YES];
-		[myPlayer applySettingsWithRestart:NO];
+		[myPlayer applySettingsWithRestart:withRestart];
 	}
 }
 /************************************************************************************/
@@ -1118,7 +1153,17 @@
 }
 /************************************************************************************/
 - (int) fullscreenDeviceId {
-	return fullscreenDeviceId;
+	
+	// Same screen as player window
+	if (fullscreenDeviceId == -1) {
+		int screenId = [[NSScreen screens] indexOfObject:[playerWindow screen]];
+		if (screenId != NSNotFound)
+			return screenId;
+		else
+			return 0;
+	// custom screen id
+	} else
+		return fullscreenDeviceId;
 }
 /************************************************************************************/
 - (IBAction)displayStats:(id)sender
@@ -1566,24 +1611,13 @@
 /************************************************************************************/
 - (void)fullscreenMenuAction:(id)sender {
 	
-	NSUserDefaults *prefs = [appController preferences];
+	int devid = [[sender representedObject] intValue];
 	
-	// Inegrated doesn't need restart
-	if ([prefs integerForKey:@"VideoDriver"] == 0) {
-	
-		int devid = [[sender representedObject] intValue];
+	if (devid >= -1 && devid < (int)[[NSScreen screens] count]) {
 		
-		if (devid >= -1 && devid < (int)[[NSScreen screens] count]) {
-			
-			fullscreenDeviceId = devid;
-			fullscreenDeviceLocked = YES; // Prevent screen changes from overriding
-			[self selectFullscreenDevice];
-		}
-	
-	// Restart playback for others
-	} else {
-		
-		[self applyChangesWithRestart:YES];
+		fullscreenDeviceId = devid;
+		fullscreenDeviceLocked = YES; // Prevent screen changes from overriding
+		[self selectFullscreenDevice];
 	}
 }
 /************************************************************************************/
@@ -1784,31 +1818,29 @@
 			[scrubbingBarToolbar setIndeterminate:NO];
 			break;
 		case kPlaying :
-			if (playingItem != NULL) {
-				status = NSLocalizedString(@"Playing",nil);
-				// set default state of scrubbing bar
-				[scrubbingBar setStyle:NSScrubbingBarEmptyStyle];
-				[scrubbingBar setIndeterminate:NO];
-				[scrubbingBar setMaxValue:100];
-				
-				[scrubbingBarToolbar setStyle:NSScrubbingBarEmptyStyle];
-				[scrubbingBarToolbar setIndeterminate:NO];
-				[scrubbingBarToolbar setMaxValue:100];
-				
-				// Populate menus
-				[self fillStreamMenus];
-				[self fillChapterMenu];
-				// Request the selected streams
-				[myPlayer sendCommands:[NSArray arrayWithObjects:
-										@"get_property switch_video",@"get_property switch_audio",
-										@"get_property sub_demux",@"get_property sub_file",nil]];
-				
-				if ([movieInfo length] > 0) {
-					[scrubbingBar setMaxValue: [movieInfo length]];
-					[scrubbingBar setStyle:NSScrubbingBarPositionStyle];
-					[scrubbingBarToolbar setMaxValue: [movieInfo length]];
-					[scrubbingBarToolbar setStyle:NSScrubbingBarPositionStyle];
-				}
+			status = NSLocalizedString(@"Playing",nil);
+			// set default state of scrubbing bar
+			[scrubbingBar setStyle:NSScrubbingBarEmptyStyle];
+			[scrubbingBar setIndeterminate:NO];
+			[scrubbingBar setMaxValue:100];
+			
+			[scrubbingBarToolbar setStyle:NSScrubbingBarEmptyStyle];
+			[scrubbingBarToolbar setIndeterminate:NO];
+			[scrubbingBarToolbar setMaxValue:100];
+			
+			// Populate menus
+			[self fillStreamMenus];
+			[self fillChapterMenu];
+			// Request the selected streams
+			[myPlayer sendCommands:[NSArray arrayWithObjects:
+									@"get_property switch_video",@"get_property switch_audio",
+									@"get_property sub_demux",@"get_property sub_file",nil]];
+			
+			if ([movieInfo length] > 0) {
+				[scrubbingBar setMaxValue: [movieInfo length]];
+				[scrubbingBar setStyle:NSScrubbingBarPositionStyle];
+				[scrubbingBarToolbar setMaxValue: [movieInfo length]];
+				[scrubbingBarToolbar setStyle:NSScrubbingBarPositionStyle];
 			}
 			break;
 		case kPaused :

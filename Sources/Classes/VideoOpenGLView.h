@@ -29,6 +29,7 @@
 {
 	NSRect screen_frame;
 	bool isFullscreen;
+	bool switchingToFullscreen;
 	bool useFullscreen;
 	bool isOntop;
 	bool isPlaying;
@@ -79,25 +80,40 @@
 	IBOutlet id playerController;
 	
 	IBOutlet id fullscreenWindow;
+	
+	// Inter-thread communication
+	NSPort *port1;
+	NSPort *port2;
+	id threadProxy;
 }
 
+- (void) connectToServer:(NSArray *)ports;
+
+// Render Thread methods
+- (void)threadMain:(NSArray *)ports;
 - (void)prepareOpenGL;
-- (NSEvent *) readNextEvent;
 - (int) startWithWidth: (int)width withHeight: (int)height withBytes: (int)bytes withAspect: (int)aspect;
 - (void) stop;
-- (void) close;
 - (void) render;
 - (void) doRender;
 - (void) clear;
+- (void) adaptSize;
+- (void) toggleFullscreen;
+- (void) finishToggleFullscreen;
+- (void) updateInThread;
+- (void) drawRectInThread;
+
+// Main Thread methods
+- (void) startOpenGLView;
+- (void) toggleFullscreenWindow;
 - (void) reshape;
 - (void) resizeToMovie;
+- (void) close;
 - (void) setWindowSizeMult: (float)zoom;
-- (void) toggleFullscreen;
 - (void) ontop;
 
 //Action
 - (IBAction)MovieMenuAction:(id)sender;
-
 //Event
 - (void) mouseDown: (NSEvent *) theEvent;
 

@@ -214,6 +214,13 @@
 	else
 		[subSizeBox setIntValue:100];
 	
+	// subtitle color
+	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES]; 
+	if ([thePrefs objectForKey:@"SubtitlesColor"])
+		[subColorWell setColor:(NSColor *)[NSUnarchiver unarchiveObjectWithData:[thePrefs objectForKey:@"SubtitlesColor"]]];
+	else
+		[subColorWell setColor:[NSColor whiteColor]];
+	
 	// ass at the beginning of filter chain
 	if ([thePrefs objectForKey:@"ASSPreFilter"])
 		[assPreFilter setState:[thePrefs boolForKey:@"ASSPreFilter"]];
@@ -378,8 +385,15 @@
 {
 	// init values
 	[self reloadValues];
-			
+	closeAfterApply = NO;
+	
 	[preferencesPanel makeKeyAndOrderFront:self];
+}
+/************************************************************************************/
+- (IBAction)applyAndClose:(id)sender
+{
+	closeAfterApply = YES;
+	[self applyPrefs:self];
 }
 /************************************************************************************/
 - (IBAction)applyPrefs:(id)sender
@@ -509,6 +523,10 @@
 	[thePrefs setObject:[NSNumber numberWithInt:[subSizeBox intValue]]
 			forKey:@"SubtitlesScale"];
 	
+	// subtitle color
+	NSData *color = [NSArchiver archivedDataWithRootObject:[[subColorWell color] colorUsingColorSpace:[NSColorSpace genericRGBColorSpace]]];
+	[thePrefs setObject:color forKey:@"SubtitlesColor"];
+	
 	// ass pre filter
 	[thePrefs setBool:[assPreFilter state] forKey:@"ASSPreFilter"];
 	
@@ -583,7 +601,7 @@
 	
 		
 	[playerController applyPrefs];
-	if ([playerController changesRequireRestart]) {
+	if ([playerController changesRequireRestart] && ![playerController movieIsSeekable]) {
 		NSBeginAlertSheet(
 				NSLocalizedString(@"Do you want to restart playback?",nil),
 				NSLocalizedString(@"OK",nil),
@@ -591,8 +609,15 @@
 				@selector(sheetDidEnd:returnCode:contextInfo:), nil, nil,
 				NSLocalizedString(@"Some of the changes requires player to restart playback that might take a while.",nil));
 	}
+	else if ([playerController changesRequireRestart]) {
+		if (closeAfterApply)
+			[preferencesPanel orderOut:nil];
+		[playerController applyChangesWithRestart:YES];
+		[playListController applyPrefs];
+	}
 	else {
-		[preferencesPanel orderOut:nil];
+		if (closeAfterApply)
+			[preferencesPanel orderOut:nil];
 		[playListController applyPrefs];
 	}
 }
@@ -749,7 +774,8 @@
 		returnCode:(int)returnCode
 		contextInfo:(void *)contextInfo
 {
-	[preferencesPanel orderOut:nil];
+	if (closeAfterApply)
+		[preferencesPanel orderOut:nil];
 
 	if (returnCode == NSAlertDefaultReturn)
 		[playerController applyChangesWithRestart:YES];

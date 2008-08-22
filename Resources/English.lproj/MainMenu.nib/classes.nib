@@ -44,6 +44,8 @@
 				<string>id</string>
 				<key>settingsController</key>
 				<string>id</string>
+				<key>threadProxy</key>
+				<string>id</string>
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>NSOpenGLView</string>
@@ -304,6 +306,8 @@
 		<dict>
 			<key>ACTIONS</key>
 			<dict>
+				<key>applyAndClose</key>
+				<string>id</string>
 				<key>applyPrefs</key>
 				<string>id</string>
 				<key>cacheSizeChanged</key>
@@ -418,6 +422,8 @@
 				<key>preferencesPanel</key>
 				<string>NSPanel</string>
 				<key>screenshots</key>
+				<string>id</string>
+				<key>subColorWell</key>
 				<string>id</string>
 				<key>subEncodingMenu</key>
 				<string>id</string>

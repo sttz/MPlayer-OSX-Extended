@@ -388,8 +388,15 @@
 			[params addObject:[NSString stringWithFormat:@"%.3f",(subScale/100.0)]];
 		} else {
 			[params addObject:@"-subfont-text-scale"];
-			[params addObject:[NSString stringWithFormat:@"%.3f",((subScale/100.0)*5.0)]];
+			[params addObject:[NSString stringWithFormat:@"%.3f",(5.0*(subScale/100.0))]];
 		}
+	}
+	// subtitles color
+	if (subColor && assSubtitles) {
+		float red, green, blue, alpha;
+		[subColor getRed:&red green:&green blue:&blue alpha:&alpha];
+		[params addObject:@"-ass-color"];
+		[params addObject:[NSString stringWithFormat:@"%02X%02X%02X%02X",(unsigned)(red*255),(unsigned)(green*255),(unsigned)(blue*255),(unsigned)((1-alpha)*255)]];
 	}
 	// always enable fontconfig
 	[params addObject:@"-fontconfig"];
@@ -488,6 +495,7 @@
 	
 	[myCommandsBuffer removeAllObjects];	// empty buffer before launch
 	settingsChanged = NO;					// every startup settings has been made
+	videoOutChanged = NO;
 	
 	// Disable preflight mode
 	isPreflight = NO;
@@ -958,12 +966,18 @@
 	}
 }
 /************************************************************************************/
+- (unsigned int)getDeviceId
+{
+	return deviceId;
+}
+/************************************************************************************/
 - (void) setVideoOutModule:(int)module
 {
 	if (voModule != module)
 	{
 		voModule = module;
 		settingsChanged = YES;
+		videoOutChanged = YES;
 	}
 }
 /************************************************************************************/
@@ -996,6 +1010,7 @@
 	} else {
 		[subEncoding release];
 		subEncoding = nil;
+		settingsChanged = YES;
 	}
 }
 /************************************************************************************/
@@ -1003,6 +1018,25 @@
 {
 	if (subScale != aScale) {
 		subScale = aScale;
+		settingsChanged = YES;
+	}
+}
+/************************************************************************************/
+- (void) setSubtitlesColor:(NSColor *)color
+{
+	if (color != nil) {
+		if (subColor == nil || 
+				[color redComponent] != [subColor redComponent] ||
+				[color greenComponent] != [subColor greenComponent] ||
+				[color blueComponent] != [subColor blueComponent] ||
+				[color alphaComponent] != [subColor alphaComponent]) {
+			[subColor release];
+			subColor = [color retain];
+			settingsChanged = YES;
+		}
+	} else {
+		[subColor release];
+		subColor = nil;
 		settingsChanged = YES;
 	}
 }
@@ -1183,6 +1217,11 @@
 	return NO;
 }
 /************************************************************************************/
+- (BOOL) videoOutHasChanged
+{
+	return videoOutChanged;
+}
+/************************************************************************************/
 - (BOOL)isRunning
 {	
 	return isRunning;
@@ -1230,7 +1269,7 @@
  ************************************************************************************/
 - (void)sendCommand:(NSString *)aCommand
 {
-	[Debug log:ASL_LEVEL_DEBUG withMessage:@"Send Command: %@",aCommand];
+	//[Debug log:ASL_LEVEL_DEBUG withMessage:@"Send Command: %@",aCommand];
 	[self sendToMplayersInput:[aCommand stringByAppendingString:@"\n"]];
 }
 /************************************************************************************/
@@ -1899,6 +1938,12 @@
 			// getting length
 			if ([idName isEqualToString:@"LENGTH"]) {
 				[info setLength:[idValue intValue]];
+				continue;
+			}
+			
+			// seekability
+			if ([idName isEqualToString:@"SEEKABLE"]) {
+				[info setIsSeekable:(BOOL)[idValue intValue]];
 				continue;
 			}
 			
