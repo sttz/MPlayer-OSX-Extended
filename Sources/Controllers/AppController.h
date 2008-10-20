@@ -19,6 +19,7 @@
     // controller outlets
 	IBOutlet id playerController;
 	IBOutlet id playListController;
+	IBOutlet id preferencesController;
 	// GUI outlets
 	IBOutlet id locationPanel;
 	IBOutlet id locationBox;
@@ -51,7 +52,7 @@
 - (IBAction) displayLogWindow:(id)sender;
 - (IBAction) applyLocation:(id)sender;
 - (IBAction) cancelLocation:(id)sender;
-- (IBAction) donate:(id)sender;
+- (IBAction) openHomepage:(id)sender;
 - (IBAction) closeWindow:(id)sender;
 
 // bundle access
@@ -70,5 +71,6 @@
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename;
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender;
 - (BOOL) validateMenuItem:(NSMenuItem *)aMenuItem;
+- (void) appFinishedLaunching;
 
 @end

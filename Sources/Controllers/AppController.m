@@ -19,6 +19,12 @@
 	// create preferences and register application factory presets
 	[[NSUserDefaults standardUserDefaults] registerDefaults:
 	[[[NSBundle mainBundle] infoDictionary] objectForKey:@"ApplicationDefaults"]];
+	
+	// register for app launch finish
+	[[NSNotificationCenter defaultCenter] addObserver: self
+			selector: @selector(appFinishedLaunching)
+			name: NSApplicationDidFinishLaunchingNotification
+			object:NSApp];
 }
 
 /************************************************************************************
@@ -232,9 +238,9 @@
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to launch the console.app"];
 }
 
-- (IBAction) donate:(id)sender
+- (IBAction) openHomepage:(id)sender
 {
-	[[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: @"https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=nicolas%2eplourde%40gmail%2ecom&item_name=MPlayer%20OSX%20Donation"]];
+	[[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: @"http://mplayerosx.sttz.ch/"]];
 }
 
 - (IBAction) closeWindow:(id)sender {
@@ -400,4 +406,18 @@
 		return [playerController isPlaying];
 	return YES;
 }
+/******************************************************************************/
+- (void) appFinishedLaunching
+{
+	// warn for fontconfig cache building
+	if (![[NSUserDefaults standardUserDefaults] objectForKey:@"Version"]) {
+		NSRunAlertPanel(NSLocalizedString(@"Warning",nil),
+						NSLocalizedString(@"The first time MPlayerOSX Extended opens a file, it needs to build it's font cache.\n\
+										  This can take up to a couple of minutes,\n please be patient.",nil),
+						NSLocalizedString(@"OK",nil),nil,nil);
+		[preferencesController reloadValues];
+		[preferencesController applyPrefs:nil];
+	}
+}
+
 @end

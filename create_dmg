@@ -1,12 +1,15 @@
 #!/bin/sh
 
-DATE=`date +%y%m%d`
-VOLUME="MPlayer"
-FILES=./dist
-VERSION=dev-SVN-$DATE
+if [ $1 ]; then
+    VERSION=$1
+else
+    VERSION="test"
+fi
 
-DMG="$VOLUME-$VERSION.dmg"
+VOLUME="MPlayerOSX Extended"
+FILES=./build/Release
+DMG="MPlayer-OSX-Extended_$VERSION.dmg"
 
 # Create tmp disk image
-hdiutil create $DMG -srcfolder $FILES/ -ov -volname $VOLUME
+hdiutil create "$DMG" -srcfolder $FILES/ -ov -volname "$VOLUME"
 

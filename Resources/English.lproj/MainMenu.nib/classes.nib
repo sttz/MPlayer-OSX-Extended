@@ -44,6 +44,8 @@
 				<string>id</string>
 				<key>settingsController</key>
 				<string>id</string>
+				<key>threadProto</key>
+				<string>id</string>
 				<key>threadProxy</key>
 				<string>id</string>
 			</dict>
@@ -470,6 +472,14 @@
 			<string>NSObject</string>
 		</dict>
 		<dict>
+			<key>CLASS</key>
+			<string>PlayerFullscreenWindow</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>PlayerWindow</string>
+		</dict>
+		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key></key>
@@ -563,9 +573,9 @@
 				<string>id</string>
 				<key>displayPlayList</key>
 				<string>id</string>
-				<key>donate</key>
-				<string>id</string>
 				<key>openFile</key>
+				<string>id</string>
+				<key>openHomepage</key>
 				<string>id</string>
 				<key>openLocation</key>
 				<string>id</string>
@@ -591,6 +601,8 @@
 				<key>playerController</key>
 				<string>id</string>
 				<key>playerWindow</key>
+				<string>id</string>
+				<key>preferencesController</key>
 				<string>id</string>
 				<key>theApp</key>
 				<string>id</string>

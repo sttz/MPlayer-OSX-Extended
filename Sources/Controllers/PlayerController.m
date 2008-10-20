@@ -287,7 +287,10 @@
 	NSString *aPath;
 	BOOL loadInfo;
 	
-	//[self displayWindow:self];
+	// re-open player window for internal video
+	NSUserDefaults *preferences = [appController preferences];
+	if ([self isInternalVideoOutput] && ![playerWindow isVisible])
+		[self displayWindow:self];
 	
 	// prepare player
 	// set movie file
@@ -395,8 +398,6 @@
 {
 	return myPreflightPlayer;
 }
-
-
 /************************************************************************************/
 - (NSMutableDictionary *) playingItem
 {
@@ -414,6 +415,15 @@
 - (BOOL) isPlaying
 {	
 	if ([myPlayer status] != kStopped && [myPlayer status] != kFinished)
+		return YES;
+	else
+		return NO;
+}
+/************************************************************************************/
+- (BOOL) isInternalVideoOutput
+{
+	NSUserDefaults *preferences = [appController preferences];
+	if ([preferences integerForKey:@"VideoDriver"] == 0)
 		return YES;
 	else
 		return NO;
@@ -455,8 +465,8 @@
 	if ([preferences objectForKey:@"DisplayType"])
 		[myPlayer setDisplayType: [preferences integerForKey:@"DisplayType"]];
 	
-	// ontop
-	if ([preferences integerForKey:@"DisplayType"] == 2)
+	// ontop for internal video
+	if ([self isInternalVideoOutput] && [preferences integerForKey:@"DisplayType"] == 2)
 		[self setOntop:YES];
 	else
 		[self setOntop:NO];
@@ -473,8 +483,8 @@
 	[self setMovieSize];
 	
 	// set aspect ratio
-	if ([preferences objectForKey:@"VideoAspectRatio"]) {
-		switch ([[preferences objectForKey:@"VideoAspectRatio"] intValue]) {
+	if ([preferences objectForKey:@"VideoAspect"]) {
+		switch ([[preferences objectForKey:@"VideoAspect"] intValue]) {
 		case 1 :
 			[myPlayer setAspectRatio:4.0/3.0];		// 4:3
 			break;
@@ -786,12 +796,15 @@
 		switch ([[preferences objectForKey:@"VideoSize"] intValue]) {
 		case 0 :		// original
 			[myPlayer setMovieSize:kDefaultMovieSize];
+			//[videoOpenGLView setWindowSizeMult: 1];
 			break;
 		case 1 :		// half
 			[myPlayer setMovieSize:NSMakeSize(0.5, 0)];
+			//[videoOpenGLView setWindowSizeMult: 0.5];
 			break;
 		case 2 :		// double
 			[myPlayer setMovieSize:NSMakeSize(2, 0)];
+			//[videoOpenGLView setWindowSizeMult: 2];
 			break;
 		case 3 :		// fit screen it (it is set before actual playback)
 			if ([movieInfo videoWidth] && [movieInfo videoHeight]) {
@@ -1108,7 +1121,11 @@
 	[self clearChapterMenu];
 }
 
-
+/************************************************************************************/
+- (NSWindow *) playerWindow
+{
+	return [[playerWindow retain] autorelease];
+}
 /************************************************************************************/
 - (void)setOntop:(BOOL)aBool
 {

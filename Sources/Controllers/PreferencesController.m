@@ -400,7 +400,7 @@
 {
 	NSUserDefaults *thePrefs = [appController preferences];
 	
-	[thePrefs setObject:@"ext6" forKey:@"Version"];
+	[thePrefs setObject:@"rev7" forKey:@"Version"];
 	
 	// *** Playback
 	
@@ -634,7 +634,7 @@
 
 	if(result == 0)
 	{
-		system("defaults delete hu.mplayerhq.mplayerosx");
+		system("defaults delete hu.mplayerhq.mplayerosx.extended");
 		[Debug log:ASL_LEVEL_WARNING withMessage:@"User Default Deleted"];
 		NSRunAlertPanel(@"Alert", @"Default preferences restored, MPlayer OSX will close", @"Done", nil, nil);
 		exit(0);

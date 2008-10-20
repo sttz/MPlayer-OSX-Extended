@@ -115,6 +115,7 @@
 		3A09436C0E45043000E6753F /* LanguageCodes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A09436B0E45043000E6753F /* LanguageCodes.m */; };
 		3A38D3C50E50E45A00C1E468 /* Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A38D3C40E50E45A00C1E468 /* Debug.m */; };
 		3A96C95A0E4E20B800B7B261 /* iso-639-3.tab in Resources */ = {isa = PBXBuildFile; fileRef = 3A96C9590E4E20B800B7B261 /* iso-639-3.tab */; };
+		3AB2120C0EABE74900ACA509 /* PlayerFullscreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB2120B0EABE74900ACA509 /* PlayerFullscreenWindow.m */; };
 		3AFA914C0E5858B100B3998D /* RegexKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFA914B0E5858B100B3998D /* RegexKit.framework */; };
 		3AFA91750E58592B00B3998D /* RegexKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3AFA914B0E5858B100B3998D /* RegexKit.framework */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
@@ -214,6 +215,8 @@
 		3A38D3C30E50E45A00C1E468 /* Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Debug.h; path = Sources/Classes/Debug.h; sourceTree = "<group>"; };
 		3A38D3C40E50E45A00C1E468 /* Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Debug.m; path = Sources/Classes/Debug.m; sourceTree = "<group>"; };
 		3A96C9590E4E20B800B7B261 /* iso-639-3.tab */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "iso-639-3.tab"; path = "Resources/iso-639-3.tab"; sourceTree = "<group>"; };
+		3AB2120A0EABE74900ACA509 /* PlayerFullscreenWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerFullscreenWindow.h; path = Sources/Classes/PlayerFullscreenWindow.h; sourceTree = "<group>"; };
+		3AB2120B0EABE74900ACA509 /* PlayerFullscreenWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlayerFullscreenWindow.m; path = Sources/Classes/PlayerFullscreenWindow.m; sourceTree = "<group>"; };
 		3AFA914B0E5858B100B3998D /* RegexKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RegexKit.framework; path = Local/Frameworks/RegexKit.framework; sourceTree = SYSTEM_DEVELOPER_DIR; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* MPlayer OSX Extended.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MPlayer OSX Extended.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -252,6 +255,8 @@
 				379740A00875CA980049E91B /* VideoOpenGLView.m */,
 				37C093EB088429AE00D06F8B /* PlayerWindow.m */,
 				37C093EC088429AE00D06F8B /* PlayerWindow.h */,
+				3AB2120A0EABE74900ACA509 /* PlayerFullscreenWindow.h */,
+				3AB2120B0EABE74900ACA509 /* PlayerFullscreenWindow.m */,
 				3A0943270E44F8E300E6753F /* MovieInfo.h */,
 				3A0943280E44F8E300E6753F /* MovieInfo.m */,
 				3A09436A0E45043000E6753F /* LanguageCodes.h */,
@@ -567,6 +572,7 @@
 				3A0943290E44F8E300E6753F /* MovieInfo.m in Sources */,
 				3A09436C0E45043000E6753F /* LanguageCodes.m in Sources */,
 				3A38D3C50E50E45A00C1E468 /* Debug.m in Sources */,
+				3AB2120C0EABE74900ACA509 /* PlayerFullscreenWindow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

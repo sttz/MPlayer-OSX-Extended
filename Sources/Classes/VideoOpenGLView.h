@@ -5,7 +5,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 //include for shared memory
-#include <sys/shm.h>
+#include <sys/mman.h>
 
 //custom class
 #import "PlayerWindow.h"
@@ -23,6 +23,15 @@
 - (void) render;
 - (void) toggleFullscreen;
 - (void) ontop;
+@end
+
+// Inter-Thread Protocol
+@protocol VOGLVThreadProto
+- (void) toggleFullscreen;
+- (void) finishToggleFullscreen;
+- (void) adaptSize;
+- (void) updateInThread;
+- (void) drawRectInThread;
 @end
 
 @interface VideoOpenGLView : NSOpenGLView <MPlayerOSXVOProto>
@@ -58,9 +67,12 @@
 	float image_aspect;
 	float org_image_aspect;
 	
+	// zoom factor
+	float zoomFactor;
+	
 	//shared memory
-	int shm_id;
-	struct shmid_ds shm_desc;
+	int shm_fd;
+	//struct shmid_ds shm_desc;
 	
 	//Movie menu outlets
 	IBOutlet id HalfSizeMenuItem;
@@ -86,7 +98,8 @@
 	// Inter-thread communication
 	NSPort *port1;
 	NSPort *port2;
-	id threadProxy;
+	NSDistantObject *threadProxy;
+	id <VOGLVThreadProto> threadProto;
 }
 
 - (void) connectToServer:(NSArray *)ports;
@@ -108,11 +121,13 @@
 // Main Thread methods
 - (void) startOpenGLView;
 - (void) toggleFullscreenWindow;
+- (void) toggleFullscreenEnded;
 - (void) reshape;
 - (void) resizeToMovie;
 - (void) close;
 - (void) finishClosing;
 - (void) setWindowSizeMult: (float)zoom;
+- (void) finishWindowSizeMult;
 - (void) ontop;
 
 //Action

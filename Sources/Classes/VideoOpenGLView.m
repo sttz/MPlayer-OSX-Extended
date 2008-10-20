@@ -19,6 +19,8 @@
 	hideMouse = NO;
 	isPlaying = NO;
 	
+	zoomFactor = 1;
+	
 	port1 = [NSPort port];
 	port2 = [NSPort port];
 	
@@ -32,7 +34,9 @@
 {
 	
 	NSConnection *client = [NSConnection connectionWithReceivePort:[ports objectAtIndex:1] sendPort:[ports objectAtIndex:0]];
-	threadProxy = [client rootProxy];
+	threadProxy = [[client rootProxy] retain];
+	[threadProxy setProtocolForProxy:@protocol(VOGLVThreadProto)];
+	threadProto = (id <VOGLVThreadProto>)threadProxy;
 }
 
 /*
@@ -43,6 +47,7 @@
 
 - (void)threadMain:(NSArray *)ports
 {
+	
 	NSAutoreleasePool * pool = [NSAutoreleasePool new];
 	
 	NSRunLoop* myRunLoop = [NSRunLoop currentRunLoop];
@@ -85,20 +90,22 @@
 	
 	isPlaying = YES;
 	
-	shm_id = shmget(9849, image_width*image_height*image_bytes, 0666);
-	if (shm_id == -1)
+	shm_fd = shm_open("mplayerosx", O_RDONLY, S_IRUSR);
+	if (shm_fd == -1)
 	{
-		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to get shared memory id from mplayer (shmget)"];
-		return 0;
-	}
-
-	image_data = shmat(shm_id, NULL, 0);
-	if (!image_data)
-	{
-		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to map shared memory from mplayer (shmat)"];
+		[Debug log:ASL_LEVEL_ERR withMessage:@"mplayergui: shm_open failed"];
 		return 0;
 	}
 	
+	image_data = mmap(NULL, image_width*image_height*image_bytes,
+					  PROT_READ, MAP_SHARED, shm_fd, 0);
+	
+	if (image_data == MAP_FAILED)
+	{
+		[Debug log:ASL_LEVEL_ERR withMessage:@"mplayergui: mmap failed"];
+		return 0;
+	}
+	 
 	image_buffer = malloc(image_width*image_height*image_bytes);
 	
 	//Setup CoreVideo Texture
@@ -133,12 +140,9 @@
 	isPlaying = NO;
 	
 	//make sure we destroy the shared buffer
-	//if(image_data != NULL)
-	{
-		if (shmdt(image_data) == -1)
-			[Debug log:ASL_LEVEL_ERR withMessage:@"shmdt: "];
-	}
-
+	if (munmap(image_data, image_width*image_height*image_bytes) == -1)
+		[Debug log:ASL_LEVEL_ERR withMessage:@"munmap failed"];
+	
 	free(image_buffer);
 }
 
@@ -149,7 +153,6 @@
  */
 - (void) toggleFullscreen
 {
-	
 	// wait until finished before switching again
 	if (switchingInProgress)
 		return;
@@ -164,6 +167,7 @@
 	{
 		switchingToFullscreen = NO;
 		isFullscreen = NO;
+		//[self clear];
 	}
 	
 	[self performSelectorOnMainThread:@selector(toggleFullscreenWindow) withObject:nil waitUntilDone:NO];
@@ -171,25 +175,21 @@
 
 - (void) finishToggleFullscreen
 {
+	
 	if(switchingToFullscreen)
 	{
-		[[self openGLContext] setView: [fullscreenWindow contentView]];
 		isFullscreen = YES;
 	}
 	else
 	{
-		
 		[[self openGLContext] setView:self];
 	}
 	
 	[self adaptSize];
 	switchingInProgress = NO;
 	
-	// close view callback
-	if (isClosing) {
-		isClosing = NO;
-		[self performSelectorOnMainThread:@selector(finishClosing) withObject:nil waitUntilDone:NO];
-	}
+	// Message the main thread that switching is done
+	[self performSelectorOnMainThread:@selector(toggleFullscreenEnded) withObject:nil waitUntilDone:NO];
 }
 
 /*
@@ -276,6 +276,8 @@
 */ 
 - (void)adaptSize
 {
+	
+	//asl_log(NULL, NULL, ASL_LEVEL_ERR, "adaptSizeT");
 	NSRect frame;
 	uint32_t d_width;
 	uint32_t d_height;
@@ -284,7 +286,8 @@
 	int padding = 0;
 	
 	if(isFullscreen)
-		frame = screen_frame;
+		//frame = screen_frame;
+		frame = [[fullscreenWindow contentView] bounds];
 	else
 		frame = [self bounds];
 	
@@ -376,7 +379,7 @@
     
 	//Play in fullscreen
 	if ([playerController startInFullscreen])
-		[self toggleFullscreen];
+		[threadProto toggleFullscreen];
 }
 
 /*
@@ -386,7 +389,8 @@
 {
 	
 	static NSRect old_win_frame;
-	NSWindow *window = [self window];
+	static NSRect old_view_frame;
+	NSWindow *window = [playerController playerWindow];
     NSRect fsRect;
     
 	int fullscreenId = [playerController fullscreenDeviceId];
@@ -402,30 +406,50 @@
 		CGDisplayHideCursor(kCGDirectMainDisplay);
 		hideMouse = YES;
 		
-		[fullscreenWindow setFrame:screen_frame display:YES animate:NO];
-		[fullscreenWindow setAcceptsMouseMovedEvents:YES];
-		[[fullscreenWindow contentView] setFrame: fsRect];
-		[(PlayerWindow*)fullscreenWindow setFullscreen:YES];
-		
 		//enter kiosk mode
 		SetSystemUIMode( kUIModeAllHidden, kUIOptionAutoShowMenuBar);
+		[(PlayerWindow*)fullscreenWindow setFullscreen:YES];
 		
-		//resize window	
-		old_win_frame = [window frame];	
-		[window setFrame:screen_frame display:YES animate:YES];
+		// place fswin above video
+		NSRect rect = [self frame];
+		rect.origin = [window convertBaseToScreen:rect.origin];
+		[fullscreenWindow setFrame:rect display:NO animate:NO];
+		
+		// save positions for back transition
+		old_win_frame = rect;
+		old_view_frame = [self frame];
 		
 		[fullscreenWindow makeKeyAndOrderFront:nil];
+		
+		// move view to fswin and redraw to avoid flicker
+		[fullscreenWindow setContentView:self];
+		[self drawRect:rect];
+		
+		[fullscreenWindow setAcceptsMouseMovedEvents:YES];
+		
+		//resize window	
+		[fullscreenWindow setFrame:screen_frame display:YES animate:YES];
+		
 		[window orderOut:nil];
+		
+		[threadProto finishToggleFullscreen];
+		
 	}
 	else
 	{
-		[window makeKeyAndOrderFront:nil];
 		
-		//destroy fullscreen window
+		[window orderWindow:NSWindowBelow relativeTo:[fullscreenWindow windowNumber]];
+		[window makeKeyWindow];
+		
+		[fullscreenWindow setFrame:old_win_frame display:YES animate:YES];
+		
 		[fullscreenWindow orderOut:nil];
 		[(PlayerWindow*)fullscreenWindow setFullscreen:NO];
 		
-		[window setFrame:old_win_frame display:YES animate:YES];
+		// move view back, place and redraw
+		[[window contentView] addSubview:self];
+		[self setFrame:old_view_frame];
+		[self drawRect:old_view_frame];
 		
 		//exit kiosk mode
 		SetSystemUIMode( kUIModeNormal, 0);
@@ -433,9 +457,23 @@
 		//show mouse
 		CGDisplayShowCursor(kCGDirectMainDisplay);
 		hideMouse = NO;
+		
+		[threadProto finishToggleFullscreen];
+		
 	}
 	
-	[threadProxy performSelector:@selector(finishToggleFullscreen) withObject:nil afterDelay:0];
+	
+}
+
+/*
+ Switching Fullscreen has ended
+ */
+- (void) toggleFullscreenEnded
+{
+	[[NSNotificationCenter defaultCenter]
+		postNotificationName:@"MIFullscreenSwitchDone"
+		object:self
+		userInfo:nil];
 }
 
 /*
@@ -464,8 +502,14 @@
 {
 	// exit fullscreen and close with callback
 	if(isFullscreen) {
-		[self toggleFullscreen];
-		isClosing = YES;
+		
+		[[NSNotificationCenter defaultCenter] addObserver: self
+			selector: @selector(finishClosing) 
+			name: @"MIFullscreenSwitchDone"
+			object: self];
+		
+		[threadProto toggleFullscreen];
+		
 		return;
 	}
 	
@@ -486,6 +530,11 @@
 	frame.size.width = minSize.width;
 	frame.size.height = minSize.height+20; //+title bar height
 	[[self window] setFrame:frame display:YES animate:YES];
+	
+	// remove fullscreen callback
+	[[NSNotificationCenter defaultCenter] removeObserver:self
+		name: @"MIFullscreenSwitchDone"
+		object: self];
 }
 
 /*
@@ -493,22 +542,45 @@
 */
 - (void) setWindowSizeMult: (float)zoom
 {
-	if(isFullscreen)
-		[self toggleFullscreen];
+	zoomFactor = zoom;
+	
+	// exit fullscreen first and finish with callback
+	if(isFullscreen) {
 		
+		[[NSNotificationCenter defaultCenter] addObserver: self
+			selector: @selector(finishWindowSizeMult) 
+			name: @"MIFullscreenSwitchDone"
+			object: self];
+		
+		[threadProto toggleFullscreen];
+		
+		return;
+	}
+	
+	// not fullscreen: resize now
+	[self finishWindowSizeMult];
+}
+
+- (void) finishWindowSizeMult
+{
 	//resize window
 	NSRect win_frame = [[self window] frame];
 	NSRect mov_frame = [self bounds];
 	NSSize minSize = [[self window]contentMinSize];
 	
-	win_frame.size.height += ((image_height*zoom) - mov_frame.size.height);
+	win_frame.size.height += ((image_height*zoomFactor) - mov_frame.size.height);
 	
-	if( ((image_height*image_aspect)*zoom) < minSize.width)
+	if( ((image_height*image_aspect)*zoomFactor) < minSize.width)
 		win_frame.size.width = minSize.width;
 	else
-		win_frame.size.width += (((image_height*image_aspect)*zoom) - mov_frame.size.width);
-		
+		win_frame.size.width += (((image_height*image_aspect)*zoomFactor) - mov_frame.size.width);
+	
 	[[self window] setFrame:win_frame display:YES animate:YES];
+	
+	// remove fullscreen callback
+	[[NSNotificationCenter defaultCenter] removeObserver:self
+		name: @"MIFullscreenSwitchDone"
+		object: self];
 }
 
 /*
@@ -533,19 +605,19 @@
 - (void) reshape
 {
 	//[Debug log:ASL_LEVEL_ERR withMessage:@"reshape"];
-	[threadProxy performSelector:@selector(adaptSize) withObject:nil afterDelay:0];
+	[threadProto adaptSize];
 }
 
 - (void) update
 {
 	//[Debug log:ASL_LEVEL_ERR withMessage:@"update"];
-	[threadProxy performSelector:@selector(updateInThread) withObject:nil afterDelay:0];
+	[threadProto updateInThread];
 }
 
 - (void) drawRect: (NSRect *) bounds
 {
 	//[Debug log:ASL_LEVEL_ERR withMessage:@"drawRect"];
-	[threadProxy performSelector:@selector(drawRectInThread) withObject:nil afterDelay:0];
+	[threadProto drawRectInThread];
 }
 
 /*

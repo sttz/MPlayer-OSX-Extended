@@ -120,6 +120,7 @@
 - (NSMutableDictionary *) playingItem;
 - (BOOL) isRunning;
 - (BOOL) isPlaying;
+- (BOOL) isInternalVideoOutput;
 - (void) setOntop:(BOOL)aBool;
 - (void) applyPrefs;
 - (void) applySettings;
@@ -128,6 +129,7 @@
 - (void) applyChangesWithRestart:(BOOL)restart;
 - (BOOL) startInFullscreen;
 - (int) fullscreenDeviceId;
+- (NSWindow *) playerWindow;
 
 - (void) playFromPlaylist:(NSMutableDictionary *)anItem;
 - (void) stopFromPlaylist;
