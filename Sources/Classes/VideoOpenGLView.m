@@ -63,6 +63,7 @@
 	
 	// setup server connection for thread communication
 	NSConnection *otherConnection = [[NSConnection alloc] initWithReceivePort:[ports objectAtIndex:0] sendPort:[ports objectAtIndex:1]];
+	[otherConnection enableMultipleThreads];
 	[otherConnection setRootObject:self];
 	
 	// let client connect
@@ -153,6 +154,8 @@
  */
 - (void) toggleFullscreen
 {
+	asl_log(NULL, NULL, ASL_LEVEL_ERR, "T: toggleFullscreen");
+	
 	// wait until finished before switching again
 	if (switchingInProgress)
 		return;
@@ -175,6 +178,7 @@
 
 - (void) finishToggleFullscreen
 {
+	asl_log(NULL, NULL, ASL_LEVEL_ERR, "T: finishToggleFullscreen");
 	
 	if(switchingToFullscreen)
 	{
@@ -387,6 +391,7 @@
  */
 - (void) toggleFullscreenWindow
 {
+	asl_log(NULL, NULL, ASL_LEVEL_ERR, "M: toggleFullscreenWindow");
 	
 	static NSRect old_win_frame;
 	static NSRect old_view_frame;
@@ -470,6 +475,8 @@
  */
 - (void) toggleFullscreenEnded
 {
+	asl_log(NULL, NULL, ASL_LEVEL_ERR, "M: toggleFullscreenEnded");
+	
 	[[NSNotificationCenter defaultCenter]
 		postNotificationName:@"MIFullscreenSwitchDone"
 		object:self

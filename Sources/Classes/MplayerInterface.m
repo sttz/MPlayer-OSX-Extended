@@ -1404,6 +1404,8 @@
 	// launch mplayer task
 	[myMplayerTask launch];
 	isRunning = YES;
+	
+	[Debug log:ASL_LEVEL_INFO withMessage:@"Path to fontconfig: %@", [[myMplayerTask environment] objectForKey:@"FONTCONFIG_PATH"]];
 }
 /************************************************************************************/
 - (void)sendToMplayersInput:(NSString *)aCommand
