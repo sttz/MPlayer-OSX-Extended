@@ -411,10 +411,6 @@
 {
 	// warn for fontconfig cache building
 	if (![[NSUserDefaults standardUserDefaults] objectForKey:@"Version"]) {
-		NSRunAlertPanel(NSLocalizedString(@"Warning",nil),
-						NSLocalizedString(@"The first time MPlayerOSX Extended opens a file, it needs to build it's font cache.\n\
-										  This can take up to a couple of minutes,\n please be patient.",nil),
-						NSLocalizedString(@"OK",nil),nil,nil);
 		[preferencesController reloadValues];
 		[preferencesController applyPrefs:nil];
 	}

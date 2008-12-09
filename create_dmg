@@ -8,7 +8,7 @@ fi
 
 VOLUME="MPlayerOSX Extended"
 FILES=./build/Release
-DMG="MPlayer-OSX-Extended_$VERSION.dmg"
+DMG="releases/MPlayer-OSX-Extended_$VERSION.dmg"
 
 # Create tmp disk image
 hdiutil create "$DMG" -srcfolder $FILES/ -ov -volname "$VOLUME"

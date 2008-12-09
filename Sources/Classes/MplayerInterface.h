@@ -80,6 +80,8 @@
 	NSString *myAudioExportFile;
 	NSString *myFontFile;
 	
+	NSString *buffer_name;
+	
 	// playback
 	NSString *audioLanguages;
 	NSString *subtitleLanguages;
@@ -99,7 +101,22 @@
 	
 	unsigned int deviceId;
 	unsigned int voModule;
-	unsigned int screenshotPath;
+	NSString *screenshotPath;
+	
+	// text
+	NSString *subEncoding;
+	NSString *guessEncodingLang;
+	
+	BOOL assSubtitles;
+	unsigned int subScale;
+	
+	BOOL embeddedFonts;
+	BOOL assPreFilter;
+	NSColor *subColor;
+	NSColor *subBorderColor;
+	
+	int osdLevel;
+	unsigned int osdScale;
 	
 	// video
 	BOOL enableVideo;
@@ -111,16 +128,12 @@
 	BOOL deinterlace;
 	unsigned int postprocessing;
 	
-	BOOL assSubtitles;
-	BOOL embeddedFonts;
-	NSString *subEncoding;
-	unsigned int subScale;
-	BOOL assPreFilter;
-	NSColor *subColor;
-	
 	// audio
 	BOOL enableAudio;
 	NSString *audioCodecs;
+	
+	BOOL passthroughAC3;
+	BOOL passthroughDTS;
 	
 	BOOL hrtfFilter;
 	BOOL karaokeFilter;
@@ -143,6 +156,7 @@
 	//beta
 	unsigned int myadvolume;
 	float mySeconds;			// actual/saved seconds
+	BOOL isSeeking;
 	
 	// statistics
 	BOOL myUpdateStatistics;		// if set the following properties are periodicaly updated
@@ -161,6 +175,7 @@
 	BOOL restartingPlayer;			// set when player is teminated to be restarted
 	BOOL pausedOnRestart;			// set when paused during attemp to restart player
 	BOOL isRunning;					// set off after recieving termination notification
+	BOOL isPlaying;					// set off after reading "Exiting" from output
 	BOOL useIdentifyForPlayback;	// sets whether -identify is sent on starting playback
 	BOOL windowedVO;
 	int myOutputReadMode;				// defines playback output form 
@@ -176,6 +191,7 @@
 // init and uninit
 - (id) init;										// init
 - (id) initWithPathToPlayer:(NSString *)aPath;		// init with movie file path
+- (void) setBufferName:(NSString *)name;
 
 // playback controls (take effect imediately)
 - (void) playWithInfo:(MovieInfo *)mf;				// play item from saved time
@@ -192,13 +208,25 @@
 - (void) setAudioFile:(NSString *)aFile;
 //beta
 - (void) setAudioExportFile:(NSString *)aFile;
-- (void) setFontFile:(NSString *)aFile;
 
 // playback
 - (void) setAudioLanguages:(NSString *)langString;
 - (void) setSubtitleLanguages:(NSString *)langString;
 - (void) setCorrectPTS:(BOOL)aBool;
 - (void) setCacheSize:(unsigned int)kilobytes;
+
+// text
+- (void) setFont:(NSString *)aFile;
+- (void) setGuessEncodingLang:(NSString *)aLang;
+- (void) setAssSubtitles:(BOOL)aBool;
+- (void) setEmbeddedFonts:(BOOL)aBool;
+- (void) setSubtitlesEncoding:(NSString *)aEncoding;// sets subtitles file encoding
+- (void) setSubtitlesScale:(unsigned int)aScale;	// sets subtitle scale in % (see man mplayer)
+- (void) setAssPreFilter:(BOOL)aBool;
+- (void) setSubtitlesColor:(NSColor *)color;
+- (void) setSubtitlesBorderColor:(NSColor *)color;
+- (void) setOsdLevel:(int)anInt;
+- (void) setOsdScale:(unsigned int)anInt;
 
 // display
 - (void) setDisplayType:(unsigned int)mode;
@@ -211,7 +239,7 @@
 - (void) setDeviceId:(unsigned int)dId;
 - (unsigned int)getDeviceId;
 - (void) setVideoOutModule:(int)module;
-- (void) setScreenshotPath:(int)mode;
+- (void) setScreenshotPath:(NSString*)path;
 
 // video
 - (void) setVideoEnabled:(BOOL)aBool;
@@ -220,17 +248,12 @@
 - (void) setFastLibavcodec:(BOOL)aBool;
 - (void) setDeinterlace:(unsigned int)mode;
 - (void) setPostprocessing:(unsigned int)mode;
-- (void) setAssSubtitles:(BOOL)aBool;
-- (void) setEmbeddedFonts:(BOOL)aBool;
-// subtitles settings (don't work during playback)
-- (void) setSubtitlesEncoding:(NSString *)aEncoding;// sets subtitles file encoding
-- (void) setSubtitlesScale:(unsigned int)aScale;	// sets subtitle scale in % (see man mplayer)
-- (void) setAssPreFilter:(BOOL)aBool;
-- (void) setSubtitlesColor:(NSColor *)color;
 
 // audio
 - (void) setAudioEnabled:(BOOL)aBool;
 - (void) setAudioCodecs:(NSString *)codecString;
+- (void) setAC3Passthrough:(BOOL)aBool;
+- (void) setDTSPassthrough:(BOOL)aBool;
 - (void) setHRTFFilter:(BOOL)aBool;
 - (void) setKaraokeFilter:(BOOL)aBool;
 
@@ -264,6 +287,7 @@
 - (BOOL) changesNeedsRestart;						// retuns YES if changes needs restart
 - (BOOL) videoOutHasChanged;
 - (BOOL) isRunning;
+- (BOOL) isPlaying;
 - (BOOL) isWindowed;
 
 // statistics

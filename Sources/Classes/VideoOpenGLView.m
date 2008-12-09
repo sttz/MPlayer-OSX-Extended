@@ -16,13 +16,16 @@
 	isOntop = NO;
 	keepAspect = YES;
 	panScan = NO;
-	hideMouse = NO;
 	isPlaying = NO;
 	
 	zoomFactor = 1;
 	
 	port1 = [NSPort port];
 	port2 = [NSPort port];
+	
+	// Choose buffer name and pass it on the way to mplayer
+	buffer_name = [[NSString stringWithFormat:@"mplayerosx-%i", [[NSProcessInfo processInfo] processIdentifier]] retain];
+	[Debug log:ASL_LEVEL_ERR withMessage:@"Set buffer name: %@",buffer_name];
 	
 	[NSThread detachNewThreadSelector:@selector(threadMain:) toTarget:self withObject:[NSArray arrayWithObjects:port1, port2, nil]];
 }
@@ -59,7 +62,7 @@
 	//setup server connection for mplayer
 	NSConnection *serverConnection=[NSConnection defaultConnection];
     [serverConnection setRootObject:self];
-    [serverConnection registerName:@"mplayerosx"];
+    [serverConnection registerName:buffer_name];
 	
 	// setup server connection for thread communication
 	NSConnection *otherConnection = [[NSConnection alloc] initWithReceivePort:[ports objectAtIndex:0] sendPort:[ports objectAtIndex:1]];
@@ -91,7 +94,7 @@
 	
 	isPlaying = YES;
 	
-	shm_fd = shm_open("mplayerosx", O_RDONLY, S_IRUSR);
+	shm_fd = shm_open([buffer_name cString], O_RDONLY, S_IRUSR);
 	if (shm_fd == -1)
 	{
 		[Debug log:ASL_LEVEL_ERR withMessage:@"mplayergui: shm_open failed"];
@@ -154,7 +157,6 @@
  */
 - (void) toggleFullscreen
 {
-	asl_log(NULL, NULL, ASL_LEVEL_ERR, "T: toggleFullscreen");
 	
 	// wait until finished before switching again
 	if (switchingInProgress)
@@ -178,7 +180,6 @@
 
 - (void) finishToggleFullscreen
 {
-	asl_log(NULL, NULL, ASL_LEVEL_ERR, "T: finishToggleFullscreen");
 	
 	if(switchingToFullscreen)
 	{
@@ -342,7 +343,6 @@
  */
 - (void) updateInThread
 {
-	//asl_log(NULL, NULL, ASL_LEVEL_ERR, "updateT");
 	[[self openGLContext] update];
 }
 
@@ -351,10 +351,7 @@
  */
 - (void) drawRectInThread
 {
-	//asl_log(NULL, NULL, ASL_LEVEL_ERR, "drawRectT");
 	[self doRender];
-	//[self clear];
-	//[[self openGLContext] flushBuffer];
 }
 
 /*
@@ -363,6 +360,10 @@
  
  */
 
+- (NSString *)bufferName
+{
+	return [[buffer_name retain] autorelease];
+}
 
 /*
 	Start OpenGL view
@@ -371,14 +372,16 @@
 {
 	//Bring window to front
 	//[[self window] makeKeyAndOrderFront:nil];
-	[self resizeToMovie];
 	
     if(isFullscreen)
 	{
 		[fullscreenWindow makeKeyAndOrderFront:nil];
-		[[self window] orderOut:nil];
+		//[[self window] orderOut:nil];
 		
 		isFullscreen = YES;
+	} else {
+		
+		[self resizeToMovie];
 	}
     
 	//Play in fullscreen
@@ -387,11 +390,18 @@
 }
 
 /*
+	Return if currently in fullscreen
+ */
+- (BOOL) isFullscreen
+{
+	return isFullscreen;
+}
+
+/*
 	Toggle fullscreen on the gui side
  */
 - (void) toggleFullscreenWindow
 {
-	asl_log(NULL, NULL, ASL_LEVEL_ERR, "M: toggleFullscreenWindow");
 	
 	static NSRect old_win_frame;
 	static NSRect old_view_frame;
@@ -407,13 +417,9 @@
 	
 	if(switchingToFullscreen)
 	{
-		//hide mouse
-		CGDisplayHideCursor(kCGDirectMainDisplay);
-		hideMouse = YES;
-		
 		//enter kiosk mode
 		SetSystemUIMode( kUIModeAllHidden, kUIOptionAutoShowMenuBar);
-		[(PlayerWindow*)fullscreenWindow setFullscreen:YES];
+		[(PlayerFullscreenWindow*)fullscreenWindow setFullscreen:YES];
 		
 		// place fswin above video
 		NSRect rect = [self frame];
@@ -424,13 +430,17 @@
 		old_win_frame = rect;
 		old_view_frame = [self frame];
 		
+		// move to ontop level if needed
+		if ([playerController isOntop])
+			[fullscreenWindow setLevel:NSScreenSaverWindowLevel];
+		else
+			[fullscreenWindow setLevel:NSNormalWindowLevel];
+		
 		[fullscreenWindow makeKeyAndOrderFront:nil];
 		
 		// move view to fswin and redraw to avoid flicker
 		[fullscreenWindow setContentView:self];
 		[self drawRect:rect];
-		
-		[fullscreenWindow setAcceptsMouseMovedEvents:YES];
 		
 		//resize window	
 		[fullscreenWindow setFrame:screen_frame display:YES animate:YES];
@@ -442,14 +452,14 @@
 	}
 	else
 	{
-		
 		[window orderWindow:NSWindowBelow relativeTo:[fullscreenWindow windowNumber]];
 		[window makeKeyWindow];
+		
+		[(PlayerFullscreenWindow*)fullscreenWindow setFullscreen:NO];
 		
 		[fullscreenWindow setFrame:old_win_frame display:YES animate:YES];
 		
 		[fullscreenWindow orderOut:nil];
-		[(PlayerWindow*)fullscreenWindow setFullscreen:NO];
 		
 		// move view back, place and redraw
 		[[window contentView] addSubview:self];
@@ -458,10 +468,6 @@
 		
 		//exit kiosk mode
 		SetSystemUIMode( kUIModeNormal, 0);
-		
-		//show mouse
-		CGDisplayShowCursor(kCGDirectMainDisplay);
-		hideMouse = NO;
 		
 		[threadProto finishToggleFullscreen];
 		
@@ -475,7 +481,6 @@
  */
 - (void) toggleFullscreenEnded
 {
-	asl_log(NULL, NULL, ASL_LEVEL_ERR, "M: toggleFullscreenEnded");
 	
 	[[NSNotificationCenter defaultCenter]
 		postNotificationName:@"MIFullscreenSwitchDone"
@@ -611,19 +616,16 @@
  */
 - (void) reshape
 {
-	//[Debug log:ASL_LEVEL_ERR withMessage:@"reshape"];
 	[threadProto adaptSize];
 }
 
 - (void) update
 {
-	//[Debug log:ASL_LEVEL_ERR withMessage:@"update"];
 	[threadProto updateInThread];
 }
 
 - (void) drawRect: (NSRect *) bounds
 {
-	//[Debug log:ASL_LEVEL_ERR withMessage:@"drawRect"];
 	[threadProto drawRectInThread];
 }
 
@@ -673,15 +675,39 @@
 			[self reshape];
 		}	
 		
-		if(sender == FullAspectMenuItem)
+		if(sender == Aspect4to3MenuItem)
 		{
 			image_aspect = 4.0f/3.0f;
 			[self reshape];
 		}
 		
-		if(sender == WideAspectMenuItem)
+		if(sender == Aspect3to2MenuItem)
+		{
+			image_aspect = 3.0f/2.0f;
+			[self reshape];
+		}
+		
+		if(sender == Aspect5to3MenuItem)
+		{
+			image_aspect = 5.0f/3.0f;
+			[self reshape];
+		}
+		
+		if(sender == Aspect16to9MenuItem)
 		{
 			image_aspect = 16.0f/9.0f;
+			[self reshape];
+		}
+		
+		if(sender == Aspect185to1MenuItem)
+		{
+			image_aspect = 1.85f/1.0f;
+			[self reshape];
+		}
+		
+		if(sender == Aspect239to1MenuItem)
+		{
+			image_aspect = 2.39f/1.0f;
 			[self reshape];
 		}
 	}

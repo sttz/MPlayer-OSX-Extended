@@ -5,6 +5,14 @@
 	<key>IBClasses</key>
 	<array>
 		<dict>
+			<key>CLASS</key>
+			<string>FullscreenControlsScrubbingBar</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>ScrubbingBar</string>
+		</dict>
+		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key>MovieMenuAction</key>
@@ -16,9 +24,19 @@
 			<string>ObjC</string>
 			<key>OUTLETS</key>
 			<dict>
-				<key>DoubleSizeMenuItem</key>
+				<key>Aspect16to9MenuItem</key>
 				<string>id</string>
-				<key>FullAspectMenuItem</key>
+				<key>Aspect185to1MenuItem</key>
+				<string>id</string>
+				<key>Aspect239to1MenuItem</key>
+				<string>id</string>
+				<key>Aspect3to2MenuItem</key>
+				<string>id</string>
+				<key>Aspect4to3MenuItem</key>
+				<string>id</string>
+				<key>Aspect5to3MenuItem</key>
+				<string>id</string>
+				<key>DoubleSizeMenuItem</key>
 				<string>id</string>
 				<key>HalfSizeMenuItem</key>
 				<string>id</string>
@@ -29,8 +47,6 @@
 				<key>OriginalAspectMenuItem</key>
 				<string>id</string>
 				<key>PanScanMenuItem</key>
-				<string>id</string>
-				<key>WideAspectMenuItem</key>
 				<string>id</string>
 				<key>appController</key>
 				<string>id</string>
@@ -198,6 +214,22 @@
 				<string>id</string>
 				<key>chapterWindowMenu</key>
 				<string>id</string>
+				<key>fcAudioCycleButton</key>
+				<string>id</string>
+				<key>fcFullscreenButton</key>
+				<string>id</string>
+				<key>fcPlayButton</key>
+				<string>NSButton</string>
+				<key>fcScrubbingBar</key>
+				<string>id</string>
+				<key>fcSubtitleCycleButton</key>
+				<string>id</string>
+				<key>fcTimeTextField</key>
+				<string>id</string>
+				<key>fcVolumeSlider</key>
+				<string>id</string>
+				<key>fcWindow</key>
+				<string>id</string>
 				<key>fullscreenButton</key>
 				<string>id</string>
 				<key>fullscreenMenu</key>
@@ -274,11 +306,21 @@
 		</dict>
 		<dict>
 			<key>CLASS</key>
+			<string>FullscreenControlsView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSView</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
 			<string>PlayerWindow</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
 			<key>OUTLETS</key>
 			<dict>
+				<key>fullscreenControls</key>
+				<string>id</string>
 				<key>playerController</key>
 				<string>id</string>
 			</dict>
@@ -355,6 +397,8 @@
 				<string>id</string>
 				<key>cacheSizeSlider</key>
 				<string>id</string>
+				<key>checkForUpdates</key>
+				<string>id</string>
 				<key>correctPts</key>
 				<string>id</string>
 				<key>deinterlace</key>
@@ -395,6 +439,10 @@
 				<string>id</string>
 				<key>fastLibavcodec</key>
 				<string>id</string>
+				<key>fcProgress</key>
+				<string>NSProgressIndicator</string>
+				<key>fcWindow</key>
+				<string>NSWindow</string>
 				<key>flipHorizontal</key>
 				<string>id</string>
 				<key>flipVertical</key>
@@ -405,9 +453,21 @@
 				<string>id</string>
 				<key>fullscreenSameAsPlayer</key>
 				<string>id</string>
+				<key>guessEncoding</key>
+				<string>id</string>
+				<key>guessLanguage</key>
+				<string>id</string>
 				<key>hrtfFilter</key>
 				<string>id</string>
 				<key>karaokeFilter</key>
+				<string>id</string>
+				<key>osdLevel</key>
+				<string>id</string>
+				<key>osdScale</key>
+				<string>id</string>
+				<key>passthroughAC3</key>
+				<string>id</string>
+				<key>passthroughDTS</key>
 				<string>id</string>
 				<key>playListController</key>
 				<string>id</string>
@@ -425,6 +485,8 @@
 				<string>NSPanel</string>
 				<key>screenshots</key>
 				<string>id</string>
+				<key>subBorderColorWell</key>
+				<string>id</string>
 				<key>subColorWell</key>
 				<string>id</string>
 				<key>subEncodingMenu</key>
@@ -432,6 +494,8 @@
 				<key>subFontMenu</key>
 				<string>id</string>
 				<key>subSizeBox</key>
+				<string>id</string>
+				<key>subStyleMenu</key>
 				<string>id</string>
 				<key>subtitleLanguages</key>
 				<string>id</string>
@@ -472,6 +536,19 @@
 			<string>NSObject</string>
 		</dict>
 		<dict>
+			<key>CLASS</key>
+			<string>PlayerFullscreenWindow</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>fullscreenControls</key>
+				<string>id</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>PlayerWindow</string>
+		</dict>
+		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key></key>
@@ -486,11 +563,27 @@
 		</dict>
 		<dict>
 			<key>CLASS</key>
-			<string>PlayerFullscreenWindow</string>
+			<string>NSObject</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>checkForUpdates</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>SUUpdater</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>delegate</key>
+				<string>id</string>
+			</dict>
 			<key>SUPERCLASS</key>
-			<string>PlayerWindow</string>
+			<string>NSObject</string>
 		</dict>
 		<dict>
 			<key>CLASS</key>
@@ -555,6 +648,14 @@
 			<string>NSObject</string>
 		</dict>
 		<dict>
+			<key>CLASS</key>
+			<string>FullscreenControlsVolumeSlider</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>VolumeSlider</string>
+		</dict>
+		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key>addToPlaylist</key>
@@ -615,6 +716,22 @@
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSProgressIndicator</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSView</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FullscreenControls</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSWindow</string>
 		</dict>
 	</array>
 	<key>IBVersion</key>

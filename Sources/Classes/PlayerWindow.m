@@ -61,53 +61,6 @@
 
 @implementation PlayerWindow
 
-- (void) awakeFromNib
-{
-	[self setAcceptsMouseMovedEvents:YES];
-}
-
-- (void) displayOSD
-{
-}
-
-- (void) hideOSD: (NSTimer *) timer; 
-{
-	if(isFullscreen)
-	{
-		CGDisplayHideCursor(kCGDirectMainDisplay);
-	}
-    osdTimer = nil;
-}
-
-- (void)mouseMoved:(NSEvent *)theEvent
-{
-	if(isFullscreen)
-	{
-		CGDisplayShowCursor(kCGDirectMainDisplay);
-		if(!osdTimer)
-		{
-			osdTimer = [NSTimer	scheduledTimerWithTimeInterval:5
-								target:self
-								selector:@selector(hideOSD:)
-								userInfo:nil repeats:NO];
-		}
-        else
-        {
-            [osdTimer setFireDate: [NSDate dateWithTimeIntervalSinceNow: 5]];
-        }
-	}
-}
-
-- (void)mouseDown:(NSEvent *)theEvent
-{
-	if (isFullscreen && [theEvent clickCount] == 2)
-		[playerController switchFullscreen: self];
-}
-
-- (void) setFullscreen: (bool)aBool;
-{
-	isFullscreen = aBool;
-}
 - (void)keyDown:(NSEvent *)theEvent
 {
 	int key;

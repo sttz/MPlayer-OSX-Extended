@@ -1,12 +1,22 @@
 #import "VolumeSlider.h"
+#import "Debug.h"
 
 @implementation VolumeSliderCell
 - (id)init
 {
+	self = [super init];
+	if (self) {
+		[self loadImages];
+		isKnobSelected = NO;
+	}
+	return self;
+}
+
+- (void)loadImages
+{
 	knobOff = [[NSImage imageNamed:@"volumeKnobOff"] retain];
 	knobOn = [[NSImage imageNamed:@"volumeKnobOn"] retain];
-	isKnobSelected = NO;
-	return [super init];
+	knobOffset = -2;
 }
 
 - (void)drawKnob:(NSRect)knobRect
@@ -19,7 +29,7 @@
 		knob = knobOff;
 
 	[[self controlView] lockFocus];
-	[knob compositeToPoint: NSMakePoint(knobRect.origin.x,knobRect.origin.y+knobRect.size.height-2) operation:NSCompositeSourceOver];
+	[knob compositeToPoint: NSMakePoint(knobRect.origin.x,knobRect.origin.y+knobRect.size.height+knobOffset) operation:NSCompositeSourceOver];
 	[[self controlView] unlockFocus];
 }
 

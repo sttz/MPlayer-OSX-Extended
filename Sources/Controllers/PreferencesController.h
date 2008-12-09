@@ -22,6 +22,8 @@
 	
 	// GUI outlets
 	IBOutlet NSPanel *preferencesPanel;
+	IBOutlet NSWindow *fcWindow;
+	IBOutlet NSProgressIndicator *fcProgress;
 	
 	// ** Playback
 	// Languages
@@ -35,32 +37,8 @@
 	IBOutlet id correctPts;
 	IBOutlet id cacheSizeSlider;
 	IBOutlet id cacheSizeBox;
-	
-	// ** Video
-	// General
-	IBOutlet id enableVideo;
-	IBOutlet id videoCodecs;
-	// Decoding
-	IBOutlet id framedrop;
-	IBOutlet id fastLibavcodec;
-	// Filters
-	IBOutlet id deinterlace;
-	IBOutlet id postprocessing;
-	// Subtitles
-	IBOutlet id assSubtitles;
-	IBOutlet id embeddedFonts;
-	IBOutlet id subFontMenu;
-	IBOutlet id subEncodingMenu;
-	IBOutlet id subSizeBox;
-	IBOutlet id subColorWell;
-	
-	// ** Audio
-	// General
-	IBOutlet id enableAudio;
-	IBOutlet id audioCodecs;
-	// Filters
-	IBOutlet id hrtfFilter;
-	IBOutlet id karaokeFilter;
+	// Updates
+	IBOutlet id checkForUpdates;
 	
 	// ** Display
 	// Display
@@ -78,7 +56,49 @@
 	IBOutlet id deviceIdStepper;
 	IBOutlet id videoDriverMenu;
 	IBOutlet id screenshots;
+	
+	// ** Text
+	// General
+	IBOutlet id subFontMenu;
+	IBOutlet id subStyleMenu;
+	IBOutlet id subEncodingMenu;
+	IBOutlet id guessEncoding;
+	IBOutlet id guessLanguage;
+	// Subtitles
+	IBOutlet id assSubtitles;
+	IBOutlet id subSizeBox;
+	// ASS
+	IBOutlet id embeddedFonts;
 	IBOutlet id assPreFilter;
+	IBOutlet id subColorWell;
+	IBOutlet id subBorderColorWell;
+	// OSD
+	IBOutlet id osdLevel;
+	IBOutlet id osdScale;
+	
+	
+	// ** Video
+	// General
+	IBOutlet id enableVideo;
+	IBOutlet id videoCodecs;
+	// Decoding
+	IBOutlet id framedrop;
+	IBOutlet id fastLibavcodec;
+	// Filters
+	IBOutlet id deinterlace;
+	IBOutlet id postprocessing;
+	
+	
+	// ** Audio
+	// General
+	IBOutlet id enableAudio;
+	IBOutlet id audioCodecs;
+	// Output
+	IBOutlet id passthroughAC3;
+	IBOutlet id passthroughDTS;
+	// Filters
+	IBOutlet id hrtfFilter;
+	IBOutlet id karaokeFilter;
 	
 	// *** Advanced
 	// Audio Equalizer
@@ -110,11 +130,14 @@
 	IBOutlet id addParamsBox;
 	
 	BOOL closeAfterApply;
+	NSMutableDictionary *fonts;
+	NSArray *guessCodes;
 	
 }
 // misc
 - (void) reloadValues;
-- (void) initFontMenu;
+- (void) initFontStyleMenu;
+- (void) loadFonts;
 
 // actions
 - (IBAction)displayPreferences:(id)sender;

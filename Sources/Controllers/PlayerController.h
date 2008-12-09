@@ -48,6 +48,16 @@
 	IBOutlet id subtitleCycleButton;
 	IBOutlet id fullscreenButton;
 	
+	// Fullscreen controls
+	IBOutlet id fcWindow;
+	IBOutlet NSButton *fcPlayButton;
+    IBOutlet id fcVolumeSlider;
+	IBOutlet id fcScrubbingBar;
+	IBOutlet id fcTimeTextField;
+	IBOutlet id fcAudioCycleButton;
+	IBOutlet id fcSubtitleCycleButton;
+	IBOutlet id fcFullscreenButton;
+	
 	// statistics panel outlets
 	IBOutlet id statsPanel;
     IBOutlet id statsAVsyncBox;
@@ -109,6 +119,11 @@
 	NSImage *playImageOn;
 	NSImage *pauseImageOff;
 	NSImage *pauseImageOn;
+	NSImage *fcPlayImageOff;
+	NSImage *fcPlayImageOn;
+	NSImage *fcPauseImageOff;
+	NSImage *fcPauseImageOn;
+	
 	
 	NSRect org_frame;
 }
@@ -122,6 +137,7 @@
 - (BOOL) isPlaying;
 - (BOOL) isInternalVideoOutput;
 - (void) setOntop:(BOOL)aBool;
+- (BOOL) isOntop;
 - (void) applyPrefs;
 - (void) applySettings;
 - (BOOL) changesRequireRestart;
@@ -189,6 +205,7 @@
 - (void)menuWillOpen:(NSMenu *)menu;
 
 // notification observers
+- (void) appWillFinishLaunching;
 - (void) appFinishedLaunching;
 - (void) appShouldTerminate;
 - (void) appTerminating;

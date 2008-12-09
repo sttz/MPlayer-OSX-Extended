@@ -9,6 +9,7 @@
 
 //custom class
 #import "PlayerWindow.h"
+#import "PlayerFullscreenWindow.h"
 #import "PlayListController.h"
 
 #import "Debug.h"
@@ -46,7 +47,7 @@
 	bool isPlaying;
 	bool keepAspect;
 	bool panScan;
-	bool hideMouse;
+	NSString *buffer_name;
 	
 	//CoreVideo
 	CVPixelBufferRef currentFrameBuffer;
@@ -82,8 +83,12 @@
 	IBOutlet id KeepAspectMenuItem;
 	IBOutlet id PanScanMenuItem;
 	IBOutlet id OriginalAspectMenuItem;
-	IBOutlet id FullAspectMenuItem;
-	IBOutlet id WideAspectMenuItem;
+	IBOutlet id Aspect4to3MenuItem;
+	IBOutlet id Aspect3to2MenuItem;
+	IBOutlet id Aspect5to3MenuItem;
+	IBOutlet id Aspect16to9MenuItem;
+	IBOutlet id Aspect185to1MenuItem;
+	IBOutlet id Aspect239to1MenuItem;
 	//IBOutlet id CustomAspectMenuItem;
 	
 	// other controllers outlets
@@ -119,7 +124,9 @@
 - (void) drawRectInThread;
 
 // Main Thread methods
+- (NSString *)bufferName;
 - (void) startOpenGLView;
+- (BOOL) isFullscreen;
 - (void) toggleFullscreenWindow;
 - (void) toggleFullscreenEnded;
 - (void) reshape;

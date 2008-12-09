@@ -8,36 +8,44 @@
  */
 
 #import "ScrubbingBar.h"
-
+#import "Debug.h"
 
 @implementation ScrubbingBar:NSProgressIndicator
 - (void)awakeFromNib
 {
 	myStyle = NSScrubbingBarEmptyStyle;
 	// load images that forms th scrubbing bar
-	scrubBarEnds = [[NSImage alloc] initWithContentsOfFile:
-			[[NSBundle mainBundle] pathForResource:@"scrub_bar_ends" ofType:@"tif"]];
-	scrubBarRun = [[NSImage alloc] initWithContentsOfFile:
-			[[NSBundle mainBundle] pathForResource:@"scrub_bar_run" ofType:@"tif"]];
-	scrubBarBadge = [[NSImage alloc] initWithContentsOfFile:
-			[[NSBundle mainBundle] pathForResource:@"scrub_bar_badge" ofType:@"tif"]];
+	[self loadImages];
 	
 	//load image for progressbar
-	NSSize animSize = NSMakeSize([self bounds].size.width+10,[self bounds].size.height);
+	int frameWidth = [scrubBarAnimFrame size].width;
+	NSSize animSize = NSMakeSize([self bounds].size.width+frameWidth,[self bounds].size.height);
 	scrubBarAnim = [[NSImage alloc] initWithSize:animSize];
-	scrubBarAnimFrame = [[NSImage alloc] initWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"scrub_bar_anim" ofType:@"png"]];
 			
 	[scrubBarAnim lockFocus];
-	int numFrames = round([scrubBarAnim size].width/10);
+	int numFrames = round([scrubBarAnim size].width/frameWidth);
 	int i = 0;
 	for (i = 0; i < numFrames; i++)
 	{
-        [scrubBarAnimFrame compositeToPoint:NSMakePoint(i * 10, 0) operation:NSCompositeCopy];
+        [scrubBarAnimFrame compositeToPoint:NSMakePoint(i * frameWidth, 0) operation:NSCompositeCopy];
     }
 	[scrubBarAnim unlockFocus];
 	animFrame = 0;
 	
 	[self display];
+}
+
+- (void) loadImages
+{
+	scrubBarEnds = [[NSImage alloc] initWithContentsOfFile:
+					[[NSBundle mainBundle] pathForResource:@"scrub_bar_ends" ofType:@"tif"]];
+	scrubBarRun = [[NSImage alloc] initWithContentsOfFile:
+				   [[NSBundle mainBundle] pathForResource:@"scrub_bar_run" ofType:@"tif"]];
+	scrubBarBadge = [[NSImage alloc] initWithContentsOfFile:
+					 [[NSBundle mainBundle] pathForResource:@"scrub_bar_badge" ofType:@"tif"]];
+	scrubBarAnimFrame = [[NSImage alloc] initWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"scrub_bar_anim" ofType:@"png"]];
+	
+	badgeOffset = 0;
 }
 
 - (void) dealloc
@@ -48,18 +56,23 @@
 	[scrubBarAnimFrame release];
 	[scrubBarAnim release];
 	
+	if (animationTimer) {
+		[animationTimer invalidate];
+		[animationTimer release];
+	}
+	
 	[super dealloc];
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
 	if ([self style] == NSScrubbingBarPositionStyle)
-		postNotification(self, theEvent);
+		postNotification(self, theEvent, [scrubBarBadge size]);
 }
 - (void)mouseDragged:(NSEvent *)theEvent
 {
 	if ([self style] == NSScrubbingBarPositionStyle)
-		postNotification(self, theEvent);
+		postNotification(self, theEvent, [scrubBarBadge size]);
 }
 - (BOOL)mouseDownCanMoveWindow
 {
@@ -81,30 +94,16 @@
 
 - (void)drawRect:(NSRect)aRect
 {
+	
 	float runLength = [self bounds].size.width - [scrubBarEnds size].width;
 	float endWidth = [scrubBarEnds size].width / 2;		// each half of the picture is one end
 	float yOrigin = [self bounds].origin.y + 1;
-	double theValue = [self doubleValue] / ([self maxValue] - [self minValue]);
-	
-	//resize bar animation
-	//load image for progressbar
-	NSSize animSize = NSMakeSize([self bounds].size.width+10,[self bounds].size.height);
-	scrubBarAnim = [[NSImage alloc] initWithSize:animSize];
-	//scrubBarAnimFrame = [[NSImage alloc] initWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"scrub_bar_anim" ofType:@"png"]];
-			
-	[scrubBarAnim lockFocus];
-	int numFrames = round([scrubBarAnim size].width/10);
-	int i = 0;
-	for (i = 0; i < numFrames; i++)
-	{
-        [scrubBarAnimFrame compositeToPoint:NSMakePoint(i * 10, 0) operation:NSCompositeCopy];
-    }
-	[scrubBarAnim unlockFocus];
+	double theValue = [self doubleValue] / ([self maxValue] - [self minValue]);	
 	
 	//draw bar end left and right
 	[scrubBarEnds compositeToPoint:NSMakePoint([self bounds].origin.x, yOrigin) fromRect:NSMakeRect(0,0,endWidth,[scrubBarEnds size].height) operation:NSCompositeSourceOver];
 	[scrubBarEnds compositeToPoint:NSMakePoint(NSMaxX([self bounds]) - endWidth,yOrigin) fromRect:NSMakeRect(endWidth,0,endWidth,[scrubBarEnds size].height) operation:NSCompositeSourceOver];
-		
+	
 	// resize the bar run frame if needed
 	if ([scrubBarRun size].width != runLength)
 	{
@@ -112,23 +111,31 @@
 		[scrubBarRun setSize:NSMakeSize(runLength, [scrubBarRun size].height)];
 		[scrubBarRun recache];
 	}
-
 	[scrubBarRun compositeToPoint:NSMakePoint(endWidth,yOrigin) operation:NSCompositeSourceOver];
-			
+	
 	switch ([self style])
 	{
 		case NSScrubbingBarPositionStyle :
+			if (animationTimer)
+				[self stopAnimation:self];
 			//draw position badge
-			[scrubBarBadge compositeToPoint: NSMakePoint(endWidth + (runLength - [scrubBarBadge size].width) * theValue, yOrigin) operation:NSCompositeSourceOver];
+			[scrubBarBadge compositeToPoint: NSMakePoint(endWidth + (runLength - [scrubBarBadge size].width) * theValue, yOrigin + badgeOffset) operation:NSCompositeSourceOver];
 			break;
 		case NSScrubbingBarProgressStyle :
-			animFrame += 0.1;
-			if(animFrame>1) animFrame=0;
-			[scrubBarAnim compositeToPoint: NSMakePoint(-10+(animFrame*10), yOrigin) operation:NSCompositeSourceOver];
+			[scrubBarAnim compositeToPoint: NSMakePoint(-[scrubBarAnimFrame size].width+(animFrame* [scrubBarAnimFrame size].width), yOrigin) operation:NSCompositeSourceAtop];
 			break;
 		default :
 			break;
 	}
+}
+
+- (void)animate:(NSTimer *)aTimer
+{
+	float yOrigin = [self bounds].origin.y + 1;
+	animFrame += 0.1;
+	if(animFrame>1) animFrame=0;
+	[scrubBarAnim compositeToPoint: NSMakePoint(-[scrubBarAnimFrame size].width+(animFrame* [scrubBarAnimFrame size].width), yOrigin) operation:NSCompositeSourceAtop];
+	[self display];
 }
 
 - (NSScrubbingBarStyle)style
@@ -145,6 +152,25 @@
 	else
 		[self stopAnimation:nil];
 	[self display];
+}
+- (void)startAnimation:(id)sender 
+{
+	[super startAnimation:sender];
+	if (!animationTimer) {
+		animationTimer = [[NSTimer scheduledTimerWithTimeInterval:0.05 
+								target:self selector:@selector(animate:) 
+								userInfo:nil repeats:YES] retain];
+		
+	}
+}
+- (void)stopAnimation:(id)sender
+{
+	[super stopAnimation:sender];
+	if (animationTimer) {
+		[animationTimer invalidate];
+		[animationTimer release];
+		animationTimer = NULL;		
+	}
 }
 - (void)incrementBy:(double)delta
 {
@@ -173,14 +199,15 @@
 }
 @end
 
-int postNotification (id self, NSEvent *theEvent)
+int postNotification (id self, NSEvent *theEvent, NSSize badgeSize)
 {
 	NSPoint thePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	double theValue;
-	float minX = [self bounds].origin.x + 5,
-		maxX = NSMaxX([self bounds]) - 7,
-		minY = 2,
-		maxY = 12;
+	float imageHalf = badgeSize.width / 2;
+	float minX = NSMinX([self bounds]) + imageHalf,
+		maxX = NSMaxX([self bounds]) - imageHalf,
+		minY = NSMinY([self bounds]),
+		maxY = NSMaxY([self bounds]);
 	// set the value
 	if (thePoint.y >= minY && thePoint.y < maxY) {
 			if (thePoint.x < minX)

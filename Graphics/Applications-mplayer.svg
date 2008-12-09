@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://web.resource.org/cc/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.0" width="48" height="48" id="svg2" sodipodi:version="0.32" inkscape:version="0.43+0.44pre0" sodipodi:docname="mplayer.svg" sodipodi:docbase="/home/andreas/project/application icons/scalable" inkscape:export-filename="/home/andreas/project/application icons/scalable/mplayer.png" inkscape:export-xdpi="90" inkscape:export-ydpi="90">
+  <metadata id="metadata31">
+    <rdf:RDF>
+      <cc:Work rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <dc:title>Mplayer Application icon</dc:title>
+        <dc:date>October 2006</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Gauthier Tellier</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:contributor>
+          <cc:Agent>
+            <dc:title>Andreas Nilsson</dc:title>
+          </cc:Agent>
+        </dc:contributor>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>mplayer</rdf:li>
+            <rdf:li>multimedia</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <cc:license rdf:resource="http://creativecommons.org/licenses/GPL/2.0/"/>
+      </cc:Work>
+      <cc:License rdf:about="http://creativecommons.org/licenses/GPL/2.0/">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:requires rdf:resource="http://web.resource.org/cc/Notice"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+        <cc:requires rdf:resource="http://web.resource.org/cc/ShareAlike"/>
+        <cc:requires rdf:resource="http://web.resource.org/cc/SourceCode"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview inkscape:window-height="973" inkscape:window-width="1680" inkscape:pageshadow="2" inkscape:pageopacity="0.0" guidetolerance="10.0" gridtolerance="10.0" objecttolerance="10.0" borderopacity="1.0" bordercolor="#666666" pagecolor="#ffffff" id="base" width="48px" height="48px" inkscape:zoom="8.5" inkscape:cx="30.534602" inkscape:cy="18.028107" inkscape:window-x="0" inkscape:window-y="27" inkscape:current-layer="g1888" showgrid="false"/>
+  <defs id="defs4">
+    <linearGradient inkscape:collect="always" id="linearGradient9019">
+      <stop style="stop-color: black; stop-opacity: 1;" offset="0" id="stop9021"/>
+      <stop style="stop-color: black; stop-opacity: 0;" offset="1" id="stop9023"/>
+    </linearGradient>
+    <linearGradient id="linearGradient3415">
+      <stop style="stop-color: black; stop-opacity: 0;" offset="0" id="stop3417"/>
+      <stop id="stop3423" offset="0.5" style="stop-color: black; stop-opacity: 1;"/>
+      <stop style="stop-color: black; stop-opacity: 0;" offset="1" id="stop3419"/>
+    </linearGradient>
+    <linearGradient inkscape:collect="always" id="linearGradient6711">
+      <stop style="stop-color: rgb(152, 185, 220); stop-opacity: 1;" offset="0" id="stop6713"/>
+      <stop style="stop-color: rgb(100, 150, 203); stop-opacity: 1;" offset="1" id="stop6715"/>
+    </linearGradient>
+    <linearGradient id="linearGradient3655">
+      <stop style="stop-color: white; stop-opacity: 1;" offset="0" id="stop3657"/>
+      <stop style="stop-color: white; stop-opacity: 0;" offset="1" id="stop3659"/>
+    </linearGradient>
+    <linearGradient x1="108.11752" y1="16.246464" x2="108.97424" y2="24.144896" id="linearGradient1969" xlink:href="#linearGradient3655" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0, -1, 1, 0, -4.52309, 226.344)"/>
+    <linearGradient x1="108.11752" y1="16.246464" x2="108.97424" y2="24.144896" id="linearGradient1971" xlink:href="#linearGradient3655" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0, 1, -1, 0, 220.915, -49.357)"/>
+    <linearGradient x1="108.11752" y1="16.246464" x2="108.97424" y2="24.144896" id="linearGradient1973" xlink:href="#linearGradient3655" gradientUnits="userSpaceOnUse"/>
+    <linearGradient x1="108.11752" y1="16.246464" x2="108.97424" y2="24.144896" id="linearGradient1975" xlink:href="#linearGradient3655" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-1, 0, 0, -1, 216.024, 177.611)"/>
+    <radialGradient inkscape:collect="always" xlink:href="#linearGradient6711" id="radialGradient6729" gradientUnits="userSpaceOnUse" gradientTransform="matrix(2.34967, 0.310457, -0.123757, 0.936301, 40.0397, 5.32988)" cx="12.378907" cy="14.327915" fx="12.378907" fy="14.327915" r="18.000008"/>
+    <linearGradient inkscape:collect="always" xlink:href="#linearGradient9019" id="linearGradient9025" x1="12.941172" y1="11.529402" x2="23.058811" y2="23.999992" gradientUnits="userSpaceOnUse"/>
+    <linearGradient inkscape:collect="always" xlink:href="#linearGradient6711" id="linearGradient9036" x1="12.588235" y1="11.294116" x2="32.235294" y2="31.294119" gradientUnits="userSpaceOnUse"/>
+  </defs>
+  <g id="g1888">
+    <g id="g6731" transform="matrix(0.866025, -0.5, 0.5, 0.866025, -56.6816, 35.883)">
+      <rect style="fill: rgb(28, 66, 121); fill-opacity: 1; fill-rule: evenodd; stroke: rgb(19, 46, 87); stroke-width: 1.00001; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 4; stroke-dasharray: none; stroke-opacity: 1;" id="rect6725" width="34.945019" height="34.834789" x="58.377636" y="12.493541" rx="6.2141919" ry="6.2141938" transform="matrix(0.999996, 0.00273161, 0.00274025, 0.999996, 0, 0)"/>
+      <rect style="opacity: 0.2; fill: none; fill-opacity: 1; fill-rule: evenodd; stroke: white; stroke-width: 1.00001; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 4; stroke-dasharray: none; stroke-opacity: 1;" id="rect6727" width="32.950054" height="32.849922" x="59.383732" y="13.483848" rx="5.273037" ry="5.2730365" transform="matrix(0.999997, 0.00263175, 0.00263977, 0.999997, 0, 0)"/>
+    </g>
+    <rect ry="6.2142868" rx="6.2142868" y="7.4999948" x="6.5000033" height="32.999992" width="35.000015" id="rect1973" style="fill: url(#linearGradient9036) rgb(0, 0, 0); fill-opacity: 1; fill-rule: evenodd; stroke: rgb(32, 74, 135); stroke-width: 1; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 4; stroke-dasharray: none; stroke-opacity: 1;"/>
+    <rect width="24" height="24" ry="2.7954698" x="12" y="12" style="overflow: visible; marker: none; color: black; fill: white; fill-opacity: 1; fill-rule: nonzero; stroke: none; stroke-width: 24; stroke-linecap: round; stroke-linejoin: round; stroke-miterlimit: 0; stroke-dasharray: none; stroke-dashoffset: 0pt; stroke-opacity: 1; visibility: visible; display: inline;" id="rect4552" rx="2.7954698"/>
+    <path d="M 15.126323,23.998685 C 15.127048,19.09992 19.09735,15.128472 23.99611,15.12633 C 28.89487,15.124189 32.86864,19.092166 32.873647,23.990931 C 32.878655,28.889697 28.913006,32.865789 24.014251,32.873662 C 19.115494,32.881537 15.137084,28.918214 15.126344,24.019459" style="overflow: visible; marker: none; color: black; fill: white; fill-opacity: 1; fill-rule: nonzero; stroke: rgb(32, 74, 135); stroke-width: 2.25265; stroke-linecap: round; stroke-linejoin: round; stroke-miterlimit: 0; stroke-dasharray: none; stroke-dashoffset: 0pt; stroke-opacity: 1; visibility: visible; display: inline;" id="path5443"/>
+    <path d="M 21.01635,18 L 30,24.163788 L 21,30 L 21.01635,18 z " style="fill: black; fill-opacity: 1; fill-rule: evenodd; stroke: none; stroke-width: 1px; stroke-linecap: butt; stroke-linejoin: miter; stroke-opacity: 1;" id="path6330"/>
+    <rect ry="5.273109" rx="5.273109" y="8.499999" x="7.5000029" height="30.999994" width="33" id="rect6701" style="opacity: 0.402174; fill: none; fill-opacity: 1; fill-rule: evenodd; stroke: white; stroke-width: 1; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 4; stroke-dasharray: none; stroke-opacity: 1;"/>
+  </g>
+</svg>

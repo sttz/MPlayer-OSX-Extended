@@ -43,7 +43,8 @@
 		return  nil;
 	
 	myPathToPlayer = [aPath retain];
-
+	buffer_name = @"mplayerosx";
+	
 	info = [[MovieInfo alloc] init];
 	myCommandsBuffer = [[NSMutableArray array] retain];
 	mySeconds = 0;
@@ -63,9 +64,14 @@
 	monitorAspect = 0;
 	deviceId = 0;
 	voModule = 0;
-	screenshotPath = 1;
+	screenshotPath = nil;
+	
+	// *** text
+	osdLevel = 1;
+	osdScale = 100;
 	
 	// *** video
+	videoCodecs = @"";
 	enableVideo = YES;
 	framedrop = 0;
 	fastLibavcodec = NO;
@@ -73,10 +79,11 @@
 	postprocessing = 0;
 	assSubtitles = YES;
 	embeddedFonts = YES;
-	subScale = 4;
+	subScale = 100;
 	assPreFilter = NO;
 	
 	// *** audio
+	audioCodecs = @"";
 	enableAudio = YES;
 	hrtfFilter = NO;
 	karaokeFilter = NO;
@@ -95,6 +102,7 @@
 	restartingPlayer = NO;
 	pausedOnRestart = NO;
 	isRunning = NO;
+	isPlaying = NO;
 	takeEffectImediately = NO;
 	useIdentifyForPlayback = NO;
 	myOutputReadMode = 0;
@@ -147,8 +155,18 @@
 		[equalizerValues release];
 	if (lastUnparsedLine)
 		[lastUnparsedLine release];
+	if (buffer_name)
+		[buffer_name release];
 	
 	[super dealloc];
+}
+
+/************************************************************************************/
+- (void) setBufferName:(NSString *)name
+{
+	[buffer_name release];
+	buffer_name = [name retain];
+	[Debug log:ASL_LEVEL_ERR withMessage:@"Got buffer name: %@",buffer_name];
 }
 
 /************************************************************************************
@@ -159,6 +177,7 @@
 	NSMutableArray *params = [NSMutableArray array];
 	NSMutableArray *videoFilters = [NSMutableArray array];
 	NSMutableArray *audioFilters = [NSMutableArray array];
+	NSMutableArray *audioCodecsArr = [NSMutableArray array];
 	
 	// *** FILES
 	
@@ -288,7 +307,7 @@
 	else if(voModule == 2) 
 	{
 		[params addObject:@"-vo"];
-		[params addObject:[@"macosx:shared_buffer:device_id=" stringByAppendingString: [[NSNumber numberWithUnsignedInt: deviceId] stringValue]]];
+		[params addObject:[NSString stringWithFormat:@"macosx:buffer_name=%@:device_id=%i",buffer_name, deviceId]];
 		windowedVO = NO;
 	}
 	//quartz/quicktime
@@ -298,10 +317,77 @@
 		[params addObject:[@"quartz:device_id=" stringByAppendingString: [[NSNumber numberWithUnsignedInt: deviceId] stringValue]]];
 		windowedVO = YES;
 	}
-	// ass pre filter
-	if (assPreFilter) {
-		[videoFilters insertObject:@"ass" atIndex:0];
-	 } 
+	
+	
+	
+	// *** TEXT
+	
+	// add font
+	if (myFontFile) {
+		[params addObject:@"-font"];
+		[params addObject:[NSString stringWithFormat:@"\"%@\"", myFontFile]];
+	}
+	// guess encoding with enca
+	if (guessEncodingLang) {
+		if (!subEncoding)
+			subEncoding = @"none";
+		[params addObject:@"-subcp"];
+		[params addObject:[NSString stringWithFormat:@"enca:%@:%@", guessEncodingLang, subEncoding]];
+	// fix encoding
+	} else if (subEncoding) {
+		[params addObject:@"-subcp"];
+		[params addObject:subEncoding];
+	}
+	// ass subtitles
+	if (assSubtitles) {
+		[params addObject:@"-ass"];
+	}
+	// subtitles scale
+	if (subScale > 0) {
+		if (assSubtitles) {
+			[params addObject:@"-ass-font-scale"];
+			[params addObject:[NSString stringWithFormat:@"%.3f",(subScale/100.0)]];
+		} else {
+			[params addObject:@"-subfont-text-scale"];
+			[params addObject:[NSString stringWithFormat:@"%.3f",(5.0*(subScale/100.0))]];
+		}
+	}
+	if (assSubtitles) {
+		// embedded fonts
+		if (embeddedFonts) {
+			[params addObject:@"-embeddedfonts"];
+		}
+		// ass pre filter
+		if (assPreFilter) {
+			[videoFilters insertObject:@"ass" atIndex:0];
+		}
+		// subtitles color
+		if (subColor) {
+			float red, green, blue, alpha;
+			[subColor getRed:&red green:&green blue:&blue alpha:&alpha];
+			[params addObject:@"-ass-color"];
+			[params addObject:[NSString stringWithFormat:@"%02X%02X%02X%02X",(unsigned)(red*255),(unsigned)(green*255),(unsigned)(blue*255),(unsigned)((1-alpha)*255)]];
+		}
+		// subtitles color
+		if (subBorderColor) {
+			float red, green, blue, alpha;
+			[subBorderColor getRed:&red green:&green blue:&blue alpha:&alpha];
+			[params addObject:@"-ass-border-color"];
+			[params addObject:[NSString stringWithFormat:@"%02X%02X%02X%02X",(unsigned)(red*255),(unsigned)(green*255),(unsigned)(blue*255),(unsigned)((1-alpha)*255)]];
+		}
+	}
+	if (osdLevel && osdLevel != 1 && osdLevel != 2) {
+		[params addObject:@"-osdlevel"];
+		[params addObject:[NSString stringWithFormat:@"%i",(osdLevel == 0 ? 0 : osdLevel - 1)]];
+	}
+	// osd scale
+	if (osdScale > 0) {
+		[params addObject:@"-subfont-osd-scale"];
+		[params addObject:[NSString stringWithFormat:@"%.3f",(6.0*(osdScale/100.0))]];
+	}
+	// always enable fontconfig
+	[params addObject:@"-fontconfig"];
+	
 	
 	
 	
@@ -312,7 +398,7 @@
 		[params addObject:@"null"];
 	// video codecs
 	}
-	else if (videoCodecs) {
+	else if ([videoCodecs length] > 0) {
 		[params addObject:@"-vc"];
 		[params addObject:videoCodecs];
 	}
@@ -363,43 +449,6 @@
 			[videoFilters addObject:@"pp=ac"];
 			break;
 	}
-	// ass subtitles
-	if (assSubtitles) {
-		[params addObject:@"-ass"];
-	}
-	// embedded fonts
-	if (embeddedFonts) {
-		[params addObject:@"-embeddedfonts"];
-	}
-	// add font file
-	if (myFontFile) {
-		[params addObject:@"-font"];
-		[params addObject:myFontFile];
-	}
-	// subtitles encoding
-	if (subEncoding) {
-		[params addObject:@"-subcp"];
-		[params addObject:subEncoding];
-	}
-	// subtitles scale
-	if (subScale > 0) {
-		if (assSubtitles) {
-			[params addObject:@"-ass-font-scale"];
-			[params addObject:[NSString stringWithFormat:@"%.3f",(subScale/100.0)]];
-		} else {
-			[params addObject:@"-subfont-text-scale"];
-			[params addObject:[NSString stringWithFormat:@"%.3f",(5.0*(subScale/100.0))]];
-		}
-	}
-	// subtitles color
-	if (subColor && assSubtitles) {
-		float red, green, blue, alpha;
-		[subColor getRed:&red green:&green blue:&blue alpha:&alpha];
-		[params addObject:@"-ass-color"];
-		[params addObject:[NSString stringWithFormat:@"%02X%02X%02X%02X",(unsigned)(red*255),(unsigned)(green*255),(unsigned)(blue*255),(unsigned)((1-alpha)*255)]];
-	}
-	// always enable fontconfig
-	[params addObject:@"-fontconfig"];
 	
 	
 	
@@ -408,12 +457,19 @@
 	if (!enableAudio)
 		[params addObject:@"-nosound"];
 	// audio codecs
-	if (audioCodecs) {
-		[params addObject:@"-ac"];
-		[params addObject:audioCodecs];
+	if ([audioCodecs length] > 0) {
+		[audioCodecsArr addObject:audioCodecs];
+	}
+	// ac3/dts passthrough
+	if (passthroughAC3) {
+		[audioCodecsArr insertObject:@"hwac3" atIndex:0];
+	}
+	if (passthroughDTS) {
+		[audioCodecsArr insertObject:@"hwdts" atIndex:0];
 	}
 	// hrtf filter
 	if (hrtfFilter) {
+		[audioFilters addObject:@"resample=48000"];
 		[audioFilters addObject:@"hrtf"];
 	}
 	// karaoke filter
@@ -437,7 +493,7 @@
 	
 	// *** Video filters
 	// add screenshot filter
-	if (screenshotPath > 0) {
+	if (screenshotPath) {
 		[videoFilters addObject:@"screenshot"];
 	}
 	// add filter chain
@@ -450,6 +506,17 @@
 	if ([audioFilters count] > 0) {
 		[params addObject:@"-af"];
 		[params addObject:[audioFilters componentsJoinedByString:@","]];
+	}
+	
+	// *** Audio Codecs
+	if ([audioCodecsArr count] > 0) {
+		NSString *acstring = [audioCodecsArr componentsJoinedByString:@","];
+		// add trailing , if audioCodecs is empty
+		if ([audioCodecs length] == 0)
+			acstring = [acstring stringByAppendingString:@","];
+		
+		[params addObject:@"-ac"];
+		[params addObject:acstring];
 	}
 	
 	
@@ -574,16 +641,18 @@
 	if (myMplayerTask) {
 		switch (myState) {
 		case kPlaying:
-			if(!isFullscreen) [self sendCommand:@"osd 0"];
-			[self sendCommand:[NSString stringWithFormat:@"seek %1.1f %d",seconds, aMode]];
-			[self sendCommand:@"osd 1"];
+				if(!isFullscreen) [self sendCommand:@"osd 0"];
+				[self sendCommand:[NSString stringWithFormat:@"seek %1.1f %d",seconds, aMode]];
+				[self sendCommand:@"osd 1"];
+				isSeeking = YES;
 			break;
 		case kPaused:
-				[self sendCommand:@"pause"];
-				if(!isFullscreen) [self sendCommand:@"osd 0"];
-				[self sendCommand: [NSString stringWithFormat:@"seek %1.1f %d",seconds, aMode]];
-				[self sendCommand:@"osd 1"];
-				[self sendCommand:@"pause"];
+				//[self sendCommand:@"pause"];
+				//if(!isFullscreen) [self sendCommand:@"osd 0"];
+				[self sendCommand: [NSString stringWithFormat:@"pausing_keep seek %1.1f %d",seconds, aMode]];
+				//[self sendCommand:@"osd 1"];
+				//[self sendCommand:@"pause"];
+				isSeeking = YES;
 			break;
 		default :
 			break;
@@ -688,7 +757,7 @@
 
 
 /************************************************************************************/
-- (void) setFontFile:(NSString *)aFile
+- (void) setFont:(NSString *)aFile
 {
 	if (aFile) {
 		if (![aFile isEqualToString:myFontFile]) {
@@ -782,7 +851,8 @@
 - (void) setVideoCodecs:(NSString *)codecString
 {
 	if (videoCodecs != codecString) {
-		videoCodecs = codecString;
+		[videoCodecs release];
+		videoCodecs = [codecString retain];;
 		settingsChanged = YES;
 	}
 }
@@ -853,8 +923,9 @@
 /************************************************************************************/
 - (void) setAudioCodecs:(NSString *)codecString
 {
-	if (audioCodecs != codecString) {
-		audioCodecs = codecString;
+	if ([audioCodecs isEqualToString:codecString]) {
+		[audioCodecs release];
+		audioCodecs = [codecString retain];
 		settingsChanged = YES;
 	}
 }
@@ -863,6 +934,22 @@
 {
 	if (hrtfFilter != aBool) {
 		hrtfFilter = aBool;
+		settingsChanged = YES;
+	}
+}
+/************************************************************************************/
+- (void) setAC3Passthrough:(BOOL)aBool
+{
+	if (passthroughAC3 != aBool) {
+		passthroughAC3 = aBool;
+		settingsChanged = YES;
+	}
+}
+/************************************************************************************/
+- (void) setDTSPassthrough:(BOOL)aBool
+{
+	if (passthroughDTS != aBool) {
+		passthroughDTS = aBool;
 		settingsChanged = YES;
 	}
 }
@@ -1014,6 +1101,21 @@
 	}
 }
 /************************************************************************************/
+- (void) setGuessEncodingLang:(NSString *)aLang
+{
+	if (aLang) {
+		if (![aLang isEqualToString:guessEncodingLang]) {
+			[guessEncodingLang release];
+			guessEncodingLang = [aLang retain];
+			settingsChanged = YES;
+		}
+	} else {
+		[guessEncodingLang release];
+		guessEncodingLang = nil;
+		settingsChanged = YES;
+	}
+}
+/************************************************************************************/
 - (void) setSubtitlesScale:(unsigned int)aScale
 {
 	if (subScale != aScale) {
@@ -1037,6 +1139,41 @@
 	} else {
 		[subColor release];
 		subColor = nil;
+		settingsChanged = YES;
+	}
+}
+/************************************************************************************/
+- (void) setSubtitlesBorderColor:(NSColor *)color
+{
+	if (color != nil) {
+		if (subBorderColor == nil || 
+			[color redComponent] != [subBorderColor redComponent] ||
+			[color greenComponent] != [subBorderColor greenComponent] ||
+			[color blueComponent] != [subBorderColor blueComponent] ||
+			[color alphaComponent] != [subBorderColor alphaComponent]) {
+			[subBorderColor release];
+			subBorderColor = [color retain];
+			settingsChanged = YES;
+		}
+	} else {
+		[subBorderColor release];
+		subBorderColor = nil;
+		settingsChanged = YES;
+	}
+}
+/************************************************************************************/
+- (void) setOsdLevel:(int)anInt
+{
+	if (osdLevel != anInt) {
+		osdLevel = anInt;
+		settingsChanged = YES;
+	}
+}
+/************************************************************************************/
+- (void) setOsdScale:(unsigned int)anInt {
+	
+	if (osdScale != anInt) {
+		osdScale = anInt;
 		settingsChanged = YES;
 	}
 }
@@ -1068,10 +1205,11 @@
 	}
 }
 /************************************************************************************/
-- (void) setScreenshotPath:(int)mode
+- (void) setScreenshotPath:(NSString*)path
 {
-	if (screenshotPath != mode) {
-		screenshotPath = mode;
+	if (screenshotPath != path) {
+		[screenshotPath release];
+		screenshotPath = [path retain];
 		settingsChanged = YES;
 	}
 }
@@ -1227,6 +1365,11 @@
 	return isRunning;
 }
 
+- (BOOL)isPlaying
+{
+	return isPlaying;
+}
+
 - (BOOL)isWindowed
 {	
 	return windowedVO;
@@ -1269,7 +1412,7 @@
  ************************************************************************************/
 - (void)sendCommand:(NSString *)aCommand
 {
-	//[Debug log:ASL_LEVEL_DEBUG withMessage:@"Send Command: %@",aCommand];
+	[Debug log:ASL_LEVEL_DEBUG withMessage:@"Send Command: %@",aCommand];
 	[self sendToMplayersInput:[aCommand stringByAppendingString:@"\n"]];
 }
 /************************************************************************************/
@@ -1352,21 +1495,8 @@
 			object:[[myMplayerTask standardOutput] fileHandleForReading]];
 	
 	// set working directory for screenshots
-	switch (screenshotPath) {
-		case 0: // disabled
-			break;
-		case 1: // desktop
-			[myMplayerTask setCurrentDirectoryPath:
-				[NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) objectAtIndex:0]];
-			break;
-		case 2: // documents
-			[myMplayerTask setCurrentDirectoryPath:
-				[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]];
-			break;
-		case 3: // home
-			[myMplayerTask setCurrentDirectoryPath:NSHomeDirectory()];
-			break;
-	}
+	if (screenshotPath)
+		[myMplayerTask setCurrentDirectoryPath:screenshotPath];
 	
 	// set launch path and params
 	[myMplayerTask setLaunchPath:myPathToPlayer];
@@ -1404,6 +1534,7 @@
 	// launch mplayer task
 	[myMplayerTask launch];
 	isRunning = YES;
+	isPlaying = YES;
 	
 	[Debug log:ASL_LEVEL_INFO withMessage:@"Path to fontconfig: %@", [[myMplayerTask environment] objectForKey:@"FONTCONFIG_PATH"]];
 }
@@ -1762,6 +1893,8 @@
 			}
 
 			myOutputReadMode = 0;				// reset output read mode
+			
+			isPlaying = NO;
 			
 			restartingPlayer = NO;
 			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];

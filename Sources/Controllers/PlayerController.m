@@ -25,6 +25,7 @@
 /************************************************************************************/
 -(void)awakeFromNib
 {	
+	
 	NSUserDefaults *prefs = [appController preferences];
     NSString *playerPath;
 	saveTime = YES;
@@ -107,13 +108,27 @@
 			selector: @selector(progresBarClicked:)
 			name: @"SBBarClickedNotification"
 			object:scrubbingBarToolbar];
+	[[NSNotificationCenter defaultCenter] addObserver: self
+			selector: @selector(progresBarClicked:)
+			name: @"SBBarClickedNotification"
+			object:fcScrubbingBar];
+	[[NSNotificationCenter defaultCenter] addObserver: self
+			selector: @selector(progresBarClicked:)
+			name: @"SBBarClickedNotification"
+			object:fcScrubbingBar];
 			
     // register for app launch finish
 	[[NSNotificationCenter defaultCenter] addObserver: self
 			selector: @selector(appFinishedLaunching)
 			name: NSApplicationDidFinishLaunchingNotification
 			object:NSApp];
-
+	
+	// register for pre-app launch finish
+	[[NSNotificationCenter defaultCenter] addObserver: self
+			selector: @selector(appWillFinishLaunching)
+			name: NSApplicationWillFinishLaunchingNotification
+			object:NSApp];
+	
 	// register for app termination notification
 	[[NSNotificationCenter defaultCenter] addObserver: self
 			selector: @selector(appTerminating)
@@ -127,25 +142,24 @@
 			object:NSApp];
 	
 	// load images
-	playImageOff = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle]
-							pathForResource:@"play_button_off"
-							ofType:@"png"]];
-	playImageOn = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle]
-							pathForResource:@"play_button_on"
-							ofType:@"png"]];
-	pauseImageOff = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle]
-							pathForResource:@"pause_button_off"
-							ofType:@"png"]];
-	pauseImageOn = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle]
-							pathForResource:@"pause_button_on"
-							ofType:@"png"]];
+	playImageOn = [[NSImage imageNamed:@"play_button_on"] retain];
+	playImageOff = [[NSImage imageNamed:@"play_button_off"] retain];
+	pauseImageOn = [[NSImage imageNamed:@"pause_button_on"] retain];
+	pauseImageOff = [[NSImage imageNamed:@"pause_button_off"] retain];
+	
+	fcPlayImageOn = [[NSImage imageNamed:@"fc_play_on"] retain];
+	fcPlayImageOff = [[NSImage imageNamed:@"fc_play"] retain];
+	fcPauseImageOn = [[NSImage imageNamed:@"fc_pause_on"] retain];
+	fcPauseImageOff = [[NSImage imageNamed:@"fc_pause"] retain];
 	
 	// set up prograss bar
 	[scrubbingBar setStyle:NSScrubbingBarEmptyStyle];
 	[scrubbingBar setIndeterminate:NO];
 	[scrubbingBarToolbar setStyle:NSScrubbingBarEmptyStyle];
 	[scrubbingBarToolbar setIndeterminate:NO];
-
+	[fcScrubbingBar setStyle:NSScrubbingBarEmptyStyle];
+	[fcScrubbingBar setIndeterminate:NO];
+	
 	// set mute status and reload unmuted volume
 	if ([prefs objectForKey:@"LastAudioVolume"] && [prefs boolForKey:@"LastAudioMute"]) {
 		[self setVolume:0];
@@ -182,7 +196,7 @@
 	
 	// apply prefs to player
 	[self applyPrefs];
-
+	
 }
 
 /************************************************************************************
@@ -288,8 +302,7 @@
 	BOOL loadInfo;
 	
 	// re-open player window for internal video
-	NSUserDefaults *preferences = [appController preferences];
-	if ([self isInternalVideoOutput] && ![playerWindow isVisible])
+	if ([self isInternalVideoOutput] && ![videoOpenGLView isFullscreen] && ![playerWindow isVisible])
 		[self displayWindow:self];
 	
 	// prepare player
@@ -297,7 +310,7 @@
 	aPath = [anItem objectForKey:@"MovieFile"];
 	if (aPath) {
 		// stops mplayer if it is running
-		if ([myPlayer isRunning]) {
+		if ([myPlayer isPlaying]) {
 			continuousPlayback = YES;	// don't close view
 			saveTime = NO;		// don't save time
 			[myPlayer stop];
@@ -542,10 +555,80 @@
 	else
 		[myPlayer setVideoOutModule:2];	// MPlayer OSX
 	
-	// Screenshots
-	if ([preferences objectForKey:@"Screenshots"])
-		[myPlayer setScreenshotPath: [preferences integerForKey:@"Screenshots"]];
+	// Screenshot path
+	switch ([preferences integerForKey:@"Screenshots"]) {
+		case 0: // disabled
+			[myPlayer setScreenshotPath:nil];
+			break;
+		case 1: // desktop
+			[myPlayer setScreenshotPath:
+				[NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) objectAtIndex:0]];
+			break;
+		case 2: // documents
+			[myPlayer setScreenshotPath:
+				[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]];
+			break;
+		case 3: // home
+			[myPlayer setScreenshotPath:NSHomeDirectory()];
+			break;
+		case 4: // pictures
+			[myPlayer setScreenshotPath:[NSHomeDirectory() stringByAppendingString:@"/Pictures"]];
+			break;
+	}
 	
+	
+	
+	// *** Text
+	
+	// subtitle font
+	if ([preferences objectForKey:@"SubtitlesFontName"]) {
+		NSString *fontname = [preferences stringForKey:@"SubtitlesFontName"];
+		if ([preferences objectForKey:@"SubtitlesStyleName"])
+			fontname = [NSString stringWithFormat:@"%@:style=%@", fontname, [preferences stringForKey:@"SubtitlesStyleName"]];
+		[myPlayer setFont:fontname];
+	} else
+		[myPlayer setFont:nil];
+	
+	// subtitle encoding
+	[self setSubtitlesEncoding];
+	
+	// guess encoding
+	if (![preferences boolForKey:@"SubtitlesGuessEncoding"])
+		[myPlayer setGuessEncodingLang:nil];
+	else
+		[myPlayer setGuessEncodingLang:[preferences stringForKey:@"SubtitlesGuessLanguage"]];
+	
+	// ass subtitles
+	if ([preferences objectForKey:@"ASSSubtitles"])
+		[myPlayer setAssSubtitles: [preferences boolForKey:@"ASSSubtitles"]];
+	
+	// subtitle scale
+	if ([preferences objectForKey:@"SubtitlesScale"])
+		[myPlayer setSubtitlesScale:[preferences integerForKey:@"SubtitlesScale"]];
+	
+	// embedded fonts
+	if ([preferences objectForKey:@"EmbeddedFonts"])
+		[myPlayer setEmbeddedFonts: [preferences boolForKey:@"EmbeddedFonts"]];
+	
+	// ass pre filter
+	if ([preferences objectForKey:@"ASSPreFilter"])
+		[myPlayer setAssPreFilter: [preferences boolForKey:@"ASSPreFilter"]];
+	
+	// subtitle color
+	if ([preferences objectForKey:@"SubtitlesColor"])
+		[myPlayer setSubtitlesColor:(NSColor *)[NSUnarchiver unarchiveObjectWithData:[preferences objectForKey:@"SubtitlesColor"]]];
+	
+	// subtitle color
+	if ([preferences objectForKey:@"SubtitlesBorderColor"])
+		[myPlayer setSubtitlesBorderColor:(NSColor *)[NSUnarchiver unarchiveObjectWithData:[preferences objectForKey:@"SubtitlesBorderColor"]]];
+	
+	// osd level
+	if ([preferences objectForKey:@"OSDLevel"])
+		[myPlayer setOsdLevel:[preferences integerForKey:@"OSDLevel"]];
+	
+	// osd scale
+	if ([preferences objectForKey:@"OSDScale"])
+		[myPlayer setOsdScale:[preferences integerForKey:@"OSDScale"]];
 	
 	
 	
@@ -577,80 +660,6 @@
 	if ([preferences objectForKey:@"Postprocessing"])
 		[myPlayer setPostprocessing: [preferences integerForKey:@"Postprocessing"]];
 	
-	// ass subtitles
-	if ([preferences objectForKey:@"ASSSubtitles"])
-		[myPlayer setAssSubtitles: [preferences boolForKey:@"ASSSubtitles"]];
-	
-	// embedded fonts
-	if ([preferences objectForKey:@"EmbeddedFonts"])
-		[myPlayer setEmbeddedFonts: [preferences boolForKey:@"EmbeddedFonts"]];
-	
-	// subtitle font path
-	/*if ([preferences objectForKey:@"SubtitlesFontName"])
-	{
-		// if subtitles font is specified, set the font
-		[myPlayer setFontFile:[preferences objectForKey:@"SubtitlesFontName"]];
-		
-		if ([[[preferences objectForKey:@"SubtitlesFontPath"] lastPathComponent] caseInsensitiveCompare:@"font.desc"] == NSOrderedSame)
-		{
-			// if prerendered font selected
-			[myPlayer setSubtitlesScale:0];
-		}
-		else
-		{
-		// if true type font selected
-			// set subtitles size
-			if ([preferences objectForKey:@"SubtitlesScale"]) {
-				switch ([[preferences objectForKey:@"SubtitlesSize"] intValue]) {
-				case 0 : 		// tiny
-					[myPlayer setSubtitlesScale:60];
-					break;
-				case 1 : 		// small
-					[myPlayer setSubtitlesScale:90];
-					break;
-				case 2 :		// regular
-					[myPlayer setSubtitlesScale:100];
-					break;
-				case 3 :		// large
-					[myPlayer setSubtitlesScale:110];
-					break;
-				case 0 : 		// huge
-					[myPlayer setSubtitlesScale:140];
-					break;
-				default :
-					[myPlayer setSubtitlesScale:0];
-					break;
-				}
-			}
-		//}
-	}
-	else {
-	// if ther's no subtitles font
-		[myPlayer setFontFile:nil];
-		[myPlayer setSubtitlesScale:0];
-	}*/
-	
-	// subtitle font
-	if ([preferences objectForKey:@"SubtitlesFontName"])
-		[myPlayer setFontFile:[preferences objectForKey:@"SubtitlesFontName"]];
-	else
-		[myPlayer setFontFile:nil];
-	
-	// subtitle scale
-	if ([preferences objectForKey:@"SubtitlesScale"])
-		[myPlayer setSubtitlesScale:[preferences integerForKey:@"SubtitlesScale"]];
-	
-	// subtitle encoding
-	[self setSubtitlesEncoding];
-	
-	// subtitle color
-	if ([preferences objectForKey:@"SubtitlesColor"])
-		[myPlayer setSubtitlesColor:(NSColor *)[NSUnarchiver unarchiveObjectWithData:[preferences objectForKey:@"SubtitlesColor"]]];
-	
-	// ass pre filter
-	if ([preferences objectForKey:@"ASSPreFilter"])
-		[myPlayer setAssPreFilter: [preferences boolForKey:@"ASSPreFilter"]];
-	
 	
 	
 	// *** Audio
@@ -664,6 +673,14 @@
 		[myPlayer setAudioCodecs: [preferences stringForKey:@"AudioCodecs"]];
 	else
 		[myPlayer setAudioCodecs:nil];
+	
+	// ac3 passthrough
+	if ([preferences objectForKey:@"PassthroughAC3"])
+		[myPlayer setAC3Passthrough:[preferences boolForKey:@"PassthroughAC3"]];
+	
+	// dts passthrough
+	if ([preferences objectForKey:@"PassthroughDTS"])
+		[myPlayer setDTSPassthrough:[preferences boolForKey:@"PassthroughDTS"]];
 	
 	// hrtf filter
 	if ([preferences objectForKey:@"HRTFFilter"])
@@ -700,7 +717,6 @@
 			[myPlayer setAdditionalParams:nil];
 	else
 		[myPlayer setAdditionalParams:nil];
-	
 	
 	// update fullscreen device menu if set to auto
 	if (fullscreenDeviceId == -2)
@@ -837,25 +853,6 @@
 {
 	NSUserDefaults *preferences = [appController preferences];
 	
-	/*if ([preferences objectForKey:@"SubtitlesFontName"]) {
-		if ([[[preferences objectForKey:@"SubtitlesFontName"] lastPathComponent]
-				caseInsensitiveCompare:@"font.desc"] != NSOrderedSame) {
-		// if font is not a font.desc font then set subtitles encoding
-			if (myPlayingItem) {
-				if ([myPlayingItem objectForKey:@"SubtitlesEncoding"])
-					[myPlayer setSubtitlesEncoding:[myPlayingItem objectForKey:@"SubtitlesEncoding"]];
-				else
-					[myPlayer setSubtitlesEncoding:
-							[preferences objectForKey:@"SubtitlesEncoding"]];
-			}
-			else
-				[myPlayer setSubtitlesEncoding:
-						[preferences objectForKey:@"SubtitlesEncoding"]];
-		}
-		else
-			[myPlayer setSubtitlesEncoding:nil];
-	}*/
-	
 	if (myPlayingItem && [myPlayingItem objectForKey:@"SubtitlesEncoding"]
 			&& ![[myPlayingItem objectForKey:@"SubtitlesEncoding"] isEqualToString:@"None"])
 		[myPlayer setSubtitlesEncoding:[myPlayingItem objectForKey:@"SubtitlesEncoding"]];
@@ -942,6 +939,8 @@
 	[volumeButtonToolbar setImage:volumeImage];
 	[volumeButton display];
 	[volumeButtonToolbar display];
+	
+	[fcVolumeSlider setDoubleValue:volume];
 	
 	[toggleMuteMenu setState:(volume == 0)];
 	
@@ -1140,6 +1139,10 @@
 		isOntop = NO;
 	}
 }
+- (BOOL) isOntop
+{
+	return isOntop;
+}
 /************************************************************************************/
 - (IBAction)switchFullscreen:(id)sender
 {
@@ -1259,11 +1262,13 @@
 				menu = [audioStreamMenu submenu];
 				[audioStreamMenu setEnabled:NO];
 				[audioCycleButton setEnabled:NO];
+				[fcAudioCycleButton setEnabled:NO];
 				break;
 			case 2:
 				menu = [subtitleStreamMenu submenu];
 				[subtitleStreamMenu setEnabled:NO];
 				[subtitleCycleButton setEnabled:NO];
+				[fcSubtitleCycleButton setEnabled:NO];
 				break;
 		}
 		
@@ -1334,6 +1339,7 @@
 		[audioStreamMenu setEnabled:hasItems];
 		[audioWindowMenu setEnabled:hasItems];
 		[audioCycleButton setEnabled:([menu numberOfItems] > 1)];
+		[fcAudioCycleButton setEnabled:([menu numberOfItems] > 1)];
 		
 		// subtitle stream menu
 		menu = [subtitleStreamMenu submenu];
@@ -1399,6 +1405,7 @@
 		[subtitleStreamMenu setEnabled:hasItems];
 		[subtitleWindowMenu setEnabled:hasItems];
 		[subtitleCycleButton setEnabled:([menu numberOfItems] > 1)];
+		[fcSubtitleCycleButton setEnabled:([menu numberOfItems] > 1)];
 		
 	}
 }
@@ -1785,10 +1792,16 @@
 /************************************************************************************
  NOTIFICATION OBSERVERS
  ************************************************************************************/
+- (void) appWillFinishLaunching
+{
+	// Pass buffer name to interface
+	[myPlayer setBufferName:[videoOpenGLView bufferName]];
+}
+/************************************************************************************/
 - (void) appFinishedLaunching
 {
 	NSUserDefaults *prefs = [appController preferences];
-
+	
 	// play the last played movie if it is set to do so
 	if ([prefs objectForKey:@"PlaylistRemember"] && [prefs objectForKey:@"LastTrack"]
 			&& ![myPlayer isRunning]) {
@@ -1835,6 +1848,11 @@
 	[pauseImageOn release];
 	[pauseImageOff release];
 	
+	[fcPlayImageOn release];
+	[fcPlayImageOff release];
+	[fcPauseImageOn release];
+	[fcPauseImageOff release];
+	
 	[myPlayer release];
 }
 /************************************************************************************/
@@ -1856,7 +1874,7 @@
 }
 /************************************************************************************/
 - (void) statusUpdate:(NSNotification *)notification;
-{
+{	
 	int seconds;
 	NSMutableDictionary *playingItem = myPlayingItem;
 	
@@ -1882,6 +1900,8 @@
 			[playButton setAlternateImage:pauseImageOn];
 			[playButtonToolbar setImage:pauseImageOff];
 			[playButtonToolbar setAlternateImage:pauseImageOn];
+			[fcPlayButton setImage:fcPauseImageOff];
+			[fcPlayButton setAlternateImage:fcPauseImageOn];
 			[playMenuItem setTitle:@"Pause"];
 			[stopMenuItem setEnabled:YES];
 			[skipBeginningMenuItem setEnabled:YES];
@@ -1895,6 +1915,8 @@
 			[playButton setAlternateImage:playImageOn];
 			[playButtonToolbar setImage:playImageOff];
 			[playButtonToolbar setAlternateImage:playImageOn];
+			[fcPlayButton setImage:fcPlayImageOff];
+			[fcPlayButton setAlternateImage:fcPlayImageOn];
 			[playMenuItem setTitle:@"Play"];
 			[stopMenuItem setEnabled:NO];
 			[skipBeginningMenuItem setEnabled:NO];
@@ -1927,6 +1949,8 @@
 			[scrubbingBar setIndeterminate:YES];
 			[scrubbingBarToolbar setStyle:NSScrubbingBarProgressStyle];
 			[scrubbingBarToolbar setIndeterminate:YES];
+			[fcScrubbingBar setStyle:NSScrubbingBarProgressStyle];
+			[fcScrubbingBar setIndeterminate:YES];
 			break;
 		}
 		case kBuffering :
@@ -1936,6 +1960,8 @@
 			[scrubbingBar setIndeterminate:YES];
 			[scrubbingBarToolbar setStyle:NSScrubbingBarProgressStyle];
 			[scrubbingBarToolbar setIndeterminate:YES];
+			[fcScrubbingBar setStyle:NSScrubbingBarProgressStyle];
+			[fcScrubbingBar setIndeterminate:YES];
 			break;
 		case kIndexing :
 			status = NSLocalizedString(@"Indexing",nil);
@@ -1946,6 +1972,9 @@
 			[scrubbingBarToolbar setStyle:NSScrubbingBarProgressStyle];
 			[scrubbingBarToolbar setMaxValue:100];
 			[scrubbingBarToolbar setIndeterminate:NO];
+			[fcScrubbingBar setStyle:NSScrubbingBarProgressStyle];
+			[fcScrubbingBar setMaxValue:100];
+			[fcScrubbingBar setIndeterminate:NO];
 			break;
 		case kPlaying :
 			status = NSLocalizedString(@"Playing",nil);
@@ -1957,6 +1986,10 @@
 			[scrubbingBarToolbar setStyle:NSScrubbingBarEmptyStyle];
 			[scrubbingBarToolbar setIndeterminate:NO];
 			[scrubbingBarToolbar setMaxValue:100];
+			
+			[fcScrubbingBar setStyle:NSScrubbingBarEmptyStyle];
+			[fcScrubbingBar setIndeterminate:NO];
+			[fcScrubbingBar setMaxValue:100];
 			
 			// Populate menus
 			[self fillStreamMenus];
@@ -1971,6 +2004,8 @@
 				[scrubbingBar setStyle:NSScrubbingBarPositionStyle];
 				[scrubbingBarToolbar setMaxValue: [movieInfo length]];
 				[scrubbingBarToolbar setStyle:NSScrubbingBarPositionStyle];
+				[fcScrubbingBar setMaxValue: [movieInfo length]];
+				[fcScrubbingBar setStyle:NSScrubbingBarPositionStyle];
 			}
 			break;
 		case kPaused :
@@ -1992,6 +2027,7 @@
 			status = @"";
 			[timeTextField setStringValue:@"00:00:00"];
 			[timeTextFieldToolbar setStringValue:@"00:00:00"];
+			[fcTimeTextField setStringValue:@"00:00:00"];
 			// hide progress bars
 			[scrubbingBar setStyle:NSScrubbingBarEmptyStyle];
 			[scrubbingBar setDoubleValue:0];
@@ -1999,6 +2035,9 @@
 			[scrubbingBarToolbar setStyle:NSScrubbingBarEmptyStyle];
 			[scrubbingBarToolbar setDoubleValue:0];
 			[scrubbingBarToolbar setIndeterminate:NO];
+			[fcScrubbingBar setStyle:NSScrubbingBarEmptyStyle];
+			[fcScrubbingBar setDoubleValue:0];
+			[fcScrubbingBar setIndeterminate:NO];
 			// disable stream menus
 			[videoStreamMenu setEnabled:NO];
 			[audioStreamMenu setEnabled:NO];
@@ -2073,6 +2112,7 @@
 	case kIndexing :
 		[scrubbingBar setDoubleValue:[myPlayer cacheUsage]];
 		[scrubbingBarToolbar setDoubleValue:[myPlayer cacheUsage]];
+		[fcScrubbingBar setDoubleValue:[myPlayer cacheUsage]];
 		break;
 	case kPlaying :
 		if (playingItem != NULL) {
@@ -2091,6 +2131,13 @@
 				else
 					[scrubbingBarToolbar setDoubleValue:0];
 			}
+			if ([[fcScrubbingBar window] isVisible]) 
+			{
+				if ([movieInfo length] > 0)
+					[fcScrubbingBar setDoubleValue:[myPlayer seconds]];
+				else
+					[fcScrubbingBar setDoubleValue:0];
+			}
 			if ([[timeTextField window] isVisible])
 			{
 					[timeTextField setStringValue:[NSString stringWithFormat:@"%02d:%02d:%02d", seconds/3600,(seconds%3600)/60,seconds%60]];
@@ -2098,6 +2145,10 @@
 			if ([[timeTextFieldToolbar window] isVisible])
 			{
 					[timeTextFieldToolbar setStringValue:[NSString stringWithFormat:@"%02d:%02d:%02d", seconds/3600,(seconds%3600)/60,seconds%60]];
+			}
+			if ([[fcTimeTextField window] isVisible])
+			{
+				[fcTimeTextField setStringValue:[NSString stringWithFormat:@"%02d:%02d:%02d", seconds/3600,(seconds%3600)/60,seconds%60]];
 			}
 			// stats window
 			if ([statsPanel isVisible]) {

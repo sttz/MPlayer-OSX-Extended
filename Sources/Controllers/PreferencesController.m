@@ -14,7 +14,132 @@
 #import "PlayerController.h"
 #import "LanguageCodes.h"
 
+#import <fontconfig/fontconfig.h>
+#import <Sparkle/Sparkle.h>
+
 @implementation PreferencesController
+
+- (void) awakeFromNib;
+{
+	// register for app launch finish
+	[[NSNotificationCenter defaultCenter] addObserver: self
+			selector: @selector(loadFonts)
+			name: NSApplicationDidFinishLaunchingNotification
+			object:NSApp];
+	
+	// compile guess codes
+	guessCodes = [[NSArray alloc] initWithObjects:
+				  @"__",	// None	
+				  @"be",	// Belarussian
+				  @"bg",	// Bulgarian
+				  @"cs",	// Czech
+				  @"et",	// Estonian
+				  @"hr",	// Croatian
+				  @"hu",	// Hungarian
+				  @"lt",	// Latvian
+				  @"lv",	// Lithuanian
+				  @"pl",	// Polish
+				  @"ru",	// Russian
+				  @"sk",	// Slovak
+				  @"sl",	// Slovene
+				  @"uk",	// Ukrainian
+				  @"zh",	// Chinese
+				  nil
+				  ];
+	
+	// add codes to menu
+	int i;
+	for (i = 0; i < [guessLanguage numberOfItems]; i++) {
+		[[guessLanguage itemAtIndex:i] setRepresentedObject:[guessCodes objectAtIndex:i]];
+	}
+	
+}
+
+
+- (void)loadFonts
+{
+	FcConfig *config;
+	FcPattern *pat;
+	FcFontSet *set;
+	FcObjectSet *os;
+	NSModalSession modal = NULL;
+	
+	// Initialize fontconfig with own config directory
+	setenv("FONTCONFIG_PATH", [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"fonts"] cString], 1);
+	
+	config = FcInitLoadConfig();
+	if (!config)
+		return [Debug log:ASL_LEVEL_ERR withMessage:@"Failed to initialize Fontconfig."];
+	FcConfigSetCurrent(config);
+	
+	// Check if the cache needs to be rebuilt
+	FcStrList *fontDirs = FcConfigGetFontDirs(config);
+	FcChar8 *fontDir;
+	FcBool cachesAreValid = FcTrue;
+	while (fontDir = FcStrListNext(fontDirs)) {
+		cachesAreValid = (FcDirCacheValid(fontDir) || !FcFileIsDir(fontDir)) && cachesAreValid;
+	}
+	
+	// Display rebuilding dialog while Fontconfig is working
+	if (!cachesAreValid) {
+		[fcWindow makeKeyAndOrderFront:self];
+		[fcProgress setUsesThreadedAnimation:YES];
+		[fcProgress startAnimation:self];
+		modal = [NSApp beginModalSessionForWindow:fcWindow];
+	}
+	
+	if (!FcConfigBuildFonts(config)) {
+		FcConfigDestroy(config);
+		return [Debug log:ASL_LEVEL_ERR withMessage:@"Failed to build Fontconfig cache."];
+	}
+	
+	if (modal) {
+		[NSApp endModalSession:modal];
+		[fcWindow close];
+	}
+	
+	// Create pattern for all fonts and include family and style information
+	pat = FcPatternCreate();
+	os = FcObjectSetBuild(FC_FAMILY, FC_STYLE, (char *) 0);
+	set = FcFontList(0, pat, os);
+	
+	FcObjectSetDestroy(os);
+	FcPatternDestroy(pat);
+	
+	// Read fonts into dictionary
+	if (set) {
+		fonts = [[NSMutableDictionary dictionaryWithCapacity:set->nfont] retain];
+		
+		int i;
+		for (i = 0; i < set->nfont; i++) {
+			
+			FcChar8 *family;
+			FcChar8 *fontstyle;
+			NSMutableArray *styles;
+			
+			if (FcPatternGetString(set->fonts[i], FC_FAMILY, 0, &family) == FcResultMatch) {
+				
+				// For now just take the 0th family and style name, which should be the english one
+				if (![fonts objectForKey:[NSString stringWithCString:(const char*)family]]) {
+					styles = [NSMutableArray arrayWithCapacity:1];
+					[fonts setObject:styles	forKey:[NSString stringWithCString:(const char*)family]];
+				} else {
+					styles = [fonts objectForKey:[NSString stringWithCString:(const char*)family]];
+				}
+				
+				if (FcPatternGetString(set->fonts[i], FC_STYLE, 0, &fontstyle) == FcResultMatch)
+					[styles addObject:[NSString stringWithCString:(const char*)fontstyle]];
+				
+			}
+			
+		}
+	} else {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to create font list."];
+	}
+	
+	FcFontSetDestroy(set);
+	FcFini();
+}
 
 /************************************************************************************
  MISC
@@ -70,6 +195,8 @@
 		[cacheSizeBox setStringValue:@""];
 	}
 	
+	// check for updates
+	[checkForUpdates setState:[[SUUpdater sharedUpdater] automaticallyChecksForUpdates]];
 	
 	
 	// *** Display
@@ -140,6 +267,114 @@
 	
 	
 	
+	// *** Text
+	
+	// create fonts menu
+	[subFontMenu removeAllItems];
+	
+	// add first item - none and separator
+	[subFontMenu addItemWithTitle:NSLocalizedString(@"none",nil)];
+	[[subFontMenu lastItem] setTag:0];
+	
+	if (fonts) {
+		[[subFontMenu menu] addItem:[NSMenuItem separatorItem]];
+		
+		// add fonts
+		NSEnumerator *e = [[[fonts allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] objectEnumerator];
+		id obj;
+		while (obj = [e nextObject]) {
+			[subFontMenu addItemWithTitle:obj];
+		}
+		
+		// select font
+		if ([thePrefs objectForKey:@"SubtitlesFontName"]) {
+			[subFontMenu selectItemAtIndex:[subFontMenu indexOfItemWithTitle:
+											[thePrefs objectForKey:@"SubtitlesFontName"]]];
+			if ([subFontMenu indexOfSelectedItem] < 0)
+				[subFontMenu selectItemAtIndex:0];
+		}
+		else
+			[subFontMenu selectItemAtIndex:0];
+		
+		// create font style menu
+		[self initFontStyleMenu];
+	}
+	
+	// subtitles encoding
+	if ([thePrefs objectForKey:@"SubtitlesEncoding"]) {
+		[subEncodingMenu selectItemWithTitle:[thePrefs objectForKey:@"SubtitlesEncoding"]];
+		if ([subEncodingMenu indexOfSelectedItem] < 0)
+			[subEncodingMenu selectItemAtIndex:0];
+	}
+	else
+		[subEncodingMenu selectItemAtIndex:0];
+	
+	// guess encoding
+	if ([thePrefs objectForKey:@"SubtitlesGuessEncoding"])
+		[guessEncoding setState:[thePrefs boolForKey:@"SubtitlesGuessEncoding"]];
+	
+	// guess language
+	if ([thePrefs objectForKey:@"SubtitlesGuessLanguage"]) {
+		int i;
+		for (i = 0; i < [guessLanguage numberOfItems]; i++) {
+			if ([[[guessLanguage itemAtIndex:i] representedObject] 
+				 isEqualToString:[thePrefs stringForKey:@"SubtitlesGuessLanguage"]]) {
+				[guessLanguage selectItemAtIndex:i];
+			}
+		}
+		if ([guessLanguage indexOfSelectedItem] < 0)
+			[guessLanguage selectItemAtIndex:0];
+	}
+	else
+		[guessLanguage selectItemAtIndex:0];
+	
+	// ass subtitles
+	if ([thePrefs objectForKey:@"ASSSubtitles"])
+		[assSubtitles setState:[thePrefs boolForKey:@"ASSSubtitles"]];
+	
+	// subtitles size
+	if ([thePrefs objectForKey:@"SubtitlesScale"])
+		[subSizeBox setIntValue:[[thePrefs objectForKey:@"SubtitlesScale"] intValue]];
+	else
+		[subSizeBox setIntValue:100];
+	
+	// embedded fonts
+	if ([thePrefs objectForKey:@"EmbeddedFonts"])
+		[embeddedFonts setState:[thePrefs boolForKey:@"EmbeddedFonts"]];
+	
+	// ass at the beginning of filter chain
+	if ([thePrefs objectForKey:@"ASSPreFilter"])
+		[assPreFilter setState:[thePrefs boolForKey:@"ASSPreFilter"]];
+	
+	// subtitle color
+	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES]; 
+	if ([thePrefs objectForKey:@"SubtitlesColor"] 
+			&& [NSUnarchiver unarchiveObjectWithData:[thePrefs objectForKey:@"SubtitlesColor"]])
+		[subColorWell setColor:(NSColor *)[NSUnarchiver unarchiveObjectWithData:[thePrefs objectForKey:@"SubtitlesColor"]]];
+	else
+		[subColorWell setColor:[NSColor whiteColor]];
+	
+	// subtitle border color
+	if ([thePrefs objectForKey:@"SubtitlesBorderColor"] 
+			&& [NSUnarchiver unarchiveObjectWithData:[thePrefs objectForKey:@"SubtitlesBorderColor"]])
+		[subBorderColorWell setColor:(NSColor *)[NSUnarchiver unarchiveObjectWithData:[thePrefs objectForKey:@"SubtitlesBorderColor"]]];
+	else
+		[subBorderColorWell setColor:[NSColor blackColor]];
+	
+	// osd level
+	if ([thePrefs objectForKey:@"OSDLevel"])
+		[osdLevel selectItemAtIndex:[thePrefs integerForKey:@"OSDLevel"]];
+	else
+		[osdLevel selectItemAtIndex:1];
+	
+	// osd scale
+	if ([thePrefs objectForKey:@"OSDScale"])
+		[osdScale setIntValue:[[thePrefs objectForKey:@"OSDScale"] intValue]];
+	else
+		[osdScale setIntValue:100];
+	
+	
+	
 	// ** Video
 	
 	// enable video
@@ -175,56 +410,6 @@
 	else
 		[postprocessing setSelectedSegment: 0];
 	
-	// ass subtitles
-	if ([thePrefs objectForKey:@"ASSSubtitles"])
-		[assSubtitles setState:[thePrefs boolForKey:@"ASSSubtitles"]];
-	
-	// embedded fonts
-	if ([thePrefs objectForKey:@"EmbeddedFonts"])
-		[embeddedFonts setState:[thePrefs boolForKey:@"EmbeddedFonts"]];
-	
-	// create fonts menu
-	[self initFontMenu];
-	
-	// subtitles font
-	if ([thePrefs objectForKey:@"SubtitlesFontName"]) {
-		//[subFontMenu selectItemAtIndex:[subFontMenu indexOfItemWithRepresentedObject:
-		//		[thePrefs objectForKey:@"SubtitlesFontPath"]]];
-		[subFontMenu selectItemAtIndex:[subFontMenu indexOfItemWithTitle:
-		 		[thePrefs objectForKey:@"SubtitlesFontName"]]];
-		if ([subFontMenu indexOfSelectedItem] < 0)
-			[subFontMenu selectItemAtIndex:0];
-	}
-	else
-		[subFontMenu selectItemAtIndex:0];
-		
-	// subtitles encoding
-	if ([thePrefs objectForKey:@"SubtitlesEncoding"]) {
-		[subEncodingMenu selectItemWithTitle:[thePrefs objectForKey:@"SubtitlesEncoding"]];
-		if ([subEncodingMenu indexOfSelectedItem] < 0)
-			[subEncodingMenu selectItemAtIndex:0];
-		}
-	else
-		[subEncodingMenu selectItemAtIndex:0];
-	
-	// subtitles size
-	if ([thePrefs objectForKey:@"SubtitlesScale"])
-		[subSizeBox setIntValue:
-				[[thePrefs objectForKey:@"SubtitlesScale"] intValue]];
-	else
-		[subSizeBox setIntValue:100];
-	
-	// subtitle color
-	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES]; 
-	if ([thePrefs objectForKey:@"SubtitlesColor"])
-		[subColorWell setColor:(NSColor *)[NSUnarchiver unarchiveObjectWithData:[thePrefs objectForKey:@"SubtitlesColor"]]];
-	else
-		[subColorWell setColor:[NSColor whiteColor]];
-	
-	// ass at the beginning of filter chain
-	if ([thePrefs objectForKey:@"ASSPreFilter"])
-		[assPreFilter setState:[thePrefs boolForKey:@"ASSPreFilter"]];
-	
 	
 	
 	// *** Audio
@@ -239,6 +424,14 @@
 	}
 	else
 		[audioCodecs setStringValue:@""];
+	
+	// ac3 passthrough
+	if ([thePrefs objectForKey:@"PassthroughAC3"])
+		[passthroughAC3 setState:[thePrefs boolForKey:@"PassthroughAC3"]];
+	
+	// ac3 passthrough
+	if ([thePrefs objectForKey:@"PassthroughDTS"])
+		[passthroughDTS setState:[thePrefs boolForKey:@"PassthroughDTS"]];
 	
 	// hrtf filter
 	if ([thePrefs objectForKey:@"HRTFFilter"])
@@ -326,56 +519,34 @@
 	[self enableControls:nil];
 }
 /************************************************************************************/
-- (void) initFontMenu
+- (void) initFontStyleMenu
 {
-	NSArray *paths;
-	NSArray *fontLibrary;
-	NSEnumerator *pathsEnum;
-	NSString *path;
-	int count = 0;
-
-	// clear menu
-	[subFontMenu removeAllItems];
-	
-	// add first item - none and separator
-	[subFontMenu addItemWithTitle:NSLocalizedString(@"none",nil)];
-	[[subFontMenu lastItem] setTag:0];
-	[[subFontMenu menu] addItem:[NSMenuItem separatorItem]];
-
-	// get paths for system dir fonts
-	fontLibrary = [NSArray arrayWithObjects:	@"/Library/Fonts",
-												[[NSString stringWithString:@"~/Library/Fonts"] stringByExpandingTildeInPath],
-												[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Fonts"],nil];
-
-	for(count=0; count<[fontLibrary count]; count++)
-	{
-		NSString *fontPath = [fontLibrary objectAtIndex:count];
-		paths = [[NSFileManager defaultManager] subpathsAtPath:fontPath];
-		pathsEnum = [paths objectEnumerator];
-		while (path = [pathsEnum nextObject])
-		{
-			if ([[path pathExtension] caseInsensitiveCompare:@"ttf"] == NSOrderedSame)
-			{
-				[subFontMenu addItemWithTitle:[[path lastPathComponent] stringByDeletingPathExtension]];
-				[[subFontMenu lastItem] setTag:1];
-				//[[subFontMenu lastItem] setRepresentedObject:[fontPath stringByAppendingPathComponent:path]];
-			}
-			/*else if ([[path lastPathComponent] caseInsensitiveCompare:@"font.desc"] == NSOrderedSame)
-			{
-				[subFontMenu addItemWithTitle:[path stringByDeletingLastPathComponent]];
-				[[subFontMenu lastItem] setTag:2];
-				//[[subFontMenu lastItem] setRepresentedObject:path];
-			}*/
+	if ([subFontMenu indexOfSelectedItem] != 0) {
+		
+		NSUserDefaults *thePrefs = [appController preferences];
+		
+		[subStyleMenu removeAllItems];
+		
+		NSEnumerator *e = [[[fonts objectForKey:[subFontMenu titleOfSelectedItem]] 
+							sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] 
+						   objectEnumerator];
+		id obj;
+		while (obj = [e nextObject]) {
+			[subStyleMenu addItemWithTitle:obj];
 		}
 		
-		// if last item is not separator then add it
-		if (![[subFontMenu lastItem] isSeparatorItem])
-			[[subFontMenu menu] addItem:[NSMenuItem separatorItem]];
-	}
-
-	// remove separator if it is last item
-	if ([[subFontMenu lastItem] isSeparatorItem])
-		[subFontMenu removeItemAtIndex:[subFontMenu numberOfItems]-1];
+		if ([thePrefs objectForKey:@"SubtitlesStyleName"])
+			[subStyleMenu selectItemWithTitle:[thePrefs stringForKey:@"SubtitlesStyleName"]];
+		else
+			[subStyleMenu selectItemWithTitle:@"Regular"];
+		
+		if ([subStyleMenu indexOfSelectedItem] < 0)
+			[subStyleMenu selectItemAtIndex:0];
+		
+		[subStyleMenu setEnabled:([subStyleMenu numberOfItems] > 0)];
+		
+	} else
+		[subStyleMenu setEnabled:NO];
 }
 
 /************************************************************************************
@@ -426,9 +597,8 @@
 	[thePrefs setObject:[NSNumber numberWithFloat:[cacheSizeSlider floatValue]]
 			forKey:@"CacheSize"];
 	
-	// enable additional params
-	[thePrefs setBool:[addParamsButton state] forKey:@"EnableAdditionalParams"];
-	
+	// check for updates
+	[[SUUpdater sharedUpdater] setAutomaticallyChecksForUpdates:[checkForUpdates state]];
 	
 	
 	// *** Display
@@ -478,6 +648,63 @@
 			forKey:@"Screenshots"];
 	
 	
+	// *** Text
+	
+	// subtitles font
+	if ([subFontMenu indexOfSelectedItem] <= 0)
+		[thePrefs removeObjectForKey:@"SubtitlesFontName"];
+	else
+		[thePrefs setObject:[subFontMenu titleOfSelectedItem] forKey:@"SubtitlesFontName"];
+	
+	// font style
+	if ([subStyleMenu indexOfSelectedItem] == -1)
+		[thePrefs removeObjectForKey:@"SubtitlesStyleName"];
+	else
+		[thePrefs setObject:[subStyleMenu titleOfSelectedItem] forKey:@"SubtitlesStyleName"];
+	
+	// subtitles encoding
+	[thePrefs setObject:[subEncodingMenu titleOfSelectedItem]
+				 forKey:@"SubtitlesEncoding"];
+	
+	// guess encoding
+	[thePrefs setBool:[guessEncoding state] forKey:@"SubtitlesGuessEncoding"];
+	
+	// guess language
+	[Debug log:ASL_LEVEL_ERR withMessage:@"SubtitlesGuessLanguage: %i, %@",[guessLanguage indexOfSelectedItem],[[guessLanguage selectedItem] representedObject]];
+	if ([guessLanguage indexOfSelectedItem] > 0)
+		[thePrefs setObject:[[guessLanguage selectedItem] representedObject] forKey:@"SubtitlesGuessLanguage"];
+	else
+		[thePrefs removeObjectForKey:@"SubtitlesGuessLanguage"];
+	
+	// ass subtitles
+	[thePrefs setBool:[assSubtitles state] forKey:@"ASSSubtitles"];
+	
+	// subtitles size
+	[thePrefs setObject:[NSNumber numberWithInt:[subSizeBox intValue]]
+				 forKey:@"SubtitlesScale"];
+	
+	// embedded fonts
+	[thePrefs setBool:[embeddedFonts state] forKey:@"EmbeddedFonts"];
+	
+	// ass pre filter
+	[thePrefs setBool:[assPreFilter state] forKey:@"ASSPreFilter"];
+	
+	// subtitle color
+	NSData *color = [NSArchiver archivedDataWithRootObject:[[subColorWell color] colorUsingColorSpace:[NSColorSpace genericRGBColorSpace]]];
+	[thePrefs setObject:color forKey:@"SubtitlesColor"];
+	
+	// subtitle border color
+	color = [NSArchiver archivedDataWithRootObject:[[subBorderColorWell color] colorUsingColorSpace:[NSColorSpace genericRGBColorSpace]]];
+	[thePrefs setObject:color forKey:@"SubtitlesBorderColor"];
+	
+	// osd level
+	[thePrefs setInteger:[osdLevel indexOfSelectedItem] forKey:@"OSDLevel"];
+	
+	// osd scale
+	[thePrefs setObject:[NSNumber numberWithInt:[osdScale intValue]]
+				 forKey:@"OSDScale"];
+	
+	
 	
 	// *** Video
 	
@@ -502,34 +729,6 @@
 	[thePrefs setObject:[NSNumber numberWithInt:[postprocessing indexOfSelectedItem]]
 			forKey:@"Postprocessing"];
 	
-	// ass subtitles
-	[thePrefs setBool:[assSubtitles state] forKey:@"ASSSubtitles"];
-	
-	// embedded fonts
-	[thePrefs setBool:[embeddedFonts state] forKey:@"EmbeddedFonts"];
-	
-	// subtitles font
-	if ([subFontMenu indexOfSelectedItem] <= 0)
-		[thePrefs removeObjectForKey:@"SubtitlesFontName"];
-	else
-		[thePrefs setObject:[subFontMenu titleOfSelectedItem] forKey:@"SubtitlesFontName"];
-		//[thePrefs setObject:[[subFontMenu selectedItem] representedObject] forKey:@"SubtitlesFontPath"];
-	
-	// subtitles encoding
-	[thePrefs setObject:[subEncodingMenu titleOfSelectedItem]
-			forKey:@"SubtitlesEncoding"];
-	
-	// subtitles size
-	[thePrefs setObject:[NSNumber numberWithInt:[subSizeBox intValue]]
-			forKey:@"SubtitlesScale"];
-	
-	// subtitle color
-	NSData *color = [NSArchiver archivedDataWithRootObject:[[subColorWell color] colorUsingColorSpace:[NSColorSpace genericRGBColorSpace]]];
-	[thePrefs setObject:color forKey:@"SubtitlesColor"];
-	
-	// ass pre filter
-	[thePrefs setBool:[assPreFilter state] forKey:@"ASSPreFilter"];
-	
 	
 	
 	// *** Audio
@@ -539,6 +738,12 @@
 	
 	// audio codecs
 	[thePrefs setObject:[audioCodecs stringValue] forKey:@"AudioCodecs"];
+	
+	// ac3 passthrough
+	[thePrefs setBool:[passthroughAC3 state] forKey:@"PassthroughAC3"];
+	
+	// dts passthrough
+	[thePrefs setBool:[passthroughDTS state] forKey:@"PassthroughDTS"];
 	
 	// hrtf filter
 	[thePrefs setBool:[hrtfFilter state] forKey:@"HRTFFilter"];
@@ -577,6 +782,9 @@
 			[NSNumber numberWithFloat:[veGammaBlue floatValue]],
 			[NSNumber numberWithFloat:[veWeight floatValue]],nil]
 			forKey:@"VideoEqualizer"];
+	
+	// enable additional params
+	[thePrefs setBool:[addParamsButton state] forKey:@"EnableAdditionalParams"];
 	
 	// additional params
 	if (![[[addParamsBox stringValue] stringByTrimmingCharactersInSet:
@@ -676,17 +884,11 @@
 	
 	// ** Video
 	
-	// enable subtitles settings deppending on selected font
-	/*switch ([[subFontMenu selectedItem] tag]) {
-	case 1 : // truetype font
-		[subSizeMenu setEnabled:YES];
-		[subEncodingMenu setEnabled:YES];
-		break;
-	default : // pre-rendered fonts and none
-		[subSizeMenu setEnabled:NO];
-		[subEncodingMenu setEnabled:NO];
-		break;
-	}*/
+	// enable font style menu
+	[self initFontStyleMenu];
+	
+	// enable guess encoding language menu
+	[guessLanguage setEnabled:([guessEncoding state] == NSOnState)];
 	
 	// ** Advanced
 	
@@ -783,6 +985,12 @@
 		[playerController applyChangesWithRestart:NO];
 	
 	[playListController applyPrefs];	
+}
+
+- (void) dealloc
+{
+	[fonts release];
+	[super dealloc];
 }
 
 @end

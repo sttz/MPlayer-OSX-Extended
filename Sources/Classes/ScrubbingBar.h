@@ -22,17 +22,17 @@
 // info dictionary key
 	//	@"SBClickedValue"		NSNumber double
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_2
 typedef enum _NSScrubbingBarStyle {
     NSScrubbingBarEmptyStyle = 0,
 	NSScrubbingBarProgressStyle = 1,
 	NSScrubbingBarPositionStyle = 2
 } NSScrubbingBarStyle;
-#endif
 
 @interface ScrubbingBar:NSProgressIndicator
 {
 	NSScrubbingBarStyle	myStyle;
+	
+	NSTimer *animationTimer;
 	
 	NSImage *scrubBarEnds;
 	NSImage *scrubBarRun;
@@ -40,7 +40,10 @@ typedef enum _NSScrubbingBarStyle {
 	NSImage *scrubBarAnim;
 	NSImage *scrubBarAnimFrame;
 	float animFrame;
+	
+	int badgeOffset;
 }
+- (void) loadImages;
 // event handlers
 - (void) mouseDown:(NSEvent *)theEvent;
 - (void) mouseDragged:(NSEvent *)theEvent;
@@ -48,9 +51,11 @@ typedef enum _NSScrubbingBarStyle {
 - (BOOL) mouseDownCanMoveWindow;
 - (BOOL) acceptsFirstMouse:(NSEvent *)theEvent;
 
+- (void)animate:(NSTimer *)aTimer;
+
 // overriding drawing method
 - (void) drawRect:(NSRect)aRect;
 @end
 
 // private
-int postNotification (id self, NSEvent *theEvent);
+int postNotification (id self, NSEvent *theEvent, NSSize badgeSize);
