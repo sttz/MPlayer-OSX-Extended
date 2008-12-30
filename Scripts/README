@@ -1,0 +1,61 @@
+*******************************
+** MPlayer OSX Utility Scripts
+*******************************
+All scripts need to be configured with the correct paths.
+
+*******************************
+** build
+*******************************
+Script automating the MPlayer static binary build process. 
+
+It expects a setup as follows:
+$build_dir/usr/local = $build_root in script config
+$build_dir/binaries = $binary_dest in script config
+$build_dir/mplayer/build = script inside the mplayer source root
+
+The build_root should contain static versions of all libraries 
+MPlayer needs. Besides the required libraries of mplayer, the 
+script assumes that expat and libdvdcss are in that root.
+
+The build_root should only contain static libraries or else 
+OSX will link with the shared libraries first.
+
+The script will only run on intel machines. It generates an i386 
+build by default. ppc and ppcg3 can be selected at the command line:
+./build ppc
+./build ppcg3
+./build i386
+
+The script will optionally do an "svn update" (-u), "make clean",
+"./configure $opts" and finally "make".
+
+If compilation is successful, the script will move the binary 
+to $binary_dest/CURRENT_DATE and append the platform it was built 
+for ("mplayer.i386", "mplayer.ppc" or "mplayer.ppcg3"). If the 
+directory contains a i386 and ppc build, the script will merge 
+them into an universal binary ("mplayer.ub").
+
+"make clean" can be skipped with -nc or --no-clean, the binary 
+moving with -nm or --no-move.
+
+*******************************
+** install
+*******************************
+Script automating copying the binaries into the MPlayer OSX project.
+
+It expects a directory as argument and will look for "mplayer.ub" and 
+"mplayer.ppcg3" in that directory. If found, it will copy 
+"mplayer.ub" to $mplayerosx_path/External_Binaries/mplayer.app and 
+"mplayer.ppcg3" to $mplayerosx_path/External_Binaries/mplayer_noaltivec.app.
+
+Finally it touches $mplayerosx_path/External_Binaries to make XCode copy 
+the new binaries to the builds.
+
+*******************************
+** build_dmg
+*******************************
+Script automating creating a release DMG.
+Also used by the XCode project for Sparkle singing.
+
+Expects a version string as parameter and will create a DMG 
+from $source_dir to $output_dir.

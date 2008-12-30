@@ -7,49 +7,17 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		37B4F8290CDF359D00941094 /* Build MPlayer PPC noaltivec */ = {
+		3A42DBC40EF5866600E9B2CE /* Distribution */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 37B4F82B0CDF359D00941094 /* Build configuration list for PBXAggregateTarget "Build MPlayer PPC noaltivec" */;
+			buildConfigurationList = 3A42DBC90EF5866C00E9B2CE /* Build configuration list for PBXAggregateTarget "Distribution" */;
 			buildPhases = (
-				37B4F82A0CDF359D00941094 /* ShellScript */,
+				3A42DBC30EF5866600E9B2CE /* ShellScript */,
 			);
 			dependencies = (
+				3A42DBCB0EF5867400E9B2CE /* PBXTargetDependency */,
 			);
-			name = "Build MPlayer PPC noaltivec";
-			productName = "Build MPlayer PPC";
-		};
-		37B9DF1A0C2E923700211F5E /* Build MPlayer PPC */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 37B9DF1B0C2E925600211F5E /* Build configuration list for PBXAggregateTarget "Build MPlayer PPC" */;
-			buildPhases = (
-				37B9DF220C2E929100211F5E /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = "Build MPlayer PPC";
-			productName = "Build MPlayer PPC";
-		};
-		37B9DF1E0C2E926D00211F5E /* Build MPlayer Intel */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 37B9DF1F0C2E928000211F5E /* Build configuration list for PBXAggregateTarget "Build MPlayer Intel" */;
-			buildPhases = (
-				37B9DF240C2E92A300211F5E /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = "Build MPlayer Intel";
-			productName = "Build MPlayer Intel";
-		};
-		37B9DF260C2E93F800211F5E /* Build MPlayer Universal */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 37B9DF270C2E941700211F5E /* Build configuration list for PBXAggregateTarget "Build MPlayer Universal" */;
-			buildPhases = (
-				37BFD4150CCD659900FCABD6 /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = "Build MPlayer Universal";
-			productName = "Build MPlayer Universal";
+			name = Distribution;
+			productName = Distribution;
 		};
 /* End PBXAggregateTarget section */
 
@@ -163,6 +131,16 @@
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3A42DBCA0EF5867400E9B2CE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D1107260486CEB800E47090;
+			remoteInfo = "MPlayer OSX Extended";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		3AFA91540E5858EF00B3998D /* Copy Files */ = {
@@ -570,7 +548,7 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = 377E0250085E333600D64A26 /* Build configuration list for PBXProject "MPlayer OSX" */;
+			buildConfigurationList = 377E0250085E333600D64A26 /* Build configuration list for PBXProject "MPlayer OSX Extended" */;
 			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -585,10 +563,7 @@
 			projectRoot = "";
 			targets = (
 				8D1107260486CEB800E47090 /* MPlayer OSX Extended */,
-				37B9DF1A0C2E923700211F5E /* Build MPlayer PPC */,
-				37B9DF1E0C2E926D00211F5E /* Build MPlayer Intel */,
-				37B9DF260C2E93F800211F5E /* Build MPlayer Universal */,
-				37B4F8290CDF359D00941094 /* Build MPlayer PPC noaltivec */,
+				3A42DBC40EF5866600E9B2CE /* Distribution */,
 			);
 		};
 /* End PBXProject section */
@@ -677,7 +652,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		37B4F82A0CDF359D00941094 /* ShellScript */ = {
+		3A42DBC30EF5866600E9B2CE /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -687,47 +662,8 @@
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "setenv BUILD_ARCH=build/mplayer_ppc\nsetenv NEXT_ROOT=/Developer/SDKs/MacOSX10.4u.sdk\nsetenv MACOSX_DEPLOYMENT_TARGET=10.4\nsetenv CFLAGS=\"-mmacosx-version-min=10.4 -isystem /Developer/SDKs/MacOSX10.4u.sdk -I/usr/local/include\"\nsetenv LDFLAGS=\"-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk -L/usr/local/lib\"\ncd mplayer\n./configure --enable-cross-compile --cc=\"cc -arch ppc\" --host-cc=\"cc -arch i386\" --target=ppc-darwin --disable-win32dll --disable-altivec --with-extraincdir=/usr/local/include --with-extralibdir=/usr/local/lib\nmake clean\nmake\nmv mplayer ../External_Binaries/mplayer_noaltivec.app/Contents/MacOS/mplayer\ncd ..\nexit 0";
-		};
-		37B9DF220C2E929100211F5E /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export NEXT_ROOT=/Developer/SDKs/MacOSX10.4u.sdk\nexport MACOSX_DEPLOYMENT_TARGET=10.4\nexport CFLAGS=\"-mmacosx-version-min=10.4 -isystem /Developer/SDKs/MacOSX10.4u.sdk -I/Users/nicolas/Source/MPlayer/usr/local/ppc/include\"\nexport LDFLAGS=\"-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk -L/Users/nicolas/Source/MPlayer/usr/local/ppc/lib -lxml2\"\nexport CXXFLAGS=\"-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk -I/Users/nicolas/Source/MPlayer/usr/local/ppc/include -L/Users/nicolas/Source/MPlayer/usr/local/ppc/lib -arch ppc\"\nexport FREETYPE_CFLAGS=\"-I/Users/nicolas/Source/MPlayer/usr/local/ppc/include/freetype2\"\nexport FREETYPE_LIBS=\"-L/Users/nicolas/Source/MPlayer/usr/local/ppc/lib -lfreetype\"\n--with-expat-lib=/Developer/SDKs/MacOSX10.4u.sdk/usr/X11R6/lib/\ncd mplayer\nCC=\"gcc -arch ppc\" ./configure --disable-shared --host=powerpc-apple-darwin9.1.0 --build=powerpc-apple-darwin9.1.0 --with-expat-lib=/Developer/SDKs/MacOSX10.4u.sdk/usr/X11R6/lib/ --prefix=/Users/nicolas/Source/MPlayer/usr/local/ppc\n\n./configure --enable-cross-compile --cc=\"cc -arch ppc\" --host-cc=\"cc -arch i386\" --target=ppc-darwin --disable-win32dll --enable-altivec\nmake clean\nmake\nmv mplayer ./mplayer_ppc\ncd ..\nexit 0";
-		};
-		37B9DF240C2E92A300211F5E /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export NEXT_ROOT=/Developer/SDKs/MacOSX10.4u.sdk\nexport MACOSX_DEPLOYMENT_TARGET=10.4\nexport CFLAGS=\"-mmacosx-version-min=10.4 -isystem /Developer/SDKs/MacOSX10.4u.sdk -I/opt/local/include\"\nexport LDFLAGS=\"-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk -L/opt/local/lib\"\nexport CXXFLAGS=\"-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk -I/opt/local/include -L/opt/local/lib\"\nexport FREETYPE_CFLAGS=\"-I/opt/local/include/freetype2\"\nexport FREETYPE_LIBS=\"-L/opt/local/lib -lfreetype\"\nexport LIBXML2_CFLAGS=\"-I/opt/local/include/libxml2\"\nexport LIBXML2_CFLAGS=\"-I/opt/local/include/libxml2\"\n\ncd mplayer\n./configure --disable-shared --prefix=/opt/local\n\n./configure\nmake clean\nmake\nmv mplayer ./mplayer_i386\ncd ..\nexit 0";
-		};
-		37BFD4150CCD659900FCABD6 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "lipo -create ./mplayer/mplayer_i386 ./mplayer/mplayer_ppc -output ./External_Binaries/mplayer.app/Contents/MacOS/mplayer\nexit 0";
+			shellPath = /bin/bash;
+			shellScript = "set -o errexit\n\n[ $BUILD_STYLE = Release ] || { echo Distribution target requires \"'Release'\" build style; false; }\n\nVERSION=$(defaults read \"$BUILT_PRODUCTS_DIR/$PROJECT_NAME.app/Contents/Info\" CFBundleShortVersionString)\nBUILD_ID=$(defaults read \"$BUILT_PRODUCTS_DIR/$PROJECT_NAME.app/Contents/Info\" CFBundleVersion)\nDOWNLOAD_BASE_URL=\"http://mplayerosx.sttz.ch/downloads\"\nRELEASENOTES_URL=\"http://mplayerosx.sttz.ch/revisions.html#$VERSION\"\n\nARCHIVE_FILENAME=\"MPlayer-OSX-Extended_$VERSION.dmg\"\nDOWNLOAD_URL=\"$DOWNLOAD_BASE_URL/$ARCHIVE_FILENAME\"\nKEYCHAIN_PRIVKEY_NAME=\"MPlayerOSX Sparkle Private Key\"\nRELEASE_DIR=\"releases/\"\n\nWD=$PWD\nrm -f \"$RELEASE_DIR/$ARCHIVE_FILENAME\"\n./Scripts/create_dmg \"$VERSION\"\n\nSIZE=$(stat -f %z \"$RELEASE_DIR/$ARCHIVE_FILENAME\")\nPUBDATE=$(date +\"%a, %d %b %G %T %z\")\nSIGNATURE=$(\n\topenssl dgst -sha1 -binary < \"$RELEASE_DIR/$ARCHIVE_FILENAME\" \\\n\t| openssl dgst -dss1 -sign <(security find-generic-password -g -s \"$KEYCHAIN_PRIVKEY_NAME\" 2>&1 1>/dev/null | perl -pe '($_) = /\"(.+)\"/; s/\\\\012/\\n/g') \\\n\t| openssl enc -base64\n)\n\n[ $SIGNATURE ] || { echo Unable to load signing private key with name \"'$KEYCHAIN_PRIVKEY_NAME'\" from keychain; false; }\n\ncat <<EOF\n\t\t<item>\n\t\t\t<title>revision $VERSION</title>\n\t\t\t<sparkle:releaseNotesLink>$RELEASENOTES_URL</sparkle:releaseNotesLink>\n\t\t\t<pubDate>$PUBDATE</pubDate>\n\t\t\t<enclosure\n\t\t\t\turl=\"$DOWNLOAD_URL\"\n\t\t\t\tsparkle:version=\"$BUILD_ID\"\n\t\t\t\tsparkle:shortVersionString=\"$VERSION\"\n\t\t\t\ttype=\"application/octet-stream\"\n\t\t\t\tlength=\"$SIZE\"\n\t\t\t\tsparkle:dsaSignature=\"$SIGNATURE\"\n\t\t\t/>\n\t\t</item>\nEOF\n\necho scp \"'$HOME/svn/my-cool-app/build/Release/$ARCHIVE_FILENAME'\" www.example.com:download/\necho scp \"'$WD/appcast.xml'\" www.example.com:web/software/my-cool-app/appcast.xml";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -760,6 +696,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3A42DBCB0EF5867400E9B2CE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8D1107260486CEB800E47090 /* MPlayer OSX Extended */;
+			targetProxy = 3A42DBCA0EF5867400E9B2CE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		37EA49EE0861CD840026216A /* MPlayer OSX Help */ = {
@@ -893,90 +837,23 @@
 			};
 			name = Release;
 		};
-		37B4F82C0CDF359D00941094 /* Debug */ = {
+		3A42DBC50EF5866600E9B2CE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				PRODUCT_NAME = "Build MPlayer PPC";
+				PRODUCT_NAME = Distribution;
 			};
 			name = Debug;
 		};
-		37B4F82D0CDF359D00941094 /* Release */ = {
+		3A42DBC60EF5866600E9B2CE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				PRODUCT_NAME = "Build MPlayer PPC";
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
-		37B9DF1C0C2E925600211F5E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				PRODUCT_NAME = "Build MPlayer PPC";
-			};
-			name = Debug;
-		};
-		37B9DF1D0C2E925600211F5E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				PRODUCT_NAME = "Build MPlayer PPC";
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
-		37B9DF200C2E928000211F5E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				PRODUCT_NAME = "Build MPlayer Intel";
-			};
-			name = Debug;
-		};
-		37B9DF210C2E928000211F5E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				PRODUCT_NAME = "Build MPlayer Intel";
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
-		37B9DF280C2E941700211F5E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				PRODUCT_NAME = "Build MPlayer Universal";
-			};
-			name = Debug;
-		};
-		37B9DF290C2E941700211F5E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				PRODUCT_NAME = "Build MPlayer Universal";
+				PRODUCT_NAME = Distribution;
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -993,7 +870,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		377E0250085E333600D64A26 /* Build configuration list for PBXProject "MPlayer OSX" */ = {
+		377E0250085E333600D64A26 /* Build configuration list for PBXProject "MPlayer OSX Extended" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				377E0251085E333600D64A26 /* Debug */,
@@ -1002,38 +879,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		37B4F82B0CDF359D00941094 /* Build configuration list for PBXAggregateTarget "Build MPlayer PPC noaltivec" */ = {
+		3A42DBC90EF5866C00E9B2CE /* Build configuration list for PBXAggregateTarget "Distribution" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				37B4F82C0CDF359D00941094 /* Debug */,
-				37B4F82D0CDF359D00941094 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		37B9DF1B0C2E925600211F5E /* Build configuration list for PBXAggregateTarget "Build MPlayer PPC" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				37B9DF1C0C2E925600211F5E /* Debug */,
-				37B9DF1D0C2E925600211F5E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		37B9DF1F0C2E928000211F5E /* Build configuration list for PBXAggregateTarget "Build MPlayer Intel" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				37B9DF200C2E928000211F5E /* Debug */,
-				37B9DF210C2E928000211F5E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		37B9DF270C2E941700211F5E /* Build configuration list for PBXAggregateTarget "Build MPlayer Universal" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				37B9DF280C2E941700211F5E /* Debug */,
-				37B9DF290C2E941700211F5E /* Release */,
+				3A42DBC50EF5866600E9B2CE /* Debug */,
+				3A42DBC60EF5866600E9B2CE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

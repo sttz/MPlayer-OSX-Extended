@@ -37,6 +37,7 @@
 {
 	
 	NSConnection *client = [NSConnection connectionWithReceivePort:[ports objectAtIndex:1] sendPort:[ports objectAtIndex:0]];
+	[client enableMultipleThreads];
 	threadProxy = [[client rootProxy] retain];
 	[threadProxy setProtocolForProxy:@protocol(VOGLVThreadProto)];
 	threadProto = (id <VOGLVThreadProto>)threadProxy;
