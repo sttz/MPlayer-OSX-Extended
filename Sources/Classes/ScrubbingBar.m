@@ -17,11 +17,27 @@
 	// load images that forms th scrubbing bar
 	[self loadImages];
 	
-	//load image for progressbar
+	// Register for notification to check when we need to redraw the animation image
+	[self setPostsFrameChangedNotifications:YES];
+	[[NSNotificationCenter defaultCenter] addObserver:self 
+		selector:@selector(redrawAnim) name:NSViewFrameDidChangeNotification object:nil];
+	[self redrawAnim];
+	
+	[self display];
+}
+
+- (void)redrawAnim
+{
 	int frameWidth = [scrubBarAnimFrame size].width;
-	NSSize animSize = NSMakeSize([self bounds].size.width+frameWidth,[self bounds].size.height);
+	
+	// Only redraw if current image is too small
+	if ([scrubBarAnim size].width > [self frame].size.width + frameWidth)
+		return;
+	
+	NSSize animSize = NSMakeSize([self frame].size.width+(frameWidth*3),[self frame].size.height);
+	[scrubBarAnim release];
 	scrubBarAnim = [[NSImage alloc] initWithSize:animSize];
-			
+	
 	[scrubBarAnim lockFocus];
 	int numFrames = round([scrubBarAnim size].width/frameWidth);
 	int i = 0;
@@ -30,9 +46,6 @@
         [scrubBarAnimFrame compositeToPoint:NSMakePoint(i * frameWidth, 0) operation:NSCompositeCopy];
     }
 	[scrubBarAnim unlockFocus];
-	animFrame = 0;
-	
-	[self display];
 }
 
 - (void) loadImages
@@ -50,9 +63,9 @@
 
 - (void) dealloc
 {
-	if (scrubBarEnds) [scrubBarEnds release];
-	if (scrubBarRun) [scrubBarRun release];
-	if (scrubBarBadge) [scrubBarBadge release];
+	[scrubBarEnds release];
+	[scrubBarRun release];
+	[scrubBarBadge release];
 	[scrubBarAnimFrame release];
 	[scrubBarAnim release];
 	
@@ -95,14 +108,14 @@
 - (void)drawRect:(NSRect)aRect
 {
 	
-	float runLength = [self bounds].size.width - [scrubBarEnds size].width;
+	float runLength = [self frame].size.width - [scrubBarEnds size].width;
 	float endWidth = [scrubBarEnds size].width / 2;		// each half of the picture is one end
-	float yOrigin = [self bounds].origin.y + 1;
+	float yOrigin = 1;
 	double theValue = [self doubleValue] / ([self maxValue] - [self minValue]);	
 	
 	//draw bar end left and right
-	[scrubBarEnds compositeToPoint:NSMakePoint([self bounds].origin.x, yOrigin) fromRect:NSMakeRect(0,0,endWidth,[scrubBarEnds size].height) operation:NSCompositeSourceOver];
-	[scrubBarEnds compositeToPoint:NSMakePoint(NSMaxX([self bounds]) - endWidth,yOrigin) fromRect:NSMakeRect(endWidth,0,endWidth,[scrubBarEnds size].height) operation:NSCompositeSourceOver];
+	[scrubBarEnds compositeToPoint:NSMakePoint(0, yOrigin) fromRect:NSMakeRect(0,0,endWidth,[scrubBarEnds size].height) operation:NSCompositeSourceOver];
+	[scrubBarEnds compositeToPoint:NSMakePoint([self frame].size.width - endWidth,yOrigin) fromRect:NSMakeRect(endWidth,0,endWidth,[scrubBarEnds size].height) operation:NSCompositeSourceOver];
 	
 	// resize the bar run frame if needed
 	if ([scrubBarRun size].width != runLength)
@@ -131,7 +144,7 @@
 
 - (void)animate:(NSTimer *)aTimer
 {
-	float yOrigin = [self bounds].origin.y + 1;
+	float yOrigin = 1;
 	animFrame += 0.1;
 	if(animFrame>1) animFrame=0;
 	[scrubBarAnim compositeToPoint: NSMakePoint(-[scrubBarAnimFrame size].width+(animFrame* [scrubBarAnimFrame size].width), yOrigin) operation:NSCompositeSourceAtop];

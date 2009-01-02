@@ -89,7 +89,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 			object:[playerController preflightInterface]];
 	
 	// preset status column for displaying pictures
-	[[playListTable tableColumnWithIdentifier:@"status"] setDataCell:[[NSImageCell alloc] initImageCell:nil]];
+	[[playListTable tableColumnWithIdentifier:@"status"] setDataCell:[[[NSImageCell alloc] initImageCell:nil] autorelease]];
 	
 	// load images
 	statusIcon = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle]
@@ -119,15 +119,14 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	
 	//default set
 	NSToolbarItem *item;
-	item = [[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarSeparatorItemIdentifier];
+	item = [[[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarSeparatorItemIdentifier] autorelease];
 	[toolbarItems setObject:item forKey:NSToolbarSeparatorItemIdentifier];
-	item = [[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarSpaceItemIdentifier];
+	item = [[[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarSpaceItemIdentifier] autorelease];
 	[toolbarItems setObject:item forKey:NSToolbarSpaceItemIdentifier];
-	item = [[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarFlexibleSpaceItemIdentifier];
+	item = [[[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarFlexibleSpaceItemIdentifier] autorelease];
 	[toolbarItems setObject:item forKey:NSToolbarFlexibleSpaceItemIdentifier];
-	item = [[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarCustomizeToolbarItemIdentifier];
+	item = [[[NSToolbarItem alloc] initWithItemIdentifier:NSToolbarCustomizeToolbarItemIdentifier] autorelease];
 	[toolbarItems setObject:item forKey:NSToolbarCustomizeToolbarItemIdentifier];
-	[item release];
 		
 	//custom set
 	addToolbarItem(toolbarItems,@"PlayerPlayTool",@"Play",@"Play",nil,self,@selector(setView:),playerPlayToolbarView,nil,nil);
@@ -873,13 +872,6 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	CFPreferencesSetAppValue((CFStringRef)@"PlayList", (CFPropertyListRef)myData, kCFPreferencesCurrentApplication);
 	CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication);
 	
-	// release data
-	[myData release];
-	[statusIcon release];
-	[playMode0Image release];
-	[playMode1Image release];
-	[playMode2Image release];
-	
  }
 
 - (void)windowWillClose:(NSNotification *)aNotification
@@ -941,6 +933,14 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 {
     [preflightQueue release];
 	[toolbarItems release];
+	
+	// release data
+	[myData release];
+	[statusIcon release];
+	[playMode0Image release];
+	[playMode1Image release];
+	[playMode2Image release];
+	
     [super dealloc];
 }
 @end

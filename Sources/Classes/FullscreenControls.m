@@ -114,4 +114,10 @@
 	
 }
 
+- (void) dealloc
+{
+	[animation release];
+	[super dealloc];
+}
+
 @end

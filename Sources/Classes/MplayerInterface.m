@@ -27,6 +27,10 @@
 
 #define MI_REFRESH_LIMIT			10
 
+#define MI_CMD_SHOW_ALWAYS			1
+#define MI_CMD_SHOW_COND			2
+#define MI_CMD_SHOW_NEVER			0
+
 @implementation MplayerInterface
 /************************************************************************************
  INIT & UNINIT
@@ -376,7 +380,7 @@
 			[params addObject:[NSString stringWithFormat:@"%02X%02X%02X%02X",(unsigned)(red*255),(unsigned)(green*255),(unsigned)(blue*255),(unsigned)((1-alpha)*255)]];
 		}
 	}
-	if (osdLevel && osdLevel != 1 && osdLevel != 2) {
+	if (osdLevel != 1 && osdLevel != 2) {
 		[params addObject:@"-osdlevel"];
 		[params addObject:[NSString stringWithFormat:@"%i",(osdLevel == 0 ? 0 : osdLevel - 1)]];
 	}
@@ -641,16 +645,12 @@
 	if (myMplayerTask) {
 		switch (myState) {
 		case kPlaying:
-				if(!isFullscreen) [self sendCommand:@"osd 0"];
-				[self sendCommand:[NSString stringWithFormat:@"seek %1.1f %d",seconds, aMode]];
-				[self sendCommand:@"osd 1"];
+				[self sendCommand:[NSString stringWithFormat:@"seek %1.1f %d",seconds, aMode] withType:MI_CMD_SHOW_COND];
 				isSeeking = YES;
 			break;
 		case kPaused:
 				//[self sendCommand:@"pause"];
-				//if(!isFullscreen) [self sendCommand:@"osd 0"];
-				[self sendCommand: [NSString stringWithFormat:@"pausing_keep seek %1.1f %d",seconds, aMode]];
-				//[self sendCommand:@"osd 1"];
+				[self sendCommand: [NSString stringWithFormat:@"pausing_keep seek %1.1f %d",seconds, aMode] withType:MI_CMD_SHOW_COND];
 				//[self sendCommand:@"pause"];
 				isSeeking = YES;
 			break;
@@ -1276,26 +1276,18 @@
 		else {
 			// only settings that don't need restart will be applied
 			if ([myCommandsBuffer count] > 0) {
-				NSMutableArray *commands = [NSMutableArray array];
 				if (myState == kPaused) {
 					if (takeEffectImediately) {
-						[commands addObject:@"pause"];
 						
-						if(!isFullscreen) [commands addObject:@"osd 0"];
-						[commands addObjectsFromArray:myCommandsBuffer];
-						[commands addObject:@"osd 1"];
-						[commands addObject:@"pause"];
-						[self sendCommands:commands];
+						[self sendCommands:myCommandsBuffer withType:MI_CMD_SHOW_COND];
 						[myCommandsBuffer removeAllObjects];
 						takeEffectImediately = NO;
 					}
-					// else the commands will be sent on unpausing
+				// else the commands will be sent on unpausing
 				}
 				else {
-					if(!isFullscreen) [commands addObject:@"osd 0"];
-					[commands addObjectsFromArray:myCommandsBuffer];
-					[commands addObject:@"osd 1"];
-					[self sendCommands:commands];
+					
+					[self sendCommands:myCommandsBuffer withType:MI_CMD_SHOW_COND];
 					[myCommandsBuffer removeAllObjects];
 				}
 			}
@@ -1410,18 +1402,36 @@
 /************************************************************************************
  ADVENCED
  ************************************************************************************/
+- (void)sendCommand:(NSString *)aCommand withType:(uint)type
+{
+	[self sendCommands:[NSArray arrayWithObject:aCommand] withType:type];
+}
+/************************************************************************************/
 - (void)sendCommand:(NSString *)aCommand
 {
-	[Debug log:ASL_LEVEL_DEBUG withMessage:@"Send Command: %@",aCommand];
-	[self sendToMplayersInput:[aCommand stringByAppendingString:@"\n"]];
+	[self sendCommand:aCommand withType:MI_CMD_SHOW_ALWAYS];
+}
+/************************************************************************************/
+- (void)sendCommands:(NSArray *)aCommands withType:(uint)type
+{	
+	BOOL quietCommand = (type == MI_CMD_SHOW_NEVER || (type == MI_CMD_SHOW_COND && osdLevel == 1));
+	
+	if (quietCommand)
+		[self sendToMplayersInput:@"osd 0\n"];
+	
+	int i;
+	for (i=0; i < [aCommands count]; i++) {
+		[Debug log:ASL_LEVEL_DEBUG withMessage:@"Send Command: %@",[aCommands objectAtIndex:i]];
+		[self sendToMplayersInput:[[aCommands objectAtIndex:i] stringByAppendingString:@"\n"]];
+	}
+		
+	if (quietCommand)
+		[self reactivateOsdAfterDelay];
 }
 /************************************************************************************/
 - (void)sendCommands:(NSArray *)aCommands
 {
-	int i;
-	for (i=0; i < [aCommands count]; i++) {
-		[self sendCommand:[aCommands objectAtIndex:i]];
-	}
+	[self sendCommands:aCommands withType:MI_CMD_SHOW_ALWAYS];
 }
 /************************************************************************************/
 - (void)sendCommandsQuietly:(NSArray *)commands {
@@ -1450,12 +1460,13 @@
 }
 
 - (void)reactivateOsd {
-	[self sendCommand:@"osd 1"];
+	[Debug log:ASL_LEVEL_ERR withMessage:@"osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)];
+	[self sendToMplayersInput:[NSString stringWithFormat:@"osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)]];
 }
 /************************************************************************************/
 - (void) takeScreenshot
 {
-	[self sendToMplayersInput:@"screenshot 0\n"];
+	[self sendCommand:@"screenshot 0\n"];
 }
 /************************************************************************************/
 - (void)runMplayerWithParams:(NSArray *)aParams
@@ -1806,9 +1817,7 @@
 						[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
 						
 						// perform commands buffer
-						if(!isFullscreen) [self sendCommand:@"osd 0"];
-						[self sendCommands:myCommandsBuffer];
-						[self sendCommand:@"osd 1"];
+						[self sendCommands:myCommandsBuffer withType:MI_CMD_SHOW_COND];
 						[myCommandsBuffer removeAllObjects];	// clear command buffer
 			
 						continue; 							// continue on next line
@@ -2218,10 +2227,8 @@
 			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
 	
 			// perform commands buffer
-			if(!isFullscreen) [self sendCommand:@"osd 0"];
-			[self sendCommand:[NSString stringWithFormat:@"volume %d 1",myVolume]];
-			[self sendCommands:myCommandsBuffer];
-			[self sendCommand:@"osd 1"];
+			[self sendCommand:[NSString stringWithFormat:@"volume %d 1",myVolume] withType:MI_CMD_SHOW_COND];
+			[self sendCommands:myCommandsBuffer withType:MI_CMD_SHOW_COND];
 			if (pausedOnRestart)
 				[self sendCommand:@"pause"];
 			[myCommandsBuffer removeAllObjects];

@@ -51,7 +51,7 @@
 				<key>appController</key>
 				<string>id</string>
 				<key>fullscreenWindow</key>
-				<string>id</string>
+				<string>PlayerFullscreenWindow</string>
 				<key>playListController</key>
 				<string>id</string>
 				<key>playerController</key>
@@ -536,19 +536,6 @@
 			<string>NSObject</string>
 		</dict>
 		<dict>
-			<key>CLASS</key>
-			<string>PlayerFullscreenWindow</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>fullscreenControls</key>
-				<string>id</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>PlayerWindow</string>
-		</dict>
-		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key></key>
@@ -560,6 +547,19 @@
 			<string>ObjC</string>
 			<key>SUPERCLASS</key>
 			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>PlayerFullscreenWindow</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>fullscreenControls</key>
+				<string>id</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>PlayerWindow</string>
 		</dict>
 		<dict>
 			<key>CLASS</key>

@@ -12,6 +12,7 @@
 @implementation FullscreenControlsScrubbingBar
 - (void) loadImages
 {	
+	// These will be release in [super dealloc]
 	scrubBarEnds = [[NSImage imageNamed:@"fc_scrub_ends"] retain];
 	scrubBarRun = [[NSImage imageNamed:@"fc_scrub_run"] retain];
 	scrubBarBadge = [[NSImage imageNamed:@"fc_scrub_badge"] retain];

@@ -49,54 +49,128 @@
 	return YES;
 }
 
-- (BOOL)acceptsFirstResponder
+/*- (BOOL)acceptsFirstResponder
 {
 	return YES;
-}
+}*/
 
-- (void) awakeFromNib
+/*- (void) awakeFromNib
 {
-	[self setAcceptsMouseMovedEvents:YES];
-}
+	//[self setAcceptsMouseMovedEvents:YES];
+	
+}*/
 
-- (void)makeKeyAndOrderFront:(id)sender
+/*- (void)makeKeyAndOrderFront:(id)sender
 {
 	[super makeKeyAndOrderFront:sender];
-	[self makeFirstResponder:self];
+	//[self makeFirstResponder:self];
+}*/
+
+- (void) startMouseTracking
+{
+	fsTrackTag = [[self contentView] addTrackingRect:[[self contentView] frame] owner:self userData:nil assumeInside:NO];
+	fcTrackTag = [[fullscreenControls contentView] addTrackingRect:[[fullscreenControls contentView] frame]	
+														owner:self userData:nil assumeInside:NO];
+	
+	NSPoint mp = [[self contentView] convertPoint:[self mouseLocationOutsideOfEventStream] fromView:nil];
+	if ([[self contentView] mouse:mp inRect:[[self contentView] frame]])
+		[self mouseEnteredFSWindow];
+	
+	mp = [[fullscreenControls contentView] convertPoint:[fullscreenControls mouseLocationOutsideOfEventStream] fromView:nil];
+	if ([[fullscreenControls contentView] mouse:mp inRect:[[fullscreenControls contentView] frame]])
+		[self mouseEnteredFCWindow];
+}
+
+- (void) stopMouseTracking
+{
+	[[self contentView] removeTrackingRect:fsTrackTag];
+	[[fullscreenControls contentView] removeTrackingRect:fcTrackTag];
+	[self mouseExitedFSWindow];
+}
+
+- (void)mouseEntered:(NSEvent *)theEvent
+{
+	if ([theEvent window] == self)
+		[self mouseEnteredFSWindow];
+	else
+		[self mouseEnteredFCWindow];
+}
+
+- (void)mouseExited:(NSEvent *)theEvent
+{
+	if ([theEvent window] == self)
+		[self mouseExitedFSWindow];
+	else
+		[self mouseExitedFCWindow];
+}
+
+- (void)mouseEnteredFSWindow
+{
+	mouseInWindow = YES;
+	[self setAcceptsMouseMovedEvents:YES];
+	[self makeFirstResponder:[self contentView]];
+	CGDisplayHideCursor(kCGDirectMainDisplay);
+}
+
+- (void)mouseExitedFSWindow
+{
+	mouseInWindow = NO;
+	[self setAcceptsMouseMovedEvents:NO];
+	CGDisplayShowCursor(kCGDirectMainDisplay);
+}
+
+- (void)mouseEnteredFCWindow
+{
+	mouseOverControls = YES;
+	if (osdTimer)
+		[osdTimer invalidate];
+}
+
+- (void)mouseExitedFCWindow
+{
+	mouseOverControls = NO;
+	[self refreshOSDTimer];
 }
 
 - (void) hideOSD 
 {
-	[Debug log:ASL_LEVEL_ERR withMessage:@"hide osd"];
 	if(isFullscreen)
 	{
-		CGDisplayHideCursor(kCGDirectMainDisplay);
+		if (mouseInWindow)
+			CGDisplayHideCursor(kCGDirectMainDisplay);
+		if (mouseOverControls)
+			[self mouseExitedFCWindow];
 		[fullscreenControls orderOut:self];
 	}
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent
-{
+{	
 	if(isFullscreen)
 	{
-		if (![fullscreenControls isVisible]) {
-			CGDisplayShowCursor(kCGDirectMainDisplay);
-			[fullscreenControls orderFront:self];
-		}
+		CGDisplayShowCursor(kCGDirectMainDisplay);
 		
-		if(!osdTimer || ![osdTimer isValid])
-		{
-			[osdTimer release];
-			osdTimer = [NSTimer	scheduledTimerWithTimeInterval:5
-														target:self
-													  selector:@selector(hideOSD)
-													  userInfo:nil repeats:NO];
-			[osdTimer retain];
-		}
-        else
-        {
-            [osdTimer setFireDate: [NSDate dateWithTimeIntervalSinceNow: 5]];
-        }
+		if (![fullscreenControls isVisible])
+			[fullscreenControls orderFront:self];
+		
+		[self refreshOSDTimer];
+	}
+}
+
+- (void)refreshOSDTimer
+{
+	if(!osdTimer || ![osdTimer isValid])
+	{
+		[osdTimer release];
+		osdTimer = [NSTimer	scheduledTimerWithTimeInterval:5
+													target:self
+												  selector:@selector(hideOSD)
+												  userInfo:nil repeats:NO];
+		[osdTimer retain];
+	}
+	else
+	{
+		[osdTimer setFireDate: [NSDate dateWithTimeIntervalSinceNow: 5]];
 	}
 }
 
@@ -112,9 +186,9 @@
 		[fullscreenControls orderOut:self];
 		if (osdTimer != nil)
 			[osdTimer invalidate];
-		CGDisplayShowCursor(kCGDirectMainDisplay);
+		//CGDisplayShowCursor(kCGDirectMainDisplay);
 	} else {
-		CGDisplayHideCursor(kCGDirectMainDisplay);
+		//CGDisplayHideCursor(kCGDirectMainDisplay);
 	}
 	isFullscreen = aBool;
 }

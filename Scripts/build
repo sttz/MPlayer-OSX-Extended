@@ -10,6 +10,11 @@ binary_dest="/Users/adrian/dev/mplayer/mplayer_static/binaries"
 do_clean=1
 do_move=1
 do_update=0
+do_quiet=0
+
+success_sound="/System/Library/Sounds/Glass.aiff"
+failure_sound="/System/Library/Sounds/Basso.aiff"
+qtplay_path="/opt/local/bin/qtplay"
 
 usage()
 {
@@ -27,6 +32,8 @@ while [ -n "$1" ]; do
 								;;
 		-u | --update )			do_update=1
 								;;
+		-q | --quiet )			do_quiet=1
+								;;
 		-h | --help )			usage
 								exit
 								;;
@@ -35,6 +42,14 @@ while [ -n "$1" ]; do
 	esac
 	shift
 done
+
+# Quiet string
+if [ $do_quiet -eq 1 ]; then
+	echo "" > build.log
+	output=" >> build.log 2>> build.log"
+else
+	output=""
+fi
 
 # Destination for binary
 binary_dest="${binary_dest}/`date +%Y%m%d`"
@@ -129,30 +144,38 @@ echo "configure options: $config_opts"
 if [ $do_move -eq 1 ]; then
 	echo "binary will be moved to: $binary_dest"
 fi
+# Sounds need qtplay
+if [ ! -f "$qtplay_path" ]; then
+	success_sound=""
+	failure_sound=""
+	echo "Sounds disabled: qtplay required."
+fi
 echo "****************************"
 
 # *** UPDATE
 if [ $do_update -eq 1 ]; then
-	echo "********* UPDATING **********"
-	svn update
+	echo "********* UPDATING *********"
+	eval "svn update $output"
 fi
 
 # *** CLEAN BUILD
 if [ $do_clean -eq 1 ]; then
 	echo "********* CLEANING *********"
-	make clean
+	eval "make clean $output"
 fi
 
 # *** BUILD
 echo "****** CONFIG && MAKE ******"
-conf_cmd="./configure $config_opts"
-eval $conf_cmd && make
+eval "./configure $config_opts $output" && eval "make $output"
 
 # *** MOVE BINARY
 echo "******** FINISH UP *********"
 if [ ! -f "mplayer" ]; then
 	# FAIL!
 	echo "Compilation failed!"
+	if [ -n "$failure_sound" ]; then
+		$qtplay_path $failure_sound > /dev/null
+	fi
 	exit 1
 else
 	# WIN!
@@ -171,4 +194,7 @@ else
 	fi
 	
 	echo "Compilation successful!"
+	if [ -n "$success_sound" ]; then
+		$qtplay_path $success_sound > /dev/null
+	fi
 fi

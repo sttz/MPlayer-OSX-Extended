@@ -299,7 +299,9 @@
 - (int) postProcLevel;
 
 // advenced
+- (void)sendCommand:(NSString *)aCommand withType:(uint)type;
 - (void)sendCommand:(NSString *)aCommand;
+- (void)sendCommands:(NSArray *)aCommands withType:(uint)type;
 - (void)sendCommands:(NSArray *)aCommands;
 - (void)sendCommandQuietly:(NSString *)command;
 - (void)sendCommandsQuietly:(NSArray *)commands;

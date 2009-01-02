@@ -238,8 +238,7 @@
 	
 	// video aspect box
 	if ([thePrefs objectForKey:@"CustomVideoAspect"])
-		[videoAspectBox setFloatValue:[[thePrefs
-				objectForKey:@"CustomVideoAspect"] floatValue]];
+		[videoAspectBox setStringValue:[thePrefs stringForKey:@"CustomVideoAspect"]];
 	else
 		[videoAspectBox setStringValue:@""];
 	
@@ -609,7 +608,6 @@
 	
 	// flip vertical
 	[thePrefs setBool:[flipVertical state] forKey:@"FlipVertical"];
-	//[thePrefs setBool:[[NSNumber numberWithInt: [flipVertical state]] boolValue] forKey:@"FlipVertical"];
 	
 	// flip horizontal
 	[thePrefs setBool:[flipHorizontal state] forKey:@"FlipHorizontal"];
@@ -627,8 +625,7 @@
 			forKey:@"VideoAspect"];
 	
 	// video aspect box
-	[thePrefs setObject:[NSNumber numberWithFloat:[videoAspectBox floatValue]]
-			forKey:@"CustomVideoAspect"];
+	[thePrefs setObject:[videoAspectBox stringValue] forKey:@"CustomVideoAspect"];
 	
 	// fullscreen device id
 	[thePrefs setBool:[fullscreenSameAsPlayer state] forKey:@"FullscreenDeviceSameAsPlayer"];
@@ -990,6 +987,7 @@
 - (void) dealloc
 {
 	[fonts release];
+	[guessCodes release];
 	[super dealloc];
 }
 

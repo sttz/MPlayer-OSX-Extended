@@ -55,18 +55,12 @@
 
 - (void) dealloc
 {
-	if (info)
-		[info release];
-	if (video)
-		[video release];
-	if (audio)
-		[audio release];
-	if (subtitle)
-		[subtitle release];
-	if (subfile)
-		[subfile release];
-	if (chapter)
-		[chapter release];
+	[info release];
+	[video release];
+	[audio release];
+	[subtitle release];
+	[subfile release];
+	[chapter release];
 	
 	[super dealloc];
 }
@@ -84,6 +78,7 @@
 // **************************************************** //
 
 -(void)setFilename:(NSString *)aString {
+	[filename release];
 	filename = [aString retain];
 	
 	// filesystem attributes
@@ -99,6 +94,7 @@
 }
 
 -(void)setFileFormat:(NSString *)aString {
+	[fileFormat release];
 	fileFormat = [aString retain];
 }
 -(NSString *)fileFormat {
@@ -113,6 +109,7 @@
 }
 
 -(void)setVideoFormat:(NSString *)aString {
+	[videoForamt release];
 	videoForamt = [aString retain];
 }
 -(NSString *)videoForamt {
@@ -120,6 +117,7 @@
 }
 
 -(void)setVideoCodec:(NSString *)aString {
+	[videoCodec release];
 	videoCodec = [aString retain];
 }
 -(NSString *)videoCodec {
@@ -162,6 +160,7 @@
 }
 
 -(void)setAudioFormat:(NSString *)aString {
+	[audioFormat release];
 	audioFormat = [aString retain];
 }
 -(NSString *)audioForamt {
@@ -169,6 +168,7 @@
 }
 
 -(void)setAudioCodec:(NSString *)aString {
+	[audioCodec release];
 	audioCodec = [aString retain];
 }
 -(NSString *)audioCodec {

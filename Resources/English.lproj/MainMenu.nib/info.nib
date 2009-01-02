@@ -5,13 +5,12 @@
 	<key>IBFramework Version</key>
 	<string>677</string>
 	<key>IBLastKnownRelativeProjectPath</key>
-	<string>../../MPlayer OSX.xcodeproj</string>
+	<string>../../MPlayer OSX Extended.xcodeproj</string>
 	<key>IBOldestOS</key>
 	<integer>5</integer>
 	<key>IBOpenObjects</key>
 	<array>
-		<integer>943</integer>
-		<integer>1582</integer>
+		<integer>11353</integer>
 	</array>
 	<key>IBSystem Version</key>
 	<string>9F33</string>

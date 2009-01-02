@@ -8,6 +8,7 @@
  */
 
 #import "PlayerController.h"
+#import <RegexKit/RegexKit.h> 
 
 // other controllers
 #import "AppController.h"
@@ -19,6 +20,9 @@
 #import "ScrubbingBar.h"
 #include <sys/types.h>
 #include <sys/sysctl.h>
+
+// regex for parsing aspect ratio
+#define ASPECT_REGEX	@"^(\\d+\\.?\\d*|\\.\\d+)(?:\\:(\\d+\\.?\\d*|\\.\\d+))?$"
 
 @implementation PlayerController
 
@@ -197,6 +201,24 @@
 	// apply prefs to player
 	[self applyPrefs];
 	
+}
+
+- (void) dealloc
+{
+	[myPlayer release];
+	[myPreflightPlayer release];
+	
+	[playImageOn release];
+	[playImageOff release];
+	[pauseImageOn release];
+	[pauseImageOff release];
+	
+	[fcPlayImageOn release];
+	[fcPlayImageOff release];
+	[fcPauseImageOn release];
+	[fcPauseImageOff release];
+	
+	[super dealloc];
 }
 
 /************************************************************************************
@@ -495,6 +517,9 @@
 	// set video size
 	[self setMovieSize];
 	
+	// Parts of custom aspect ratio
+	NSString *part1 = nil, *part2 = nil;
+	
 	// set aspect ratio
 	if ([preferences objectForKey:@"VideoAspect"]) {
 		switch ([[preferences objectForKey:@"VideoAspect"] intValue]) {
@@ -517,8 +542,20 @@
 			[myPlayer setAspectRatio:2.93];	// 2.39:1
 			break;
 		case 7 :
-			// TODO: support x:y input
-			[myPlayer setAspectRatio:[[preferences objectForKey:@"CustomVideoAspect"] floatValue]];	// custom
+			// Parse custom aspect ratio field (eiher "x.x or x.x:x.x)
+			if ([[preferences stringForKey:@"CustomVideoAspect"] getCapturesWithRegexAndReferences:
+				 ASPECT_REGEX,
+				 @"${1}", &part1,
+				 @"${2}", &part2, nil]) {
+				
+				[Debug log:ASL_LEVEL_ERR withMessage:@"Aspect: %@, %@", part1, part2];
+				
+				if (part1 && part2)				
+					[myPlayer setAspectRatio:([part1 floatValue] / [part2 floatValue])];
+				else
+					[myPlayer setAspectRatio:[part1 floatValue]];
+			} else
+				[myPlayer setAspectRatio:[[preferences objectForKey:@"CustomVideoAspect"] floatValue]];	// custom
 			break;
 		default :
 			[myPlayer setAspectRatio:0];
@@ -1045,7 +1082,6 @@
 			[playListController selectItemAtIndex:([playListController itemCount]-1)];
 	}
 	[playListController updateView];
-	[myPlayer seek:10 mode:MIRelativeSeekingMode];
 }
 
 /************************************************************************************/
@@ -1861,6 +1897,7 @@
 	// the info dictionary should now be ready to be imported
 	if ([myPlayer info] && myPlayingItem) {
 		[myPlayingItem setObject:[myPlayer info] forKey:@"MovieInfo"];
+		[movieInfo release];
 		movieInfo = [[myPlayer info] retain];
 	}
 	[playListController updateView];

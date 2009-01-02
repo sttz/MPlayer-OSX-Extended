@@ -26,9 +26,12 @@
 #import "PlayerWindow.h"
 
 @interface PlayerFullscreenWindow : PlayerWindow {
-	IBOutlet id fullscreenControls;
-	bool isFullscreen;
+	IBOutlet NSWindow *fullscreenControls;
+	BOOL isFullscreen;
+	BOOL mouseInWindow;
+	BOOL mouseOverControls;
 	
+	NSTrackingRectTag fsTrackTag, fcTrackTag;
 	NSTimer *osdTimer;
 }
 
@@ -39,5 +42,13 @@
 
 - (void) hideOSD;
 - (void) setFullscreen: (bool)aBool;
+- (void) startMouseTracking;
+- (void) stopMouseTracking;
+- (void) refreshOSDTimer;
+
+- (void) mouseEnteredFSWindow;
+- (void) mouseExitedFSWindow;
+- (void) mouseEnteredFCWindow;
+- (void) mouseExitedFCWindow;
 
 @end

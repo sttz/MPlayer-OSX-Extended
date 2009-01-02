@@ -98,7 +98,7 @@
 	IBOutlet id settingsController;
 	IBOutlet id playerController;
 	
-	IBOutlet id fullscreenWindow;
+	IBOutlet PlayerFullscreenWindow* fullscreenWindow;
 	
 	// Inter-thread communication
 	NSPort *port1;

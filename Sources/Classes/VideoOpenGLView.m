@@ -25,9 +25,16 @@
 	
 	// Choose buffer name and pass it on the way to mplayer
 	buffer_name = [[NSString stringWithFormat:@"mplayerosx-%i", [[NSProcessInfo processInfo] processIdentifier]] retain];
-	[Debug log:ASL_LEVEL_ERR withMessage:@"Set buffer name: %@",buffer_name];
 	
 	[NSThread detachNewThreadSelector:@selector(threadMain:) toTarget:self withObject:[NSArray arrayWithObjects:port1, port2, nil]];
+}
+
+- (void) dealloc
+{
+	[buffer_name release];
+	[threadProxy release];
+	
+	[super dealloc];
 }
 
 /*
@@ -75,6 +82,7 @@
 	
 	[myRunLoop run];
 	
+	[otherConnection release];
 	[pool release];
 }
 
@@ -407,20 +415,19 @@
 	static NSRect old_win_frame;
 	static NSRect old_view_frame;
 	NSWindow *window = [playerController playerWindow];
-    NSRect fsRect;
     
 	int fullscreenId = [playerController fullscreenDeviceId];
 	screen_frame = [[[NSScreen screens] objectAtIndex:fullscreenId] frame];
-	
-    fsRect = screen_frame;
-    fsRect.origin.x = 0;
-	fsRect.origin.y = 0;
+	/*screen_frame.origin.x = 500;
+	screen_frame.origin.y = 500;
+	screen_frame.size.width = 200;
+	screen_frame.size.height = 200;*/
 	
 	if(switchingToFullscreen)
 	{
 		//enter kiosk mode
 		SetSystemUIMode( kUIModeAllHidden, kUIOptionAutoShowMenuBar);
-		[(PlayerFullscreenWindow*)fullscreenWindow setFullscreen:YES];
+		[fullscreenWindow setFullscreen:YES];
 		
 		// place fswin above video
 		NSRect rect = [self frame];
@@ -446,6 +453,8 @@
 		//resize window	
 		[fullscreenWindow setFrame:screen_frame display:YES animate:YES];
 		
+		[fullscreenWindow startMouseTracking];
+		
 		[window orderOut:nil];
 		
 		[threadProto finishToggleFullscreen];
@@ -456,7 +465,8 @@
 		[window orderWindow:NSWindowBelow relativeTo:[fullscreenWindow windowNumber]];
 		[window makeKeyWindow];
 		
-		[(PlayerFullscreenWindow*)fullscreenWindow setFullscreen:NO];
+		[fullscreenWindow setFullscreen:NO];
+		[fullscreenWindow stopMouseTracking];
 		
 		[fullscreenWindow setFrame:old_win_frame display:YES animate:YES];
 		

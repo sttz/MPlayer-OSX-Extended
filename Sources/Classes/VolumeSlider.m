@@ -12,6 +12,14 @@
 	return self;
 }
 
+- (void) dealloc
+{
+	[knobOff release];
+	[knobOn release];
+	
+	[super dealloc];
+}
+
 - (void)loadImages
 {
 	knobOff = [[NSImage imageNamed:@"volumeKnobOff"] retain];

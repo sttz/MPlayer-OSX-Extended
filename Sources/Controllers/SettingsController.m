@@ -21,6 +21,7 @@
  ************************************************************************************/
 - (void) displayForItem:(NSMutableDictionary *)anItem
 {
+	[myItem release];
 	myItem = [anItem retain];
 	
 	// load values from myItem
@@ -28,6 +29,13 @@
 	
 	// display dialog
 	[settingsPanel makeKeyAndOrderFront:nil];
+}
+/************************************************************************************/
+- (void) dealloc
+{
+	[myItem release];
+	
+	[super dealloc];
 }
 /************************************************************************************/
 - (BOOL) isVisible

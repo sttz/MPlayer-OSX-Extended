@@ -51,6 +51,7 @@ typedef enum _NSScrubbingBarStyle {
 - (BOOL) mouseDownCanMoveWindow;
 - (BOOL) acceptsFirstMouse:(NSEvent *)theEvent;
 
+- (void)redrawAnim;
 - (void)animate:(NSTimer *)aTimer;
 
 // overriding drawing method

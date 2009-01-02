@@ -395,6 +395,9 @@
 	
 	[Debug log:ASL_LEVEL_INFO withMessage:@"===================== MPlayer OSX Terminated ====================="];
 	
+	// Release language code mappings
+	[LanguageCodes releaseCodes];
+	
 	return NSTerminateNow;
 }
 

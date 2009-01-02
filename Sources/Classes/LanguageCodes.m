@@ -98,4 +98,10 @@ static NSMutableDictionary *codes_3;
 	
 }
 
++ (void)releaseCodes
+{
+	[codes_2 release];
+	[codes_3 release];
+}
+
 @end

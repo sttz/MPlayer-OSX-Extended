@@ -34,4 +34,6 @@
 
 + (NSString *)resolveCode:(NSString *)code;
 
++ (void)releaseCodes;
+
 @end
