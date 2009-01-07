@@ -160,6 +160,7 @@
 
 // player control actions
 - (IBAction)playPause:(id)sender;
+- (float)getSeekSeconds;
 - (IBAction)seekBack:(id)sender;
 - (IBAction)seekFwd:(id)sender;
 - (IBAction)seekPrevious:(id)sender;

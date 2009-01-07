@@ -27,10 +27,6 @@
 
 #define MI_REFRESH_LIMIT			10
 
-#define MI_CMD_SHOW_ALWAYS			1
-#define MI_CMD_SHOW_COND			2
-#define MI_CMD_SHOW_NEVER			0
-
 @implementation MplayerInterface
 /************************************************************************************
  INIT & UNINIT
@@ -650,7 +646,7 @@
 			break;
 		case kPaused:
 				//[self sendCommand:@"pause"];
-				[self sendCommand: [NSString stringWithFormat:@"pausing_keep seek %1.1f %d",seconds, aMode] withType:MI_CMD_SHOW_COND];
+				[self sendCommand: [NSString stringWithFormat:@"seek %1.1f %d",seconds, aMode] withType:MI_CMD_SHOW_COND];
 				//[self sendCommand:@"pause"];
 				isSeeking = YES;
 			break;
@@ -1414,19 +1410,31 @@
 /************************************************************************************/
 - (void)sendCommands:(NSArray *)aCommands withType:(uint)type
 {	
+	if ([aCommands count] == 0)
+		return;
+	
 	BOOL quietCommand = (type == MI_CMD_SHOW_NEVER || (type == MI_CMD_SHOW_COND && osdLevel == 1));
 	
-	if (quietCommand)
-		[self sendToMplayersInput:@"osd 0\n"];
+	if (quietCommand && !osdSilenced) {
+		//[Debug log:ASL_LEVEL_DEBUG withMessage:@"osd 0 (%@, %i, %i)\n",[aCommands objectAtIndex:0], type, osdLevel];
+		[self sendToMplayersInput:@"pausing_keep osd 0\n"];
+		osdSilenced = YES;
+	}
 	
 	int i;
 	for (i=0; i < [aCommands count]; i++) {
 		[Debug log:ASL_LEVEL_DEBUG withMessage:@"Send Command: %@",[aCommands objectAtIndex:i]];
-		[self sendToMplayersInput:[[aCommands objectAtIndex:i] stringByAppendingString:@"\n"]];
+		[self sendToMplayersInput:[NSString stringWithFormat:@"%@\n", [aCommands objectAtIndex:i]]];
 	}
 		
-	if (quietCommand)
-		[self reactivateOsdAfterDelay];
+	if (quietCommand) {
+		if (myState == kPlaying)
+			[self reactivateOsdAfterDelay];
+		else {
+			[self sendToMplayersInput:[NSString stringWithFormat:@"pausing_keep osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)]];
+			osdSilenced = NO;
+		}
+	}
 }
 /************************************************************************************/
 - (void)sendCommands:(NSArray *)aCommands
@@ -1434,34 +1442,21 @@
 	[self sendCommands:aCommands withType:MI_CMD_SHOW_ALWAYS];
 }
 /************************************************************************************/
-- (void)sendCommandsQuietly:(NSArray *)commands {
-	
-	[self sendCommand:@"osd 0"];
-	
-	int i;
-	for (i=0; i < [commands count]; i++) {
-		[self sendCommand:[commands objectAtIndex:i]];
-	}
-	
-	[self reactivateOsdAfterDelay];
-}
-/************************************************************************************/
-- (void)sendCommandQuietly:(NSString *)command {
-	
-	[self sendCommand:@"osd 0"];
-	[self sendCommand:command];
-	[self reactivateOsdAfterDelay];
-}
-/************************************************************************************/
 - (void)reactivateOsdAfterDelay {
 	
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(reactivateOsd) object:nil];
-	[self performSelector:@selector(reactivateOsd) withObject:self afterDelay:1.2];
+	[self performSelector:@selector(reactivateOsd) withObject:nil afterDelay:1.2];
 }
 
 - (void)reactivateOsd {
-	[Debug log:ASL_LEVEL_ERR withMessage:@"osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)];
-	[self sendToMplayersInput:[NSString stringWithFormat:@"osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)]];
+	//[Debug log:ASL_LEVEL_DEBUG withMessage:@"osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)];
+	
+	if (myState == kPlaying) {
+		[self sendToMplayersInput:[NSString stringWithFormat:@"pausing_keep osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)]];
+	} else if (myState == kPaused) {
+		[myCommandsBuffer addObject:[NSString stringWithFormat:@"osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)]];
+	}
+	osdSilenced = NO;
 }
 /************************************************************************************/
 - (void) takeScreenshot

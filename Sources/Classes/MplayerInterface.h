@@ -69,6 +69,11 @@
 // default constants
 #define kDefaultMovieSize 			NSMakeSize(0,0)
 
+// osd level modes
+#define MI_CMD_SHOW_ALWAYS			1
+#define MI_CMD_SHOW_COND			2
+#define MI_CMD_SHOW_NEVER			0
+
 @interface MplayerInterface : NSObject
 {
 // Properties
@@ -85,7 +90,7 @@
 	// playback
 	NSString *audioLanguages;
 	NSString *subtitleLanguages;
-	
+	BOOL osdSilenced;
 	BOOL correctPTS;
 	
 	unsigned int cacheSize;
@@ -303,8 +308,6 @@
 - (void)sendCommand:(NSString *)aCommand;
 - (void)sendCommands:(NSArray *)aCommands withType:(uint)type;
 - (void)sendCommands:(NSArray *)aCommands;
-- (void)sendCommandQuietly:(NSString *)command;
-- (void)sendCommandsQuietly:(NSArray *)commands;
 - (void)runMplayerWithParams:(NSArray *)aParams;
 - (void)sendToMplayersInput:(NSString *)aCommand;
 - (void)terminateMplayer;

@@ -1055,10 +1055,24 @@
 }
 
 /************************************************************************************/
+- (float)getSeekSeconds
+{
+	float seconds = 60;
+	if ([NSApp currentEvent]) {
+		if ([[NSApp currentEvent] modifierFlags] & NSShiftKeyMask) {
+			seconds = 600;
+		} else if ([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask) {
+			seconds = 10;
+		}
+	}
+	return seconds;
+}
+
 - (IBAction)seekBack:(id)sender
 {
+	
 	if ([myPlayer isRunning])
-		[myPlayer seek:-10 mode:MIRelativeSeekingMode];
+		[myPlayer seek:-[self getSeekSeconds] mode:MIRelativeSeekingMode];
 	else {
 		if ([playListController indexOfSelectedItem] < 1)
 			[playListController selectItemAtIndex:0];
@@ -1073,7 +1087,7 @@
 - (IBAction)seekFwd:(id)sender
 {
 	if ([myPlayer isRunning])
-		[myPlayer seek:10 mode:MIRelativeSeekingMode];
+		[myPlayer seek:[self getSeekSeconds] mode:MIRelativeSeekingMode];
 	else {
 		if ([playListController indexOfSelectedItem] < ([playListController itemCount]-1))
 			[playListController selectItemAtIndex:
@@ -1130,7 +1144,7 @@
 	if ([myPlayer isRunning]) {
 		
 		currentChapter = chapter;
-		[myPlayer sendCommandQuietly:[NSString stringWithFormat:@"set_property chapter %d 1", currentChapter]];
+		[myPlayer sendCommand:[NSString stringWithFormat:@"set_property chapter %d 1", currentChapter] withType:MI_CMD_SHOW_COND];
 		lastPoll = 0; // force update of chapter menu
 	}
 }
