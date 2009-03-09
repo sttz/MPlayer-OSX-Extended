@@ -1526,7 +1526,9 @@
 	
 	for(count = 0; count < [aParams count]; count++ )
 		[Debug log:ASL_LEVEL_INFO withMessage:@"Arg: %@", [aParams objectAtIndex:count]];
-
+	
+	[Debug log:ASL_LEVEL_INFO withMessage:@"Command: mplayer %@", [aParams componentsJoinedByString:@" "]];
+	
 	// activate notification for available data at output
 	[[[myMplayerTask standardOutput] fileHandleForReading]
 			readInBackgroundAndNotify];

@@ -36,6 +36,8 @@
 				<string>id</string>
 				<key>Aspect5to3MenuItem</key>
 				<string>id</string>
+				<key>CustomAspectMenuItem</key>
+				<string>id</string>
 				<key>DoubleSizeMenuItem</key>
 				<string>id</string>
 				<key>HalfSizeMenuItem</key>
@@ -556,7 +558,7 @@
 			<key>OUTLETS</key>
 			<dict>
 				<key>fullscreenControls</key>
-				<string>id</string>
+				<string>NSWindow</string>
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>PlayerWindow</string>
@@ -693,6 +695,8 @@
 			<dict>
 				<key>closeMenuItem</key>
 				<string>id</string>
+				<key>customAspectMenuItem</key>
+				<string>NSMenuItem</string>
 				<key>locationBox</key>
 				<string>id</string>
 				<key>locationPanel</key>

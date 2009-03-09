@@ -25,6 +25,8 @@
 			selector: @selector(appFinishedLaunching)
 			name: NSApplicationDidFinishLaunchingNotification
 			object:NSApp];
+	
+	[self updateAspectMenu];
 }
 
 /************************************************************************************
@@ -355,6 +357,20 @@
 */
 
 
+// update custom aspect in aspect menu
+- (void) updateAspectMenu
+{
+	float customAspect = [[self preferences] floatForKey:@"CustomVideoAspectValue"];
+	if (customAspect == 0) {
+		[customAspectMenuItem setEnabled:NO];
+		[customAspectMenuItem setTitle:@"Custom"];
+	} else {
+		[customAspectMenuItem setEnabled:YES];
+		[customAspectMenuItem setTitle:[[self preferences] stringForKey:@"CustomVideoAspect"]];
+	}
+}
+
+
 /************************************************************************************
  DELEGATE METHODS
  ************************************************************************************/
@@ -412,7 +428,6 @@
 /******************************************************************************/
 - (void) appFinishedLaunching
 {
-	// warn for fontconfig cache building
 	if (![[NSUserDefaults standardUserDefaults] objectForKey:@"Version"]) {
 		[preferencesController reloadValues];
 		[preferencesController applyPrefs:nil];

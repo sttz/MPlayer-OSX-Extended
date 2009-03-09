@@ -721,6 +721,11 @@
 			image_aspect = 2.39f/1.0f;
 			[self reshape];
 		}
+		
+		if (sender == CustomAspectMenuItem) {
+			image_aspect = [[appController preferences] floatForKey:@"CustomVideoAspectValue"];
+			[self reshape];
+		}
 	}
 }
 

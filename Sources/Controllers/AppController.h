@@ -30,6 +30,7 @@
 	
 	IBOutlet id closeMenuItem;
 	IBOutlet id playerWindow;
+	IBOutlet NSMenuItem *customAspectMenuItem;
 	
 	// other outlets
 	IBOutlet id theApp;
@@ -61,6 +62,7 @@
 
 // misc methods
 - (NSString *) openDialogForTypes:(NSArray *)typeList;
+- (void) updateAspectMenu;
 
 //beta
 //- (NSString *) saveDialogForTypes:(NSArray *)typeList;

@@ -89,7 +89,7 @@
 	IBOutlet id Aspect16to9MenuItem;
 	IBOutlet id Aspect185to1MenuItem;
 	IBOutlet id Aspect239to1MenuItem;
-	//IBOutlet id CustomAspectMenuItem;
+	IBOutlet id CustomAspectMenuItem;
 	
 	// other controllers outlets
 	IBOutlet id	playListController;

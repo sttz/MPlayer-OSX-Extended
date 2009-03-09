@@ -8,6 +8,7 @@
  */
 
 #import "PreferencesController.h"
+#import <RegexKit/RegexKit.h> 
 
 // other controllers
 #import "AppController.h"
@@ -16,6 +17,9 @@
 
 #import <fontconfig/fontconfig.h>
 #import <Sparkle/Sparkle.h>
+
+// regex for parsing aspect ratio
+#define ASPECT_REGEX	@"^(\\d+\\.?\\d*|\\.\\d+)(?:\\:(\\d+\\.?\\d*|\\.\\d+))?$"
 
 @implementation PreferencesController
 
@@ -626,6 +630,28 @@
 	
 	// video aspect box
 	[thePrefs setObject:[videoAspectBox stringValue] forKey:@"CustomVideoAspect"];
+	
+	// parse value
+	if ([[videoAspectBox stringValue] length] > 0) {
+		// Parts of custom aspect ratio
+		NSString *part1 = nil, *part2 = nil;
+		// Parse custom aspect ratio field (eiher "x.x or x.x:x.x)
+		if ([[videoAspectBox stringValue] getCapturesWithRegexAndReferences:
+			 ASPECT_REGEX,
+			 @"${1}", &part1,
+			 @"${2}", &part2, nil]) {
+			
+			if (part1 && part2)				
+				[thePrefs setFloat:([part1 floatValue] / [part2 floatValue]) forKey:@"CustomVideoAspectValue"];
+			else
+				[thePrefs setFloat:[part1 floatValue] forKey:@"CustomVideoAspectValue"];
+		} else
+			[thePrefs setFloat:[videoAspectBox floatValue] forKey:@"CustomVideoAspectValue"];
+	} else
+		[thePrefs setFloat:0.0 forKey:@"CustomVideoAspectValue"];
+	
+	// update aspect menu
+	[appController updateAspectMenu];
 	
 	// fullscreen device id
 	[thePrefs setBool:[fullscreenSameAsPlayer state] forKey:@"FullscreenDeviceSameAsPlayer"];
