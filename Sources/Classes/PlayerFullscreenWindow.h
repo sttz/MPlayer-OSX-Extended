@@ -24,9 +24,13 @@
 
 #import <Cocoa/Cocoa.h>
 #import "PlayerWindow.h"
+#import "AppController.h"
 
 @interface PlayerFullscreenWindow : PlayerWindow {
+	
 	IBOutlet NSWindow *fullscreenControls;
+	IBOutlet AppController *appController;
+	
 	BOOL isFullscreen;
 	BOOL mouseInWindow;
 	BOOL mouseOverControls;

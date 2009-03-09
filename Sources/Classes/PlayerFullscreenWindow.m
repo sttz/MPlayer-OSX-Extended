@@ -79,6 +79,25 @@
 	mp = [[fullscreenControls contentView] convertPoint:[fullscreenControls mouseLocationOutsideOfEventStream] fromView:nil];
 	if ([[fullscreenControls contentView] mouse:mp inRect:[[fullscreenControls contentView] frame]])
 		[self mouseEnteredFCWindow];
+	
+	// place controls on screen
+	NSArray *pos;
+	if ([[appController preferences] objectForKey:@"FullscreenControlsPosition"]) 
+		pos = [[appController preferences] arrayForKey:@"FullscreenControlsPosition"];
+	else
+		pos = [NSArray arrayWithObjects:[NSNumber numberWithFloat:0.5],[NSNumber numberWithFloat:0.15], nil];
+	
+	// use percent values to get absolute origin
+	NSRect screenFrame = [[self screen] frame];
+	NSRect controllerFrame = [fullscreenControls frame];
+	
+	NSPoint point = NSMakePoint(
+		screenFrame.origin.x + [[pos objectAtIndex:0] floatValue] * screenFrame.size.width - (controllerFrame.size.width / 2), 
+		screenFrame.origin.y + [[pos objectAtIndex:1] floatValue] * screenFrame.size.height - (controllerFrame.size.height / 2));
+	
+	controllerFrame.origin.x = point.x;
+	controllerFrame.origin.y = point.y;
+	[fullscreenControls setFrame:controllerFrame display:YES];
 }
 
 - (void) stopMouseTracking
@@ -86,6 +105,20 @@
 	[[self contentView] removeTrackingRect:fsTrackTag];
 	[[fullscreenControls contentView] removeTrackingRect:fcTrackTag];
 	[self mouseExitedFSWindow];
+	
+	// save controller position
+	NSRect screenFrame = [[self screen] frame];
+	NSRect controllerFrame = [fullscreenControls frame];
+	
+	// transform position to relative screen-coordiantes
+	NSArray *pos = [NSArray arrayWithObjects:
+		[NSNumber numberWithFloat:
+			((controllerFrame.origin.x + (controllerFrame.size.width / 2)) - screenFrame.origin.x) / screenFrame.size.width],
+		[NSNumber numberWithFloat:
+			((controllerFrame.origin.y + (controllerFrame.size.height / 2)) - screenFrame.origin.y) / screenFrame.size.height],
+		nil];
+	
+	[[appController preferences] setObject:pos forKey:@"FullscreenControlsPosition"];
 }
 
 - (void)mouseEntered:(NSEvent *)theEvent
