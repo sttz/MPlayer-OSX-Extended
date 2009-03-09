@@ -1872,18 +1872,6 @@
 			name: @"PlaybackStartNotification" object:myPlayer];
 	[[NSNotificationCenter defaultCenter] removeObserver:self
 			name: @"MIStateUpdatedNotification" object:myPlayer];
-	
-	[playImageOn release];
-	[playImageOff release];
-	[pauseImageOn release];
-	[pauseImageOff release];
-	
-	[fcPlayImageOn release];
-	[fcPlayImageOff release];
-	[fcPauseImageOn release];
-	[fcPauseImageOff release];
-	
-	[myPlayer release];
 }
 /************************************************************************************/
 - (void) playbackStarted
