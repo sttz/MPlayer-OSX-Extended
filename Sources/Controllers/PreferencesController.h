@@ -56,6 +56,8 @@
 	IBOutlet id deviceIdStepper;
 	IBOutlet id videoDriverMenu;
 	IBOutlet id screenshots;
+	// Interace
+	IBOutlet id animateInterface;
 	
 	// ** Text
 	// General

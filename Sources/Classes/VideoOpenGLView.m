@@ -451,7 +451,7 @@
 		[self drawRect:rect];
 		
 		//resize window	
-		[fullscreenWindow setFrame:screen_frame display:YES animate:YES];
+		[fullscreenWindow setFrame:screen_frame display:YES animate:[appController animateInterface]];
 		
 		[fullscreenWindow startMouseTracking];
 		
@@ -468,7 +468,7 @@
 		[fullscreenWindow setFullscreen:NO];
 		[fullscreenWindow stopMouseTracking];
 		
-		[fullscreenWindow setFrame:old_win_frame display:YES animate:YES];
+		[fullscreenWindow setFrame:old_win_frame display:YES animate:[appController animateInterface]];
 		
 		[fullscreenWindow orderOut:nil];
 		
@@ -515,7 +515,7 @@
 		win_frame.size.width += (image_height*image_aspect - mov_frame.size.width);
 	
 	win_frame.size.height += (image_height - mov_frame.size.height);
-	[[self window] setFrame:win_frame display:YES animate:YES];
+	[[self window] setFrame:win_frame display:YES animate:[appController animateInterface]];
 }
 
 /*
@@ -552,7 +552,7 @@
 	NSSize minSize = [[self window]contentMinSize];
 	frame.size.width = minSize.width;
 	frame.size.height = minSize.height+20; //+title bar height
-	[[self window] setFrame:frame display:YES animate:YES];
+	[[self window] setFrame:frame display:YES animate:[appController animateInterface]];
 	
 	// remove fullscreen callback
 	[[NSNotificationCenter defaultCenter] removeObserver:self
@@ -598,7 +598,7 @@
 	else
 		win_frame.size.width += (((image_height*image_aspect)*zoomFactor) - mov_frame.size.width);
 	
-	[[self window] setFrame:win_frame display:YES animate:YES];
+	[[self window] setFrame:win_frame display:YES animate:[appController animateInterface]];
 	
 	// remove fullscreen callback
 	[[NSNotificationCenter defaultCenter] removeObserver:self

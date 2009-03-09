@@ -63,6 +63,7 @@
 // misc methods
 - (NSString *) openDialogForTypes:(NSArray *)typeList;
 - (void) updateAspectMenu;
+- (BOOL) animateInterface;
 
 //beta
 //- (NSString *) saveDialogForTypes:(NSArray *)typeList;

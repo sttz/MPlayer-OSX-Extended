@@ -268,6 +268,9 @@
 	else
 		[screenshots selectItemAtIndex: 1];
 	
+	// animate transitions
+	if ([thePrefs objectForKey:@"AnimateInterfaceTransitions"])
+		[animateInterface setState:[thePrefs boolForKey:@"AnimateInterfaceTransitions"]];
 	
 	
 	// *** Text
@@ -670,6 +673,8 @@
 	[thePrefs setObject:[NSNumber numberWithInt:[screenshots indexOfSelectedItem]]
 			forKey:@"Screenshots"];
 	
+	// animations
+	[thePrefs setBool:[animateInterface state] forKey:@"AnimateInterfaceTransitions"];
 	
 	// *** Text
 	

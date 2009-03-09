@@ -371,6 +371,16 @@
 }
 
 
+// animate interface transitions
+- (BOOL) animateInterface
+{
+	if ([[self preferences] objectForKey:@"AnimateInterfaceTransitions"])
+		return [[self preferences] boolForKey:@"AnimateInterfaceTransitions"];
+	else
+		return YES;
+}
+
+
 /************************************************************************************
  DELEGATE METHODS
  ************************************************************************************/
