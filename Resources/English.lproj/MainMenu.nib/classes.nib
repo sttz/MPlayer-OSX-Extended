@@ -547,7 +547,7 @@
 			<key>OUTLETS</key>
 			<dict>
 				<key>appController</key>
-				<string>id</string>
+				<string>AppController</string>
 				<key>fullscreenControls</key>
 				<string>NSWindow</string>
 			</dict>
