@@ -808,6 +808,18 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	}
 }
 
+- (void)playItemAtIndex:(int)index
+{
+	if (index >= [self itemCount]) {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Cannot play item at index %d, only %d item ins Playlist.",index,[self itemCount]];
+		return;
+	}
+	
+	[self selectItemAtIndex:index];
+	[self updateView];
+	[playerController playFromPlaylist:[myData objectAtIndex:index]];
+}
+
 /************************************************************************************/
 // Stop the table's rows from being editable when we double-click on them
 - (BOOL)tableView:(NSTableView *)tableView

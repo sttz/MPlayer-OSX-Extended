@@ -93,6 +93,7 @@
 - (IBAction)cancelPreflight:(id)sender;
 - (IBAction)playPrevious:(id)sender;
 - (IBAction)playNext:(id)sender;
+- (void)playItemAtIndex:(int)index;
 - (void) removeItemAtIndex:(unsigned int)index;
 
 // TableView data access methods

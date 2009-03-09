@@ -400,6 +400,21 @@
 	return NO;
 }
 /************************************************************************************/
+- (void)application:(NSApplication *)sender openFiles:(NSArray *)filenames
+{
+	NSEnumerator *e = [filenames objectEnumerator];
+	NSString *filename;
+	
+	[playListController displayWindow:sender];
+	
+	// add files to playlist
+	while (filename = [e nextObject]) {
+		NSMutableDictionary *myItem = [NSMutableDictionary
+			dictionaryWithObject:filename forKey:@"MovieFile"];
+		[playListController appendItem:myItem];
+	}
+}
+/************************************************************************************/
 // posted when application wants to terminate
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
 {
