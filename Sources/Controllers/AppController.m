@@ -20,6 +20,11 @@
 	[[NSUserDefaults standardUserDefaults] registerDefaults:
 	[[[NSBundle mainBundle] infoDictionary] objectForKey:@"ApplicationDefaults"]];
 	
+	// register for urls
+	[[NSAppleEventManager sharedAppleEventManager] 
+		setEventHandler:self andSelector:@selector(getUrl:withReplyEvent:) 
+		forEventClass:kInternetEventClass andEventID:kAEGetURL];
+	
 	// register for app launch finish
 	[[NSNotificationCenter defaultCenter] addObserver: self
 			selector: @selector(appFinishedLaunching)
@@ -402,10 +407,19 @@
 /************************************************************************************/
 - (void)application:(NSApplication *)sender openFiles:(NSArray *)filenames
 {
+	// Handle single file
+	if ([filenames count] == 1) {
+		if ([self application:sender openFile:[filenames objectAtIndex:0]])
+			[theApp replyToOpenOrPrint:NSApplicationDelegateReplySuccess];
+		else
+			[theApp replyToOpenOrPrint:NSApplicationDelegateReplyFailure];
+		return;
+	}
+	
 	NSEnumerator *e = [filenames objectEnumerator];
 	NSString *filename;
 	
-	[playListController displayWindow:sender];
+	[playListController openWindow:YES];
 	
 	// add files to playlist
 	while (filename = [e nextObject]) {
@@ -413,6 +427,17 @@
 			dictionaryWithObject:filename forKey:@"MovieFile"];
 		[playListController appendItem:myItem];
 	}
+	
+	[sender replyToOpenOrPrint:NSApplicationDelegateReplySuccess];
+}
+/************************************************************************************/
+- (void)getUrl:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
+{
+	NSString *url = [[event paramDescriptorForKeyword:keyDirectObject] stringValue];
+	
+	NSMutableDictionary *myItem = [NSMutableDictionary
+								   dictionaryWithObject:url forKey:@"MovieFile"];
+	[playerController playItem:myItem];
 }
 /************************************************************************************/
 // posted when application wants to terminate

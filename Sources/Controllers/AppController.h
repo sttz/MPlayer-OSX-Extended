@@ -75,5 +75,6 @@
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender;
 - (BOOL) validateMenuItem:(NSMenuItem *)aMenuItem;
 - (void) appFinishedLaunching;
+- (void)getUrl:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent;
 
 @end

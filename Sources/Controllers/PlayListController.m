@@ -151,19 +151,24 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 
 - (IBAction) displayWindow:(id)sender
 {	
-	if(isOpen)
+	[self openWindow:!isOpen];
+}
+
+- (void) openWindow:(BOOL)display
+{
+	if(isOpen && !display)
 	{
 		[playListButton setState: NSOffState];
 		[playListWindow orderOut:nil];
 	}
-	else
+	else if (!isOpen && display)
 	{
 		[playListButton setState: NSOnState];
 		[playListWindow makeKeyAndOrderFront:nil];
 		[playerController updatePlaylistWindow];
 	}
-
-	isOpen = !isOpen;
+	
+	isOpen = display;
 	[self updateView];
 	[[NSApp mainWindow] update];
 }

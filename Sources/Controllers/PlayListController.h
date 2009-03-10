@@ -68,6 +68,7 @@
 }
 //window 
 - (IBAction)displayWindow:(id)sender;
+- (void) openWindow:(BOOL)display;
 
 // data access interface
 - (NSMutableDictionary *) itemAtIndex:(int) aIndex;
