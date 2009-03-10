@@ -51,9 +51,11 @@
 		</dict>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>VideoCD</string>
+			<string>CD/DVD Media</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>dvdnav</string>
+				<string>dvd</string>
 				<string>vcd</string>
 			</array>
 			<key>CFBundleTypeRole</key>
