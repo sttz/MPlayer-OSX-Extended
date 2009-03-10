@@ -738,6 +738,11 @@
 			<string>FullscreenControls</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>playerController</key>
+				<string>PlayerController</string>
+			</dict>
 			<key>SUPERCLASS</key>
 			<string>NSWindow</string>
 		</dict>

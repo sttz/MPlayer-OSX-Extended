@@ -214,6 +214,9 @@
 - (void) statsClosed;
 - (void) statusUpdate:(NSNotification *)notification;
 - (void) progresBarClicked:(NSNotification *)notification;
+- (void) updatePlayerWindow;
+- (void) updatePlaylistWindow;
+- (void) updateFullscreenControls;
 
 // window delegate methods
 - (BOOL)windowShouldZoom:(NSWindow *)sender toFrame:(NSRect)newFrame;

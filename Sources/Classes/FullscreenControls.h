@@ -23,7 +23,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
-
+#import "PlayerController.h"
 
 @interface FullscreenControls : NSWindow {
 	NSPoint dragStartPoint;
@@ -32,6 +32,8 @@
 	int currentFade;
 	int currentState;
 	BOOL isOpen;
+	
+	IBOutlet PlayerController *playerController;
 }
 - (void)fadeWith:(NSString*)effect;
 @end

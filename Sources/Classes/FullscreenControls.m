@@ -76,6 +76,7 @@
 {
 	[super orderFront:sender];
 	[self fadeWith:NSViewAnimationFadeInEffect];
+	[playerController updateFullscreenControls];
 }
 
 - (void)orderOut:(id)sender

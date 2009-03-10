@@ -160,6 +160,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	{
 		[playListButton setState: NSOnState];
 		[playListWindow makeKeyAndOrderFront:nil];
+		[playerController updatePlaylistWindow];
 	}
 
 	isOpen = !isOpen;

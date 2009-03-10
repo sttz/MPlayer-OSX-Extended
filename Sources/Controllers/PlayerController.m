@@ -1894,7 +1894,6 @@
 /************************************************************************************/
 - (void) statusUpdate:(NSNotification *)notification;
 {	
-	int seconds;
 	NSMutableDictionary *playingItem = myPlayingItem;
 	
 	// reset Idle time - Carbon PowerManager calls
@@ -2117,8 +2116,6 @@
 		
 	}
 	
-	seconds = (int)[myPlayer seconds];
-	
 	// update values
 	switch ([myPlayer status]) {
 	case kOpening :
@@ -2135,40 +2132,14 @@
 		break;
 	case kPlaying :
 		if (playingItem != NULL) {
-			if ([[scrubbingBar window] isVisible]) 
-			{
-				
-				if ([movieInfo length] > 0)
-					[scrubbingBar setDoubleValue:[myPlayer seconds]];
-				else
-					[scrubbingBar setDoubleValue:0];
-			}
-			if ([[scrubbingBarToolbar window] isVisible]) 
-			{
-				if ([movieInfo length] > 0)
-					[scrubbingBarToolbar setDoubleValue:[myPlayer seconds]];
-				else
-					[scrubbingBarToolbar setDoubleValue:0];
-			}
-			if ([[fcScrubbingBar window] isVisible]) 
-			{
-				if ([movieInfo length] > 0)
-					[fcScrubbingBar setDoubleValue:[myPlayer seconds]];
-				else
-					[fcScrubbingBar setDoubleValue:0];
-			}
-			if ([[timeTextField window] isVisible])
-			{
-					[timeTextField setStringValue:[NSString stringWithFormat:@"%02d:%02d:%02d", seconds/3600,(seconds%3600)/60,seconds%60]];
-			}
-			if ([[timeTextFieldToolbar window] isVisible])
-			{
-					[timeTextFieldToolbar setStringValue:[NSString stringWithFormat:@"%02d:%02d:%02d", seconds/3600,(seconds%3600)/60,seconds%60]];
-			}
-			if ([[fcTimeTextField window] isVisible])
-			{
-				[fcTimeTextField setStringValue:[NSString stringWithFormat:@"%02d:%02d:%02d", seconds/3600,(seconds%3600)/60,seconds%60]];
-			}
+			// update windows
+			if ([playerWindow isVisible])
+				[self updatePlayerWindow];
+			if ([[scrubbingBar window] isVisible])
+				[self updatePlaylistWindow];
+			if ([fcWindow isVisible])
+				[self updateFullscreenControls];
+			
 			// stats window
 			if ([statsPanel isVisible]) {
 				[statsCPUUsageBox setStringValue:[NSString localizedStringWithFormat:@"%d %%",
@@ -2189,13 +2160,49 @@
 			
 			lastPoll = [NSDate timeIntervalSinceReferenceDate];
 			[myPlayer sendCommand:@"get_property volume"];
-			[self selectChapterForTime:seconds];
+			[self selectChapterForTime:(int)[myPlayer seconds]];
 		}
 			
 		break;
 	case kPaused :
 		break;
 	}
+}
+/************************************************************************************/
+- (void) updatePlayerWindow
+{
+	int seconds = (int)[myPlayer seconds];
+	
+	if ([movieInfo length] > 0)
+		[scrubbingBar setDoubleValue:[myPlayer seconds]];
+	else
+		[scrubbingBar setDoubleValue:0];
+	
+	[timeTextField setStringValue:[NSString stringWithFormat:@"%02d:%02d:%02d", seconds/3600,(seconds%3600)/60,seconds%60]];
+}
+
+- (void) updatePlaylistWindow
+{
+	int seconds = (int)[myPlayer seconds];
+	
+	if ([movieInfo length] > 0)
+		[scrubbingBarToolbar setDoubleValue:[myPlayer seconds]];
+	else
+		[scrubbingBarToolbar setDoubleValue:0];
+	
+	[timeTextFieldToolbar setStringValue:[NSString stringWithFormat:@"%02d:%02d:%02d", seconds/3600,(seconds%3600)/60,seconds%60]];
+}
+
+- (void) updateFullscreenControls
+{
+	int seconds = (int)[myPlayer seconds];
+	
+	if ([movieInfo length] > 0)
+		[fcScrubbingBar setDoubleValue:[myPlayer seconds]];
+	else
+		[fcScrubbingBar setDoubleValue:0];
+	
+	[fcTimeTextField setStringValue:[NSString stringWithFormat:@"%02d:%02d:%02d", seconds/3600,(seconds%3600)/60,seconds%60]];
 }
 
 /************************************************************************************/
