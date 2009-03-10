@@ -55,7 +55,6 @@
 		378749400891B7A60068D97D /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 378749150891B7A60068D97D /* fonts */; };
 		379740A10875CA980049E91B /* VideoOpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 379740A00875CA980049E91B /* VideoOpenGLView.m */; };
 		37B934DC088FDF9200C81536 /* PlaylistTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 37B934DB088FDF9200C81536 /* PlaylistTableView.m */; };
-		37BFD48F0CCD7D5900FCABD6 /* External_Binaries in Resources */ = {isa = PBXBuildFile; fileRef = 37BFD48B0CCD7D5900FCABD6 /* External_Binaries */; };
 		37C093ED088429AE00D06F8B /* PlayerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 37C093EB088429AE00D06F8B /* PlayerWindow.m */; };
 		37DCF87B0888624D00DBF422 /* play_button_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 37DCF8790888624D00DBF422 /* play_button_off.png */; };
 		37DCF87C0888624D00DBF422 /* play_button_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 37DCF87A0888624D00DBF422 /* play_button_on.png */; };
@@ -81,6 +80,7 @@
 		37EA4BC2086271480026216A /* scrub_bar_anim.png in Resources */ = {isa = PBXBuildFile; fileRef = 37EA4BC1086271480026216A /* scrub_bar_anim.png */; };
 		3A0943290E44F8E300E6753F /* MovieInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A0943280E44F8E300E6753F /* MovieInfo.m */; };
 		3A09436C0E45043000E6753F /* LanguageCodes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A09436B0E45043000E6753F /* LanguageCodes.m */; };
+		3A0A3E550F670C89008C8507 /* External_Binaries in Resources */ = {isa = PBXBuildFile; fileRef = 3A0A3E510F670C89008C8507 /* External_Binaries */; };
 		3A38D3C50E50E45A00C1E468 /* Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A38D3C40E50E45A00C1E468 /* Debug.m */; };
 		3A5879C80EED42BD003408E8 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A5879C70EED42BD003408E8 /* Sparkle.framework */; };
 		3A5879D30EED42CB003408E8 /* Sparkle.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 3A5879C70EED42BD003408E8 /* Sparkle.framework */; };
@@ -204,7 +204,6 @@
 		379740A00875CA980049E91B /* VideoOpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = VideoOpenGLView.m; path = Sources/Classes/VideoOpenGLView.m; sourceTree = "<group>"; };
 		37B934DA088FDF9200C81536 /* PlaylistTableView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PlaylistTableView.h; path = Sources/Classes/PlaylistTableView.h; sourceTree = "<group>"; };
 		37B934DB088FDF9200C81536 /* PlaylistTableView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = PlaylistTableView.m; path = Sources/Classes/PlaylistTableView.m; sourceTree = "<group>"; };
-		37BFD48B0CCD7D5900FCABD6 /* External_Binaries */ = {isa = PBXFileReference; lastKnownFileType = folder; path = External_Binaries; sourceTree = "<group>"; };
 		37C093EB088429AE00D06F8B /* PlayerWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = PlayerWindow.m; path = Sources/Classes/PlayerWindow.m; sourceTree = "<group>"; };
 		37C093EC088429AE00D06F8B /* PlayerWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PlayerWindow.h; path = Sources/Classes/PlayerWindow.h; sourceTree = "<group>"; };
 		37DCF8790888624D00DBF422 /* play_button_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = play_button_off.png; path = Resources/Graphics/play_button_off.png; sourceTree = "<group>"; };
@@ -234,6 +233,9 @@
 		3A0943280E44F8E300E6753F /* MovieInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MovieInfo.m; path = Sources/Classes/MovieInfo.m; sourceTree = "<group>"; };
 		3A09436A0E45043000E6753F /* LanguageCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LanguageCodes.h; path = Sources/Classes/LanguageCodes.h; sourceTree = "<group>"; };
 		3A09436B0E45043000E6753F /* LanguageCodes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LanguageCodes.m; path = Sources/Classes/LanguageCodes.m; sourceTree = "<group>"; };
+		3A0A3E4D0F670C18008C8507 /* mplayer-mt.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; path = "mplayer-mt.app"; sourceTree = "<group>"; };
+		3A0A3E4E0F670C18008C8507 /* mplayer.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; path = mplayer.app; sourceTree = "<group>"; };
+		3A0A3E510F670C89008C8507 /* External_Binaries */ = {isa = PBXFileReference; lastKnownFileType = folder; path = External_Binaries; sourceTree = "<group>"; };
 		3A38D3C30E50E45A00C1E468 /* Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Debug.h; path = Sources/Classes/Debug.h; sourceTree = "<group>"; };
 		3A38D3C40E50E45A00C1E468 /* Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Debug.m; path = Sources/Classes/Debug.m; sourceTree = "<group>"; };
 		3A5879C70EED42BD003408E8 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
@@ -362,6 +364,8 @@
 		29B97314FDCFA39411CA2CEA /* MPlayer OSX */ = {
 			isa = PBXGroup;
 			children = (
+				3A0A3E510F670C89008C8507 /* External_Binaries */,
+				3A0A3E4C0F670C18008C8507 /* External_Binaries */,
 				377E0372085E481700D64A26 /* Controllers */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
@@ -385,7 +389,6 @@
 			isa = PBXGroup;
 			children = (
 				3A5879DF0EED4507003408E8 /* dsa_pub.pem */,
-				37BFD48B0CCD7D5900FCABD6 /* External_Binaries */,
 				378749150891B7A60068D97D /* fonts */,
 				37DCF89608886A2800DBF422 /* ffwd_button_off.png */,
 				37DCF89708886A2800DBF422 /* ffwd_button_on.png */,
@@ -492,6 +495,15 @@
 				377E037C085E482B00D64A26 /* SettingsController.m */,
 			);
 			name = Controllers;
+			sourceTree = "<group>";
+		};
+		3A0A3E4C0F670C18008C8507 /* External_Binaries */ = {
+			isa = PBXGroup;
+			children = (
+				3A0A3E4D0F670C18008C8507 /* mplayer-mt.app */,
+				3A0A3E4E0F670C18008C8507 /* mplayer.app */,
+			);
+			path = External_Binaries;
 			sourceTree = "<group>";
 		};
 		3A0E8A4C0EBF9F91003A2F66 /* Interface */ = {
@@ -613,7 +625,6 @@
 				37DCF89808886A2800DBF422 /* ffwd_button_off.png in Resources */,
 				37DCF89908886A2800DBF422 /* ffwd_button_on.png in Resources */,
 				378749400891B7A60068D97D /* fonts in Resources */,
-				37BFD48F0CCD7D5900FCABD6 /* External_Binaries in Resources */,
 				3A96C95A0E4E20B800B7B261 /* iso-639-3.tab in Resources */,
 				3ABF86A80EBFAF4C001FE779 /* fc_background.png in Resources */,
 				3AE612370EC08130009F2F12 /* fc_scrub_bg.png in Resources */,
@@ -646,6 +657,7 @@
 				3AFE25AF0EC11114009FFEC5 /* fc_pause_on.png in Resources */,
 				3AFE25BE0EC11307009FFEC5 /* fc_scrub_badge.png in Resources */,
 				3A5879E00EED4507003408E8 /* dsa_pub.pem in Resources */,
+				3A0A3E550F670C89008C8507 /* External_Binaries in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

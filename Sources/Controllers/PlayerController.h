@@ -85,10 +85,13 @@
 	IBOutlet id skipEndMenuItem;
 	IBOutlet id skipBeginningMenuItem;
 	
-	
 	// properties
 	MplayerInterface *myPlayer;
 	MplayerInterface *myPreflightPlayer;
+	
+	// paths to mplayer binaries
+	NSString *mplayerPath;
+	NSString *mplayerMTPath;
 	
 	// actual movie parametters
 	NSMutableDictionary *myPlayingItem;
@@ -217,6 +220,7 @@
 - (void) updatePlayerWindow;
 - (void) updatePlaylistWindow;
 - (void) updateFullscreenControls;
+- (void) disableFFmpegMTForCurrentFile;
 
 // window delegate methods
 - (BOOL)windowShouldZoom:(NSWindow *)sender toFrame:(NSRect)newFrame;

@@ -160,13 +160,17 @@
 	
 	[super dealloc];
 }
-
 /************************************************************************************/
 - (void) setBufferName:(NSString *)name
 {
 	[buffer_name release];
 	buffer_name = [name retain];
-	[Debug log:ASL_LEVEL_ERR withMessage:@"Got buffer name: %@",buffer_name];
+}
+/************************************************************************************/
+- (void) setPlayerPath:(NSString *)path
+{
+	[myPathToPlayer release];
+	myPathToPlayer = [path retain];
 }
 
 /************************************************************************************
@@ -1604,11 +1608,16 @@
 	//abnormal mplayer task termination
 	if (returnCode != 0)
 	{
+		// option to disable ffmpeg-mt
+		NSString *otherButton = nil;
+		if ([myPathToPlayer rangeOfString:@"mplayer-mt"].location != NSNotFound)
+			otherButton = @"Restart without FFmpeg-MT";
+		
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Abnormal playback error. mplayer returned error code: %d", returnCode];
-		bReadLog = NSRunAlertPanel(@"Playback Error", @"Abnormal playback termination. Check log file for more information.", @"Open Log", @"Continue", nil);
+		bReadLog = NSRunAlertPanel(@"Playback Error", @"Abnormal playback termination. Check log file for more information.", @"Continue", @"Open Log", otherButton);
 		
 		//Open Log file
-		if(bReadLog)
+		if(bReadLog == NSAlertAlternateReturn)
 		{
 			NSTask *finderOpenTask;
 			NSArray *finderOpenArg;
@@ -1619,6 +1628,13 @@
 			
 			if (!finderOpenTask)
 				[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to launch the console.app"];
+		} 
+		else if (bReadLog == NSAlertOtherReturn)
+		{
+			// post notification
+			[[NSNotificationCenter defaultCenter]
+					postNotificationName:@"MIRestartWithoutFFmpegMT"
+					object:self];
 		}
 	}
 }

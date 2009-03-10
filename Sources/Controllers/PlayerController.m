@@ -28,6 +28,7 @@
 	
 	NSUserDefaults *prefs = [appController preferences];
     NSString *playerPath;
+	NSString *preflightPlayerPath;
 	saveTime = YES;
 	fullscreenStatus = NO;	// by default we play in window
 	isOntop = NO;
@@ -40,6 +41,21 @@
 	// make window ontop
 	if ([prefs integerForKey:@"DisplayType"] == 2)
 		[self setOntop:YES];
+	
+	// set path to mplayer binary
+	mplayerPath = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: 
+						@"External_Binaries/mplayer.app/Contents/MacOS/mplayer"] retain];
+	
+	// Temporary: Separate binary for ffmpeg-mt
+	mplayerMTPath = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: 
+						@"External_Binaries/mplayer-mt.app/Contents/MacOS/mplayer"] retain];
+	
+	// init player
+    playerPath = mplayerPath;
+	preflightPlayerPath = mplayerPath;
+	
+	/* G3 support removed /
+	NSString *player_noaltivec = @"External_Binaries/mplayer_noaltivec.app/Contents/MacOS/mplayer";
 	
 	//check if we have Altivec
     static int hasAltivec = 0;
@@ -59,13 +75,7 @@
 	else
 	{
 		isIntel = 1;
-	}	
-	
-    NSString *player = @"External_Binaries/mplayer.app/Contents/MacOS/mplayer";
-    NSString *player_noaltivec = @"External_Binaries/mplayer_noaltivec.app/Contents/MacOS/mplayer";
-    
-    // init player
-    playerPath = player;
+	}
     
 	// choose altivec or not	
     if(hasAltivec)
@@ -83,9 +93,16 @@
             playerPath = player_noaltivec;
         }
 	}
-    
-    myPlayer = [[MplayerInterface alloc] initWithPathToPlayer: [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: playerPath]];
-	myPreflightPlayer = [[MplayerInterface alloc] initWithPathToPlayer: [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: playerPath]];
+	*/
+	
+    myPlayer = [[MplayerInterface alloc] initWithPathToPlayer: playerPath];
+	myPreflightPlayer = [[MplayerInterface alloc] initWithPathToPlayer: preflightPlayerPath];
+	
+	// register for FFmpeg-MT fail
+	[[NSNotificationCenter defaultCenter] addObserver: self
+			selector: @selector(disableFFmpegMTForCurrentFile)
+			name: @"MIRestartWithoutFFmpegMT"
+			object: myPlayer];
 	
 	// register for mplayer playback start
 	[[NSNotificationCenter defaultCenter] addObserver: self
@@ -204,6 +221,9 @@
 	[myPlayer release];
 	[myPreflightPlayer release];
 	
+	[mplayerPath release];
+	[mplayerMTPath release];
+	
 	[playImageOn release];
 	[playImageOff release];
 	[pauseImageOn release];
@@ -301,6 +321,16 @@
 /************************************************************************************
  INTERFACE
  ************************************************************************************/
+- (void) disableFFmpegMTForCurrentFile
+{
+	if (myPlayingItem) {
+		// Disable FFmpegt-MT
+		[myPlayingItem setObject:[NSNumber numberWithBool:YES] forKey:@"DisableFFmpegMT"];
+		// Restart playback
+		[self playItem:myPlayingItem];
+	}
+}
+/************************************************************************************/
 - (IBAction)displayWindow:(id)sender;
 {
 		[playerWindow makeKeyAndOrderFront:nil];
@@ -362,6 +392,13 @@
 	
 	// apply item settings
 	[self applySettings];
+	
+	// chose binary to use
+	if ([[appController preferences] boolForKey:@"UseFFmpegMT"]
+			&& ![[myPlayingItem objectForKey:@"DisableFFmpegMT"] boolValue])
+		[myPlayer setPlayerPath:mplayerMTPath];
+	else
+		[myPlayer setPlayerPath:mplayerPath];
 	
 	// if monitors aspect ratio is not 4:3 set monitor aspect ratio to the real one
 	if ([[NSScreen mainScreen] frame].size.width/4 != 
@@ -462,7 +499,7 @@
 
 /************************************************************************************/
 // applay values from preferences to player controller
-- (void) applyPrefs;
+- (void) applyPrefs
 {
 	NSUserDefaults *preferences = [appController preferences];
 	
@@ -479,10 +516,6 @@
 		[myPlayer setSubtitleLanguages: [preferences stringForKey:@"SubtitleLanguages"]];
 	else
 		[myPlayer setSubtitleLanguages:nil];
-	
-	// correct pts
-	if ([preferences objectForKey:@"CorrectPTS"])
-		[myPlayer setCorrectPTS: [preferences boolForKey:@"CorrectPTS"]];
 	
 	// cache size
 	if ([preferences objectForKey:@"CacheSize"])

@@ -178,10 +178,6 @@
 	if ([thePrefs objectForKey:@"SmallPlaylistText"])
 		[playlistSmallText setState:[thePrefs boolForKey:@"SmallPlaylistText"]];
 	
-	// correct pts
-	if ([thePrefs objectForKey:@"CorrectPTS"])
-		[correctPts setState:[thePrefs boolForKey:@"CorrectPTS"]];
-	
 	// cache settings
 	if ([thePrefs objectForKey:@"CacheSize"]) {
 		[cacheSizeSlider setFloatValue:
@@ -198,6 +194,10 @@
 		[cacheSizeSlider setFloatValue: 0];
 		[cacheSizeBox setStringValue:@""];
 	}
+	
+	// FFmpeg-MT
+	if ([thePrefs objectForKey:@"UseFFmpegMT"])
+		[useFFmpegMT setState:[thePrefs boolForKey:@"UseFFmpegMT"]];
 	
 	// check for updates
 	[checkForUpdates setState:[[SUUpdater sharedUpdater] automaticallyChecksForUpdates]];
@@ -596,12 +596,12 @@
 	// playlist small text
 	[thePrefs setBool:[playlistSmallText state] forKey:@"SmallPlaylistText"];
 	
-	// correct pts
-	[thePrefs setBool:[correctPts state] forKey:@"CorrectPTS"];
-	
 	// cache size
 	[thePrefs setObject:[NSNumber numberWithFloat:[cacheSizeSlider floatValue]]
 			forKey:@"CacheSize"];
+	
+	// playlist small text
+	[thePrefs setBool:[useFFmpegMT state] forKey:@"UseFFmpegMT"];
 	
 	// check for updates
 	[[SUUpdater sharedUpdater] setAutomaticallyChecksForUpdates:[checkForUpdates state]];

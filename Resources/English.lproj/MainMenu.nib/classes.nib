@@ -403,8 +403,6 @@
 				<string>id</string>
 				<key>checkForUpdates</key>
 				<string>id</string>
-				<key>correctPts</key>
-				<string>id</string>
 				<key>deinterlace</key>
 				<string>id</string>
 				<key>deviceIdStepper</key>
@@ -503,6 +501,8 @@
 				<string>id</string>
 				<key>subtitleLanguages</key>
 				<string>id</string>
+				<key>useFFmpegMT</key>
+				<string>id</string>
 				<key>veBrightness</key>
 				<string>id</string>
 				<key>veContrast</key>
@@ -540,6 +540,19 @@
 			<string>NSObject</string>
 		</dict>
 		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key></key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
 			<key>CLASS</key>
 			<string>PlayerFullscreenWindow</string>
 			<key>LANGUAGE</key>
@@ -553,19 +566,6 @@
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>PlayerWindow</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key></key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>FirstResponder</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
 		</dict>
 		<dict>
 			<key>CLASS</key>

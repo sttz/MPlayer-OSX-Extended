@@ -34,9 +34,9 @@
 	IBOutlet id playlistSmallText;
 	IBOutlet id playlistRemember;
 	// Misc
-	IBOutlet id correctPts;
 	IBOutlet id cacheSizeSlider;
 	IBOutlet id cacheSizeBox;
+	IBOutlet id useFFmpegMT;
 	// Updates
 	IBOutlet id checkForUpdates;
 	

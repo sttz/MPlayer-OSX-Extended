@@ -75,8 +75,8 @@
 #define MI_CMD_SHOW_NEVER			0
 
 @interface MplayerInterface : NSObject
-{
-// Properties
+{	
+	// Properties
 	// file paths
 	NSString *myPathToPlayer;
 	NSString *myMovieFile;
@@ -197,6 +197,7 @@
 - (id) init;										// init
 - (id) initWithPathToPlayer:(NSString *)aPath;		// init with movie file path
 - (void) setBufferName:(NSString *)name;
+- (void) setPlayerPath:(NSString *)path;
 
 // playback controls (take effect imediately)
 - (void) playWithInfo:(MovieInfo *)mf;				// play item from saved time
