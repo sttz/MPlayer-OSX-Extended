@@ -23,10 +23,10 @@ if [ -f "$1/mplayer.ub" ]; then
 	echo "mplayer.ub copied to mplayer.app/Contents/MacOS/mplayer"
 fi
 
-# Copy ppc g3 version (mplayer.ppcg3) to mplayer_noaltivec.app
-if [ -f "$1/mplayer.ppcg3" ]; then
-	cp "$1/mplayer.ppcg3" "$mplayerosx_path/External_Binaries/mplayer_noaltivec.app/Contents/MacOS/mplayer"
-	echo "mplayer.ppcg3 copied to mplayer_noaltivec.app/Contents/MacOS/mplayer"
+# Copy ffmpeg-mt version (mplayer-mt.ub) to mplayer-mt.app
+if [ -f "$1/mplayer-mt.ub" ]; then
+	cp "$1/mplayer-mt.ub" "$mplayerosx_path/External_Binaries/mplayer-mt.app/Contents/MacOS/mplayer"
+	echo "mplayer-mt.ub copied to mplayer-mt.app/Contents/MacOS/mplayer"
 fi
 
 # Touch the folder to make XCode copy the new binaries

@@ -6,6 +6,7 @@
 build_root="/Users/adrian/dev/mplayer/mplayer_static/usr/local"
 target_system="i386"
 binary_dest="/Users/adrian/dev/mplayer/mplayer_static/binaries"
+binary_name="mplayer"
 
 do_clean=1
 do_move=1
@@ -183,13 +184,13 @@ else
 		if [ ! -d "$binary_dest" ]; then
 			mkdir -p $binary_dest
 		fi
-		cp mplayer $binary_dest"/mplayer.$target_system"
-		echo "Binary moved to: $binary_dest/mplayer.$target_system"
+		cp mplayer $binary_dest"/$binary_name.$target_system"
+		echo "Binary moved to: $binary_dest/$binary_name.$target_system"
 		
 		# Merge universal binary if possible
-		if [ -f "$binary_dest/mplayer.i386" -a -f "$binary_dest/mplayer.ppc" ]; then
-			lipo -create "$binary_dest/mplayer.i386" "$binary_dest/mplayer.ppc" -output "$binary_dest/mplayer.ub"
-			echo "Universal binary merged at: $binary_dest/mplayer.ub"
+		if [ -f "$binary_dest/$binary_name.i386" -a -f "$binary_dest/$binary_name.ppc" ]; then
+			lipo -create "$binary_dest/$binary_name.i386" "$binary_dest/$binary_name.ppc" -output "$binary_dest/$binary_name.ub"
+			echo "Universal binary merged at: $binary_dest/$binary_name.ub"
 		fi
 	fi
 	
