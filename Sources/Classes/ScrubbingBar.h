@@ -42,6 +42,7 @@ typedef enum _NSScrubbingBarStyle {
 	float animFrame;
 	
 	int badgeOffset;
+	int rightClip;
 }
 - (void) loadImages;
 // event handlers
@@ -50,6 +51,9 @@ typedef enum _NSScrubbingBarStyle {
 // overriding event handlers
 - (BOOL) mouseDownCanMoveWindow;
 - (BOOL) acceptsFirstMouse:(NSEvent *)theEvent;
+
+- (void) startMyAnimation;
+- (void) stopMyAnimation;
 
 - (void)redrawAnim;
 - (void)animate:(NSTimer *)aTimer;

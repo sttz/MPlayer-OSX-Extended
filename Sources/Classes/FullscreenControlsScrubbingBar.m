@@ -19,6 +19,9 @@
 	scrubBarAnimFrame = [[NSImage imageNamed:@"fc_scrub_anim"] retain];
 	
 	badgeOffset = 1;
+	rightClip = 1;
 	[self setFrameSize:NSMakeSize([self frame].size.width,[scrubBarEnds size].height)];
+	
+	
 }
 @end

@@ -59,6 +59,7 @@
 	scrubBarAnimFrame = [[NSImage alloc] initWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"scrub_bar_anim" ofType:@"png"]];
 	
 	badgeOffset = 0;
+	rightClip = 1;
 }
 
 - (void) dealloc
@@ -129,13 +130,14 @@
 	switch ([self style])
 	{
 		case NSScrubbingBarPositionStyle :
-			if (animationTimer)
-				[self stopAnimation:self];
 			//draw position badge
 			[scrubBarBadge compositeToPoint: NSMakePoint(endWidth + (runLength - [scrubBarBadge size].width) * theValue, yOrigin + badgeOffset) operation:NSCompositeSourceOver];
 			break;
 		case NSScrubbingBarProgressStyle :
-			[scrubBarAnim compositeToPoint: NSMakePoint(-[scrubBarAnimFrame size].width+(animFrame* [scrubBarAnimFrame size].width), yOrigin) operation:NSCompositeSourceAtop];
+			[scrubBarAnim 
+				drawInRect:NSMakeRect(0, yOrigin, [self frame].size.width - rightClip, [self frame].size.height) 
+				fromRect:NSMakeRect((1.0 - animFrame) * [scrubBarAnimFrame size].width, 0, [self frame].size.width - rightClip, [scrubBarAnim size].height) 
+				operation:NSCompositeSourceAtop fraction:1.0];
 			break;
 		default :
 			break;
@@ -144,72 +146,79 @@
 
 - (void)animate:(NSTimer *)aTimer
 {
-	float yOrigin = 1;
-	animFrame += 0.1;
-	if(animFrame>1) animFrame=0;
-	[scrubBarAnim compositeToPoint: NSMakePoint(-[scrubBarAnimFrame size].width+(animFrame* [scrubBarAnimFrame size].width), yOrigin) operation:NSCompositeSourceAtop];
-	[self display];
+	if ([[self window] isVisible]) {
+		animFrame += 0.1;
+		if(animFrame>1) animFrame=0;
+		[self display];
+	}
 }
 
 - (NSScrubbingBarStyle)style
 {
 	return myStyle;
 }
+
 - (void)setStyle:(NSScrubbingBarStyle)style
 {
 	myStyle = style;
 	if (style == NSScrubbingBarProgressStyle)
-	{
-		[self startAnimation:self];
-	}
+		[self startMyAnimation];
 	else
-		[self stopAnimation:nil];
+		[self stopMyAnimation];
 	[self display];
 }
-- (void)startAnimation:(id)sender 
+
+- (void)startMyAnimation
 {
-	[super startAnimation:sender];
-	if (!animationTimer) {
+	[self startAnimation:self];
+	if (animationTimer == NULL) {
 		animationTimer = [[NSTimer scheduledTimerWithTimeInterval:0.05 
 								target:self selector:@selector(animate:) 
 								userInfo:nil repeats:YES] retain];
 		
 	}
 }
-- (void)stopAnimation:(id)sender
+
+- (void)stopMyAnimation
 {
-	[super stopAnimation:sender];
+	[self stopAnimation:self];
 	if (animationTimer) {
 		[animationTimer invalidate];
 		[animationTimer release];
 		animationTimer = NULL;		
 	}
 }
-- (void)incrementBy:(double)delta
+
+/*- (void)incrementBy:(double)delta
 {
 	[super incrementBy:delta];
 	[self display];
 }
+
 - (void)setDoubleValue:(double)doubleValue
 {
 	[super setDoubleValue:doubleValue];
 	[self display];
 }
+
 - (void)setIndeterminate:(BOOL)flag
 {
 	[super setIndeterminate:flag];
 	[self display];
 }
+
 - (void)setMaxValue:(double)newMaximum
 {
 	[super setMaxValue:newMaximum];
 	[self display];
 }
+
 - (void)setMinValue:(double)newMinimum
 {
 	[super setMinValue:newMinimum];
 	[self display];
-}
+}*/
+
 @end
 
 int postNotification (id self, NSEvent *theEvent, NSSize badgeSize)
