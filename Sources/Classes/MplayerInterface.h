@@ -187,6 +187,8 @@
 	int myOutputReadMode;				// defines playback output form 
 	NSMutableArray *myCommandsBuffer;	// store cmds that cannot be send immediatelly
 	NSString *lastUnparsedLine;
+	NSString *lastUnparsedErrorLine;
+	NSMutableCharacterSet *newlineCharacterSet;
 	//NSMutableDictionary *myInfo;	// dict filled by -identify command
 	BOOL isFullscreen;				// currently playing fullscreen
 	int subtitleFileId;				// since sub file identify output is not numberede, we need to cache the id

@@ -115,6 +115,10 @@
 	
 	lastUnparsedLine = @"";
 	
+	// Create newline character set
+	newlineCharacterSet = (id)[[NSMutableCharacterSet whitespaceAndNewlineCharacterSet] retain];
+    [newlineCharacterSet formIntersectionWithCharacterSet:[[NSCharacterSet whitespaceCharacterSet] invertedSet]];
+	
 	return self;
 }
 
@@ -1666,7 +1670,37 @@
 					  initWithData:[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"] 
 					  encoding:NSUTF8StringEncoding];
 	
-	[Debug log:ASL_LEVEL_INFO withMessage:data];
+	// Split data by newline characters
+	NSArray *myLines = [self splitString:data byCharactersInSet:newlineCharacterSet];
+	NSString *line;
+	
+	int lineIndex = -1;
+	
+	while (1) {
+		char *tempPtr;
+		
+		// Read next line of data
+		lineIndex++;
+		// check if end reached (save last unfinished line)
+		if (lineIndex >= [myLines count] - 1) {
+			[lastUnparsedErrorLine release];
+			if (lineIndex < [myLines count])
+				lastUnparsedErrorLine = [[myLines objectAtIndex:lineIndex] retain];
+			break;
+		}
+		// load line
+		line = [myLines objectAtIndex:lineIndex];
+		// prepend unfinished line
+		if (lastUnparsedErrorLine != @"") {
+			line = [lastUnparsedErrorLine stringByAppendingString:line];
+			lastUnparsedErrorLine = @"";
+		}
+		// skip empty lines
+		if ([[line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length] == 0)
+			continue;
+		
+		[Debug log:ASL_LEVEL_INFO withMessage:line];
+	}
 	
 	[data release];
 }
@@ -1713,10 +1747,6 @@
 	float chapterTime[6];
 	NSString *chapterName;
 	
-	// Create newline character set
-	NSMutableCharacterSet *newlineCharacterSet = (id)[NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
-    [newlineCharacterSet formIntersectionWithCharacterSet:[[NSCharacterSet whitespaceCharacterSet] invertedSet]];
-	
 	// Split data by newline characters
 	NSArray *myLines = [self splitString:data byCharactersInSet:newlineCharacterSet];
 	
@@ -1724,18 +1754,6 @@
 	
 	while (1) {
 		char *tempPtr;
-		
-		// get the one line of data
-		/*if (stringPtr == NULL)
-			stringPtr = strtok((char *)dataPtr,"\n\r");
-		else
-			stringPtr = strtok(NULL,"\n\r");
-		
-		if  (stringPtr == NULL)
-			break;*/
-		
-		// make an NSString for this line
-		//line = [NSString stringWithCString:stringPtr];
 		
 		// Read next line of data
 		lineIndex++;
@@ -1756,8 +1774,6 @@
 		// skip empty lines
 		if ([[line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length] == 0)
 			continue;
-		
-		//[Debug log:ASL_LEVEL_ERR withMessage:@"readOutputC: %@",line];
 		
 		// create cstring for legacy code
 		stringPtr = [line lossyCString];
