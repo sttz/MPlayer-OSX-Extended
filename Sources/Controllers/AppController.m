@@ -65,12 +65,13 @@
 	[fileTypes addObjectsFromArray:[self typeExtensionsForName:@"Audio file"]];
 	
 	// present open dialog
-	theFile = [self openDialogForTypes:fileTypes];
+	theFile = [self openDialogForType:MP_DIALOG_MEDIA];
 	
 	if (theFile) {
 		// if any file, create new item and play it
 		NSMutableDictionary *theItem = [NSMutableDictionary
 				dictionaryWithObject:theFile forKey:@"MovieFile"];
+		[theItem setObject:[NSNumber numberWithInt:![openMultithreading state]] forKey:@"DisableFFmpegMT"];
 		[playerController playItem:theItem];
 	}
 }
@@ -154,10 +155,11 @@
 - (IBAction) openSubtitle:(id)sender
 {
 	// present open dialog
-	NSString *theFile = [self openDialogForTypes:[self typeExtensionsForName:@"Subtitles file"]];
+	NSString *theFile = [self openDialogForType:MP_DIALOG_SUBTITLES];
 	if (theFile) {
 		NSMutableDictionary *theItem = [NSMutableDictionary
 				dictionaryWithObject:theFile forKey:@"SubtitlesFile"];
+		// beta: [theItem setObject:[openSubtitleEncoding titleOfSelectedItem] forKey:@"SubtitlesEncoding"];
 		[playerController playItem:theItem];
 	}
 }
@@ -295,17 +297,43 @@
  MISC METHODS
  ************************************************************************************/
 // presents open dialog for certain types
-- (NSString *) openDialogForTypes:(NSArray *)typeList
+- (NSString *) openDialogForType:(int)type
 {
-    NSOpenPanel *thePanel = [NSOpenPanel openPanel];
+    NSMutableArray *typeList = [NSMutableArray arrayWithCapacity:10];
+	NSOpenPanel *thePanel = [NSOpenPanel openPanel];
 	NSString *theFile = nil;
 	NSString *defDir;
+	
+	// Load file types
+	if (type == MP_DIALOG_MEDIA || type == MP_DIALOG_VIDEO)
+		[typeList addObjectsFromArray:[self typeExtensionsForName:@"Video file"]];
+	if (type == MP_DIALOG_MEDIA || type == MP_DIALOG_AUDIO)
+		[typeList addObjectsFromArray:[self typeExtensionsForName:@"Audio file"]];
+	if (type == MP_DIALOG_SUBTITLES)
+		[typeList addObjectsFromArray:[self typeExtensionsForName:@"Subtitles file"]];
 	
 	if (!(defDir = [[self preferences] objectForKey:@"DefaultDirectory"]))
 		defDir = NSHomeDirectory();
 
     [thePanel setAllowsMultipleSelection:NO];
-
+	
+	// show additional options based on type
+	if (type == MP_DIALOG_MEDIA || type == MP_DIALOG_VIDEO) { 
+		// add multithreading box and load state from preferences
+		[thePanel setAccessoryView:openFileSettings];
+		[openMultithreading setState:[[self preferences] boolForKey:@"UseFFmpegMT"]];
+	} else if (type == MP_DIALOG_SUBTITLES) {
+		// beta: add encoding dropdown and load state from preferences
+		/*[thePanel setAccessoryView:openSubtitleSettings];
+		if ([[self preferences] objectForKey:@"SubtitlesEncoding"]) {
+			[openSubtitleEncoding selectItemWithTitle:[[self preferences] objectForKey:@"SubtitlesEncoding"]];
+			if ([openSubtitleEncoding indexOfSelectedItem] < 0)
+				[openSubtitleEncoding selectItemAtIndex:0];
+		}
+		else
+			[openSubtitleEncoding selectItemAtIndex:0];*/
+	}
+	
     if ([thePanel runModalForDirectory:defDir file:nil types:typeList] == NSOKButton) {
         theFile = [[thePanel filenames] objectAtIndex:0];
 		[[NSUserDefaults standardUserDefaults]
@@ -327,6 +355,7 @@
     [thePanel setAllowsMultipleSelection:NO];
 	[thePanel setCanChooseDirectories : YES ];
 	[thePanel setCanChooseFiles : NO ];
+	
     if ([thePanel runModalForDirectory:defDir file:nil types:typeList] == NSOKButton) {
         theFile = [[thePanel filenames] objectAtIndex:0];
 		[[NSUserDefaults standardUserDefaults]

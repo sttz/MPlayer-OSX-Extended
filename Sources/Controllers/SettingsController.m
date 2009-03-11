@@ -273,16 +273,14 @@
 /************************************************************************************/
 - (IBAction)chooseAudio:(id)sender
 {
-	NSString *newPath = [appController
-			openDialogForTypes:[appController typeExtensionsForName:@"Audio file"]];
+	NSString *newPath = [appController openDialogForType:MP_DIALOG_AUDIO];
 	if (newPath)
 		[audioBox setStringValue:newPath];
 }
 /************************************************************************************/
 - (IBAction)chooseSubtitles:(id)sender
 {
-	NSString *newPath = [appController
-			openDialogForTypes:[appController typeExtensionsForName:@"Subtitles file"]];
+	NSString *newPath = [appController openDialogForType:MP_DIALOG_SUBTITLES];
 	if (newPath)
 		[subtitlesBox setStringValue:newPath];
 }

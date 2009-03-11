@@ -540,19 +540,6 @@
 			<string>NSObject</string>
 		</dict>
 		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key></key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>FirstResponder</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
-		</dict>
-		<dict>
 			<key>CLASS</key>
 			<string>PlayerFullscreenWindow</string>
 			<key>LANGUAGE</key>
@@ -566,6 +553,19 @@
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>PlayerWindow</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key></key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
 		</dict>
 		<dict>
 			<key>CLASS</key>
@@ -705,6 +705,14 @@
 				<string>id</string>
 				<key>locationPanel</key>
 				<string>id</string>
+				<key>openFileSettings</key>
+				<string>NSView</string>
+				<key>openMultithreading</key>
+				<string>id</string>
+				<key>openSubtitleEncoding</key>
+				<string>id</string>
+				<key>openSubtitleSettings</key>
+				<string>NSView</string>
 				<key>playListController</key>
 				<string>id</string>
 				<key>playerController</key>

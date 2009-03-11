@@ -676,6 +676,8 @@
 	// animations
 	[thePrefs setBool:[animateInterface state] forKey:@"AnimateInterfaceTransitions"];
 	
+	
+	
 	// *** Text
 	
 	// subtitles font

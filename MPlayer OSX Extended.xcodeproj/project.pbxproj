@@ -233,8 +233,6 @@
 		3A0943280E44F8E300E6753F /* MovieInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MovieInfo.m; path = Sources/Classes/MovieInfo.m; sourceTree = "<group>"; };
 		3A09436A0E45043000E6753F /* LanguageCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LanguageCodes.h; path = Sources/Classes/LanguageCodes.h; sourceTree = "<group>"; };
 		3A09436B0E45043000E6753F /* LanguageCodes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LanguageCodes.m; path = Sources/Classes/LanguageCodes.m; sourceTree = "<group>"; };
-		3A0A3E4D0F670C18008C8507 /* mplayer-mt.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; path = "mplayer-mt.app"; sourceTree = "<group>"; };
-		3A0A3E4E0F670C18008C8507 /* mplayer.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; path = mplayer.app; sourceTree = "<group>"; };
 		3A0A3E510F670C89008C8507 /* External_Binaries */ = {isa = PBXFileReference; lastKnownFileType = folder; path = External_Binaries; sourceTree = "<group>"; };
 		3A38D3C30E50E45A00C1E468 /* Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Debug.h; path = Sources/Classes/Debug.h; sourceTree = "<group>"; };
 		3A38D3C40E50E45A00C1E468 /* Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Debug.m; path = Sources/Classes/Debug.m; sourceTree = "<group>"; };
@@ -364,8 +362,6 @@
 		29B97314FDCFA39411CA2CEA /* MPlayer OSX */ = {
 			isa = PBXGroup;
 			children = (
-				3A0A3E510F670C89008C8507 /* External_Binaries */,
-				3A0A3E4C0F670C18008C8507 /* External_Binaries */,
 				377E0372085E481700D64A26 /* Controllers */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
@@ -388,6 +384,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3A0A3E510F670C89008C8507 /* External_Binaries */,
 				3A5879DF0EED4507003408E8 /* dsa_pub.pem */,
 				378749150891B7A60068D97D /* fonts */,
 				37DCF89608886A2800DBF422 /* ffwd_button_off.png */,
@@ -495,15 +492,6 @@
 				377E037C085E482B00D64A26 /* SettingsController.m */,
 			);
 			name = Controllers;
-			sourceTree = "<group>";
-		};
-		3A0A3E4C0F670C18008C8507 /* External_Binaries */ = {
-			isa = PBXGroup;
-			children = (
-				3A0A3E4D0F670C18008C8507 /* mplayer-mt.app */,
-				3A0A3E4E0F670C18008C8507 /* mplayer.app */,
-			);
-			path = External_Binaries;
 			sourceTree = "<group>";
 		};
 		3A0E8A4C0EBF9F91003A2F66 /* Interface */ = {

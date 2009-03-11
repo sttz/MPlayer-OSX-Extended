@@ -14,12 +14,18 @@
 #import <Cocoa/Cocoa.h>
 #import <asl.h>
 
+#define MP_DIALOG_MEDIA		0
+#define MP_DIALOG_AUDIO		1
+#define MP_DIALOG_VIDEO		2
+#define MP_DIALOG_SUBTITLES 3
+
 @interface AppController : NSObject
 {
     // controller outlets
 	IBOutlet id playerController;
 	IBOutlet id playListController;
 	IBOutlet id preferencesController;
+	
 	// GUI outlets
 	IBOutlet id locationPanel;
 	IBOutlet id locationBox;
@@ -31,6 +37,12 @@
 	IBOutlet id closeMenuItem;
 	IBOutlet id playerWindow;
 	IBOutlet NSMenuItem *customAspectMenuItem;
+	
+	IBOutlet NSView *openFileSettings;
+	IBOutlet id openMultithreading;
+	
+	IBOutlet NSView *openSubtitleSettings;
+	IBOutlet id openSubtitleEncoding;
 	
 	// other outlets
 	IBOutlet id theApp;
@@ -61,7 +73,7 @@
 - (BOOL) isExtension:(NSString *)theExt ofType:(NSString *)theType;
 
 // misc methods
-- (NSString *) openDialogForTypes:(NSArray *)typeList;
+- (NSString *) openDialogForType:(int)type;
 - (void) updateAspectMenu;
 - (BOOL) animateInterface;
 
