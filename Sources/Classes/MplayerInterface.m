@@ -126,42 +126,25 @@
 // release any retained objects
 - (void) dealloc
 {
-	if (myMplayerTask)
-		[myMplayerTask release];
-	if (myPathToPlayer)
-		[myPathToPlayer release];
-	if (myMovieFile)
-		[myMovieFile release];
-	if (mySubtitlesFile)
-		[mySubtitlesFile release];
-	if (myAudioExportFile)
-		[myAudioExportFile release];
-	if (myAudioFile)
-		[myAudioFile release];
-	if (myFontFile)
-		[myFontFile release];
-	if (subEncoding)
-		[subEncoding release];
-	if (addParams)
-		[addParams release];
-	if (myCommandsBuffer)
-		[myCommandsBuffer release];
-	if (info)
-		[info release];
-	if (audioLanguages)
-		[audioLanguages release];
-	if (subtitleLanguages)
-		[subtitleLanguages release];
-	if (videoCodecs)
-		[videoCodecs release];
-	if (audioCodecs)
-		[audioCodecs release];
-	if (equalizerValues)
-		[equalizerValues release];
-	if (lastUnparsedLine)
-		[lastUnparsedLine release];
-	if (buffer_name)
-		[buffer_name release];
+	[myMplayerTask release];
+	[myPathToPlayer release];
+	[myMovieFile release];
+	[mySubtitlesFile release];
+	[myAudioExportFile release];
+	[myAudioFile release];
+	[myFontFile release];
+	[subEncoding release];
+	[addParams release];
+	[myCommandsBuffer release];
+	[info release];
+	[audioLanguages release];
+	[subtitleLanguages release];
+	[videoCodecs release];
+	[audioCodecs release];
+	[equalizerValues release];
+	[lastUnparsedLine release];
+	[buffer_name release];
+	[newlineCharacterSet release];
 	
 	[super dealloc];
 }
