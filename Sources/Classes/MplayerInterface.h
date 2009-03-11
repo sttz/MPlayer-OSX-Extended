@@ -92,6 +92,7 @@
 	NSString *subtitleLanguages;
 	BOOL osdSilenced;
 	BOOL correctPTS;
+	int numberOfThreads;
 	
 	unsigned int cacheSize;
 	

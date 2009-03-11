@@ -9,6 +9,7 @@
 
 #import "MplayerInterface.h"
 #import <RegexKit/RegexKit.h> 
+#import <sys/sysctl.h>
 
 // directly parsed mplayer output strings
 // strings that are used to get certain data from output are not included
@@ -183,6 +184,11 @@
 	NSMutableArray *audioFilters = [NSMutableArray array];
 	NSMutableArray *audioCodecsArr = [NSMutableArray array];
 	
+	// Detect number of cores/cpus
+	size_t len = sizeof(numberOfThreads);
+	if (sysctlbyname("hw.ncpu",&numberOfThreads,&len,NULL,0))
+		numberOfThreads = 1;
+	
 	// *** FILES
 	
 	// add movie file
@@ -244,7 +250,11 @@
 		[params addObject:@"-cache"];
 		[params addObject:[NSString stringWithFormat:@"%d",cacheSize]];
 	}
-	
+	// number of threads
+	if (numberOfThreads > 0) {
+		[params addObject:@"-lavdopts"];
+		[params addObject:[NSString stringWithFormat:@"threads=%d",numberOfThreads]];
+	}
 	
 	
 	// *** DISPLAY
