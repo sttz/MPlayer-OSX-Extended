@@ -8,6 +8,7 @@
  */
 
 #import "AppController.h"
+#import <Sparkle/Sparkle.h>
 
 // other controllers
 #import "PlayerController.h"
@@ -527,6 +528,15 @@
 	if (![[NSUserDefaults standardUserDefaults] objectForKey:@"Version"]) {
 		[preferencesController reloadValues];
 		[preferencesController applyPrefs:nil];
+	}
+	
+	// set sparkle feed url for prereleases
+	if ([[self preferences] boolForKey:@"CheckForPrereleases"]) {
+		NSString *feed = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"SUPrereleaseFeedURL"];
+		if (feed)
+			[[SUUpdater sharedUpdater] setFeedURL:[NSURL URLWithString:feed]];
+		else
+			[Debug log:ASL_LEVEL_ERR withMessage:@"No feed URL found for prereleases."];
 	}
 }
 

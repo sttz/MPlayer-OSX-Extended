@@ -708,13 +708,16 @@
 		[myPlayer setFastLibavcodec: [preferences boolForKey:@"FastLibavcodecDecoding"]];
 	
 	// deinterlace
-	if ([preferences objectForKey:@"Deinterlace"])
-		[myPlayer setDeinterlace: [preferences integerForKey:@"Deinterlace"]];
+	if ([preferences objectForKey:@"Deinterlace_r9"])
+		[myPlayer setDeinterlace: [preferences integerForKey:@"Deinterlace_r9"]];
 	
 	// postprocessing
 	if ([preferences objectForKey:@"Postprocessing"])
 		[myPlayer setPostprocessing: [preferences integerForKey:@"Postprocessing"]];
 	
+	// skip loopfilter
+	if ([preferences objectForKey:@"SkipLoopfilter"])
+		[myPlayer setSkipLoopfilter: [preferences integerForKey:@"SkipLoopfilter"]];
 	
 	
 	// *** Audio

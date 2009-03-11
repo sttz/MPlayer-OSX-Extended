@@ -192,6 +192,8 @@
 	<string>NSApplication</string>
 	<key>SUFeedURL</key>
 	<string>http://mplayerosx.sttz.ch/updates.xml</string>
+	<key>SUPrereleaseFeedURL</key>
+	<string>http://mplayerosx.sttz.ch/prereleases.xml</string>
 	<key>SUPublicDSAKeyFile</key>
 	<string>dsa_pub.pem</string>
 </dict>

@@ -36,9 +36,9 @@
 	// Misc
 	IBOutlet id cacheSizeSlider;
 	IBOutlet id cacheSizeBox;
-	IBOutlet id useFFmpegMT;
 	// Updates
 	IBOutlet id checkForUpdates;
+	IBOutlet id checkForPrereleases;
 	
 	// ** Display
 	// Display
@@ -86,6 +86,8 @@
 	// Decoding
 	IBOutlet id framedrop;
 	IBOutlet id fastLibavcodec;
+	IBOutlet id useFFmpegMT;
+	IBOutlet id skipLoopfilter;
 	// Filters
 	IBOutlet id deinterlace;
 	IBOutlet id postprocessing;

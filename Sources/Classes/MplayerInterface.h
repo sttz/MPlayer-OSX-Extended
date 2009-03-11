@@ -130,6 +130,7 @@
 	
 	unsigned int framedrop;
 	BOOL fastLibavcodec;
+	unsigned int skipLoopfilter;
 	
 	BOOL deinterlace;
 	unsigned int postprocessing;
@@ -257,6 +258,7 @@
 - (void) setFastLibavcodec:(BOOL)aBool;
 - (void) setDeinterlace:(unsigned int)mode;
 - (void) setPostprocessing:(unsigned int)mode;
+- (void) setSkipLoopfilter:(unsigned int)mode;
 
 // audio
 - (void) setAudioEnabled:(BOOL)aBool;

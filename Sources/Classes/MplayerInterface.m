@@ -423,17 +423,20 @@
 	switch (deinterlace) {
 		case 0: // disabled
 			break;
-		case 1: // ffmpeg
+		case 1: // yadif
+			[videoFilters addObject:@"yadif=1"];
+			break;
+		case 2: // kernel
+			[videoFilters addObject:@"kerndeint"];
+			break;
+		case 3: // ffmpeg
 			[videoFilters addObject:@"pp=fd"];
 			break;
-		case 2: // blend
+		case 4: // film
+			[videoFilters addObject:@"filmdint"];
+			break;
+		case 5: // blend
 			[videoFilters addObject:@"pp=lb"];
-			break;
-		case 3: // blend sharp
-			[videoFilters addObject:@"pp=l5"];
-			break;
-		case 4: // median
-			[videoFilters addObject:@"pp=md"];
 			break;
 	}
 	// postprocessing
@@ -450,7 +453,24 @@
 			[videoFilters addObject:@"pp=ac"];
 			break;
 	}
-	
+	// skip loopfilters
+	if (skipLoopfilter > 0) {
+		[params addObject:@"-lavdopts"];
+		switch (skipLoopfilter) {
+			case 1: // NoRef
+				[params addObject:@"skiploopfilter=noref"];
+				break;
+			case 2: // DiDir
+				[params addObject:@"skiploopfilter=bidir"];
+				break;
+			case 3: // NoKey
+				[params addObject:@"skiploopfilter=nokey"];
+				break;
+			case 4: // All
+				[params addObject:@"skiploopfilter=all"];
+				break;
+		}
+	}
 	
 	
 	// *** AUDIO
@@ -871,6 +891,14 @@
 {
 	if (fastLibavcodec != aBool) {
 		fastLibavcodec = aBool;
+		settingsChanged = YES;
+	}
+}
+/************************************************************************************/
+- (void) setSkipLoopfilter:(unsigned int)mode
+{
+	if (skipLoopfilter != mode) {
+		skipLoopfilter = mode;
 		settingsChanged = YES;
 	}
 }

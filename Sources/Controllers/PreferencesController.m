@@ -195,12 +195,12 @@
 		[cacheSizeBox setStringValue:@""];
 	}
 	
-	// FFmpeg-MT
-	if ([thePrefs objectForKey:@"UseFFmpegMT"])
-		[useFFmpegMT setState:[thePrefs boolForKey:@"UseFFmpegMT"]];
-	
 	// check for updates
 	[checkForUpdates setState:[[SUUpdater sharedUpdater] automaticallyChecksForUpdates]];
+	
+	// check for prereleases
+	if ([thePrefs objectForKey:@"CheckForPrereleases"])
+		[checkForPrereleases setState:[thePrefs boolForKey:@"CheckForPrereleases"]];
 	
 	
 	// *** Display
@@ -405,8 +405,8 @@
 		[fastLibavcodec setState:[thePrefs boolForKey:@"FastLibavcodecDecoding"]];
 	
 	// deinterlace
-	if ([thePrefs objectForKey:@"Deinterlace"])
-		[deinterlace setSelectedSegment: [thePrefs integerForKey:@"Deinterlace"]];
+	if ([thePrefs objectForKey:@"Deinterlace_r9"])
+		[deinterlace setSelectedSegment: [thePrefs integerForKey:@"Deinterlace_r9"]];
 	else
 		[deinterlace setSelectedSegment: 0];
 	
@@ -416,6 +416,15 @@
 	else
 		[postprocessing setSelectedSegment: 0];
 	
+	// FFmpeg-MT
+	if ([thePrefs objectForKey:@"UseFFmpegMT"])
+		[useFFmpegMT setState:[thePrefs boolForKey:@"UseFFmpegMT"]];
+	
+	// skip loopfilter
+	if ([thePrefs objectForKey:@"SkipLoopfilter"])
+		[skipLoopfilter setSelectedSegment: [thePrefs integerForKey:@"SkipLoopfilter"]];
+	else
+		[skipLoopfilter setSelectedSegment: 0];
 	
 	
 	// *** Audio
@@ -600,11 +609,12 @@
 	[thePrefs setObject:[NSNumber numberWithFloat:[cacheSizeSlider floatValue]]
 			forKey:@"CacheSize"];
 	
-	// playlist small text
-	[thePrefs setBool:[useFFmpegMT state] forKey:@"UseFFmpegMT"];
-	
 	// check for updates
 	[[SUUpdater sharedUpdater] setAutomaticallyChecksForUpdates:[checkForUpdates state]];
+	
+	// check for prereleases
+	[thePrefs setBool:[checkForPrereleases state] forKey:@"CheckForPrereleases"];
+	
 	
 	
 	// *** Display
@@ -753,11 +763,18 @@
 	
 	// deinterlace
 	[thePrefs setObject:[NSNumber numberWithInt:[deinterlace indexOfSelectedItem]]
-			forKey:@"Deinterlace"];
+			forKey:@"Deinterlace_r9"];
 	
 	// postprocessing
 	[thePrefs setObject:[NSNumber numberWithInt:[postprocessing indexOfSelectedItem]]
 			forKey:@"Postprocessing"];
+	
+	// skip loopfilter
+	[thePrefs setObject:[NSNumber numberWithInt:[skipLoopfilter indexOfSelectedItem]]
+			forKey:@"SkipLoopfilter"];
+	
+	// use ffmpeg-mt
+	[thePrefs setBool:[useFFmpegMT state] forKey:@"UseFFmpegMT"];
 	
 	
 	
@@ -886,6 +903,10 @@
 /************************************************************************************/
 - (IBAction)enableControls:(id)sender
 {
+	
+	// ** Playback
+	
+	[checkForPrereleases setEnabled:([checkForUpdates state] == NSOnState)];
 	
 	// ** Display
 	
