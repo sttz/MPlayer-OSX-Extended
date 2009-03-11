@@ -490,17 +490,17 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 		for (i=0;i<[propertyList count];i++) {
 			// get extension of the path and check if it is not subtitles extension
 			if ([appController isExtension:[[propertyList objectAtIndex:i] pathExtension]
-					ofType:@"Subtitles file"]) {
+					ofType:MP_DIALOG_SUBTITLES]) {
 				subsCount++;
 				continue;
 			}
 			if ([appController isExtension:[[propertyList objectAtIndex:i] pathExtension]
-					ofType:@"Movie file"]) {
+					ofType:MP_DIALOG_VIDEO]) {
 				movieCount++;
 				continue;
 			}
 			if ([appController isExtension:[[propertyList objectAtIndex:i] pathExtension]
-					ofType:@"Audio file"]) {
+					ofType:MP_DIALOG_AUDIO]) {
 				audioCount++;
 				continue;
 			}
@@ -588,11 +588,11 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 		// divide dragged files to arrays by its type
 		while (path = [fileEnum nextObject])
 		{
-			if ([appController isExtension:[path pathExtension] ofType:@"Subtitles file"]) {
+			if ([appController isExtension:[path pathExtension] ofType:MP_DIALOG_SUBTITLES]) {
 				[subtitlesList addObject:path];
 				continue;
 			}
-			if ([appController isExtension:[path pathExtension] ofType:@"Audio file"]) {
+			if ([appController isExtension:[path pathExtension] ofType:MP_DIALOG_AUDIO]) {
 				[audioList addObject:path];
 				continue;
 			}

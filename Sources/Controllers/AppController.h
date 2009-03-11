@@ -69,8 +69,9 @@
 - (IBAction) closeWindow:(id)sender;
 
 // bundle access
+- (NSArray *) getExtensionsForType:(int)type;
 - (NSArray *) typeExtensionsForName:(NSString *)typeName;
-- (BOOL) isExtension:(NSString *)theExt ofType:(NSString *)theType;
+- (BOOL) isExtension:(NSString *)theExt ofType:(int)type;
 
 // misc methods
 - (NSString *) openDialogForType:(int)type;

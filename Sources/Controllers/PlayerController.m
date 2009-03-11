@@ -268,11 +268,11 @@
 				propertyList = [pboard propertyListForType:availableType];
 				for (i=0;i<[propertyList count];i++)
 				{
-					if ([appController isExtension:[[propertyList objectAtIndex:i] pathExtension] ofType:@"Movie file"])
+					if ([appController isExtension:[[propertyList objectAtIndex:i] pathExtension] ofType:MP_DIALOG_MEDIA])
 						return NSDragOperationCopy; //its a movie file, good
-			
-					if ([appController isExtension:[[propertyList objectAtIndex:i] pathExtension] ofType:@"Audio file"])
-						return NSDragOperationCopy; //its an audio file, good
+					
+					if ([self isPlaying] && [appController isExtension:[[propertyList objectAtIndex:i] pathExtension] ofType:MP_DIALOG_SUBTITLES])
+						return NSDragOperationCopy; // subtitles are good when playing
 				}
 				return NSDragOperationNone; //no know object found, cancel drop.
 			}
@@ -308,9 +308,14 @@
 			filename = [fileArray objectAtIndex:0];
 			if (filename)
 			{
-				// create an item from it and play it
-				myItem = [NSMutableDictionary dictionaryWithObject:filename forKey:@"MovieFile"];
-				[self playItem:myItem];
+				if ([appController isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]) {
+					// create an item from it and play it
+					myItem = [NSMutableDictionary dictionaryWithObject:filename forKey:@"MovieFile"];
+					[self playItem:myItem];
+				} else {
+					// load subtitles file
+					[myPlayer setSubtitlesFile:filename];
+				}
 			}
 		}
     }
@@ -2136,10 +2141,8 @@
 		if ([[notification userInfo] objectForKey:@"AudioStreamId"])
 			[self newAudioStreamId:[[[notification userInfo] objectForKey:@"AudioStreamId"] intValue]];
 		
-		if ([[notification userInfo] objectForKey:@"SubDemuxStreamId"]) {
-			
+		if ([[notification userInfo] objectForKey:@"SubDemuxStreamId"])
 			[self newSubtitleStreamId:[[[notification userInfo] objectForKey:@"SubDemuxStreamId"] intValue] forType:SubtitleTypeDemux];
-		}
 		
 		if ([[notification userInfo] objectForKey:@"SubFileStreamId"])
 			[self newSubtitleStreamId:[[[notification userInfo] objectForKey:@"SubFileStreamId"] intValue] forType:SubtitleTypeFile];
@@ -2195,7 +2198,9 @@
 			[myPlayer sendCommand:@"get_property volume"];
 			[self selectChapterForTime:(int)[myPlayer seconds]];
 		}
-			
+		// check for stream update
+		if ([[notification userInfo] objectForKey:@"StreamsHaveChanged"])
+			[self fillStreamMenus];
 		break;
 	case kPaused :
 		break;

@@ -279,11 +279,26 @@
 	return nil;
 }
 /************************************************************************************/
+- (NSArray *) getExtensionsForType:(int)type {
+	
+	NSMutableArray *typeList = [NSMutableArray arrayWithCapacity:10];
+	
+	// Load file types
+	if (type == MP_DIALOG_MEDIA || type == MP_DIALOG_VIDEO)
+		[typeList addObjectsFromArray:[self typeExtensionsForName:@"Movie file"]];
+	if (type == MP_DIALOG_MEDIA || type == MP_DIALOG_AUDIO)
+		[typeList addObjectsFromArray:[self typeExtensionsForName:@"Audio file"]];
+	if (type == MP_DIALOG_SUBTITLES)
+		[typeList addObjectsFromArray:[self typeExtensionsForName:@"Subtitles file"]];
+	
+	return typeList;
+}
+/************************************************************************************/
 // returns YES if the extension string is member of given type from main bundle
-- (BOOL) isExtension:(NSString *)theExt ofType:(NSString *)theType
+- (BOOL) isExtension:(NSString *)theExt ofType:(int)type
 {
 	int	i;
-	NSArray *extList = [self typeExtensionsForName:theType];
+	NSArray *extList = [self getExtensionsForType:type];
 	if (extList == nil)
 		return NO;
 	for (i = 0; i<[extList count]; i++) {
@@ -299,18 +314,10 @@
 // presents open dialog for certain types
 - (NSString *) openDialogForType:(int)type
 {
-    NSMutableArray *typeList = [NSMutableArray arrayWithCapacity:10];
+    NSArray *typeList = [self getExtensionsForType:type];
 	NSOpenPanel *thePanel = [NSOpenPanel openPanel];
 	NSString *theFile = nil;
 	NSString *defDir;
-	
-	// Load file types
-	if (type == MP_DIALOG_MEDIA || type == MP_DIALOG_VIDEO)
-		[typeList addObjectsFromArray:[self typeExtensionsForName:@"Video file"]];
-	if (type == MP_DIALOG_MEDIA || type == MP_DIALOG_AUDIO)
-		[typeList addObjectsFromArray:[self typeExtensionsForName:@"Audio file"]];
-	if (type == MP_DIALOG_SUBTITLES)
-		[typeList addObjectsFromArray:[self typeExtensionsForName:@"Subtitles file"]];
 	
 	if (!(defDir = [[self preferences] objectForKey:@"DefaultDirectory"]))
 		defDir = NSHomeDirectory();

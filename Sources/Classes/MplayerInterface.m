@@ -699,8 +699,12 @@
 			[mySubtitlesFile autorelease];
 			mySubtitlesFile = [aFile retain];
 			settingsChanged = YES;
-			if (isRunning)
+			if (isRunning) {
 				[self performCommand: [NSString stringWithFormat:@"sub_load '%@'", aFile]];
+				if (info)
+					[self performCommand: [NSString stringWithFormat:
+							@"sub_file %u", [info subtitleCountForType:SubtitleTypeFile]]];
+			}
 		}
 	}
 	else {
@@ -1653,6 +1657,9 @@
 					  initWithData:[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"] 
 					  encoding:NSUTF8StringEncoding];
 	
+	if (!data)
+		return;
+	
 	// Split data by newline characters
 	NSArray *myLines = [self splitString:data byCharactersInSet:newlineCharacterSet];
 	NSString *line;
@@ -1660,8 +1667,6 @@
 	int lineIndex = -1;
 	
 	while (1) {
-		char *tempPtr;
-		
 		// Read next line of data
 		lineIndex++;
 		// check if end reached (save last unfinished line)
@@ -1711,6 +1716,12 @@
 	NSString *data = [[NSString alloc] 
 						initWithData:[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"] 
 						encoding:NSUTF8StringEncoding];
+	
+	if (!data) {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Couldn\'t read MPlayer data. Lost bytes: %u",
+			[[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"] length]];
+		return;
+	}
 	
 	const char *stringPtr;
 	NSString *line;
@@ -1993,72 +2004,6 @@
 			continue;
 		}
 		
-		// *** if player is playing then do not bother with parse anything else
-		if (myOutputReadMode > 0) {
-			// print unused line
-			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
-			continue;
-		}
-		
-		
-		// mplayer starts to open a file
-		if (strncmp(stringPtr, MI_OPENING_STRING, 8) == 0) {
-			myState = kOpening;
-			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
-			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
-			continue; 							// continue on next line	
-		}
-		
-		// filling cache
-		if (strncmp(stringPtr, "Cache fill:", 11) == 0) {
-			float cacheUsage;
-			myState = kBuffering;
-			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
-			if (sscanf(stringPtr, "Cache fill: %f%%", &cacheUsage) == 1) {
-				[userInfo setObject:[NSNumber numberWithFloat:cacheUsage]
-						forKey:@"CacheUsage"];
-				myCacheUsage = cacheUsage;
-			}
-			// if the string is longer then supposed divide it and continue
-			/*[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
-			if (strlen(stringPtr) > 32) {
-				*(stringPtr + 31) = '\0';
-				stringPtr = (stringPtr + 32);
-			}
-			else	*/							// if string is not longer than supposed
-				continue; 						// continue on next line
-		}
-		// get format of audio
-		if (strstr(stringPtr, MI_AUDIO_FILE_STRING) != NULL) {
-			[info setFileFormat:@"Audio"];
-			continue; 							// continue on next line	
-		}
-		// get format of movie
-		tempPtr = strstr(stringPtr, " file format detected.");
-		if (tempPtr != NULL) {
-			*(tempPtr) = '\0';
-			[info setFileFormat:[NSString stringWithCString:stringPtr]];
-			continue; 							// continue on next line	
-		}
-		
-		// rebuilding index
-		if ((tempPtr = strstr(stringPtr, "Generating Index:")) != NULL) {
-			int cacheUsage;
-			myState = kIndexing;
-			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
-			if (sscanf(tempPtr, "Generating Index: %d", &cacheUsage) == 1) {
-				[userInfo setObject:[NSNumber numberWithInt:cacheUsage]
-						forKey:@"CacheUsage"];
-				myCacheUsage = cacheUsage;
-			}
-			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
-			continue; 							// continue on next line	
-		}
-		
-		
-		
-		
-		
 		// stream info
 		if ([line isMatchedByRegex:MI_STREAM_REGEX]) {
 			
@@ -2214,24 +2159,28 @@
 			// video streams
 			if ([idName isEqualToString:@"VIDEO_ID"]) {
 				[info newVideoStream:[idValue intValue]];
+				[userInfo setObject:[NSNumber numberWithBool:YES] forKey:@"StreamsHaveChanged"];
 				continue;
 			}
 			
 			// audio streams
 			if ([idName isEqualToString:@"AUDIO_ID"]) {
 				[info newAudioStream:[idValue intValue]];
+				[userInfo setObject:[NSNumber numberWithBool:YES] forKey:@"StreamsHaveChanged"];
 				continue;
 			}
 			
 			// subtitle demux streams
 			if ([idName isEqualToString:@"SUBTITLE_ID"]) {
 				[info newSubtitleStream:[idValue intValue] forType:SubtitleTypeDemux];
+				[userInfo setObject:[NSNumber numberWithBool:YES] forKey:@"StreamsHaveChanged"];
 				continue;
 			}
 			
 			// subtitle file streams
 			if ([idName isEqualToString:@"FILE_SUB_ID"]) {
 				[info newSubtitleStream:[idValue intValue] forType:SubtitleTypeFile];
+				[userInfo setObject:[NSNumber numberWithBool:YES] forKey:@"StreamsHaveChanged"];
 				subtitleFileId = [idValue intValue];
 				continue;
 			}
@@ -2246,6 +2195,72 @@
 			[info setInfo:idValue forKey:idName];
 			continue;
 			
+		}
+		
+		
+		
+		
+		
+		// *** if player is playing then do not bother with parse anything else
+		if (myOutputReadMode > 0) {
+			// print unused line
+			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
+			continue;
+		}
+		
+		
+		// mplayer starts to open a file
+		if (strncmp(stringPtr, MI_OPENING_STRING, 8) == 0) {
+			myState = kOpening;
+			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
+			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
+			continue; 							// continue on next line	
+		}
+		
+		// filling cache
+		if (strncmp(stringPtr, "Cache fill:", 11) == 0) {
+			float cacheUsage;
+			myState = kBuffering;
+			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
+			if (sscanf(stringPtr, "Cache fill: %f%%", &cacheUsage) == 1) {
+				[userInfo setObject:[NSNumber numberWithFloat:cacheUsage]
+						forKey:@"CacheUsage"];
+				myCacheUsage = cacheUsage;
+			}
+			// if the string is longer then supposed divide it and continue
+			/*[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
+			if (strlen(stringPtr) > 32) {
+				*(stringPtr + 31) = '\0';
+				stringPtr = (stringPtr + 32);
+			}
+			else	*/							// if string is not longer than supposed
+				continue; 						// continue on next line
+		}
+		// get format of audio
+		if (strstr(stringPtr, MI_AUDIO_FILE_STRING) != NULL) {
+			[info setFileFormat:@"Audio"];
+			continue; 							// continue on next line	
+		}
+		// get format of movie
+		tempPtr = strstr(stringPtr, " file format detected.");
+		if (tempPtr != NULL) {
+			*(tempPtr) = '\0';
+			[info setFileFormat:[NSString stringWithCString:stringPtr]];
+			continue; 							// continue on next line	
+		}
+		
+		// rebuilding index
+		if ((tempPtr = strstr(stringPtr, "Generating Index:")) != NULL) {
+			int cacheUsage;
+			myState = kIndexing;
+			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
+			if (sscanf(tempPtr, "Generating Index: %d", &cacheUsage) == 1) {
+				[userInfo setObject:[NSNumber numberWithInt:cacheUsage]
+						forKey:@"CacheUsage"];
+				myCacheUsage = cacheUsage;
+			}
+			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
+			continue; 							// continue on next line	
 		}
 		
 		
