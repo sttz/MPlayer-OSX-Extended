@@ -1492,6 +1492,7 @@
 	// create standard input and output for application
 	[myMplayerTask setStandardInput: [NSPipe pipe]];
 	[myMplayerTask setStandardOutput: [NSPipe pipe]];
+	[myMplayerTask setStandardError: [NSPipe pipe]];
 	
 	// add observer for termination of mplayer
 	[[NSNotificationCenter defaultCenter] addObserver: self
@@ -1503,6 +1504,10 @@
 			selector:@selector(readOutputC:)
 			name:NSFileHandleReadCompletionNotification
 			object:[[myMplayerTask standardOutput] fileHandleForReading]];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+			selector:@selector(readError:)
+			name:NSFileHandleReadCompletionNotification
+			object:[[myMplayerTask standardError] fileHandleForReading]];
 	
 	// set working directory for screenshots
 	if (screenshotPath)
@@ -1535,6 +1540,8 @@
 	
 	// activate notification for available data at output
 	[[[myMplayerTask standardOutput] fileHandleForReading]
+			readInBackgroundAndNotify];
+	[[[myMplayerTask standardError] fileHandleForReading]
 			readInBackgroundAndNotify];
 	
 	// reset output read mode
@@ -1637,6 +1644,21 @@
 					object:self];
 		}
 	}
+}
+/************************************************************************************/
+- (void)readError:(NSNotification *)notification
+{
+	// register for another read
+	[[[myMplayerTask standardError] fileHandleForReading]
+			readInBackgroundAndNotify];
+	
+	NSString *data = [[NSString alloc] 
+					  initWithData:[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"] 
+					  encoding:NSUTF8StringEncoding];
+	
+	[Debug log:ASL_LEVEL_INFO withMessage:data];
+	
+	[data release];
 }
 /************************************************************************************/
 - (void)readOutputC:(NSNotification *)notification

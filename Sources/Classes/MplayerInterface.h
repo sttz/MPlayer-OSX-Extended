@@ -318,6 +318,7 @@
 
 // notification handlers
 - (void) mplayerTerminated;
+- (void)readError:(NSNotification *)notification;
 - (void) readOutputC:(NSNotification *)notification;
 
 // helper
