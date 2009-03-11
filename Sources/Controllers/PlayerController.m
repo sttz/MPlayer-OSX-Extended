@@ -330,7 +330,7 @@
 {
 	if (myPlayingItem) {
 		// Disable FFmpegt-MT
-		[myPlayingItem setObject:[NSNumber numberWithBool:YES] forKey:@"DisableFFmpegMT"];
+		[myPlayingItem setObject:[NSNumber numberWithBool:NO] forKey:@"UseFFmpegMT"];
 		// Restart playback
 		[self playItem:myPlayingItem];
 	}
@@ -399,8 +399,11 @@
 	[self applySettings];
 	
 	// chose binary to use
-	if ([[appController preferences] boolForKey:@"UseFFmpegMT"]
-			&& ![[myPlayingItem objectForKey:@"DisableFFmpegMT"] boolValue])
+	if ((![myPlayingItem objectForKey:@"UseFFmpegMT"]
+			&& [[appController preferences] boolForKey:@"UseFFmpegMT"])
+		||
+		([myPlayingItem objectForKey:@"UseFFmpegMT"]
+			&& [[myPlayingItem objectForKey:@"UseFFmpegMT"] boolValue]))
 		[myPlayer setPlayerPath:mplayerMTPath];
 	else
 		[myPlayer setPlayerPath:mplayerPath];

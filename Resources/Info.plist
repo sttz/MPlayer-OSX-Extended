@@ -183,9 +183,9 @@
 	<key>CFBundleSignature</key>
 	<string>MPHQ</string>
 	<key>CFBundleVersion</key>
-	<string>810</string>
+	<string>901</string>
 	<key>CFBundleShortVersionString</key>
-	<string>rev8</string>
+	<string>rev9-test1</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>

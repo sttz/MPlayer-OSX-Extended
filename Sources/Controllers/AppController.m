@@ -72,7 +72,7 @@
 		// if any file, create new item and play it
 		NSMutableDictionary *theItem = [NSMutableDictionary
 				dictionaryWithObject:theFile forKey:@"MovieFile"];
-		[theItem setObject:[NSNumber numberWithInt:![openMultithreading state]] forKey:@"DisableFFmpegMT"];
+		[theItem setObject:[NSNumber numberWithInt:[openMultithreading state]] forKey:@"UseFFmpegMT"];
 		[playerController playItem:theItem];
 	}
 }
