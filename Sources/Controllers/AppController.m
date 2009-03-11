@@ -432,10 +432,17 @@
 {
 	if (filename) {
 		// create an item from it and play it
-		NSMutableDictionary *myItem = [NSMutableDictionary
-				dictionaryWithObject:filename forKey:@"MovieFile"];
-		
-		[playerController playItem:myItem];
+		if ([self isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]) {
+			NSMutableDictionary *myItem = [NSMutableDictionary
+										   dictionaryWithObject:filename forKey:@"MovieFile"];
+			[playerController playItem:myItem];
+		// load subtitles while playing
+		} else if ([playerController isPlaying]
+				   && [self isExtension:[filename pathExtension] ofType:MP_DIALOG_SUBTITLES]) {
+			NSMutableDictionary *myItem = [NSMutableDictionary
+										   dictionaryWithObject:filename forKey:@"SubtitlesFile"];
+			[playerController playItem:myItem];
+		}
 		return YES;
 	}
 	return NO;
@@ -459,9 +466,12 @@
 	
 	// add files to playlist
 	while (filename = [e nextObject]) {
-		NSMutableDictionary *myItem = [NSMutableDictionary
-			dictionaryWithObject:filename forKey:@"MovieFile"];
-		[playListController appendItem:myItem];
+		// Only add movie files
+		if ([self isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]) {
+			NSMutableDictionary *myItem = [NSMutableDictionary
+										   dictionaryWithObject:filename forKey:@"MovieFile"];
+			[playListController appendItem:myItem];
+		}
 	}
 	
 	[sender replyToOpenOrPrint:NSApplicationDelegateReplySuccess];
