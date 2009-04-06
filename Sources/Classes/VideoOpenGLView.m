@@ -266,6 +266,8 @@
 		
 			glFlush();
 		}
+		
+		CVOpenGLTextureRelease(texture);
 	}
 	else
 	{
