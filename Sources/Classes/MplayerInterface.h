@@ -60,6 +60,7 @@
 #define kOpening					3
 #define kBuffering					4
 #define kIndexing					5
+#define kInitializing				6	// task just started, no status yet
 
 // seeking modes
 #define	MIRelativeSeekingMode		0	// relative seeking in seconds 

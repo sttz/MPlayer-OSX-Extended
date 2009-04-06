@@ -1584,6 +1584,7 @@
 	[myMplayerTask launch];
 	isRunning = YES;
 	isPlaying = YES;
+	myState = kInitializing;
 	
 	[Debug log:ASL_LEVEL_INFO withMessage:@"Path to fontconfig: %@", [[myMplayerTask environment] objectForKey:@"FONTCONFIG_PATH"]];
 }

@@ -451,7 +451,6 @@
 /************************************************************************************/
 - (void) playFromPlaylist:(NSMutableDictionary *)anItem
 {
-	
 	playingFromPlaylist = YES;
 	[self playItem:anItem];
 }
