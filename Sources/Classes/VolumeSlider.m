@@ -71,7 +71,7 @@
 	//[cell setTickMarkPosition:[oldCell tickMarkPosition]];
 
 	[self setCell:cell];
-	[self display];
+	[self setNeedsDisplay:YES];
 	
 	[cell release];
 }

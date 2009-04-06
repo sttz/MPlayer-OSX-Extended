@@ -359,7 +359,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	}
 
 	[self updateView];
-	[playListTable display];
+	[playListTable setNeedsDisplay:YES];
 }
 /************************************************************************************/
 - (void) finishedPlayingItem:(NSDictionary *)playingItem

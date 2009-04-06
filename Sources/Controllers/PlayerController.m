@@ -997,8 +997,8 @@
 	[volumeSliderToolbar setDoubleValue:volume];
 	[volumeButton setImage:volumeImage];
 	[volumeButtonToolbar setImage:volumeImage];
-	[volumeButton display];
-	[volumeButtonToolbar display];
+	[volumeButton setNeedsDisplay:YES];
+	[volumeButtonToolbar setNeedsDisplay:YES];
 	
 	[fcVolumeSlider setDoubleValue:volume];
 	

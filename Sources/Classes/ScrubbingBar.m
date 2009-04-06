@@ -23,7 +23,7 @@
 		selector:@selector(redrawAnim) name:NSViewFrameDidChangeNotification object:nil];
 	[self redrawAnim];
 	
-	[self display];
+	[self setNeedsDisplay:YES];
 }
 
 - (void)redrawAnim
@@ -149,7 +149,7 @@
 	if ([[self window] isVisible]) {
 		animFrame += 0.1;
 		if(animFrame>1) animFrame=0;
-		[self display];
+		[self setNeedsDisplay:YES];
 	}
 }
 
@@ -165,7 +165,7 @@
 		[self startMyAnimation];
 	else
 		[self stopMyAnimation];
-	[self display];
+	[self setNeedsDisplay:YES];
 }
 
 - (void)startMyAnimation
@@ -189,35 +189,35 @@
 	}
 }
 
-/*- (void)incrementBy:(double)delta
+- (void)incrementBy:(double)delta
 {
 	[super incrementBy:delta];
-	[self display];
+	[self setNeedsDisplay:YES];
 }
 
 - (void)setDoubleValue:(double)doubleValue
 {
 	[super setDoubleValue:doubleValue];
-	[self display];
+	[self setNeedsDisplay:YES];
 }
 
 - (void)setIndeterminate:(BOOL)flag
 {
 	[super setIndeterminate:flag];
-	[self display];
+	[self setNeedsDisplay:YES];
 }
 
 - (void)setMaxValue:(double)newMaximum
 {
 	[super setMaxValue:newMaximum];
-	[self display];
+	[self setNeedsDisplay:YES];
 }
 
 - (void)setMinValue:(double)newMinimum
 {
 	[super setMinValue:newMinimum];
-	[self display];
-}*/
+	[self setNeedsDisplay:YES];
+}
 
 @end
 
