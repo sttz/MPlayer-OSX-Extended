@@ -573,7 +573,8 @@
 		// -identify and demux=6 for matroska chapters
 		[params addObject:@"-msglevel"];
 		[params addObject:@"identify=4:demux=6"];
-	}
+	} else
+		[params addObject:@"-identify"];
 	
 	// MovieInfo
 	if (mf == nil && (info == nil || ![myMovieFile isEqualToString:[info filename]])) {
@@ -1689,7 +1690,7 @@
 		[[[myMplayerTask standardError] fileHandleForReading]
 				readInBackgroundAndNotify];
 	
-	if (!data)
+	if (!data || [data length] == 0)
 		return;
 	
 	// Split data by newline characters
@@ -1961,10 +1962,9 @@
 			
 			continue; 							// continue on next line
 		}
-
+		
 		// Exiting... test for player termination
 		if ([line isMatchedByRegex:MI_EXIT_REGEX]) {
-			
 			NSString *exitType;
 			[line getCapturesWithRegexAndReferences:MI_EXIT_REGEX, @"${1}", &exitType, nil];
 			
