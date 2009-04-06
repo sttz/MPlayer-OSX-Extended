@@ -660,20 +660,6 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 				[preflightQueue addObject:myItem];
 				
 				insertIndex++;
-				
-				// preflight the item and insert it if ok
-				/*if ([playerController preflightItem:myItem])
-				{
-					// insert item in to playlist
-					[myData insertObject:myItem atIndex:insertIndex];
-					// manage selection
-					if ([tv selectedRow] == -1)
-						[tv selectRow:insertIndex byExtendingSelection:NO];
-					else
-						[tv selectRow:insertIndex byExtendingSelection:YES];
-
-					insertIndex++;
-				}*/
 			}
 			// if progress was created then release it
 			if (progressSession != 0)
@@ -817,7 +803,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 - (void)playItemAtIndex:(int)index
 {
 	if (index >= [self itemCount]) {
-		[Debug log:ASL_LEVEL_ERR withMessage:@"Cannot play item at index %d, only %d item ins Playlist.",index,[self itemCount]];
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Cannot play item at index %d, only %d item in Playlist.",index,[self itemCount]];
 		return;
 	}
 	
@@ -840,25 +826,22 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 - (void) appFinishedLaunching
 {
 	// load playlist from preferences
-	if ((NSArray *)CFPreferencesCopyAppValue((CFStringRef)@"PlayList", kCFPreferencesCurrentApplication))
+	NSArray *savedPlaylist = [[appController preferences] objectForKey:@"PlayList"];
+	
+	if (savedPlaylist)
 	{
 		int i;
-		// if play list exists load playlist from preferences
-		NSArray * tmpArray = [[NSMutableArray alloc] initWithArray:(NSArray *)CFPreferencesCopyAppValue((CFStringRef)@"PlayList", kCFPreferencesCurrentApplication)];
 		myData = [[NSMutableArray alloc] init];
 		
 		//make item mutable
-		for(i=0; i<[tmpArray count]; i++)
+		for(i=0; i<[savedPlaylist count]; i++)
 		{
 			// add to preflight queue
-			[preflightQueue addObject:[(NSDictionary *)[tmpArray objectAtIndex:i] mutableCopy]];
-			//[myData addObject: [(NSDictionary *)[tmpArray objectAtIndex:i] mutableCopy] ];
+			[preflightQueue addObject:[[savedPlaylist objectAtIndex:i] mutableCopy]];
 		}
 		
 		// start preflight
 		[self startPreflight];
-		
-		[tmpArray release];
 	}
 	else
 	{
@@ -876,7 +859,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 }
 /************************************************************************************/
 - (void)appTerminating
-{
+{	
 	// save current playlist window state
 	[[appController preferences] setBool:[playListWindow isVisible] forKey:@"PlaylistOpen"];
 	
@@ -887,9 +870,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	}
 	
 	// save playlist to prefs
-	CFPreferencesSetAppValue((CFStringRef)@"PlayList", (CFPropertyListRef)myData, kCFPreferencesCurrentApplication);
-	CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication);
-	
+	[[appController preferences] setObject:myData forKey:@"PlayList"];
  }
 
 - (void)windowWillClose:(NSNotification *)aNotification

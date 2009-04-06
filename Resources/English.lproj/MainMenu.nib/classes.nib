@@ -546,19 +546,6 @@
 			<string>NSObject</string>
 		</dict>
 		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key></key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>FirstResponder</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
-		</dict>
-		<dict>
 			<key>CLASS</key>
 			<string>PlayerFullscreenWindow</string>
 			<key>LANGUAGE</key>
@@ -572,6 +559,19 @@
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>PlayerWindow</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key></key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
 		</dict>
 		<dict>
 			<key>CLASS</key>

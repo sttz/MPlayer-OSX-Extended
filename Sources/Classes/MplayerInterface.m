@@ -25,6 +25,7 @@
 #define MI_REPLY_REGEX				@"^ANS_(.*)=(.*)$"
 #define MI_STREAM_REGEX				@"^ID_(.*)_(\\d+)_(.*)=(.*)$"
 #define MI_MKVCHP_REGEX				@"^\\[mkv\\] Chapter (\\d+) from (\\d+):(\\d+):(\\d+\\.\\d+) to (\\d+):(\\d+):(\\d+\\.\\d+), (.+)$"
+#define MI_EXIT_REGEX				@"^ID_EXIT=(.*)$"
 
 #define MI_REFRESH_LIMIT			10
 
@@ -1640,6 +1641,7 @@
 	}
 	
 	returnCode = [myMplayerTask terminationStatus];
+	[Debug log:ASL_LEVEL_INFO withMessage:@"MPlayer process exited with code %d",returnCode];
 	
 	//abnormal mplayer task termination
 	if (returnCode != 0)
@@ -1677,13 +1679,14 @@
 /************************************************************************************/
 - (void)readError:(NSNotification *)notification
 {
-	// register for another read
-	[[[myMplayerTask standardError] fileHandleForReading]
-			readInBackgroundAndNotify];
-	
 	NSString *data = [[NSString alloc] 
 					  initWithData:[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"] 
 					  encoding:NSUTF8StringEncoding];
+	
+	// register for another read
+	if ([myMplayerTask isRunning] || [data length] > 0) 
+		[[[myMplayerTask standardError] fileHandleForReading]
+				readInBackgroundAndNotify];
 	
 	if (!data)
 		return;
@@ -1737,19 +1740,23 @@
 				getBytes:(void *)dataPtr];
 	*(dataPtr+dataLength) = '\0';*/
 	
-	// register for another read
-	[[[myMplayerTask standardOutput] fileHandleForReading]
-			readInBackgroundAndNotify];	
-	
 	NSString *data = [[NSString alloc] 
 						initWithData:[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"] 
 						encoding:NSUTF8StringEncoding];
+	
+	// register for another read
+	if ([myMplayerTask isRunning] || [data length] > 0) 
+		[[[myMplayerTask standardOutput] fileHandleForReading]
+			readInBackgroundAndNotify];	
 	
 	if (!data) {
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Couldn\'t read MPlayer data. Lost bytes: %u",
 			[[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"] length]];
 		return;
 	}
+	
+	if ([data length] == 0)
+		return;
 	
 	const char *stringPtr;
 	NSString *line;
@@ -1788,6 +1795,7 @@
 		}
 		// load line
 		line = [myLines objectAtIndex:lineIndex];
+		
 		// prepend unfinished line
 		if (lastUnparsedLine != @"") {
 			line = [lastUnparsedLine stringByAppendingString:line];
@@ -1954,19 +1962,27 @@
 		}
 
 		// Exiting... test for player termination
-		if ((tempPtr = strstr(stringPtr, MI_EXITING_STRING)) != NULL) {
-			// if user quits player
-			if (strncmp(tempPtr, MI_EXITING_QUIT_STRING, 17) == 0)
-				myState = kStopped;
-			// if player reaches end of file
-			if (strncmp(tempPtr, MI_EXITING_EOF_STRING, 24) == 0)
+		if ([line isMatchedByRegex:MI_EXIT_REGEX]) {
+			
+			NSString *exitType;
+			[line getCapturesWithRegexAndReferences:MI_EXIT_REGEX, @"${1}", &exitType, nil];
+			
+			// player reached end of file
+			if ([exitType isEqualToString:@"EOF"])
 				myState = kFinished;
+			// player was stopped (by user or with an error)
+			else
+				myState = kStopped;
+			
 			// remove observer for output
 				// it's here because the NSTask sometimes do not terminate
 				// as it is supposed to do
 			[[NSNotificationCenter defaultCenter] removeObserver:self
 					name: NSFileHandleReadCompletionNotification
 					object:[[myMplayerTask standardOutput] fileHandleForReading]];
+			[[NSNotificationCenter defaultCenter] removeObserver:self
+					name: NSFileHandleReadCompletionNotification
+					object:[[myMplayerTask standardError] fileHandleForReading]];
 			
 			// post notification for finish of parsing
 			NSMutableDictionary *preflightInfo = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -1989,7 +2005,7 @@
 			isPlaying = NO;
 			
 			restartingPlayer = NO;
-			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
+			[Debug log:ASL_LEVEL_INFO withMessage:line];
 			continue;							// continue on next line
 		}
 		
