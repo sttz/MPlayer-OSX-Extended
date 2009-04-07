@@ -224,6 +224,9 @@
 	[mplayerPath release];
 	[mplayerMTPath release];
 	
+	[myPlayingItem release];
+	[movieInfo release];
+	
 	[playImageOn release];
 	[playImageOff release];
 	[pauseImageOn release];
@@ -2106,10 +2109,10 @@
 			[audioWindowMenu setEnabled:NO];
 			[subtitleWindowMenu setEnabled:NO];
 			// release the retained playing item
-			[playingItem autorelease];
+			/*[playingItem autorelease];
 			myPlayingItem = nil;
 			[movieInfo autorelease];
-			movieInfo = nil;
+			movieInfo = nil;*/
 			// update state of playlist
 			[playListController updateView];
 			// Playlist mode
