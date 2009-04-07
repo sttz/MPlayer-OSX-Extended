@@ -391,9 +391,9 @@
 	}
 	
 	if (myPlayingItem)
-		[myPlayingItem release];
+		[myPlayingItem autorelease];
 	if (movieInfo)
-		[movieInfo release];
+		[movieInfo autorelease];
 	
 	// backup item that is playing
 	myPlayingItem = [anItem retain];
