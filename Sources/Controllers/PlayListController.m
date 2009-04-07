@@ -711,9 +711,10 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 			[[preflightQueue objectAtIndex:queueIndex] setObject:info forKey:@"MovieInfo"];
 			
 			int insertIndex;
-			if ([[preflightQueue objectAtIndex:queueIndex] objectForKey:@"InsertIndex"])
+			if ([[preflightQueue objectAtIndex:queueIndex] objectForKey:@"InsertIndex"]) {
 				insertIndex = [[[preflightQueue objectAtIndex:queueIndex] objectForKey:@"InsertIndex"] intValue];
-			else
+				[[preflightQueue objectAtIndex:queueIndex] removeObjectForKey:@"InsertIndex"];
+			} else
 				insertIndex = [myData count];
 			
 			// insert item in to playlist
