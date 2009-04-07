@@ -310,7 +310,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 			totalTime += [[MovieInfo fromDictionary:[myData objectAtIndex:i]] length];
 		}
 	}
-
+	
 	if([self itemCount] == 1)
 		[playListCount setStringValue:[NSString stringWithFormat:@"%d item, %01d:%02d:%02d",[self itemCount],totalTime/3600,(totalTime%3600)/60,totalTime%60]];
 	else
@@ -555,7 +555,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 		{
 			removeIndex = [myData indexOfObjectIdenticalTo:[itemsStore objectAtIndex:i]];
 			// remove object
-			[self removeItemAtIndex:removeIndex];
+			[myData removeObjectAtIndex:removeIndex];
 			// deal with poibility that insertion point might change too
 			if (removeIndex < insertIndex)	// if insertion point was affected by remove
 				insertIndex--;				// then decrement it
