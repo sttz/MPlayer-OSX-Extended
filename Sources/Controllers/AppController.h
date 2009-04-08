@@ -77,6 +77,7 @@
 - (NSString *) openDialogForType:(int)type;
 - (void) updateAspectMenu;
 - (BOOL) animateInterface;
+- (void) setSparkleFeed;
 
 //beta
 //- (NSString *) saveDialogForTypes:(NSArray *)typeList;

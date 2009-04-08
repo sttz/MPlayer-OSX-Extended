@@ -531,13 +531,22 @@
 	}
 	
 	// set sparkle feed url for prereleases
-	if ([[self preferences] boolForKey:@"CheckForPrereleases"]) {
-		NSString *feed = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"SUPrereleaseFeedURL"];
-		if (feed)
-			[[SUUpdater sharedUpdater] setFeedURL:[NSURL URLWithString:feed]];
-		else
-			[Debug log:ASL_LEVEL_ERR withMessage:@"No feed URL found for prereleases."];
-	}
+	[self setSparkleFeed];
+}
+/******************************************************************************/
+- (void) setSparkleFeed
+{
+	NSString *feed;
+	
+	if ([[self preferences] boolForKey:@"CheckForPrereleases"])
+		feed = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"SUPrereleaseFeedURL"];
+	else
+		feed = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"SUFeedURL"];
+	
+	if (feed)
+		[[SUUpdater sharedUpdater] setFeedURL:[NSURL URLWithString:feed]];
+	else
+		[Debug log:ASL_LEVEL_ERR withMessage:@"No feed URL found for automatic updates."];
 }
 
 @end

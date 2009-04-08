@@ -614,6 +614,7 @@
 	
 	// check for prereleases
 	[thePrefs setBool:[checkForPrereleases state] forKey:@"CheckForPrereleases"];
+	[appController setSparkleFeed];
 	
 	
 	
