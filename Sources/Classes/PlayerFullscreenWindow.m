@@ -26,6 +26,8 @@
 #import "PlayerController.h"
 #import "Debug.h"
 
+#define MP_FC_HIDEAFTERSECONDS	3
+
 @implementation PlayerFullscreenWindow
 
 -(id) initWithContentRect: (NSRect) contentRect 
@@ -195,7 +197,7 @@
 	if(!osdTimer || ![osdTimer isValid])
 	{
 		[osdTimer release];
-		osdTimer = [NSTimer	scheduledTimerWithTimeInterval:5
+		osdTimer = [NSTimer	scheduledTimerWithTimeInterval:MP_FC_HIDEAFTERSECONDS
 													target:self
 												  selector:@selector(hideOSD)
 												  userInfo:nil repeats:NO];
@@ -203,7 +205,7 @@
 	}
 	else
 	{
-		[osdTimer setFireDate: [NSDate dateWithTimeIntervalSinceNow: 5]];
+		[osdTimer setFireDate: [NSDate dateWithTimeIntervalSinceNow: MP_FC_HIDEAFTERSECONDS]];
 	}
 }
 
