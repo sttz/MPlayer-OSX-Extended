@@ -48,6 +48,9 @@ static NSMutableDictionary *codes_3;
 	NSEnumerator *theEnum = [lines objectEnumerator];
 	NSString *theLine;
 	
+	// Skip first line (table index)
+	[theEnum nextObject];
+	
 	while (nil != (theLine = [theEnum nextObject]) )
 	{
 		if (![theLine isEqualToString:@""])
@@ -60,10 +63,15 @@ static NSMutableDictionary *codes_3;
 			// Add 639-3 code
 			[codes_3 setObject:[values objectAtIndex:6] forKey:[values objectAtIndex:0]];
 			
+			// Add 639-2/B bibliographic code (differs from 639-3)
+			if (![[values objectAtIndex:1] isEqualToString:@""] 
+					&& ![[values objectAtIndex:0] isEqualToString:[values objectAtIndex:1]])
+				[codes_3 setObject:[values objectAtIndex:6] forKey:[values objectAtIndex:1]];
+			
 			if ([[values objectAtIndex:3] isEqualToString:@""])
 				continue;
 			
-			// Add 639-2 code
+			// Add 639-1 code
 			[codes_2 setObject:[values objectAtIndex:6] forKey:[values objectAtIndex:3]];
 			
 		}
