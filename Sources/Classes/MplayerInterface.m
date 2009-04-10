@@ -327,7 +327,7 @@
 	// add font
 	if (myFontFile) {
 		[params addObject:@"-font"];
-		[params addObject:[NSString stringWithFormat:@"\"%@\"", myFontFile]];
+		[params addObject:myFontFile];
 	}
 	// guess encoding with enca
 	if (guessEncodingLang) {
@@ -1690,8 +1690,10 @@
 		[[[myMplayerTask standardError] fileHandleForReading]
 				readInBackgroundAndNotify];
 	
-	if (!data || [data length] == 0)
+	if (!data || [data length] == 0) {
+		[data release];
 		return;
+	}
 	
 	// Split data by newline characters
 	NSArray *myLines = [self splitString:data byCharactersInSet:newlineCharacterSet];
@@ -1754,11 +1756,14 @@
 	if (!data) {
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Couldn\'t read MPlayer data. Lost bytes: %u",
 			[[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"] length]];
+		[data release];
 		return;
 	}
 	
-	if ([data length] == 0)
+	if ([data length] == 0) {
+		[data release];
 		return;
+	}
 	
 	const char *stringPtr;
 	NSString *line;
@@ -2387,6 +2392,7 @@
 	while([scanner scanUpToCharactersFromSet:set intoString:&chunk]) {
 		
 		[result addObject:chunk];
+		[chunk release];
 		// Scan to the end of character occurences
 		endsWithMatch = [scanner scanCharactersFromSet:set intoString:NULL];
 	}
@@ -2397,7 +2403,7 @@
 		[result addObject: @""];
 	}
 	
-	result = [result copy];
+	result = [result retain];
 	[pool release];
 	result = [result autorelease];
 	return result; 
