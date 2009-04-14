@@ -1509,8 +1509,8 @@
 	NSArray *props = [sender representedObject];
 	
 	if ([[props objectAtIndex:1] intValue] == -1)
-		[myPlayer sendCommands:[NSArray arrayWithObjects:@"set_property sub_demux -1",
-				@"get_property sub_demux",
+		[myPlayer sendCommands:[NSArray arrayWithObjects:@"set_property sub_source -1",
+				@"get_property sub_demux",@"get_property sub_file",
 				nil]];
 	else if ([[props objectAtIndex:0] intValue] == SubtitleTypeDemux)
 		[myPlayer sendCommands:[NSArray arrayWithObjects:
