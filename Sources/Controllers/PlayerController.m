@@ -390,10 +390,14 @@
    		return;
 	}
 	
-	if (myPlayingItem)
+	if (myPlayingItem) {
 		[myPlayingItem autorelease];
-	if (movieInfo)
+		myPlayingItem = nil;
+	}
+	if (movieInfo) {
 		[movieInfo autorelease];
+		movieInfo = nil;
+	}
 	
 	// backup item that is playing
 	myPlayingItem = [anItem retain];

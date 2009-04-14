@@ -114,8 +114,6 @@
 	windowedVO = NO;
 	isFullscreen = NO;
 	
-	lastUnparsedLine = @"";
-	
 	// Create newline character set
 	newlineCharacterSet = (id)[[NSMutableCharacterSet whitespaceAndNewlineCharacterSet] retain];
     [newlineCharacterSet formIntersectionWithCharacterSet:[[NSCharacterSet whitespaceCharacterSet] invertedSet]];
@@ -144,6 +142,7 @@
 	[audioCodecs release];
 	[equalizerValues release];
 	[lastUnparsedLine release];
+	[lastUnparsedErrorLine release];
 	[buffer_name release];
 	[newlineCharacterSet release];
 	
@@ -1511,6 +1510,7 @@
 			pausedOnRestart = NO;
 		[self stop];
 		[myMplayerTask release];
+		myMplayerTask = nil;
 	}
 	
 	// if no path or movie file specified the return
@@ -1686,7 +1686,7 @@
 					  encoding:NSUTF8StringEncoding];
 	
 	// register for another read
-	if ([myMplayerTask isRunning] || [data length] > 0) 
+	if ([myMplayerTask isRunning] || (data && [data length] > 0))
 		[[[myMplayerTask standardError] fileHandleForReading]
 				readInBackgroundAndNotify];
 	
@@ -1709,14 +1709,17 @@
 			[lastUnparsedErrorLine release];
 			if (lineIndex < [myLines count])
 				lastUnparsedErrorLine = [[myLines objectAtIndex:lineIndex] retain];
+			else
+				lastUnparsedErrorLine = nil;
 			break;
 		}
 		// load line
 		line = [myLines objectAtIndex:lineIndex];
 		// prepend unfinished line
-		if (lastUnparsedErrorLine != @"") {
+		if (lastUnparsedErrorLine) {
 			line = [lastUnparsedErrorLine stringByAppendingString:line];
-			lastUnparsedErrorLine = @"";
+			[lastUnparsedErrorLine release];
+			lastUnparsedErrorLine = nil;
 		}
 		// skip empty lines
 		if ([[line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length] == 0)
@@ -1749,7 +1752,7 @@
 						encoding:NSUTF8StringEncoding];
 	
 	// register for another read
-	if ([myMplayerTask isRunning] || [data length] > 0) 
+	if ([myMplayerTask isRunning] || (data && [data length] > 0)) 
 		[[[myMplayerTask standardOutput] fileHandleForReading]
 			readInBackgroundAndNotify];	
 	
@@ -1798,15 +1801,18 @@
 			[lastUnparsedLine release];
 			if (lineIndex < [myLines count])
 				lastUnparsedLine = [[myLines objectAtIndex:lineIndex] retain];
+			else
+				lastUnparsedLine = nil;
 			break;
 		}
 		// load line
 		line = [myLines objectAtIndex:lineIndex];
 		
 		// prepend unfinished line
-		if (lastUnparsedLine != @"") {
+		if (lastUnparsedLine) {
 			line = [lastUnparsedLine stringByAppendingString:line];
-			lastUnparsedLine = @"";
+			[lastUnparsedLine release];
+			lastUnparsedLine = nil;
 		}
 		// skip empty lines
 		if ([[line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length] == 0)
@@ -2374,7 +2380,7 @@
 -(NSArray *)splitString:(NSString *)string byCharactersInSet:(NSCharacterSet *)set {
 	
 	NSAutoreleasePool * pool = [NSAutoreleasePool new];
-	NSMutableArray * result = [NSMutableArray array];
+	NSMutableArray * result = [[NSMutableArray alloc] init];
 	NSScanner * scanner = [NSScanner scannerWithString:string];
 	NSString * chunk = nil;
 	BOOL endsWithMatch;
@@ -2392,7 +2398,6 @@
 	while([scanner scanUpToCharactersFromSet:set intoString:&chunk]) {
 		
 		[result addObject:chunk];
-		[chunk release];
 		// Scan to the end of character occurences
 		endsWithMatch = [scanner scanCharactersFromSet:set intoString:NULL];
 	}
@@ -2403,11 +2408,8 @@
 		[result addObject: @""];
 	}
 	
-	result = [result retain];
 	[pool release];
-	result = [result autorelease];
-	return result; 
-	
+	return [result autorelease]; 
 }
 
 @end
