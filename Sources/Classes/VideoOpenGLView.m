@@ -302,7 +302,6 @@
 	int padding = 0;
 	
 	if(isFullscreen)
-		//frame = screen_frame;
 		frame = [[fullscreenWindow contentView] bounds];
 	else
 		frame = [self bounds];
@@ -392,7 +391,7 @@
 		isFullscreen = YES;
 	} else {
 		
-		[self resizeToMovie];
+		[self resizeView];
 	}
     
 	//Play in fullscreen
@@ -419,7 +418,7 @@
 	NSWindow *window = [playerController playerWindow];
     
 	int fullscreenId = [playerController fullscreenDeviceId];
-	screen_frame = [[[NSScreen screens] objectAtIndex:fullscreenId] frame];
+	NSRect screen_frame = [[[NSScreen screens] objectAtIndex:fullscreenId] frame];
 	/*screen_frame.origin.x = 500;
 	screen_frame.origin.y = 500;
 	screen_frame.size.width = 200;
@@ -504,20 +503,48 @@
 /*
  Resize OpenGL view to fit movie
  */
-- (void) resizeToMovie
+- (void) resizeView
 {
+	[Debug log:ASL_LEVEL_ERR withMessage:@"Resize: %d, %ux%u",videoSizeMode,image_width,image_height];
+	if (image_width == 0 || image_height == 0)
+		return;
+	[Debug log:ASL_LEVEL_ERR withMessage:@"Resize: YES"];
 	NSRect win_frame = [[self window] frame];
 	NSRect mov_frame = [self bounds];
 	NSSize minSize = [[self window]contentMinSize];
+	NSSize screen_size;
+	float fitFactor;
 	
-	//if movie is smaller then the UI use min size
-	if( (image_height*image_aspect) < minSize.width)
+	// Determine maximal scale factor to fit screen
+	screen_size = [[[playerController playerWindow] screen] visibleFrame].size;
+	
+	if (screen_size.width / screen_size.height > (float)image_width / (float)image_height)
+		fitFactor = screen_size.height / (float)image_height;
+	else
+		fitFactor = screen_size.width / (float)image_width;
+	
+	// Fit to specific width
+	if (videoSizeMode == WSM_FIT_WIDTH)
+		zoomFactor = fitWidth / (float)image_width;
+	
+	// Limit factor
+	if (videoSizeMode == WSM_FIT_SCREEN || zoomFactor > fitFactor)
+		zoomFactor = fitFactor;
+	
+	// Apply size
+	win_frame.size.height += (image_height*zoomFactor) - mov_frame.size.height;
+	
+	if(image_height*image_aspect*zoomFactor < minSize.width)
 		win_frame.size.width = minSize.width;
 	else
-		win_frame.size.width += (image_height*image_aspect - mov_frame.size.width);
+		win_frame.size.width += image_height*image_aspect*zoomFactor - mov_frame.size.width;
 	
-	win_frame.size.height += (image_height - mov_frame.size.height);
 	[[self window] setFrame:win_frame display:YES animate:[appController animateInterface]];
+	
+	// remove fullscreen callback
+	[[NSNotificationCenter defaultCenter] removeObserver:self
+		name: @"MIFullscreenSwitchDone"
+		object: self];
 }
 
 /*
@@ -563,49 +590,34 @@
 }
 
 /*
-	Resize Window with given zoom factor
-*/
-- (void) setWindowSizeMult: (float)zoom
+ Resize Window with given options
+ */
+- (void) setWindowSizeMode:(int)mode withValue:(float)val
 {
-	zoomFactor = zoom;
+	videoSizeMode = mode;
+	
+	if (videoSizeMode == WSM_SCALE)
+		zoomFactor = val;
+	else if (videoSizeMode == WSM_FIT_WIDTH)
+		fitWidth = val;
+	
+	// do not apply if not playing
+	if (!isPlaying)
+		return;
 	
 	// exit fullscreen first and finish with callback
 	if(isFullscreen) {
 		
 		[[NSNotificationCenter defaultCenter] addObserver: self
-			selector: @selector(finishWindowSizeMult) 
+			selector: @selector(resizeView) 
 			name: @"MIFullscreenSwitchDone"
 			object: self];
 		
 		[threadProto toggleFullscreen];
 		
-		return;
-	}
-	
-	// not fullscreen: resize now
-	[self finishWindowSizeMult];
-}
-
-- (void) finishWindowSizeMult
-{
-	//resize window
-	NSRect win_frame = [[self window] frame];
-	NSRect mov_frame = [self bounds];
-	NSSize minSize = [[self window]contentMinSize];
-	
-	win_frame.size.height += ((image_height*zoomFactor) - mov_frame.size.height);
-	
-	if( ((image_height*image_aspect)*zoomFactor) < minSize.width)
-		win_frame.size.width = minSize.width;
-	else
-		win_frame.size.width += (((image_height*image_aspect)*zoomFactor) - mov_frame.size.width);
-	
-	[[self window] setFrame:win_frame display:YES animate:[appController animateInterface]];
-	
-	// remove fullscreen callback
-	[[NSNotificationCenter defaultCenter] removeObserver:self
-		name: @"MIFullscreenSwitchDone"
-		object: self];
+	} else
+		// not in fullscreen: resize now
+		[self resizeView];
 }
 
 /*
@@ -651,11 +663,11 @@
 	{
 		//Zoom
 		if(sender == HalfSizeMenuItem)
-			[self setWindowSizeMult: 0.5];
+			[self setWindowSizeMode:WSM_SCALE withValue:0.5];
 		if(sender == NormalSizeMenuItem)
-			[self setWindowSizeMult: 1];
+			[self setWindowSizeMode:WSM_SCALE withValue:1];
 		if(sender == DoubleSizeMenuItem)
-			[self setWindowSizeMult: 2];
+			[self setWindowSizeMode:WSM_SCALE withValue:2];
 			
 		//Aspect
 		if(sender == KeepAspectMenuItem)

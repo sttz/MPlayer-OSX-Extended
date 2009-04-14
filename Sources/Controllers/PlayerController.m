@@ -879,19 +879,19 @@
 		switch ([[preferences objectForKey:@"VideoSize"] intValue]) {
 		case 0 :		// original
 			[myPlayer setMovieSize:kDefaultMovieSize];
-			//[videoOpenGLView setWindowSizeMult: 1];
+			[videoOpenGLView setWindowSizeMode:WSM_SCALE withValue:1];
 			break;
 		case 1 :		// half
 			[myPlayer setMovieSize:NSMakeSize(0.5, 0)];
-			//[videoOpenGLView setWindowSizeMult: 0.5];
+			[videoOpenGLView setWindowSizeMode:WSM_SCALE withValue:0.5];
 			break;
 		case 2 :		// double
 			[myPlayer setMovieSize:NSMakeSize(2, 0)];
-			//[videoOpenGLView setWindowSizeMult: 2];
+			[videoOpenGLView setWindowSizeMode:WSM_SCALE withValue:2];
 			break;
 		case 3 :		// fit screen it (it is set before actual playback)
 			if ([movieInfo videoWidth] && [movieInfo videoHeight]) {
-				NSSize screenSize = [[NSScreen mainScreen] visibleFrame].size;
+				NSSize screenSize = [[playerWindow screen] visibleFrame].size;
 				double theWidth = ((screenSize.height - 28) /	// 28 pixels for window caption
 						[movieInfo videoHeight] * [movieInfo videoWidth]);
 				if (theWidth < screenSize.width)
@@ -899,13 +899,17 @@
 				else
 					[myPlayer setMovieSize:NSMakeSize(screenSize.width, 0)];
 			}
+			[videoOpenGLView setWindowSizeMode:WSM_FIT_SCREEN withValue:0];
 			break;
 		case 4 :		// fit width
-			if ([preferences objectForKey:@"CustomVideoSize"])
+			if ([preferences objectForKey:@"CustomVideoSize"]) {
 				[myPlayer setMovieSize:NSMakeSize([[preferences
 						objectForKey:@"CustomVideoSize"] unsignedIntValue], 0)];
-			else
+				[videoOpenGLView setWindowSizeMode:WSM_FIT_WIDTH withValue:[[preferences objectForKey:@"CustomVideoSize"] floatValue]];
+			} else {
 				[myPlayer setMovieSize:kDefaultMovieSize];
+				[videoOpenGLView setWindowSizeMode:WSM_SCALE withValue:1];
+			}
 			break;
 		default :
 			[myPlayer setMovieSize:kDefaultMovieSize];

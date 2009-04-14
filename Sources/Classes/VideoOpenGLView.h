@@ -35,9 +35,12 @@
 - (void) drawRectInThread;
 @end
 
+#define		WSM_SCALE		1
+#define		WSM_FIT_SCREEN	2
+#define		WSM_FIT_WIDTH	3
+
 @interface VideoOpenGLView : NSOpenGLView <MPlayerOSXVOProto>
 {
-	NSRect screen_frame;
 	bool isFullscreen;
 	bool switchingToFullscreen;
 	bool switchingInProgress;
@@ -68,8 +71,12 @@
 	float image_aspect;
 	float org_image_aspect;
 	
+	// video size mode
+	int videoSizeMode;
 	// zoom factor
 	float zoomFactor;
+	// fit width
+	int fitWidth;
 	
 	//shared memory
 	int shm_fd;
@@ -130,11 +137,10 @@
 - (void) toggleFullscreenWindow;
 - (void) toggleFullscreenEnded;
 - (void) reshape;
-- (void) resizeToMovie;
+- (void) resizeView;
 - (void) close;
 - (void) finishClosing;
-- (void) setWindowSizeMult: (float)zoom;
-- (void) finishWindowSizeMult;
+- (void) setWindowSizeMode:(int)mode withValue:(float)val;
 - (void) ontop;
 
 //Action
