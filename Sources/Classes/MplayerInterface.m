@@ -29,6 +29,8 @@
 
 #define MI_REFRESH_LIMIT			10
 
+#define MI_LAVC_MAX_THREADS				8
+
 @implementation MplayerInterface
 /************************************************************************************
  INIT & UNINIT
@@ -175,6 +177,8 @@
 	size_t len = sizeof(numberOfThreads);
 	if (sysctlbyname("hw.ncpu",&numberOfThreads,&len,NULL,0))
 		numberOfThreads = 1;
+	if (numberOfThreads > MI_LAVC_MAX_THREADS)
+		numberOfThreads = MI_LAVC_MAX_THREADS;
 	
 	// *** FILES
 	
