@@ -127,6 +127,8 @@
 				<string>vfw</string>
 				<string>vob</string>
 				<string>wmv</string>
+				<string>nsv</string>
+				<string>flv</string>
 				<string>*</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
