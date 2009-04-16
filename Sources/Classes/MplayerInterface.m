@@ -8,7 +8,7 @@
  */
 
 #import "MplayerInterface.h"
-#import <RegexKit/RegexKit.h> 
+#import "RegexKitLite.h"
 #import <sys/sysctl.h>
 
 // directly parsed mplayer output strings
@@ -26,6 +26,7 @@
 #define MI_STREAM_REGEX				@"^ID_(.*)_(\\d+)_(.*)=(.*)$"
 #define MI_MKVCHP_REGEX				@"^\\[mkv\\] Chapter (\\d+) from (\\d+):(\\d+):(\\d+\\.\\d+) to (\\d+):(\\d+):(\\d+\\.\\d+), (.+)$"
 #define MI_EXIT_REGEX				@"^ID_EXIT=(.*)$"
+#define MI_NEWLINE_REGEX			@"(?:\r\n|[\n\v\f\r\302\205\\p{Zl}\\p{Zp}])"
 
 #define MI_STATS_UPDATE_INTERVAL	0.1f
 
@@ -116,10 +117,6 @@
 	windowedVO = NO;
 	isFullscreen = NO;
 	
-	// Create newline character set
-	newlineCharacterSet = (id)[[NSMutableCharacterSet whitespaceAndNewlineCharacterSet] retain];
-    [newlineCharacterSet formIntersectionWithCharacterSet:[[NSCharacterSet whitespaceCharacterSet] invertedSet]];
-	
 	return self;
 }
 
@@ -146,7 +143,6 @@
 	[lastUnparsedLine release];
 	[lastUnparsedErrorLine release];
 	[buffer_name release];
-	[newlineCharacterSet release];
 	
 	[super dealloc];
 }
@@ -1707,7 +1703,8 @@
 	}
 	
 	// Split data by newline characters
-	NSArray *myLines = [self splitString:data byCharactersInSet:newlineCharacterSet];
+	NSArray *myLines = [data componentsSeparatedByRegex:MI_NEWLINE_REGEX 
+							 options:RKLMultiline range:NSMakeRange(0, [data length]) error:NULL];
 	NSString *line;
 	
 	int lineIndex = -1;
@@ -1798,7 +1795,8 @@
 	NSString *chapterName;
 	
 	// Split data by newline characters
-	NSArray *myLines = [self splitString:data byCharactersInSet:newlineCharacterSet];
+	NSArray *myLines = [data componentsSeparatedByRegex:MI_NEWLINE_REGEX 
+							 options:RKLMultiline range:NSMakeRange(0, [data length]) error:NULL];
 	
 	int lineIndex = -1;
 	
@@ -1997,8 +1995,7 @@
 		
 		// Exiting... test for player termination
 		if ([line isMatchedByRegex:MI_EXIT_REGEX]) {
-			NSString *exitType;
-			[line getCapturesWithRegexAndReferences:MI_EXIT_REGEX, @"${1}", &exitType, nil];
+			NSString *exitType = [line stringByMatching:MI_EXIT_REGEX capture:1];
 			
 			// player reached end of file
 			if ([exitType isEqualToString:@"EOF"])
@@ -2047,7 +2044,8 @@
 		if ([line isMatchedByRegex:MI_REPLY_REGEX]) {
 			
 			// extract matches
-			[line getCapturesWithRegexAndReferences:MI_REPLY_REGEX, @"${1}", &idName, @"${2}", &idValue, nil];
+			idName = [line stringByMatching:MI_REPLY_REGEX capture:1];
+			idValue = [line stringByMatching:MI_REPLY_REGEX capture:2];
 			
 			// streams
 			if ([idName isEqualToString:@"switch_video"]) {
@@ -2085,11 +2083,10 @@
 		if ([line isMatchedByRegex:MI_STREAM_REGEX]) {
 			
 			// extract matches
-			[line getCapturesWithRegexAndReferences:MI_STREAM_REGEX, 
-			 @"${1}", &streamType,
-			 @"${2:%d}", &streamId,
-			 @"${3}", &streamInfoName,
-			 @"${4}", &streamInfoValue, nil];
+			streamType		=  [line stringByMatching:MI_STREAM_REGEX capture:1];
+			streamId		= [[line stringByMatching:MI_STREAM_REGEX capture:2] intValue];
+			streamInfoName  =  [line stringByMatching:MI_STREAM_REGEX capture:3];
+			streamInfoValue =  [line stringByMatching:MI_STREAM_REGEX capture:4];
 			
 			// video streams
 			if ([streamType isEqualToString:@"VID"]) {
@@ -2143,7 +2140,8 @@
 		if ([line isMatchedByRegex:MI_DEFINE_REGEX]) {
 			
 			// extract matches
-			[line getCapturesWithRegexAndReferences:MI_DEFINE_REGEX, @"${1}", &idName, @"${2}", &idValue, nil];
+			idName  = [line stringByMatching:MI_DEFINE_REGEX capture:1];
+			idValue = [line stringByMatching:MI_DEFINE_REGEX capture:2];
 			
 			// getting length
 			if ([idName isEqualToString:@"LENGTH"]) {
@@ -2345,11 +2343,14 @@
 		if ([line isMatchedByRegex:MI_MKVCHP_REGEX]) {
 			
 			// extract
-			[line getCapturesWithRegexAndReferences:MI_MKVCHP_REGEX, 
-					@"${1:%d}", &chapterId,
-					@"${2:%f}", &chapterTime[0], @"${3:%f}", &chapterTime[1], @"${4:%f}", &chapterTime[2],
-					@"${5:%f}", &chapterTime[3], @"${6:%f}", &chapterTime[4], @"${7:%f}", &chapterTime[5],
-					@"${8}", &chapterName, nil];
+			chapterId		= [[line stringByMatching:MI_MKVCHP_REGEX capture:1] intValue];
+			chapterTime[0]	= [[line stringByMatching:MI_MKVCHP_REGEX capture:2] floatValue];
+			chapterTime[1]	= [[line stringByMatching:MI_MKVCHP_REGEX capture:3] floatValue];
+			chapterTime[2]	= [[line stringByMatching:MI_MKVCHP_REGEX capture:4] floatValue];
+			chapterTime[3]	= [[line stringByMatching:MI_MKVCHP_REGEX capture:5] floatValue];
+			chapterTime[4]	= [[line stringByMatching:MI_MKVCHP_REGEX capture:6] floatValue];
+			chapterTime[5]	= [[line stringByMatching:MI_MKVCHP_REGEX capture:7] floatValue];
+			chapterName		=  [line stringByMatching:MI_MKVCHP_REGEX capture:8];
 			
 			[info newChapter:(chapterId+1) from:(chapterTime[0]*3600+chapterTime[1]*60+chapterTime[2])
 						  to:(chapterTime[3]*3600+chapterTime[4]*60+chapterTime[5]) withName:chapterName];
@@ -2396,41 +2397,6 @@
 	//free((char *)dataPtr);
 	[data release];
 	[pool release];
-}
-
--(NSArray *)splitString:(NSString *)string byCharactersInSet:(NSCharacterSet *)set {
-	
-	NSAutoreleasePool * pool = [NSAutoreleasePool new];
-	NSMutableArray * result = [[NSMutableArray alloc] init];
-	NSScanner * scanner = [NSScanner scannerWithString:string];
-	NSString * chunk = nil;
-	BOOL endsWithMatch;
-	
-	// Don't ignore whitespace and newlines
-	[scanner setCharactersToBeSkipped: nil];
-	
-	// Check beginning of string for match
-	if ([scanner scanCharactersFromSet:set intoString:NULL]) {
-		
-		[result addObject:@""];
-	}
-	
-	// Loop over string and split
-	while([scanner scanUpToCharactersFromSet:set intoString:&chunk]) {
-		
-		[result addObject:chunk];
-		// Scan to the end of character occurences
-		endsWithMatch = [scanner scanCharactersFromSet:set intoString:NULL];
-	}
-	
-	// Check end of string for match
-	if (endsWithMatch) {
-		
-		[result addObject: @""];
-	}
-	
-	[pool release];
-	return [result autorelease]; 
 }
 
 @end

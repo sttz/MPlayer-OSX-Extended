@@ -118,9 +118,8 @@
 		3AE612610EC088E7009F2F12 /* fc_aslider_knob_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AE612580EC088E7009F2F12 /* fc_aslider_knob_on.png */; };
 		3AE612620EC088E7009F2F12 /* fc_audio_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AE612590EC088E7009F2F12 /* fc_audio_on.png */; };
 		3AE612660EC08C2D009F2F12 /* FullscreenControlsVolumeSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE612650EC08C2D009F2F12 /* FullscreenControlsVolumeSlider.m */; };
+		3AF152260F97B3F700409534 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AF152240F97B3F700409534 /* RegexKitLite.m */; };
 		3AF7EFF60EEDDEB600BFEBBF /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7263150EE5EFD200945A3E /* libfreetype.a */; };
-		3AFA914C0E5858B100B3998D /* RegexKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFA914B0E5858B100B3998D /* RegexKit.framework */; };
-		3AFA91750E58592B00B3998D /* RegexKit.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 3AFA914B0E5858B100B3998D /* RegexKit.framework */; };
 		3AFE25310EC0FA29009FFEC5 /* FullscreenControlsScrubbingBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AFE25300EC0FA29009FFEC5 /* FullscreenControlsScrubbingBar.m */; };
 		3AFE25360EC0FEBB009FFEC5 /* fc_scrub_anim.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AFE25330EC0FEBB009FFEC5 /* fc_scrub_anim.png */; };
 		3AFE25370EC0FEBB009FFEC5 /* fc_scrub_run.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AFE25340EC0FEBB009FFEC5 /* fc_scrub_run.png */; };
@@ -150,7 +149,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				3A5879D30EED42CB003408E8 /* Sparkle.framework in Copy Files */,
-				3AFA91750E58592B00B3998D /* RegexKit.framework in Copy Files */,
 			);
 			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -276,7 +274,8 @@
 		3AE612590EC088E7009F2F12 /* fc_audio_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fc_audio_on.png; path = Resources/Graphics/fc_audio_on.png; sourceTree = "<group>"; };
 		3AE612640EC08C2D009F2F12 /* FullscreenControlsVolumeSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FullscreenControlsVolumeSlider.h; path = Sources/Classes/FullscreenControlsVolumeSlider.h; sourceTree = "<group>"; };
 		3AE612650EC08C2D009F2F12 /* FullscreenControlsVolumeSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullscreenControlsVolumeSlider.m; path = Sources/Classes/FullscreenControlsVolumeSlider.m; sourceTree = "<group>"; };
-		3AFA914B0E5858B100B3998D /* RegexKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RegexKit.framework; path = Local/Frameworks/RegexKit.framework; sourceTree = SYSTEM_DEVELOPER_DIR; };
+		3AF152240F97B3F700409534 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegexKitLite.m; path = Sources/RegexKitLite/RegexKitLite.m; sourceTree = "<group>"; };
+		3AF152250F97B3F700409534 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegexKitLite.h; path = Sources/RegexKitLite/RegexKitLite.h; sourceTree = "<group>"; };
 		3AFE252F0EC0FA29009FFEC5 /* FullscreenControlsScrubbingBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FullscreenControlsScrubbingBar.h; path = Sources/Classes/FullscreenControlsScrubbingBar.h; sourceTree = "<group>"; };
 		3AFE25300EC0FA29009FFEC5 /* FullscreenControlsScrubbingBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullscreenControlsScrubbingBar.m; path = Sources/Classes/FullscreenControlsScrubbingBar.m; sourceTree = "<group>"; };
 		3AFE25330EC0FEBB009FFEC5 /* fc_scrub_anim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fc_scrub_anim.png; path = Resources/Graphics/fc_scrub_anim.png; sourceTree = "<group>"; };
@@ -301,7 +300,6 @@
 				3747F282087EFA4200980B71 /* Carbon.framework in Frameworks */,
 				3747F284087EFA5D00980B71 /* OpenGL.framework in Frameworks */,
 				3747F286087EFA6A00980B71 /* QuartzCore.framework in Frameworks */,
-				3AFA914C0E5858B100B3998D /* RegexKit.framework in Frameworks */,
 				3A7263180EE5EFDC00945A3E /* libexpat.a in Frameworks */,
 				3A72631B0EE5F00400945A3E /* libiconv.a in Frameworks */,
 				3A72631E0EE5F01B00945A3E /* libz.a in Frameworks */,
@@ -338,7 +336,6 @@
 				3A7263170EE5EFDC00945A3E /* libexpat.a */,
 				3A7263150EE5EFD200945A3E /* libfreetype.a */,
 				3A5879C70EED42BD003408E8 /* Sparkle.framework */,
-				3AFA914B0E5858B100B3998D /* RegexKit.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 			);
 			name = "Linked Frameworks";
@@ -375,6 +372,8 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				3AF152240F97B3F700409534 /* RegexKitLite.m */,
+				3AF152250F97B3F700409534 /* RegexKitLite.h */,
 				32CA4F630368D1EE00C91783 /* MPlayer OSX_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 			);
@@ -692,6 +691,7 @@
 				3ABF86580EBFAD06001FE779 /* FullscreenControlsView.m in Sources */,
 				3AE612660EC08C2D009F2F12 /* FullscreenControlsVolumeSlider.m in Sources */,
 				3AFE25310EC0FA29009FFEC5 /* FullscreenControlsScrubbingBar.m in Sources */,
+				3AF152260F97B3F700409534 /* RegexKitLite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -762,6 +762,7 @@
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../mplayer_static/usr/local/lib\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../mplayer_static/usr/local/lib\"";
+				OTHER_LDFLAGS = "-licucore";
 				PREBINDING = NO;
 				PRODUCT_NAME = "MPlayer OSX Extended";
 				STRIP_INSTALLED_PRODUCT = YES;
@@ -798,7 +799,10 @@
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../mplayer_static/usr/local/lib\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../mplayer_static/usr/local/lib\"";
-				OTHER_LDFLAGS = "-Wl,-search_paths_first";
+				OTHER_LDFLAGS = (
+					"-licucore",
+					"-Wl,-search_paths_first",
+				);
 				PREBINDING = NO;
 				PRODUCT_NAME = "MPlayer OSX Extended";
 				STRIP_INSTALLED_PRODUCT = YES;

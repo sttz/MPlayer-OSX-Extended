@@ -191,7 +191,6 @@
 	NSMutableArray *myCommandsBuffer;	// store cmds that cannot be send immediatelly
 	NSString *lastUnparsedLine;
 	NSString *lastUnparsedErrorLine;
-	NSMutableCharacterSet *newlineCharacterSet;
 	//NSMutableDictionary *myInfo;	// dict filled by -identify command
 	BOOL isFullscreen;				// currently playing fullscreen
 	int subtitleFileId;				// since sub file identify output is not numberede, we need to cache the id
@@ -328,8 +327,5 @@
 - (void) mplayerTerminated;
 - (void)readError:(NSNotification *)notification;
 - (void) readOutputC:(NSNotification *)notification;
-
-// helper
--(NSArray *)splitString:(NSString *)string byCharactersInSet:(NSCharacterSet *)set;
 
 @end
