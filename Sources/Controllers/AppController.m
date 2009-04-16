@@ -33,6 +33,8 @@
 			object:NSApp];
 	
 	[self updateAspectMenu];
+	
+	[LanguageCodes loadCodes];
 }
 
 /************************************************************************************

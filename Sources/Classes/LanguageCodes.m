@@ -25,12 +25,36 @@
 
 #import "LanguageCodes.h"
 
-static NSMutableDictionary *codes_2;
-static NSMutableDictionary *codes_3;
+static NSDictionary *codes_2;
+static NSDictionary *codes_3;
 
 @implementation LanguageCodes
 
 + (BOOL)loadCodes {
+	
+	// Try to load cached archive
+	NSString *archive_path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"iso-639.plist"];
+	
+	NSData *archive_data = [NSData dataWithContentsOfFile:archive_path];
+	if (archive_data) {
+		NSString *archive_error;
+		NSDictionary *archive = (NSDictionary *)[NSPropertyListSerialization
+									propertyListFromData:archive_data 
+									mutabilityOption:NSPropertyListImmutable 
+									format:NULL 
+									errorDescription:&archive_error];
+		
+		if (archive_error) {
+			[Debug log:ASL_LEVEL_WARNING withMessage:@"Language code cache couldn't be read, reading tab file (%@).",archive_error];
+			[archive_error release];
+		
+		} else {
+			codes_2 = [[archive objectForKey:@"codes_2"] retain];
+			codes_3 = [[archive objectForKey:@"codes_3"] retain];
+			return YES;
+		}
+	} else
+		[Debug log:ASL_LEVEL_WARNING withMessage:@"Language code cache couldn't be found or opened, reading tab file."];
 	
 	// Load languages codes
 	NSString *path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"iso-639-3.tab"];
@@ -38,12 +62,12 @@ static NSMutableDictionary *codes_3;
 	
 	if (content == nil) {
 		[Debug log:ASL_LEVEL_WARNING withMessage:@"Failed to read language codes at %@", path];
-		return FALSE;
+		return NO;
 	}
 	
 	// Parse file
-	codes_2 = [[NSMutableDictionary dictionary] retain];
-	codes_3 = [[NSMutableDictionary dictionary] retain];
+	NSMutableDictionary *m_codes_2 = [[NSMutableDictionary dictionary] retain];
+	NSMutableDictionary *m_codes_3 = [[NSMutableDictionary dictionary] retain];
 	NSArray  *lines = [content componentsSeparatedByString:@"\n"];
 	NSEnumerator *theEnum = [lines objectEnumerator];
 	NSString *theLine;
@@ -61,23 +85,39 @@ static NSMutableDictionary *codes_3;
 				continue;
 			
 			// Add 639-3 code
-			[codes_3 setObject:[values objectAtIndex:6] forKey:[values objectAtIndex:0]];
+			[m_codes_3 setObject:[values objectAtIndex:6] forKey:[values objectAtIndex:0]];
 			
 			// Add 639-2/B bibliographic code (differs from 639-3)
 			if (![[values objectAtIndex:1] isEqualToString:@""] 
 					&& ![[values objectAtIndex:0] isEqualToString:[values objectAtIndex:1]])
-				[codes_3 setObject:[values objectAtIndex:6] forKey:[values objectAtIndex:1]];
+				[m_codes_3 setObject:[values objectAtIndex:6] forKey:[values objectAtIndex:1]];
 			
 			if ([[values objectAtIndex:3] isEqualToString:@""])
 				continue;
 			
 			// Add 639-1 code
-			[codes_2 setObject:[values objectAtIndex:6] forKey:[values objectAtIndex:3]];
+			[m_codes_2 setObject:[values objectAtIndex:6] forKey:[values objectAtIndex:3]];
 			
 		}
 	}
 	
-	return TRUE;
+	// Try to cache as archive
+	NSDictionary *codes = [NSDictionary dictionaryWithObjectsAndKeys:
+							m_codes_2, @"codes_2", m_codes_3, @"codes_3", nil];
+	NSString *error;
+	NSData *data =		  [NSPropertyListSerialization dataFromPropertyList:codes
+							format:NSPropertyListBinaryFormat_v1_0 errorDescription:&error];
+	
+	if (!error)
+		[data writeToFile:archive_path atomically:YES];
+	else {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Cannot cache language codes: %@",error];
+		[error release];
+	}
+	
+	codes_2 = m_codes_2;
+	codes_3 = m_codes_3;
+	return YES;
 	
 }
 
