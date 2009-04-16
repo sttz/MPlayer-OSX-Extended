@@ -2182,18 +2182,10 @@
 		break;
 	case kSeeking :
 	case kPlaying :
-		[self statsUpdate:notification];
 		// check for stream update
 		if ([[notification userInfo] objectForKey:@"StreamsHaveChanged"])
 			[self fillStreamMenus];
-		// poll volume and chapter
-		double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - lastPoll);
-		if (timeDifference >= pollInterval) {
-			
-			lastPoll = [NSDate timeIntervalSinceReferenceDate];
-			[myPlayer sendCommand:@"get_property volume"];
-			[self selectChapterForTime:(int)[myPlayer seconds]];
-		}
+		[self statsUpdate:notification];
 		break;
 	case kPaused :
 		break;
@@ -2224,6 +2216,13 @@
 				[statsPostProcBox setStringValue:[NSString localizedStringWithFormat:@"%d",
 												  [myPlayer postProcLevel]]];
 			}
+		}
+		// poll volume and chapter
+		double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - lastPoll);
+		if (timeDifference >= pollInterval) {
+			lastPoll = [NSDate timeIntervalSinceReferenceDate];
+			[myPlayer sendCommand:@"get_property volume"];
+			[self selectChapterForTime:(int)[myPlayer seconds]];
 		}
 	}
 }
