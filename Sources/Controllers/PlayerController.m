@@ -129,10 +129,6 @@
 			selector: @selector(progresBarClicked:)
 			name: @"SBBarClickedNotification"
 			object:fcScrubbingBar];
-	[[NSNotificationCenter defaultCenter] addObserver: self
-			selector: @selector(progresBarClicked:)
-			name: @"SBBarClickedNotification"
-			object:fcScrubbingBar];
 			
     // register for app launch finish
 	[[NSNotificationCenter defaultCenter] addObserver: self
