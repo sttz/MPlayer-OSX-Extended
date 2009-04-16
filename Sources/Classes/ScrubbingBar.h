@@ -41,7 +41,8 @@ typedef enum _NSScrubbingBarStyle {
 	NSImage *scrubBarAnimFrame;
 	float animFrame;
 	
-	int badgeOffset;
+	float xBadgeOffset, yBadgeOffset;
+	float barRightInset;
 	int rightClip;
 }
 - (void) loadImages;

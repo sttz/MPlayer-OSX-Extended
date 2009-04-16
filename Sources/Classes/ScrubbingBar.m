@@ -58,7 +58,8 @@
 					 [[NSBundle mainBundle] pathForResource:@"scrub_bar_badge" ofType:@"tif"]];
 	scrubBarAnimFrame = [[NSImage alloc] initWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"scrub_bar_anim" ofType:@"png"]];
 	
-	badgeOffset = 0;
+	yBadgeOffset = 0;
+	xBadgeOffset = 3.5;
 	rightClip = 1;
 }
 
@@ -111,12 +112,11 @@
 	
 	float runLength = [self frame].size.width - [scrubBarEnds size].width;
 	float endWidth = [scrubBarEnds size].width / 2;		// each half of the picture is one end
-	float yOrigin = 1;
 	double theValue = [self doubleValue] / ([self maxValue] - [self minValue]);	
 	
 	//draw bar end left and right
-	[scrubBarEnds compositeToPoint:NSMakePoint(0, yOrigin) fromRect:NSMakeRect(0,0,endWidth,[scrubBarEnds size].height) operation:NSCompositeSourceOver];
-	[scrubBarEnds compositeToPoint:NSMakePoint([self frame].size.width - endWidth,yOrigin) fromRect:NSMakeRect(endWidth,0,endWidth,[scrubBarEnds size].height) operation:NSCompositeSourceOver];
+	[scrubBarEnds compositeToPoint:NSMakePoint(0, 0) fromRect:NSMakeRect(0,0,endWidth,[scrubBarEnds size].height) operation:NSCompositeSourceOver];
+	[scrubBarEnds compositeToPoint:NSMakePoint([self frame].size.width - endWidth,0) fromRect:NSMakeRect(endWidth,0,endWidth,[scrubBarEnds size].height) operation:NSCompositeSourceOver];
 	
 	// resize the bar run frame if needed
 	if ([scrubBarRun size].width != runLength)
@@ -125,22 +125,25 @@
 		[scrubBarRun setSize:NSMakeSize(runLength, [scrubBarRun size].height)];
 		[scrubBarRun recache];
 	}
-	[scrubBarRun compositeToPoint:NSMakePoint(endWidth,yOrigin) operation:NSCompositeSourceOver];
+	[scrubBarRun compositeToPoint:NSMakePoint(endWidth,0) operation:NSCompositeSourceOver];
 	
-	switch ([self style])
-	{
-		case NSScrubbingBarPositionStyle :
-			//draw position badge
-			[scrubBarBadge compositeToPoint: NSMakePoint(endWidth + (runLength - [scrubBarBadge size].width) * theValue, yOrigin + badgeOffset) operation:NSCompositeSourceOver];
-			break;
-		case NSScrubbingBarProgressStyle :
-			[scrubBarAnim 
-				drawInRect:NSMakeRect(0, yOrigin, [self frame].size.width - rightClip, [self frame].size.height) 
-				fromRect:NSMakeRect((1.0 - animFrame) * [scrubBarAnimFrame size].width, 0, [self frame].size.width - rightClip, [scrubBarAnim size].height) 
-				operation:NSCompositeSourceAtop fraction:1.0];
-			break;
-		default :
-			break;
+	if ([self style] == NSScrubbingBarPositionStyle) {
+		// calculate actual x-position of badge with badge offset and shadow
+		float badgePosX = ([self frame].size.width - rightClip) * theValue - xBadgeOffset;
+		// limit the badge width not to draw into the shadow on the rigth side
+		float badgeWidth = [self frame].size.width - badgePosX - rightClip;
+		if (badgeWidth > [scrubBarBadge size].width)
+			badgeWidth = [scrubBarBadge size].width;
+		
+		[scrubBarBadge compositeToPoint: NSMakePoint(badgePosX, yBadgeOffset)
+				fromRect: NSMakeRect(0, 0, badgeWidth, [scrubBarBadge size].height) 
+				operation: NSCompositeSourceOver];
+		
+	} else if ([self style] == NSScrubbingBarProgressStyle) {
+		[scrubBarAnim 
+			drawInRect:NSMakeRect(0, 0, [self frame].size.width - rightClip, [self frame].size.height) 
+			fromRect:NSMakeRect((1.0 - animFrame) * [scrubBarAnimFrame size].width, 0, [self frame].size.width - rightClip, [scrubBarAnim size].height) 
+			operation:NSCompositeSourceAtop fraction:1.0];
 	}
 }
 
@@ -225,9 +228,8 @@ int postNotification (id self, NSEvent *theEvent, NSSize badgeSize)
 {
 	NSPoint thePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	double theValue;
-	float imageHalf = badgeSize.width / 2;
-	float minX = NSMinX([self bounds]) + imageHalf,
-		maxX = NSMaxX([self bounds]) - imageHalf;
+	float minX = NSMinX([self bounds]),
+		maxX = NSMaxX([self bounds]);
 	
 	// set the value
 	if (thePoint.x < minX)
