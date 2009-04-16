@@ -227,27 +227,23 @@ int postNotification (id self, NSEvent *theEvent, NSSize badgeSize)
 	double theValue;
 	float imageHalf = badgeSize.width / 2;
 	float minX = NSMinX([self bounds]) + imageHalf,
-		maxX = NSMaxX([self bounds]) - imageHalf,
-		minY = NSMinY([self bounds]),
-		maxY = NSMaxY([self bounds]);
-	// set the value
-	if (thePoint.y >= minY && thePoint.y < maxY) {
-			if (thePoint.x < minX)
-				theValue = [self minValue];
-			else if (thePoint.x >= maxX)
-				theValue = [self maxValue];
-			else
-				theValue = [self minValue] + (([self maxValue] - [self minValue]) *
-						(thePoint.x - minX) / (maxX - minX));
-		
-		[[NSNotificationCenter defaultCenter]
-				postNotificationName:@"SBBarClickedNotification"
-				object:self
-				userInfo:[NSDictionary 
-						dictionaryWithObject:[NSNumber numberWithDouble:theValue]
-						forKey:@"SBClickedValue"]];
-		return 1;
-	}
+		maxX = NSMaxX([self bounds]) - imageHalf;
 	
-	return 0;
+	// set the value
+	if (thePoint.x < minX)
+		theValue = [self minValue];
+	else if (thePoint.x >= maxX)
+		theValue = [self maxValue];
+	else
+		theValue = [self minValue] + (([self maxValue] - [self minValue]) *
+				(thePoint.x - minX) / (maxX - minX));
+	
+	[[NSNotificationCenter defaultCenter]
+			postNotificationName:@"SBBarClickedNotification"
+			object:self
+			userInfo:[NSDictionary 
+					dictionaryWithObject:[NSNumber numberWithDouble:theValue]
+					forKey:@"SBClickedValue"]];
+	
+	return 1;
 }
