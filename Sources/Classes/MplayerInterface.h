@@ -61,6 +61,7 @@
 #define kBuffering					4
 #define kIndexing					5
 #define kInitializing				6	// task just started, no status yet
+#define kSeeking					7
 
 // seeking modes
 #define	MIRelativeSeekingMode		0	// relative seeking in seconds 
@@ -194,6 +195,7 @@
 	//NSMutableDictionary *myInfo;	// dict filled by -identify command
 	BOOL isFullscreen;				// currently playing fullscreen
 	int subtitleFileId;				// since sub file identify output is not numberede, we need to cache the id
+	NSDictionary *lastMissedSeek;	// last seek that couldn't be processed
 	
 	MovieInfo *info;
 }

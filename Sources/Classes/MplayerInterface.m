@@ -668,13 +668,20 @@
 		switch (myState) {
 		case kPlaying:
 				[self sendCommand:[NSString stringWithFormat:@"seek %1.1f %d",seconds, aMode] withType:MI_CMD_SHOW_COND];
-				isSeeking = YES;
+				myState = kSeeking;
 			break;
 		case kPaused:
 				//[self sendCommand:@"pause"];
 				[self sendCommand: [NSString stringWithFormat:@"seek %1.1f %d",seconds, aMode] withType:MI_CMD_SHOW_COND];
+				myState = kSeeking;
 				//[self sendCommand:@"pause"];
-				isSeeking = YES;
+			break;
+		case kSeeking:
+			// Save missed seek
+			[lastMissedSeek release];
+			lastMissedSeek = [[NSDictionary alloc] initWithObjectsAndKeys:
+				[NSNumber numberWithFloat:seconds], @"seconds",
+				[NSNumber numberWithInt:aMode], @"mode", nil];
 			break;
 		default :
 			break;
@@ -1918,6 +1925,16 @@
 				
 				// if the line was parsed then post notification and continue on next line
 				if (myOutputReadMode > 0) {
+					
+					// finish seek
+					if (myState == kSeeking && lastMissedSeek) {
+						myState = kPlaying;
+						[self seek:[[lastMissedSeek objectForKey:@"seconds"] floatValue]
+							  mode:[[lastMissedSeek objectForKey:@"mode"] intValue]];
+						[lastMissedSeek release];
+						lastMissedSeek = nil;
+						continue;
+					}
 					
 					// if it was not playing before (launched or unpaused)
 					if (myState != kPlaying) {

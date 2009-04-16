@@ -2258,7 +2258,7 @@
 /************************************************************************************/
 - (void) progresBarClicked:(NSNotification *)notification
 {
-	if ([myPlayer status] == kPlaying || [myPlayer status] == kPaused) {
+	if ([myPlayer status] == kPlaying || [myPlayer status] == kPaused || [myPlayer status] == kSeeking) {
 		int theMode = MIPercentSeekingMode;
 		if ([movieInfo length] > 0)
 			theMode = MIAbsoluteSeekingMode;
