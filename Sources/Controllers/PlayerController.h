@@ -216,6 +216,7 @@
 - (void) playbackStarted;
 - (void) statsClosed;
 - (void) statusUpdate:(NSNotification *)notification;
+- (void) statsUpdate:(NSNotification *)notification;
 - (void) progresBarClicked:(NSNotification *)notification;
 - (void) updatePlayerWindow;
 - (void) updatePlaylistWindow;

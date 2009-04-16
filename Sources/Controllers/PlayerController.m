@@ -115,6 +115,10 @@
 			selector: @selector(statusUpdate:)
 			name: @"MIStateUpdatedNotification"
 			object:myPlayer];
+	[[NSNotificationCenter defaultCenter] addObserver: self
+			selector: @selector(statsUpdate:)
+			name: @"MIStatsUpdatedNotification"
+			object:myPlayer];
 
 	// register for notification on clicking progress bar
 	[[NSNotificationCenter defaultCenter] addObserver: self
@@ -1942,10 +1946,8 @@
 			name: @"NSWindowWillCloseNotification" object:statsPanel];
 }
 /************************************************************************************/
-- (void) statusUpdate:(NSNotification *)notification;
+- (void) statusUpdate:(NSNotification *)notification
 {	
-	NSMutableDictionary *playingItem = myPlayingItem;
-	
 	// reset Idle time - Carbon PowerManager calls
 	if ([movieInfo isVideo])	// if there is a video
 		UpdateSystemActivity (UsrActivity);		// do not dim the display
@@ -2000,13 +2002,13 @@
 			NSMutableString *path = [[NSMutableString alloc] init];
 			[path appendString:@"MPlayer OSX Extended - "];
 			
-			if ([playingItem objectForKey:@"ItemTitle"])
+			if ([myPlayingItem objectForKey:@"ItemTitle"])
 			{
-				[path appendString:[playingItem objectForKey:@"ItemTitle"]];
+				[path appendString:[myPlayingItem objectForKey:@"ItemTitle"]];
 			}
 			else 
 			{
-				[path appendString:[[playingItem objectForKey:@"MovieFile"] lastPathComponent]];
+				[path appendString:[[myPlayingItem objectForKey:@"MovieFile"] lastPathComponent]];
 			}
 
 			[playerWindow setTitle:path];
@@ -2113,7 +2115,7 @@
 			[audioWindowMenu setEnabled:NO];
 			[subtitleWindowMenu setEnabled:NO];
 			// release the retained playing item
-			/*[playingItem autorelease];
+			/*[myPlayingItem autorelease];
 			myPlayingItem = nil;
 			[movieInfo autorelease];
 			movieInfo = nil;*/
@@ -2124,7 +2126,7 @@
 				// if playback finished itself (not by user) let playListController know
 				if ([[[notification userInfo]
 						objectForKey:@"PlayerStatus"] unsignedIntValue] == kFinished)
-					[playListController finishedPlayingItem:playingItem];
+					[playListController finishedPlayingItem:myPlayingItem];
 				// close view otherwise
 				else if (!continuousPlayback)
 					[self stopFromPlaylist];
@@ -2178,8 +2180,29 @@
 		[scrubbingBarToolbar setDoubleValue:[myPlayer cacheUsage]];
 		[fcScrubbingBar setDoubleValue:[myPlayer cacheUsage]];
 		break;
+	case kSeeking :
 	case kPlaying :
-		if (playingItem != NULL) {
+		[self statsUpdate:notification];
+		// check for stream update
+		if ([[notification userInfo] objectForKey:@"StreamsHaveChanged"])
+			[self fillStreamMenus];
+		// poll volume and chapter
+		double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - lastPoll);
+		if (timeDifference >= pollInterval) {
+			
+			lastPoll = [NSDate timeIntervalSinceReferenceDate];
+			[myPlayer sendCommand:@"get_property volume"];
+			[self selectChapterForTime:(int)[myPlayer seconds]];
+		}
+		break;
+	case kPaused :
+		break;
+	}
+}
+/************************************************************************************/
+- (void) statsUpdate:(NSNotification *)notification {
+	if ([myPlayer status] == kPlaying || [myPlayer status] == kSeeking) {
+		if (myPlayingItem) {
 			// update windows
 			if ([playerWindow isVisible])
 				[self updatePlayerWindow];
@@ -2191,31 +2214,17 @@
 			// stats window
 			if ([statsPanel isVisible]) {
 				[statsCPUUsageBox setStringValue:[NSString localizedStringWithFormat:@"%d %%",
-						[myPlayer cpuUsage]]];
+												  [myPlayer cpuUsage]]];
 				[statsCacheUsageBox setStringValue:[NSString localizedStringWithFormat:@"%d %%",
-						[myPlayer cacheUsage]]];
+													[myPlayer cacheUsage]]];
 				[statsAVsyncBox setStringValue:[NSString localizedStringWithFormat:@"%3.1f",
-						[myPlayer syncDifference]]];
+												[myPlayer syncDifference]]];
 				[statsDroppedBox setStringValue:[NSString localizedStringWithFormat:@"%d",
-						[myPlayer droppedFrames]]];
+												 [myPlayer droppedFrames]]];
 				[statsPostProcBox setStringValue:[NSString localizedStringWithFormat:@"%d",
-						[myPlayer postProcLevel]]];
+												  [myPlayer postProcLevel]]];
 			}
 		}
-		// poll volume and chapter
-		double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - lastPoll);
-		if (timeDifference >= pollInterval) {
-			
-			lastPoll = [NSDate timeIntervalSinceReferenceDate];
-			[myPlayer sendCommand:@"get_property volume"];
-			[self selectChapterForTime:(int)[myPlayer seconds]];
-		}
-		// check for stream update
-		if ([[notification userInfo] objectForKey:@"StreamsHaveChanged"])
-			[self fillStreamMenus];
-		break;
-	case kPaused :
-		break;
 	}
 }
 /************************************************************************************/
@@ -2224,7 +2233,7 @@
 	int seconds = (int)[myPlayer seconds];
 	
 	if ([movieInfo length] > 0)
-		[scrubbingBar setDoubleValue:[myPlayer seconds]];
+		[scrubbingBar setDoubleValue:seconds];
 	else
 		[scrubbingBar setDoubleValue:0];
 	
@@ -2236,7 +2245,7 @@
 	int seconds = (int)[myPlayer seconds];
 	
 	if ([movieInfo length] > 0)
-		[scrubbingBarToolbar setDoubleValue:[myPlayer seconds]];
+		[scrubbingBarToolbar setDoubleValue:seconds];
 	else
 		[scrubbingBarToolbar setDoubleValue:0];
 	
@@ -2248,7 +2257,7 @@
 	int seconds = (int)[myPlayer seconds];
 	
 	if ([movieInfo length] > 0)
-		[fcScrubbingBar setDoubleValue:[myPlayer seconds]];
+		[fcScrubbingBar setDoubleValue:seconds];
 	else
 		[fcScrubbingBar setDoubleValue:0];
 	

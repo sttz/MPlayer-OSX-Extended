@@ -46,6 +46,8 @@
 	if (![super init])
 		return  nil;
 	
+	statsUpdateInterval = 0.1;
+	
 	myPathToPlayer = [aPath retain];
 	buffer_name = @"mplayerosx";
 	
@@ -1837,7 +1839,7 @@
 			double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - myLastUpdate);
 				
 			// parse the output according to the preset mode
-			if (timeDifference >= 1.0f) {
+			if (timeDifference >= statsUpdateInterval) {
 				float audioCPUUsage = 0;
 				int videoCPUUsage = 0, voCPUUsage = 0;
 				int hours = 0, mins = 0;
@@ -1926,6 +1928,12 @@
 				// if the line was parsed then post notification and continue on next line
 				if (myOutputReadMode > 0) {
 					
+					// post notification
+					[[NSNotificationCenter defaultCenter]
+							postNotificationName:@"MIStatsUpdatedNotification"
+							object:self
+							userInfo:nil];
+					
 					// finish seek
 					if (myState == kSeeking && lastMissedSeek) {
 						myState = kPlaying;
@@ -1947,13 +1955,7 @@
 			
 						continue; 							// continue on next line
 					}
-			
-					// post notification
-					[[NSNotificationCenter defaultCenter]
-							postNotificationName:@"MIStateUpdatedNotification"
-							object:self
-							userInfo:nil];
-					[userInfo removeAllObjects];
+					
 					continue;
 				}
 				else
