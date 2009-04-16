@@ -505,10 +505,9 @@
  */
 - (void) resizeView
 {
-	[Debug log:ASL_LEVEL_ERR withMessage:@"Resize: %d, %ux%u",videoSizeMode,image_width,image_height];
 	if (image_width == 0 || image_height == 0)
 		return;
-	[Debug log:ASL_LEVEL_ERR withMessage:@"Resize: YES"];
+	
 	NSRect win_frame = [[self window] frame];
 	NSRect mov_frame = [self bounds];
 	NSSize minSize = [[self window]contentMinSize];
