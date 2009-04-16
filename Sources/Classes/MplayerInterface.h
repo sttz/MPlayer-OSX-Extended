@@ -174,7 +174,6 @@
 	int myCacheUsage;			// cache usage
 	int	myDroppedFrames;		// number of dropped frames since last key frame
 	int myPostProcLevel;		// actual level of postprocessing
-	float statsUpdateInterval;	// frequency of stats updates
 	
 	// internal use
 	NSTask *myMplayerTask;

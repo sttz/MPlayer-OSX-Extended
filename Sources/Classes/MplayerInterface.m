@@ -27,9 +27,9 @@
 #define MI_MKVCHP_REGEX				@"^\\[mkv\\] Chapter (\\d+) from (\\d+):(\\d+):(\\d+\\.\\d+) to (\\d+):(\\d+):(\\d+\\.\\d+), (.+)$"
 #define MI_EXIT_REGEX				@"^ID_EXIT=(.*)$"
 
-#define MI_REFRESH_LIMIT			10
+#define MI_STATS_UPDATE_INTERVAL	0.1f
 
-#define MI_LAVC_MAX_THREADS				8
+#define MI_LAVC_MAX_THREADS			8
 
 @implementation MplayerInterface
 /************************************************************************************
@@ -45,8 +45,6 @@
 {
 	if (![super init])
 		return  nil;
-	
-	statsUpdateInterval = 0.1;
 	
 	myPathToPlayer = [aPath retain];
 	buffer_name = @"mplayerosx";
@@ -1839,7 +1837,7 @@
 			double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - myLastUpdate);
 				
 			// parse the output according to the preset mode
-			if (timeDifference >= statsUpdateInterval) {
+			if (timeDifference >= MI_STATS_UPDATE_INTERVAL) {
 				float audioCPUUsage = 0;
 				int videoCPUUsage = 0, voCPUUsage = 0;
 				int hours = 0, mins = 0;
