@@ -520,13 +520,13 @@
 	}
 	// add filter chain
 	if ([videoFilters count] > 0) {
-		[params addObject:@"-vf"];
+		[params addObject:@"-vf-add"];
 		[params addObject:[videoFilters componentsJoinedByString:@","]];
 	}
 	
 	// *** Audio Filters
 	if ([audioFilters count] > 0) {
-		[params addObject:@"-af"];
+		[params addObject:@"-af-add"];
 		[params addObject:[audioFilters componentsJoinedByString:@","]];
 	}
 	
