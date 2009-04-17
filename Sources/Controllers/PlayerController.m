@@ -469,7 +469,7 @@
 /************************************************************************************/
 - (void) stopFromPlaylist
 {
-	
+	[self stop:nil];
 	playingFromPlaylist = NO;
 	[self cleanUpAfterStop];
 }
@@ -1152,8 +1152,13 @@
 	{
 		if (movieInfo && [movieInfo chapterCount] > 0)
 			[self skipToNextChapter];
-		else
-			[self seek:100 mode:MIPercentSeekingMode];
+		else {
+			if (playingFromPlaylist)
+				[playListController finishedPlayingItem:myPlayingItem];
+			else
+				[self stop:nil];
+			//[self seek:100 mode:MIPercentSeekingMode];
+		}
 	}
 }
 
@@ -1173,8 +1178,13 @@
 	
 	if ([myPlayer isRunning] && movieInfo && [movieInfo chapterCount] >= (currentChapter+1))
 		[self goToChapter:(currentChapter+1)];
-	else
-		[self seek:100 mode:MIPercentSeekingMode];
+	else {
+		if (playingFromPlaylist)
+			[playListController finishedPlayingItem:myPlayingItem];
+		else
+			[self stop:nil];
+		//[self seek:100 mode:MIPercentSeekingMode];
+	}
 }
 
 - (void)skipToPreviousChapter {
