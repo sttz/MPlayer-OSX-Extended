@@ -16,7 +16,6 @@
 #import "MplayerInterface.h"
 #import "VideoOpenGLView.h"
 
-#define		pollInterval			3.0f
 #define		volumeStep				10.0
 
 @interface PlayerController : NSObject
@@ -108,14 +107,17 @@
 	int audioStreamId;
 	int subtitleDemuxStreamId;
 	int subtitleFileStreamId;
+	BOOL isSeeking;
 	
 	// preferences
 	int fullscreenDeviceId;
 	BOOL fullscreenDeviceLocked;
 	
 	// volume
-	double muteLastVolume;
-	double lastPoll;
+	float muteLastVolume;
+	double lastVolumePoll;
+	
+	double lastChapterCheck;
 	
 	// images
 	NSImage *playImageOff;
@@ -163,6 +165,7 @@
 
 // player control actions
 - (IBAction)playPause:(id)sender;
+- (void) seek:(float)seconds mode:(int)aMode;
 - (float)getSeekSeconds;
 - (IBAction)seekBack:(id)sender;
 - (IBAction)seekFwd:(id)sender;
@@ -200,7 +203,7 @@
 - (void)clearChapterMenu;
 - (void)fillChapterMenu;
 - (void)chapterMenuAction:(id)sender;
-- (void)selectChapterForTime:(int)seconds;
+- (void)selectChapterForTime:(float)seconds;
 
 - (void)clearFullscreenMenu;
 - (void)fillFullscreenMenu;

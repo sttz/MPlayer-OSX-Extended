@@ -20,6 +20,9 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
+#define		MP_VOLUME_POLL_INTERVAL		10.0f
+#define		MP_CHAPTER_CHECK_INTERVAL	0.5f
+
 @implementation PlayerController
 
 /************************************************************************************/
@@ -32,7 +35,8 @@
 	saveTime = YES;
 	fullscreenStatus = NO;	// by default we play in window
 	isOntop = NO;
-	lastPoll = -pollInterval;
+	lastVolumePoll = -MP_VOLUME_POLL_INTERVAL;
+	lastChapterCheck = -MP_CHAPTER_CHECK_INTERVAL;
 	
 	//resize window
 	[playerWindow setContentMinSize:NSMakeSize(450, 78)]; // Temp workaround for IB always forgetting the min-size
@@ -1089,6 +1093,15 @@
 }
 
 /************************************************************************************/
+- (void) seek:(float)seconds mode:(int)aMode
+{
+	isSeeking = YES;
+	// Tell MPlayer to seek
+	[myPlayer seek:seconds mode:aMode];
+	// Force recheck of chapters
+	lastChapterCheck = -MP_CHAPTER_CHECK_INTERVAL;
+}
+
 - (float)getSeekSeconds
 {
 	float seconds = 60;
@@ -1106,7 +1119,7 @@
 {
 	
 	if ([myPlayer isRunning])
-		[myPlayer seek:-[self getSeekSeconds] mode:MIRelativeSeekingMode];
+		[self seek:-[self getSeekSeconds] mode:MIRelativeSeekingMode];
 	else {
 		if ([playListController indexOfSelectedItem] < 1)
 			[playListController selectItemAtIndex:0];
@@ -1121,7 +1134,7 @@
 - (IBAction)seekFwd:(id)sender
 {
 	if ([myPlayer isRunning])
-		[myPlayer seek:[self getSeekSeconds] mode:MIRelativeSeekingMode];
+		[self seek:[self getSeekSeconds] mode:MIRelativeSeekingMode];
 	else {
 		if ([playListController indexOfSelectedItem] < ([playListController itemCount]-1))
 			[playListController selectItemAtIndex:
@@ -1140,7 +1153,7 @@
 		if (movieInfo && [movieInfo chapterCount] > 0)
 			[self skipToNextChapter];
 		else
-			[myPlayer seek:100 mode:MIPercentSeekingMode];
+			[self seek:100 mode:MIPercentSeekingMode];
 	}
 }
 
@@ -1151,7 +1164,7 @@
 		if (movieInfo && [movieInfo chapterCount] > 0)
 			[self skipToPreviousChapter];
 		else
-			[myPlayer seek:0 mode:MIPercentSeekingMode];
+			[self seek:0 mode:MIPercentSeekingMode];
 	}
 }
 
@@ -1161,7 +1174,7 @@
 	if ([myPlayer isRunning] && movieInfo && [movieInfo chapterCount] >= (currentChapter+1))
 		[self goToChapter:(currentChapter+1)];
 	else
-		[myPlayer seek:100 mode:MIPercentSeekingMode];
+		[self seek:100 mode:MIPercentSeekingMode];
 }
 
 - (void)skipToPreviousChapter {
@@ -1169,7 +1182,7 @@
 	if ([myPlayer isRunning] && movieInfo&& [movieInfo chapterCount] > 0 && currentChapter > 1)
 		[self goToChapter:(currentChapter-1)];
 	else
-		[myPlayer seek:0 mode:MIPercentSeekingMode];
+		[self seek:0 mode:MIPercentSeekingMode];
 }
 
 - (void)goToChapter:(unsigned int)chapter {
@@ -1179,7 +1192,7 @@
 		
 		currentChapter = chapter;
 		[myPlayer sendCommand:[NSString stringWithFormat:@"set_property chapter %d 1", currentChapter] withType:MI_CMD_SHOW_COND];
-		lastPoll = 0; // force update of chapter menu
+		lastChapterCheck = -MP_CHAPTER_CHECK_INTERVAL; // force update of chapter menu
 	}
 }
 
@@ -1671,38 +1684,42 @@
 	[self goToChapter:[[sender representedObject] intValue]];
 }
 /************************************************************************************/
-- (void)selectChapterForTime:(int)seconds {
-	
-	[self disableMenuItemsInMenu:[chapterMenu submenu]];
-	[self disableMenuItemsInMenu:[chapterWindowMenu menu]];
-	
-	if (movieInfo) {
+- (void)selectChapterForTime:(float)seconds {
+	//[Debug log:ASL_LEVEL_ERR withMessage:@"selectChapterForTime"];
+	if (movieInfo && [movieInfo chapterCount] > 0) {
 		
 		NSEnumerator *en = [movieInfo getChaptersEnumerator];
 		NSNumber *key;
 		NSNumber *bestKey = nil;
-		float secf = seconds;
 		
 		while ((key = [en nextObject])) {
 			
-			if ([movieInfo startOfChapter:[key intValue]] < secf 
-					&& (bestKey == nil || [movieInfo startOfChapter:[bestKey intValue]] < [movieInfo startOfChapter:[key intValue]])) {
+			if ([movieInfo startOfChapter:[key intValue]] <= seconds 
+					&& (bestKey == nil || 
+							[movieInfo startOfChapter:[bestKey intValue]] < [movieInfo startOfChapter:[key intValue]])) {
 				
 				bestKey = key;
 			}
 		}
 		
 		if (bestKey) {
-		
+			
 			int index = [[chapterMenu submenu] indexOfItemWithRepresentedObject:bestKey];
 			
-			if (index != -1) {
+			if (index != -1 && [[[chapterMenu submenu] itemAtIndex:index] state] != NSOnState) {
+				
+				[self disableMenuItemsInMenu:[chapterMenu submenu]];
+				[self disableMenuItemsInMenu:[chapterWindowMenu menu]];
 				
 				[[[chapterMenu submenu] itemAtIndex:index] setState:NSOnState];
 				[[[chapterWindowMenu menu] itemAtIndex:(index+1)] setState:NSOnState];
 				currentChapter = [bestKey intValue];
-				return;
 			}
+			return;
+			
+		} else {
+			[self disableMenuItemsInMenu:[chapterMenu submenu]];
+			[self disableMenuItemsInMenu:[chapterWindowMenu menu]];
 		}
 		
 	}
@@ -2047,6 +2064,10 @@
 			[fcScrubbingBar setIndeterminate:NO];
 			break;
 		case kPlaying :
+			if (isSeeking) {
+				isSeeking = NO;
+				break;
+			}
 			status = NSLocalizedString(@"Playing",nil);
 			// set default state of scrubbing bar
 			[scrubbingBar setStyle:NSScrubbingBarEmptyStyle];
@@ -2217,12 +2238,17 @@
 												  [myPlayer postProcLevel]]];
 			}
 		}
-		// poll volume and chapter
-		double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - lastPoll);
-		if (timeDifference >= pollInterval) {
-			lastPoll = [NSDate timeIntervalSinceReferenceDate];
+		// poll volume
+		double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - lastVolumePoll);
+		if (timeDifference >= MP_VOLUME_POLL_INTERVAL) {
+			lastVolumePoll = [NSDate timeIntervalSinceReferenceDate];
 			[myPlayer sendCommand:@"get_property volume"];
-			[self selectChapterForTime:(int)[myPlayer seconds]];
+		}
+		// check chapters
+		timeDifference = ([NSDate timeIntervalSinceReferenceDate] - lastChapterCheck);
+		if (timeDifference >= MP_CHAPTER_CHECK_INTERVAL) {
+			lastChapterCheck = [NSDate timeIntervalSinceReferenceDate];
+			[self selectChapterForTime:[myPlayer seconds]];
 		}
 	}
 }
@@ -2271,7 +2297,7 @@
 		if ([movieInfo length] > 0)
 			theMode = MIAbsoluteSeekingMode;
 
-		[myPlayer seek:[[[notification userInfo] 
+		[self seek:[[[notification userInfo] 
 				objectForKey:@"SBClickedValue"] floatValue] mode:theMode];
 	}
 }
