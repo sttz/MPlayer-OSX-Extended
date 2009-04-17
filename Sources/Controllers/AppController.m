@@ -407,7 +407,7 @@
 	float customAspect = [[self preferences] floatForKey:@"CustomVideoAspectValue"];
 	if (customAspect == 0) {
 		[customAspectMenuItem setEnabled:NO];
-		[customAspectMenuItem setTitle:@"Custom"];
+		[customAspectMenuItem setTitle:@"Custom (set in Preferences)"];
 	} else {
 		[customAspectMenuItem setEnabled:YES];
 		[customAspectMenuItem setTitle:[[self preferences] stringForKey:@"CustomVideoAspect"]];
