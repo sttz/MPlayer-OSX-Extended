@@ -1,0 +1,19 @@
+#!/bin/bash
+# MPlayer OSX sign update
+# Adrian Stutz 2009
+
+# *** CONFIG
+privkey_keychain_name="MPlayerOSX Sparkle Private Key"
+
+if [ ! -f "$1" ]; then
+	echo "usage: ./sign file"
+	exit 1
+fi
+
+signature=$(
+	openssl dgst -sha1 -binary < "$1" \
+	| openssl dgst -dss1 -sign <(security find-generic-password -g -s "$privkey_keychain_name" 2>&1 1>/dev/null | perl -pe '($_) = /"(.+)"/; s/\\012/\n/g') \
+	| openssl enc -base64
+)
+
+echo $signature
