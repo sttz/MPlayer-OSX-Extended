@@ -89,7 +89,6 @@
 		3A7263180EE5EFDC00945A3E /* libexpat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7263170EE5EFDC00945A3E /* libexpat.a */; };
 		3A72631B0EE5F00400945A3E /* libiconv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A72631A0EE5F00400945A3E /* libiconv.a */; };
 		3A72631E0EE5F01B00945A3E /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A72631D0EE5F01B00945A3E /* libz.a */; };
-		3A96C95A0E4E20B800B7B261 /* iso-639-3.tab in Resources */ = {isa = PBXBuildFile; fileRef = 3A96C9590E4E20B800B7B261 /* iso-639-3.tab */; };
 		3AB2120C0EABE74900ACA509 /* PlayerFullscreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB2120B0EABE74900ACA509 /* PlayerFullscreenWindow.m */; };
 		3ABF85420EBFA084001FE779 /* FullscreenControls.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABF85410EBFA084001FE779 /* FullscreenControls.m */; };
 		3ABF86580EBFAD06001FE779 /* FullscreenControlsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABF86570EBFAD06001FE779 /* FullscreenControlsView.m */; };
@@ -119,6 +118,7 @@
 		3AE612620EC088E7009F2F12 /* fc_audio_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AE612590EC088E7009F2F12 /* fc_audio_on.png */; };
 		3AE612660EC08C2D009F2F12 /* FullscreenControlsVolumeSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE612650EC08C2D009F2F12 /* FullscreenControlsVolumeSlider.m */; };
 		3AF152260F97B3F700409534 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AF152240F97B3F700409534 /* RegexKitLite.m */; };
+		3AF152A40F97C21500409534 /* iso-639.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3AF152A30F97C21500409534 /* iso-639.plist */; };
 		3AF7EFF60EEDDEB600BFEBBF /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7263150EE5EFD200945A3E /* libfreetype.a */; };
 		3AFE25310EC0FA29009FFEC5 /* FullscreenControlsScrubbingBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AFE25300EC0FA29009FFEC5 /* FullscreenControlsScrubbingBar.m */; };
 		3AFE25360EC0FEBB009FFEC5 /* fc_scrub_anim.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AFE25330EC0FEBB009FFEC5 /* fc_scrub_anim.png */; };
@@ -276,6 +276,7 @@
 		3AE612650EC08C2D009F2F12 /* FullscreenControlsVolumeSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullscreenControlsVolumeSlider.m; path = Sources/Classes/FullscreenControlsVolumeSlider.m; sourceTree = "<group>"; };
 		3AF152240F97B3F700409534 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegexKitLite.m; path = Sources/RegexKitLite/RegexKitLite.m; sourceTree = "<group>"; };
 		3AF152250F97B3F700409534 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegexKitLite.h; path = Sources/RegexKitLite/RegexKitLite.h; sourceTree = "<group>"; };
+		3AF152A30F97C21500409534 /* iso-639.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; name = "iso-639.plist"; path = "Resources/iso-639.plist"; sourceTree = "<group>"; };
 		3AFE252F0EC0FA29009FFEC5 /* FullscreenControlsScrubbingBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FullscreenControlsScrubbingBar.h; path = Sources/Classes/FullscreenControlsScrubbingBar.h; sourceTree = "<group>"; };
 		3AFE25300EC0FA29009FFEC5 /* FullscreenControlsScrubbingBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullscreenControlsScrubbingBar.m; path = Sources/Classes/FullscreenControlsScrubbingBar.m; sourceTree = "<group>"; };
 		3AFE25330EC0FEBB009FFEC5 /* fc_scrub_anim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fc_scrub_anim.png; path = Resources/Graphics/fc_scrub_anim.png; sourceTree = "<group>"; };
@@ -457,6 +458,7 @@
 				377E032C085E3ED500D64A26 /* volume2.png */,
 				377E032D085E3ED500D64A26 /* volume3.png */,
 				8D1107310486CEB800E47090 /* Info.plist */,
+				3AF152A30F97C21500409534 /* iso-639.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -572,6 +574,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AF152A40F97C21500409534 /* iso-639.plist in Resources */,
 				377E032F085E3ED500D64A26 /* audio.icns in Resources */,
 				377E0330085E3ED500D64A26 /* icon.icns in Resources */,
 				377E0331085E3ED500D64A26 /* info.png in Resources */,
@@ -612,7 +615,6 @@
 				37DCF89808886A2800DBF422 /* ffwd_button_off.png in Resources */,
 				37DCF89908886A2800DBF422 /* ffwd_button_on.png in Resources */,
 				378749400891B7A60068D97D /* fonts in Resources */,
-				3A96C95A0E4E20B800B7B261 /* iso-639-3.tab in Resources */,
 				3ABF86A80EBFAF4C001FE779 /* fc_background.png in Resources */,
 				3AE612370EC08130009F2F12 /* fc_scrub_bg.png in Resources */,
 				3AE612380EC08130009F2F12 /* fc_srub_bar.png in Resources */,
