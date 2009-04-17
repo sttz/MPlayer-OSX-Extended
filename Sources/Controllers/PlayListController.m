@@ -317,8 +317,8 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 		[playListCount setStringValue:[NSString stringWithFormat:@"%d items, %01d:%02d:%02d",[self itemCount],totalTime/3600,(totalTime%3600)/60,totalTime%60]];
 	
 	// update menu items
-	[playNextMenuItem setEnabled:([self itemCount] > 0)];
-	[playPreviousMenuItem setEnabled:([self itemCount] > 0)];
+	[playNextMenuItem setEnabled:[playerController isPlaying]];
+	[playPreviousMenuItem setEnabled:[playerController isPlaying]];
 }
 /************************************************************************************/
 - (void) applyPrefs;
@@ -777,7 +777,10 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 
 - (IBAction)playPrevious:(id)sender;
 {
-	int itemIdx = [self indexOfSelectedItem];
+	if (![playerController isPlaying])
+		return;
+	
+	int itemIdx = [self indexOfItem:[playerController playingItem]];
 	
 	if(itemIdx > 0)
 	{
@@ -790,9 +793,12 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 
 - (IBAction)playNext:(id)sender;
 {
-	int itemIdx = [self indexOfSelectedItem];
+	if (![playerController isPlaying])
+		return;
 	
-	if(itemIdx < ([self itemCount]-1))
+	int itemIdx = [self indexOfItem:[playerController playingItem]];
+	
+	if(itemIdx >= 0 && itemIdx < ([self itemCount]-1))
 	{
 		itemIdx++;
 		[self selectItemAtIndex:itemIdx];
