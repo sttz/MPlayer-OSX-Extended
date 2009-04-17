@@ -28,7 +28,8 @@
 #define MI_EXIT_REGEX				@"^ID_EXIT=(.*)$"
 #define MI_NEWLINE_REGEX			@"(?:\r\n|[\n\v\f\r\302\205\\p{Zl}\\p{Zp}])"
 
-#define MI_STATS_UPDATE_INTERVAL	0.1f
+#define MI_STATS_UPDATE_INTERVAL	0.5f // Stats update interval when playing
+#define MI_SEEK_UPDATE_INTERVAL		0.1f // Stats update interval while seeking
 
 #define MI_LAVC_MAX_THREADS			8
 
@@ -602,6 +603,7 @@
 	if (myMplayerTask) {
 		switch (myState) {
 		case kPlaying :
+		case kSeeking :
 //			[myMplayerTask terminate];
 			[self sendCommand:@"quit"];
 			break;
@@ -627,6 +629,7 @@
 	if (myMplayerTask) {
 		switch (myState) {
 		case kPlaying:					// mplayer is just playing then pause it
+		case kSeeking :
 			[self sendCommand:@"pause"];
 //			myState = kPaused;
 			break;
@@ -689,6 +692,7 @@
 {
 	switch (myState) {
 	case kPlaying:					// if is playing send it directly to player
+	case kSeeking:
 		[self sendCommand:aCommand];
 		break;
 	case kStopped:					// if stopped do nothing
@@ -890,7 +894,7 @@
 {
 	if (framedrop != mode) {
 		framedrop = mode;
-		if (myState == kPlaying || myState == kPaused)
+		if (myState == kPlaying || myState == kPaused || myState == kSeeking)
 			[myCommandsBuffer addObject:[@"frame_drop=" stringByAppendingString: [[NSNumber numberWithInt: mode] stringValue]]];
 	}
 }
@@ -1278,7 +1282,7 @@
 {
 	if (isFullscreen != aBool) {
 		isFullscreen = aBool;
-		if (myState == kPlaying || myState == kPaused) {
+		if (myState == kPlaying || myState == kPaused || myState == kSeeking) {
 			[myCommandsBuffer addObject:@"vo_fullscreen"];
 			takeEffectImediately = YES;
 		}
@@ -1293,7 +1297,7 @@
 {
 	if (myVolume != percents) {
 		myVolume = percents;
-		if (myState == kPlaying || myState == kPaused)
+		if (myState == kPlaying || myState == kPaused || myState == kSeeking)
 			[myCommandsBuffer addObject:[NSString stringWithFormat:
 					@"volume %d 1",myVolume]];
 	}
@@ -1437,7 +1441,7 @@
 }
 
 /************************************************************************************
- ADVENCED
+ ADVANCED
  ************************************************************************************/
 - (void)sendCommand:(NSString *)aCommand withType:(uint)type
 {
@@ -1499,6 +1503,8 @@
 	}
 	osdSilenced = NO;
 }
+/************************************************************************************/
+
 /************************************************************************************/
 - (void) takeScreenshot
 {
@@ -1835,7 +1841,8 @@
 			double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - myLastUpdate);
 				
 			// parse the output according to the preset mode
-			if (timeDifference >= MI_STATS_UPDATE_INTERVAL) {
+			if ((myState == kSeeking && timeDifference >= MI_SEEK_UPDATE_INTERVAL)
+					|| timeDifference >= MI_STATS_UPDATE_INTERVAL) {
 				float audioCPUUsage = 0;
 				int videoCPUUsage = 0, voCPUUsage = 0;
 				int hours = 0, mins = 0;
