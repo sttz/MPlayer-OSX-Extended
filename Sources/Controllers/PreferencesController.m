@@ -711,7 +711,6 @@
 	[thePrefs setBool:[guessEncoding state] forKey:@"SubtitlesGuessEncoding"];
 	
 	// guess language
-	[Debug log:ASL_LEVEL_ERR withMessage:@"SubtitlesGuessLanguage: %i, %@",[guessLanguage indexOfSelectedItem],[[guessLanguage selectedItem] representedObject]];
 	if ([guessLanguage indexOfSelectedItem] > 0)
 		[thePrefs setObject:[[guessLanguage selectedItem] representedObject] forKey:@"SubtitlesGuessLanguage"];
 	else
