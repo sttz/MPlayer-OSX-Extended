@@ -302,14 +302,14 @@
 	if(voModule == 1) 
 	{
 		[params addObject:@"-vo"];
-		[params addObject:[@"macosx:device_id=" stringByAppendingString: [[NSNumber numberWithUnsignedInt: deviceId] stringValue]]];
+		[params addObject:[@"corevideo:device_id=" stringByAppendingString: [[NSNumber numberWithUnsignedInt: deviceId] stringValue]]];
 		windowedVO = YES;
 	}
 	//mplayer osx
 	else if(voModule == 2) 
 	{
 		[params addObject:@"-vo"];
-		[params addObject:[NSString stringWithFormat:@"macosx:buffer_name=%@:device_id=%i",buffer_name, deviceId]];
+		[params addObject:[NSString stringWithFormat:@"corevideo:buffer_name=%@:device_id=%i",buffer_name, deviceId]];
 		windowedVO = NO;
 	}
 	//quartz/quicktime
