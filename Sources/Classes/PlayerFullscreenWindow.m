@@ -27,6 +27,9 @@
 #import "Debug.h"
 
 #define MP_FC_HIDEAFTERSECONDS	3
+#define INITIAL_FC_X_POS		0.5
+#define INITIAL_FC_Y_POS		0.15
+
 
 @implementation PlayerFullscreenWindow
 
@@ -87,15 +90,31 @@
 	if ([[appController preferences] objectForKey:@"FullscreenControlsPosition"]) 
 		pos = [[appController preferences] arrayForKey:@"FullscreenControlsPosition"];
 	else
-		pos = [NSArray arrayWithObjects:[NSNumber numberWithFloat:0.5],[NSNumber numberWithFloat:0.15], nil];
+		pos = [NSArray arrayWithObjects:[NSNumber numberWithFloat:INITIAL_FC_X_POS],[NSNumber numberWithFloat:INITIAL_FC_Y_POS], nil];
 	
-	// use percent values to get absolute origin
 	NSRect screenFrame = [[self screen] frame];
 	NSRect controllerFrame = [fullscreenControls frame];
+	NSPoint point;
 	
-	NSPoint point = NSMakePoint(
-		screenFrame.origin.x + [[pos objectAtIndex:0] floatValue] * screenFrame.size.width - (controllerFrame.size.width / 2), 
-		screenFrame.origin.y + [[pos objectAtIndex:1] floatValue] * screenFrame.size.height - (controllerFrame.size.height / 2));
+	BOOL onScreen = NO;
+	int i,j;
+	for (j = 0; onScreen == NO && j < 2; j++) {
+		
+		// use percent values to get absolute origin
+		point = NSMakePoint(
+			screenFrame.origin.x + [[pos objectAtIndex:0] floatValue] * screenFrame.size.width - (controllerFrame.size.width / 2), 
+			screenFrame.origin.y + [[pos objectAtIndex:1] floatValue] * screenFrame.size.height - (controllerFrame.size.height / 2));
+		
+		// check if point is on any screen
+		for (i = 0; i < [[NSScreen screens] count]; i++) {
+			if (NSPointInRect(point, [[[NSScreen screens] objectAtIndex:i] frame]))
+				onScreen = YES;
+		}
+		
+		// reset to default position if not on screen
+		if (!onScreen)
+			pos = [NSArray arrayWithObjects:[NSNumber numberWithFloat:INITIAL_FC_X_POS],[NSNumber numberWithFloat:INITIAL_FC_Y_POS], nil];
+	}
 	
 	controllerFrame.origin.x = point.x;
 	controllerFrame.origin.y = point.y;
@@ -113,14 +132,19 @@
 	NSRect controllerFrame = [fullscreenControls frame];
 	
 	// transform position to relative screen-coordiantes
-	NSArray *pos = [NSArray arrayWithObjects:
-		[NSNumber numberWithFloat:
-			((controllerFrame.origin.x + (controllerFrame.size.width / 2)) - screenFrame.origin.x) / screenFrame.size.width],
-		[NSNumber numberWithFloat:
-			((controllerFrame.origin.y + (controllerFrame.size.height / 2)) - screenFrame.origin.y) / screenFrame.size.height],
-		nil];
+	float px, py;
+	px = ((controllerFrame.origin.x + (controllerFrame.size.width / 2)) - screenFrame.origin.x) / screenFrame.size.width;
+	py = ((controllerFrame.origin.y + (controllerFrame.size.height / 2)) - screenFrame.origin.y) / screenFrame.size.height;
 	
-	[[appController preferences] setObject:pos forKey:@"FullscreenControlsPosition"];
+	// check values for sanity and reset to defaults if so
+	if (!isfinite(px) || isnan(px) || !isfinite(py) || isnan(py))
+		[[appController preferences] removeObjectForKey:@"FullscreenControlsPosition"];
+	// save sane values in preferences
+	else {
+		NSArray *pos = [NSArray arrayWithObjects:
+			[NSNumber numberWithFloat:px],[NSNumber numberWithFloat:py],nil];
+		[[appController preferences] setObject:pos forKey:@"FullscreenControlsPosition"];
+	}
 }
 
 - (void)mouseEntered:(NSEvent *)theEvent
