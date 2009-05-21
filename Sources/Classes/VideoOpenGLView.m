@@ -427,7 +427,8 @@
 	if(switchingToFullscreen)
 	{
 		//enter kiosk mode
-		SetSystemUIMode( kUIModeAllHidden, kUIOptionAutoShowMenuBar);
+		if (fullscreenId == 0)
+			SetSystemUIMode( kUIModeAllHidden, kUIOptionAutoShowMenuBar);
 		[fullscreenWindow setFullscreen:YES];
 		
 		// place fswin above video
@@ -479,7 +480,8 @@
 		[self drawRect:old_view_frame];
 		
 		//exit kiosk mode
-		SetSystemUIMode( kUIModeNormal, 0);
+		if (fullscreenId == 0)
+			SetSystemUIMode( kUIModeNormal, 0);
 		
 		[threadProto finishToggleFullscreen];
 		
