@@ -579,9 +579,8 @@
 	
 	//resize window
 	NSRect frame = [[self window] frame];
-	NSSize minSize = [[self window]contentMinSize];
-	frame.size.width = minSize.width;
-	frame.size.height = minSize.height+20; //+title bar height
+	frame.size = [[playerController playerWindow] contentMinSize];
+	frame = [[playerController playerWindow] frameRectForContentRect:frame];
 	[[self window] setFrame:frame display:YES animate:[appController animateInterface]];
 	
 	// remove fullscreen callback
