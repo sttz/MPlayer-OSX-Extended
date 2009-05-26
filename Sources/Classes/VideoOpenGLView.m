@@ -620,6 +620,12 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self
 		name: @"MIFullscreenSwitchDone"
 		object: self];
+	
+	// post view closed notification
+	[[NSNotificationCenter defaultCenter]
+		postNotificationName:@"MIVideoViewClosed"
+		object:self
+		userInfo:nil];
 }
 
 /*
