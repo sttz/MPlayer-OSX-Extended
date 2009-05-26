@@ -412,11 +412,6 @@
  */
 - (void) toggleFullscreenWindow
 {
-	
-	static NSRect old_win_frame;
-	static NSRect old_view_frame;
-	NSWindow *window = [playerController playerWindow];
-    
 	int fullscreenId = [playerController fullscreenDeviceId];
 	NSRect screen_frame = [[[NSScreen screens] objectAtIndex:fullscreenId] frame];
 	/*screen_frame.origin.x = 500;
@@ -426,18 +421,18 @@
 	
 	if(switchingToFullscreen)
 	{
-		//enter kiosk mode
+		// hide menu and dock if on same screen
 		if (fullscreenId == 0)
 			SetSystemUIMode( kUIModeAllHidden, kUIOptionAutoShowMenuBar);
 		[fullscreenWindow setFullscreen:YES];
 		
-		// place fswin above video
+		// place fswin above video in player window
 		NSRect rect = [self frame];
-		rect.origin = [window convertBaseToScreen:rect.origin];
+		rect.origin = [[playerController playerWindow] convertBaseToScreen:rect.origin];
 		[fullscreenWindow setFrame:rect display:NO animate:NO];
 		
-		// save positions for back transition
-		old_win_frame = rect;
+		// save position and size for back transition
+		old_win_size = [[playerController playerWindow] frame].size;
 		old_view_frame = [self frame];
 		
 		// move to ontop level if needed
@@ -452,50 +447,88 @@
 		[fullscreenWindow setContentView:self];
 		[self drawRect:rect];
 		
-		//resize window	
-		[fullscreenWindow setFrame:screen_frame display:YES animate:[appController animateInterface]];
+		[self setFrame:screen_frame onWindow:fullscreenWindow blocking:NO];
 		
-		[fullscreenWindow startMouseTracking];
+		// close video view
+		NSRect frame = [[playerController playerWindow] frame];
+		frame.size = [[playerController playerWindow] contentMinSize];
+		frame = [[playerController playerWindow] frameRectForContentRect:frame];
 		
-		[window orderOut:nil];
+		[self setFrame:frame onWindow:[playerController playerWindow] blocking:NO];
 		
 		[threadProto finishToggleFullscreen];
 		
+		// wait for animation to finish
+		if ([appController animateInterface]) {
+			NSTimeInterval waitFor = [fullscreenWindow animationResizeTime:screen_frame];
+			[self performSelector:@selector(toggleFullscreenWindowContinued) withObject:self afterDelay:waitFor+.1];
+		} else
+			[self toggleFullscreenWindowContinued];
 	}
 	else
 	{
-		[window orderWindow:NSWindowBelow relativeTo:[fullscreenWindow windowNumber]];
-		[window makeKeyWindow];
+		// apply old size to player window
+		NSRect win_frame = [[playerController playerWindow] frame];
+		win_frame.size = old_win_size;
+		
+		[self setFrame:win_frame onWindow:[playerController playerWindow] blocking:NO];
+		
+		// move player window below fullscreen window
+		[[playerController playerWindow] orderWindow:NSWindowBelow relativeTo:[fullscreenWindow windowNumber]];
+		[[playerController playerWindow] makeKeyWindow];
 		
 		[fullscreenWindow setFullscreen:NO];
 		[fullscreenWindow stopMouseTracking];
 		
-		[fullscreenWindow setFrame:old_win_frame display:YES animate:[appController animateInterface]];
+		// resize fullscreen window back onto video view
+		NSRect rect = old_view_frame;
+		rect.origin = [[playerController playerWindow] convertBaseToScreen:rect.origin];
+		
+		[self setFrame:rect onWindow:fullscreenWindow blocking:NO];
+		
+		// wait for animation to finish
+		if ([appController animateInterface]) {
+			NSTimeInterval waitFor = [fullscreenWindow animationResizeTime:rect];
+			[self performSelector:@selector(toggleFullscreenWindowContinued) withObject:self afterDelay:waitFor+.1];
+		} else
+			[self toggleFullscreenWindowContinued];
+	}
+}
+
+/*
+	Continue fullscreen toggle after switch animation
+ */
+- (void) toggleFullscreenWindowContinued
+{
+	
+	if (switchingToFullscreen) {
+		
+		[fullscreenWindow startMouseTracking];
+		
+		[threadProto finishToggleFullscreen];
+		
+	} else {
 		
 		[fullscreenWindow orderOut:nil];
 		
 		// move view back, place and redraw
-		[[window contentView] addSubview:self];
+		[[[playerController playerWindow] contentView] addSubview:self];
 		[self setFrame:old_view_frame];
 		[self drawRect:old_view_frame];
 		
 		//exit kiosk mode
-		if (fullscreenId == 0)
-			SetSystemUIMode( kUIModeNormal, 0);
+		SetSystemUIMode( kUIModeNormal, 0);
 		
 		[threadProto finishToggleFullscreen];
-		
 	}
-	
-	
 }
+
 
 /*
  Switching Fullscreen has ended
  */
 - (void) toggleFullscreenEnded
 {
-	
 	[[NSNotificationCenter defaultCenter]
 		postNotificationName:@"MIFullscreenSwitchDone"
 		object:self
@@ -577,7 +610,7 @@
 	image_bytes = 0;
 	image_aspect = 0;
 	
-	//resize window
+	// close video view
 	NSRect frame = [[self window] frame];
 	frame.size = [[playerController playerWindow] contentMinSize];
 	frame = [[playerController playerWindow] frameRectForContentRect:frame];
@@ -747,6 +780,37 @@
 {
 	if ([theEvent clickCount] == 2)
 		[playerController switchFullscreen: self];
+}
+
+- (void) setFrame:(NSRect)frame onWindow:(NSWindow *)window blocking:(BOOL)blocking
+{
+	// apply directly if animations are disabled
+	if (![appController animateInterface]) {
+		[window setFrame:frame display:YES];
+		return;
+	}/* else {
+		[window setFrame:frame display:YES animate:YES];
+		return;
+	}*/
+	
+	NSViewAnimation *anim;
+	NSMutableDictionary *animInfo;
+	
+	animInfo = [NSMutableDictionary dictionaryWithCapacity:3];
+	[animInfo setObject:window forKey:NSViewAnimationTargetKey];
+	[animInfo setObject:[NSValue valueWithRect:[window frame]] forKey:NSViewAnimationStartFrameKey];
+	[animInfo setObject:[NSValue valueWithRect:frame] forKey:NSViewAnimationEndFrameKey];
+	
+	anim = [[NSViewAnimation alloc] initWithViewAnimations:[NSArray arrayWithObject:animInfo]];
+	
+	[anim setDuration:[window animationResizeTime:frame]];
+	if (!blocking)
+		[anim setAnimationBlockingMode:NSAnimationNonblocking];
+	else
+		[anim setAnimationBlockingMode:NSAnimationBlocking];
+	
+	[anim startAnimation];
+	[anim release];
 }
 
 @end

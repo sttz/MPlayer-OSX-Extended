@@ -80,6 +80,11 @@
 	
 	//shared memory
 	int shm_fd;
+	
+	// fullscreen switching
+	NSSize old_win_size;
+	NSRect old_view_frame;
+	
 	//struct shmid_ds shm_desc;
 	
 	//Movie menu outlets
@@ -135,6 +140,7 @@
 - (void) startOpenGLView;
 - (BOOL) isFullscreen;
 - (void) toggleFullscreenWindow;
+- (void) toggleFullscreenWindowContinued;
 - (void) toggleFullscreenEnded;
 - (void) reshape;
 - (void) resizeView;
@@ -147,5 +153,8 @@
 - (IBAction)MovieMenuAction:(id)sender;
 //Event
 - (void) mouseDown: (NSEvent *) theEvent;
+
+// Helper methods
+- (void) setFrame:(NSRect)frame onWindow:(NSWindow *)window blocking:(BOOL)blocking;
 
 @end
