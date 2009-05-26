@@ -1215,8 +1215,6 @@
 	[myPlayer stop];
 		
 	[playListController updateView];
-	
-	[self cleanUpAfterStop];
 }
 
 /************************************************************************************/
@@ -2330,8 +2328,28 @@
 // executes when window is closed
 - (BOOL)windowShouldClose:(id)sender
 {
+	BOOL closeNow;
+	
+	if ([videoOpenGLView isFullscreen]) {
+		closeNow = NO;
+		[[NSNotificationCenter defaultCenter] addObserver:self
+			selector: @selector(closeWindowNow:) 
+			name: @"MIVideoViewClosed"
+			object: videoOpenGLView];
+	} else
+		closeNow = YES;
+	
 	[self stop:nil];
-	return YES;
+	return closeNow;
+}
+
+- (void)closeWindowNow:(id)sender {
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self
+		name: @"MIVideoViewClosed"
+		object: videoOpenGLView];
+	
+	[playerWindow close];
 }
 
 @end

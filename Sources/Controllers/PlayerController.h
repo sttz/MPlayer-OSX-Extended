@@ -229,5 +229,6 @@
 // window delegate methods
 - (BOOL)windowShouldZoom:(NSWindow *)sender toFrame:(NSRect)newFrame;
 - (BOOL)windowShouldClose:(id)sender;
+- (void)closeWindowNow:(id)sender;
 
 @end
