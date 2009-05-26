@@ -85,6 +85,9 @@
 	NSSize old_win_size;
 	NSRect old_view_frame;
 	
+	// screen blacking
+	NSMutableArray *blackingWindows;
+	
 	//struct shmid_ds shm_desc;
 	
 	//Movie menu outlets
@@ -142,6 +145,8 @@
 - (void) toggleFullscreenWindow;
 - (void) toggleFullscreenWindowContinued;
 - (void) toggleFullscreenEnded;
+- (void) blackScreensExcept:(int)fullscreenId;
+- (void) unblackScreens;
 - (void) reshape;
 - (void) resizeView;
 - (void) close;
@@ -156,5 +161,6 @@
 
 // Helper methods
 - (void) setFrame:(NSRect)frame onWindow:(NSWindow *)window blocking:(BOOL)blocking;
+- (void) fadeWindow:(NSWindow *)window withEffect:(NSString *)effect;
 
 @end

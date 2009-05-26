@@ -53,6 +53,7 @@
 	// Output
 	IBOutlet id fullscreenSameAsPlayer;
 	IBOutlet id fullscreenDeviceId;
+	IBOutlet id blackoutScreens;
 	IBOutlet id deviceIdStepper;
 	IBOutlet id videoDriverMenu;
 	IBOutlet id screenshots;

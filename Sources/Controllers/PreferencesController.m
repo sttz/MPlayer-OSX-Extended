@@ -256,6 +256,10 @@
 	else
 		[fullscreenDeviceId setStringValue:@"0"];
 	
+	// black out screens
+	if ([thePrefs objectForKey:@"BlackOutOtherScreens"])
+		[blackoutScreens setState:[thePrefs boolForKey:@"BlackOutOtherScreens"]];
+	
 	// video driver
 	if ([thePrefs objectForKey:@"VideoDriver"])
 		[videoDriverMenu selectItemAtIndex: [[thePrefs objectForKey:@"VideoDriver"] intValue]];
@@ -675,6 +679,9 @@
 				forKey:@"FullscreenDevice"];
 	else
 		[thePrefs setObject:[NSNumber numberWithInt:0] forKey:@"FullscreenDevice"];
+	
+	// black out other screens
+	[thePrefs setBool:[blackoutScreens state] forKey:@"BlackOutOtherScreens"];
 	
 	// video out module
 	[thePrefs setObject:[NSNumber numberWithInt:[videoDriverMenu indexOfSelectedItem]]

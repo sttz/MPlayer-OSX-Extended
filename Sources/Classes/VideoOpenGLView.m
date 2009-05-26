@@ -456,7 +456,8 @@
 		
 		[self setFrame:frame onWindow:[playerController playerWindow] blocking:NO];
 		
-		[threadProto finishToggleFullscreen];
+		if ([[appController preferences] boolForKey:@"BlackOutOtherScreens"])
+			[self blackScreensExcept:fullscreenId];
 		
 		// wait for animation to finish
 		if ([appController animateInterface]) {
@@ -485,6 +486,8 @@
 		rect.origin = [[playerController playerWindow] convertBaseToScreen:rect.origin];
 		
 		[self setFrame:rect onWindow:fullscreenWindow blocking:NO];
+		
+		[self unblackScreens];
 		
 		// wait for animation to finish
 		if ([appController animateInterface]) {
@@ -533,6 +536,62 @@
 		postNotificationName:@"MIFullscreenSwitchDone"
 		object:self
 		userInfo:nil];
+}
+
+/*
+	Black out all screens except fullscreen screen
+ */
+- (void) blackScreensExcept:(int)fullscreenId
+{
+	[blackingWindows release];
+	blackingWindows = [[NSMutableArray alloc] initWithCapacity:[[NSScreen screens] count]];
+	
+	unsigned int i;
+	NSWindow *win;
+	NSRect fs_rect;
+	for (i = 0; i < [[NSScreen screens] count]; i++) { 
+		// don't black fullscreen screen
+		if (i == fullscreenId)
+			continue;
+		// when blacking the main screen, hide the menu bar and dock
+		if (i == 0)
+			SetSystemUIMode( kUIModeAllHidden, kUIOptionAutoShowMenuBar);
+		
+		fs_rect = [[[NSScreen screens] objectAtIndex:i] frame];
+		fs_rect.origin = NSZeroPoint;
+		win = [[NSWindow alloc] initWithContentRect:fs_rect styleMask:NSBorderlessWindowMask 
+											backing:NSBackingStoreBuffered defer:NO screen:[[NSScreen screens] objectAtIndex:i]];
+		[win setBackgroundColor:[NSColor blackColor]];
+		[win setLevel:NSFloatingWindowLevel];
+		[win orderFront:nil];
+		
+		if ([appController animateInterface])
+			[self fadeWindow:win withEffect:NSViewAnimationFadeInEffect];
+		
+		[blackingWindows addObject:win];
+		[win release];
+	}
+	
+}
+
+/*
+	Remove black out windows
+ */
+- (void) unblackScreens
+{
+	if (!blackingWindows)
+		return;
+	
+	unsigned int i;
+	for (i = 0; i < [blackingWindows count]; i++) {
+		if (![appController animateInterface])
+			[[blackingWindows objectAtIndex:i] close];
+		else
+			[self fadeWindow:[blackingWindows objectAtIndex:i] withEffect:NSViewAnimationFadeOutEffect];
+	}
+	
+	[blackingWindows release];
+	blackingWindows = nil;
 }
 
 /*
@@ -814,6 +873,25 @@
 		[anim setAnimationBlockingMode:NSAnimationNonblocking];
 	else
 		[anim setAnimationBlockingMode:NSAnimationBlocking];
+	
+	[anim startAnimation];
+	[anim release];
+}
+
+- (void) fadeWindow:(NSWindow *)window withEffect:(NSString *)effect
+{
+	
+	NSViewAnimation *anim;
+	NSMutableDictionary *animInfo;
+	
+	animInfo = [NSMutableDictionary dictionaryWithCapacity:2];
+	[animInfo setObject:window forKey:NSViewAnimationTargetKey];
+	[animInfo setObject:effect forKey:NSViewAnimationEffectKey];
+	
+	anim = [[NSViewAnimation alloc] initWithViewAnimations:[NSArray arrayWithObject:animInfo]];
+	[anim setAnimationBlockingMode:NSAnimationNonblockingThreaded];
+	[anim setAnimationCurve:NSAnimationEaseIn];
+	[anim setDuration:0.3];
 	
 	[anim startAnimation];
 	[anim release];

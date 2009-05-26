@@ -157,6 +157,8 @@
 				<string>id</string>
 				<key>chapterMenuAction</key>
 				<string>id</string>
+				<key>closeWindowNow</key>
+				<string>id</string>
 				<key>cycleAudioStreams</key>
 				<string>id</string>
 				<key>cycleSubtitleStreams</key>
@@ -396,6 +398,8 @@
 				<key>audioCodecs</key>
 				<string>id</string>
 				<key>audioLanguages</key>
+				<string>id</string>
+				<key>blackoutScreens</key>
 				<string>id</string>
 				<key>cacheSizeBox</key>
 				<string>id</string>
