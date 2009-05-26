@@ -8,7 +8,7 @@
  */
 
 #import "PreferencesController.h"
-#import <RegexKit/RegexKit.h> 
+#import "RegexKitLite.h" 
 
 // other controllers
 #import "AppController.h"
@@ -651,13 +651,12 @@
 	
 	// parse value
 	if ([[videoAspectBox stringValue] length] > 0) {
-		// Parts of custom aspect ratio
-		NSString *part1 = nil, *part2 = nil;
 		// Parse custom aspect ratio field (eiher "x.x or x.x:x.x)
-		if ([[videoAspectBox stringValue] getCapturesWithRegexAndReferences:
-			 ASPECT_REGEX,
-			 @"${1}", &part1,
-			 @"${2}", &part2, nil]) {
+		if ([[videoAspectBox stringValue] isMatchedByRegex:ASPECT_REGEX]) {
+			
+			// Parts of custom aspect ratio
+			NSString *part1 = [[videoAspectBox stringValue] stringByMatching:ASPECT_REGEX capture:1];
+			NSString *part2 = [[videoAspectBox stringValue] stringByMatching:ASPECT_REGEX capture:2];
 			
 			if (part1 && part2)				
 				[thePrefs setFloat:([part1 floatValue] / [part2 floatValue]) forKey:@"CustomVideoAspectValue"];
