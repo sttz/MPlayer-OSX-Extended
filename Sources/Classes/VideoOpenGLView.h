@@ -88,6 +88,9 @@
 	// screen blacking
 	NSMutableArray *blackingWindows;
 	
+	// window dragging
+	NSPoint dragStartPoint;
+	
 	//struct shmid_ds shm_desc;
 	
 	//Movie menu outlets

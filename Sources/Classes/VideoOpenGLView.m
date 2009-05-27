@@ -522,6 +522,9 @@
 		//exit kiosk mode
 		SetSystemUIMode( kUIModeNormal, 0);
 		
+		// reset drag point
+		dragStartPoint = NSZeroPoint;
+		
 		[threadProto finishToggleFullscreen];
 	}
 }
@@ -841,12 +844,54 @@
 	}
 }
 
+/*
+	Mouse down handler for fullscreen and dragging
+*/
 - (void) mouseDown: (NSEvent *) theEvent
 {
 	if ([theEvent clickCount] == 2)
 		[playerController switchFullscreen: self];
+	
+	// save start for dragging window
+	NSRect windowFrame = [[self window] frame];
+	dragStartPoint = [[self window] convertBaseToScreen:[theEvent locationInWindow]];
+	dragStartPoint.x -= windowFrame.origin.x;
+	dragStartPoint.y -= windowFrame.origin.y;
 }
 
+/*
+	Allow the window to be dragged with this view
+*/
+- (void)mouseDragged:(NSEvent *)theEvent
+{
+	// don't allow dragging when fullscreen or while switching
+	if (isFullscreen || switchingInProgress)
+		return;
+	
+	if (dragStartPoint.x == 0 && dragStartPoint.y == 0)
+		return;
+	
+	NSPoint currentDragPoint;
+	NSPoint newOrigin;
+	
+    currentDragPoint = [[self window] convertBaseToScreen:[[self window] mouseLocationOutsideOfEventStream]];
+    newOrigin.x = currentDragPoint.x - dragStartPoint.x;
+    newOrigin.y = currentDragPoint.y - dragStartPoint.y;
+    
+    [[self window] setFrameOrigin:newOrigin];
+}
+
+/*
+	Make drag operation start even if window is intially in the back
+*/
+- (BOOL)mouseDownCanMoveWindow
+{
+    return YES;
+}
+
+/*
+	Animate frame change on window with additional blocking option
+*/
 - (void) setFrame:(NSRect)frame onWindow:(NSWindow *)window blocking:(BOOL)blocking
 {
 	// apply directly if animations are disabled
@@ -878,6 +923,9 @@
 	[anim release];
 }
 
+/*
+	Animate window fading in/out
+*/
 - (void) fadeWindow:(NSWindow *)window withEffect:(NSString *)effect
 {
 	
