@@ -167,6 +167,7 @@
 // player control actions
 - (IBAction)playPause:(id)sender;
 - (void) seek:(float)seconds mode:(int)aMode;
+- (BOOL) isSeeking;
 - (float)getSeekSeconds;
 - (IBAction)seekBack:(id)sender;
 - (IBAction)seekFwd:(id)sender;
@@ -178,6 +179,7 @@
 - (IBAction)displayStats:(id)sender;
 - (IBAction)takeScreenshot:(id)sender;
 - (void) setVolume:(double)volume;
+- (double)volume;
 - (void) applyVolume:(double)volume;
 - (IBAction)toggleMute:(id)sender;
 - (IBAction)changeVolume:(id)sender;

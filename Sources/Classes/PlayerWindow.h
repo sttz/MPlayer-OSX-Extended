@@ -2,8 +2,13 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class PlayerController;
+
 @interface PlayerWindow : NSWindow
 {
-	IBOutlet id playerController;
+	IBOutlet PlayerController *playerController;
+	
+	float scrollXAcc;
+	float scrollYAcc;
 }
 @end

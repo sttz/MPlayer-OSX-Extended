@@ -980,10 +980,17 @@
 - (void) setVolume:(double)volume
 {
 	
+	volume = fmin(fmax(volume,0.0),100.0);
+	
 	[self applyVolume:volume];
 	
 	[myPlayer setVolume:[[NSNumber numberWithDouble:volume] intValue]];
 	[myPlayer applySettingsWithRestart:NO];
+}
+
+- (double)volume
+{
+	return [volumeSlider doubleValue];
 }
 
 // Apply volume to images and sliders (don't send it to mplayer)
@@ -1104,6 +1111,11 @@
 	[myPlayer seek:seconds mode:aMode];
 	// Force recheck of chapters
 	lastChapterCheck = -MP_CHAPTER_CHECK_INTERVAL;
+}
+
+- (BOOL) isSeeking
+{
+	return isSeeking;
 }
 
 - (float)getSeekSeconds

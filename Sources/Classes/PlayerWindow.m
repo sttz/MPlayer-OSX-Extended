@@ -1,5 +1,8 @@
 #import "PlayerWindow.h"
+
 #import "PlayerController.h"
+
+#define SCROLL_SEEK_MULT	10.0
 
 #define KEY_ENTER 13
 #define KEY_TAB 9
@@ -121,5 +124,33 @@
     }
 
 	[playerController sendKeyEvent: key];
+}
+
+- (void)scrollWheel:(NSEvent *)theEvent
+{
+	float dY = [theEvent deltaY];
+	float dX = [theEvent deltaX];
+	
+	// volume
+	if (fabsf(dY) > 0.99 && fabsf(dY) > fabsf(dX)) {
+		
+		[playerController setVolume:[playerController volume]+dY];
+	
+	// seek
+	} else if (fabsf(dX) > 0.99) {
+		
+		// reset accumulated time when reversing
+		if ((dX < 0 && scrollXAcc > 0) || (dX > 0 && scrollXAcc < 0))
+			scrollXAcc = 0;
+		
+		// accumulate time while player is busy
+		scrollXAcc += dX;
+		
+		// seek when ready
+		if (![playerController isSeeking]) {
+			[playerController seek:(-dX*SCROLL_SEEK_MULT) mode:MIRelativeSeekingMode];
+			dX = 0;
+		}
+	}
 }
 @end
