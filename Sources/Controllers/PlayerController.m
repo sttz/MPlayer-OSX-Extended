@@ -1235,7 +1235,7 @@
 {
     if(aBool)
 	{
-		[playerWindow setLevel:NSScreenSaverWindowLevel];
+		[playerWindow setLevel:NSModalPanelWindowLevel];
 		isOntop = YES;
 	}
 	else

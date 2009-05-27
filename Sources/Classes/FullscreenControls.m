@@ -34,7 +34,7 @@
     NSWindow* result = [super initWithContentRect:contentRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
     
 	// Put in same level as fullscreen window
-	[result setLevel:NSScreenSaverWindowLevel];
+	[result setLevel:NSModalPanelWindowLevel];
 	
 	// Prepare window transparency
     [result setBackgroundColor: [NSColor clearColor]];

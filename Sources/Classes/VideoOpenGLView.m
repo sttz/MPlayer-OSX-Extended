@@ -437,7 +437,7 @@
 		
 		// move to ontop level if needed
 		if ([playerController isOntop])
-			[fullscreenWindow setLevel:NSScreenSaverWindowLevel];
+			[fullscreenWindow setLevel:NSModalPanelWindowLevel];
 		else
 			[fullscreenWindow setLevel:NSNormalWindowLevel];
 		
@@ -725,8 +725,8 @@
 {
 	isOntop = !isOntop;
 	if(isOntop) {
-		[[self window] setLevel:NSScreenSaverWindowLevel];
-		[fullscreenWindow setLevel:NSScreenSaverWindowLevel];
+		[[self window] setLevel:NSModalPanelWindowLevel];
+		[fullscreenWindow setLevel:NSModalPanelWindowLevel];
 	}
 	else {
 		[[self window] setLevel:NSNormalWindowLevel];
