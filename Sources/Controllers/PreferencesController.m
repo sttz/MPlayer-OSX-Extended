@@ -610,7 +610,7 @@
 	[thePrefs setBool:[playlistSmallText state] forKey:@"SmallPlaylistText"];
 	
 	// cache size
-	[thePrefs setObject:[NSNumber numberWithFloat:[cacheSizeSlider floatValue]]
+	[thePrefs setObject:[NSNumber numberWithFloat:[cacheSizeBox floatValue]]
 			forKey:@"CacheSize"];
 	
 	// check for updates
@@ -988,10 +988,15 @@
 /************************************************************************************/
 - (IBAction)cacheSizeChanged:(id)sender
 {
-	if ([sender floatValue] > 0)
-		[cacheSizeBox setStringValue:[NSString stringWithFormat:@"%.1fMB", [sender floatValue]]];
-	else
+	float cacheSize = [sender floatValue];
+	
+	if (cacheSize > 0) {
+		[cacheSizeBox setStringValue:[NSString stringWithFormat:@"%.1fMB", cacheSize]];
+		[cacheSizeSlider setFloatValue:cacheSize];
+	} else {
 		[cacheSizeBox setStringValue:@""];
+		[cacheSizeSlider setFloatValue:0];
+	}
 }
 /************************************************************************************/
 - (IBAction)resetEqualizer:(id)sender

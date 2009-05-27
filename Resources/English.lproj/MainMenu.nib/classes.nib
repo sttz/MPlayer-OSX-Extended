@@ -326,7 +326,7 @@
 				<key>fullscreenControls</key>
 				<string>id</string>
 				<key>playerController</key>
-				<string>id</string>
+				<string>PlayerController</string>
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>NSWindow</string>
