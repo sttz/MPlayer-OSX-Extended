@@ -130,10 +130,6 @@
 	if(error != kCVReturnSuccess)
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to create OpenGL texture Cache (%d)", error];
 	
-	error = CVOpenGLTextureCacheCreateTextureFromImage(	NULL, textureCache, currentFrameBuffer, 0, &texture);
-	if(error != kCVReturnSuccess)
-		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to create OpenGL texture (%d)", error];
-	
 	// Start OpenGLView in GUI
 	[self performSelectorOnMainThread:@selector(startOpenGLView) withObject:nil waitUntilDone:NO];
 	
@@ -155,6 +151,11 @@
 	//make sure we destroy the shared buffer
 	if (munmap(image_data, image_width*image_height*image_bytes) == -1)
 		[Debug log:ASL_LEVEL_ERR withMessage:@"munmap failed"];
+	
+	close(shm_fd);
+	
+	CVOpenGLTextureCacheRelease(textureCache);
+	CVPixelBufferRelease(currentFrameBuffer);
 	
 	free(image_buffer);
 }
@@ -239,6 +240,8 @@
 	
 	if(isPlaying)
 	{
+		CVOpenGLTextureRef texture;
+		
 		error = CVOpenGLTextureCacheCreateTextureFromImage (NULL, textureCache,  currentFrameBuffer,  0, &texture);
 		
 		//If there is no texture, clear
