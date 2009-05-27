@@ -1038,6 +1038,8 @@
 	if (displayType != mode) {
 		displayType = mode;
 		settingsChanged = YES;
+		
+		isOntop = (displayType == 2);
 	}
 }
 /************************************************************************************/
@@ -1291,6 +1293,15 @@
 - (BOOL) fullscreen
 {
 	return isFullscreen;
+}
+/************************************************************************************/
+- (void) setOntop:(BOOL)ontop
+{
+	if (isOntop != ontop) {
+		isOntop = ontop;
+		if (myState > kStopped)
+			[self sendCommand:[NSString stringWithFormat:@"pausing_keep_force set_property ontop %d",ontop]];
+	}
 }
 /************************************************************************************/
 - (void) setVolume:(unsigned int)percents

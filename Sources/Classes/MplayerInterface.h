@@ -193,6 +193,7 @@
 	NSString *lastUnparsedErrorLine;
 	//NSMutableDictionary *myInfo;	// dict filled by -identify command
 	BOOL isFullscreen;				// currently playing fullscreen
+	BOOL isOntop;
 	int subtitleFileId;				// since sub file identify output is not numberede, we need to cache the id
 	NSDictionary *lastMissedSeek;	// last seek that couldn't be processed
 	
@@ -282,6 +283,7 @@
 - (void) setRebuildIndex:(BOOL)aBool;				// take effect after restarting playback
 - (void) setFullscreen:(BOOL)aBool;
 - (BOOL) fullscreen;
+- (void) setOntop:(BOOL)ontop;
 
 // misc settings (don't work during playback)
 - (void) setVolume:(unsigned int)percents;			// set audio volume

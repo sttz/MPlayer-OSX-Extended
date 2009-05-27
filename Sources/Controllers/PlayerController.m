@@ -553,6 +553,10 @@
 	else
 		[self setOntop:NO];
 	
+	// ontop while playing
+	if ([preferences objectForKey:@"DisplayType"])
+		isOntopWhilePlaying = ([preferences integerForKey:@"DisplayType"] == 5);
+	
 	// flip vertical
 	if ([preferences objectForKey:@"FlipVertical"])
 		[myPlayer setFlipVertical: [preferences boolForKey:@"FlipVertical"]];
@@ -1236,11 +1240,13 @@
     if(aBool)
 	{
 		[playerWindow setLevel:NSModalPanelWindowLevel];
+		[myPlayer setOntop:YES];
 		isOntop = YES;
 	}
 	else
 	{
 		[playerWindow setLevel:NSNormalWindowLevel];
+		[myPlayer setOntop:NO];
 		isOntop = NO;
 	}
 }
@@ -2002,6 +2008,8 @@
 			[skipBeginningMenuItem setEnabled:YES];
 			[skipEndMenuItem setEnabled:YES];
 			[fullscreenButton setEnabled:YES];
+			if (isOntopWhilePlaying)
+				[self setOntop:YES];
 			break;
 		case kPaused :
 		case kStopped :
@@ -2017,6 +2025,8 @@
 			[skipBeginningMenuItem setEnabled:NO];
 			[skipEndMenuItem setEnabled:NO];
 			[fullscreenButton setEnabled:NO];
+			if (isOntopWhilePlaying)
+				[self setOntop:NO];
 			break;
 		}
 		

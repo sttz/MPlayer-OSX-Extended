@@ -209,7 +209,7 @@
 	if ([thePrefs objectForKey:@"DisplayType"])
 		[displayType selectCellWithTag: [[thePrefs objectForKey:@"DisplayType"] intValue]];
 	else
-		[displayType selectCellWithTag: 0];
+		[displayType selectCellWithTag: 1];
 	
 	// flip vertical
 	if ([thePrefs objectForKey:@"FlipVertical"])
