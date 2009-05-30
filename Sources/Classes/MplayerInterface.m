@@ -33,6 +33,9 @@
 
 #define MI_LAVC_MAX_THREADS			8
 
+// run loop modes in which we parse MPlayer's output
+static NSArray* parseRunLoopModes;
+
 @implementation MplayerInterface
 /************************************************************************************
  INIT & UNINIT
@@ -47,6 +50,9 @@
 {
 	if (![super init])
 		return  nil;
+	
+	if (parseRunLoopModes==nil)
+		parseRunLoopModes = [[NSArray arrayWithObjects:NSDefaultRunLoopMode, NSEventTrackingRunLoopMode, nil] retain];
 	
 	myPathToPlayer = [aPath retain];
 	buffer_name = @"mplayerosx";
@@ -1595,9 +1601,9 @@
 	
 	// activate notification for available data at output
 	[[[myMplayerTask standardOutput] fileHandleForReading]
-			readInBackgroundAndNotify];
+			readInBackgroundAndNotifyForModes:parseRunLoopModes];
 	[[[myMplayerTask standardError] fileHandleForReading]
-			readInBackgroundAndNotify];
+			readInBackgroundAndNotifyForModes:parseRunLoopModes];
 	
 	// reset output read mode
 	myOutputReadMode = 0;
@@ -1712,7 +1718,7 @@
 	// register for another read
 	if ([myMplayerTask isRunning] || (data && [data length] > 0))
 		[[[myMplayerTask standardError] fileHandleForReading]
-				readInBackgroundAndNotify];
+				readInBackgroundAndNotifyForModes:parseRunLoopModes];
 	
 	if (!data || [data length] == 0) {
 		[data release];
@@ -1779,7 +1785,7 @@
 	// register for another read
 	if ([myMplayerTask isRunning] || (data && [data length] > 0)) 
 		[[[myMplayerTask standardOutput] fileHandleForReading]
-			readInBackgroundAndNotify];	
+			readInBackgroundAndNotifyForModes:parseRunLoopModes];	
 	
 	if (!data) {
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Couldn\'t read MPlayer data. Lost bytes: %u",
