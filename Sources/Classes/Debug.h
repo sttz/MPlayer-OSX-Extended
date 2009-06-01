@@ -36,6 +36,9 @@
 // Initialize debugger
 + (void) init;
 
+// Unitialize debugger
++ (void) uninit;
+
 // Log to file
 + (void) logToFile:(NSString *)path;
 

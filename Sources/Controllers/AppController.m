@@ -513,6 +513,9 @@
 	// Release language code mappings
 	[LanguageCodes releaseCodes];
 	
+	// Uninit Debug class
+	[Debug uninit];
+	
 	return NSTerminateNow;
 }
 
