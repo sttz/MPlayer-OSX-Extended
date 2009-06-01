@@ -401,6 +401,8 @@
 				<string>id</string>
 				<key>blackoutScreens</key>
 				<string>id</string>
+				<key>bs2bFilter</key>
+				<string>id</string>
 				<key>cacheSizeBox</key>
 				<string>id</string>
 				<key>cacheSizeSlider</key>

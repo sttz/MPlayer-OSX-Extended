@@ -145,6 +145,7 @@
 	BOOL passthroughDTS;
 	
 	BOOL hrtfFilter;
+	BOOL bs2bFilter;
 	BOOL karaokeFilter;
 	
 	// advanced
@@ -269,6 +270,7 @@
 - (void) setAC3Passthrough:(BOOL)aBool;
 - (void) setDTSPassthrough:(BOOL)aBool;
 - (void) setHRTFFilter:(BOOL)aBool;
+- (void) setBS2BFilter:(BOOL)aBool;
 - (void) setKaraokeFilter:(BOOL)aBool;
 
 // advanced

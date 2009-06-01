@@ -500,6 +500,10 @@ static NSArray* parseRunLoopModes;
 		[audioFilters addObject:@"resample=48000"];
 		[audioFilters addObject:@"hrtf"];
 	}
+	// bs2b filter
+	if (bs2bFilter) {
+		[audioFilters addObject:@"bs2b"];
+	}
 	// karaoke filter
 	if (karaokeFilter) {
 		[audioFilters addObject:@"karaoke"];
@@ -981,6 +985,14 @@ static NSArray* parseRunLoopModes;
 {
 	if (hrtfFilter != aBool) {
 		hrtfFilter = aBool;
+		settingsChanged = YES;
+	}
+}
+/************************************************************************************/
+- (void) setBS2BFilter:(BOOL)aBool
+{
+	if (bs2bFilter != aBool) {
+		bs2bFilter = aBool;
 		settingsChanged = YES;
 	}
 }

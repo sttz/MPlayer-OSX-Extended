@@ -103,6 +103,7 @@
 	IBOutlet id passthroughDTS;
 	// Filters
 	IBOutlet id hrtfFilter;
+	IBOutlet id bs2bFilter;
 	IBOutlet id karaokeFilter;
 	
 	// *** Advanced

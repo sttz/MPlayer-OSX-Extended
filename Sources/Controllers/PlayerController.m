@@ -761,6 +761,10 @@
 	if ([preferences objectForKey:@"HRTFFilter"])
 		[myPlayer setHRTFFilter: [preferences boolForKey:@"HRTFFilter"]];
 	
+	// b2bs filter
+	if ([preferences objectForKey:@"BS2BFilter"])
+		[myPlayer setBS2BFilter: [preferences boolForKey:@"BS2BFilter"]];
+	
 	// karaoke filter
 	if ([preferences objectForKey:@"KaraokeFilter"])
 		[myPlayer setKaraokeFilter: [preferences boolForKey:@"KaraokeFilter"]];

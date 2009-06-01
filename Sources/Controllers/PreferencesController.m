@@ -456,6 +456,10 @@
 	if ([thePrefs objectForKey:@"HRTFFilter"])
 		[hrtfFilter setState:[thePrefs boolForKey:@"HRTFFilter"]];
 	
+	// bs2b filter
+	if ([thePrefs objectForKey:@"BS2BFilter"])
+		[bs2bFilter setState:[thePrefs boolForKey:@"BS2BFilter"]];
+	
 	// karaoke filter
 	if ([thePrefs objectForKey:@"KaraokeFilter"])
 		[karaokeFilter setState:[thePrefs boolForKey:@"KaraokeFilter"]];
@@ -800,6 +804,9 @@
 	
 	// hrtf filter
 	[thePrefs setBool:[hrtfFilter state] forKey:@"HRTFFilter"];
+	
+	// bs2b filter
+	[thePrefs setBool:[bs2bFilter state] forKey:@"BS2BFilter"];
 	
 	// karaoke filter
 	[thePrefs setBool:[karaokeFilter state] forKey:@"KaraokeFilter"];
