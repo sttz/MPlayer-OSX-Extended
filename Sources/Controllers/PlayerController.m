@@ -280,6 +280,10 @@
 					
 					if ([self isPlaying] && [appController isExtension:[[propertyList objectAtIndex:i] pathExtension] ofType:MP_DIALOG_SUBTITLES])
 						return NSDragOperationCopy; // subtitles are good when playing
+					
+					// let the choice be overridden with the command key
+					if ([sender draggingSourceOperationMask] == NSDragOperationGeneric)
+						return NSDragOperationCopy;
 				}
 				return NSDragOperationNone; //no know object found, cancel drop.
 			}
@@ -315,7 +319,9 @@
 			filename = [fileArray objectAtIndex:0];
 			if (filename)
 			{
-				if ([appController isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]) {
+				// Open if a media file or if forced with the command key
+				if ([sender draggingSourceOperationMask] == NSDragOperationGeneric || 
+						[appController isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]) {
 					// create an item from it and play it
 					myItem = [NSMutableDictionary dictionaryWithObject:filename forKey:@"MovieFile"];
 					[self playItem:myItem];
