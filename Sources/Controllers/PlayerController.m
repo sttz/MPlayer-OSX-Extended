@@ -391,6 +391,12 @@
 		aPath = [anItem objectForKey:@"SubtitlesFile"];
 		if (aPath)
 			[myPlayer setSubtitlesFile:aPath];
+		// set encoding from open dialog drop-down
+		[myPlayingItem setObject:[anItem objectForKey:@"SubtitlesEncoding"] forKey:@"SubtitlesEncoding"];
+		[self setSubtitlesEncoding];
+		// restart playback if encoding has changed
+		if ([myPlayer changesNeedsRestart])
+			[self applyChangesWithRestart:YES];
    		return;
 	}
 	

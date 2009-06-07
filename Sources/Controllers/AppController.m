@@ -162,7 +162,7 @@
 	if (theFile) {
 		NSMutableDictionary *theItem = [NSMutableDictionary
 				dictionaryWithObject:theFile forKey:@"SubtitlesFile"];
-		// beta: [theItem setObject:[openSubtitleEncoding titleOfSelectedItem] forKey:@"SubtitlesEncoding"];
+		[theItem setObject:[openSubtitleEncoding titleOfSelectedItem] forKey:@"SubtitlesEncoding"];
 		[playerController playItem:theItem];
 	}
 }
@@ -334,14 +334,14 @@
 		[openMultithreading setState:[[self preferences] boolForKey:@"UseFFmpegMT"]];
 	} else if (type == MP_DIALOG_SUBTITLES) {
 		// beta: add encoding dropdown and load state from preferences
-		/*[thePanel setAccessoryView:openSubtitleSettings];
+		[thePanel setAccessoryView:openSubtitleSettings];
 		if ([[self preferences] objectForKey:@"SubtitlesEncoding"]) {
 			[openSubtitleEncoding selectItemWithTitle:[[self preferences] objectForKey:@"SubtitlesEncoding"]];
 			if ([openSubtitleEncoding indexOfSelectedItem] < 0)
 				[openSubtitleEncoding selectItemAtIndex:0];
 		}
 		else
-			[openSubtitleEncoding selectItemAtIndex:0];*/
+			[openSubtitleEncoding selectItemAtIndex:0];
 	}
 	
     if ([thePanel runModalForDirectory:defDir file:nil types:typeList] == NSOKButton) {
