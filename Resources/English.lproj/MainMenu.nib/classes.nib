@@ -702,6 +702,8 @@
 				<string>id</string>
 				<key>openVIDEO_TS</key>
 				<string>id</string>
+				<key>showFilesChanged</key>
+				<string>NSPopUpButton</string>
 			</dict>
 			<key>CLASS</key>
 			<string>AppController</string>

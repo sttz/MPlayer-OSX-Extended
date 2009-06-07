@@ -46,6 +46,9 @@
 	
 	// other outlets
 	IBOutlet id theApp;
+	
+	// open dialog
+	NSOpenPanel *openPanel;
 }
 // app's interface
 - (NSUserDefaults *) preferences;
@@ -57,6 +60,7 @@
 - (IBAction) addToPlaylist:(id)sender;
 - (IBAction) openLocation:(id)sender;
 - (IBAction) openSubtitle:(id)sender;
+- (IBAction) showFilesChanged:(NSPopUpButton*)sender;
 
 - (IBAction) openVIDEO_TS:(id)sender;
 - (IBAction) cancelVIDEO_TSLocation:(id)sender;

@@ -318,23 +318,25 @@
 - (NSString *) openDialogForType:(int)type
 {
     NSArray *typeList = [self getExtensionsForType:type];
-	NSOpenPanel *thePanel = [NSOpenPanel openPanel];
+	openPanel = [NSOpenPanel openPanel];
 	NSString *theFile = nil;
 	NSString *defDir;
 	
 	if (!(defDir = [[self preferences] objectForKey:@"DefaultDirectory"]))
 		defDir = NSHomeDirectory();
 
-    [thePanel setAllowsMultipleSelection:NO];
+    [openPanel setAllowsMultipleSelection:NO];
+	[openPanel setDelegate:self];
+	[openPanel setAllowedFileTypes:typeList];
 	
 	// show additional options based on type
 	if (type == MP_DIALOG_MEDIA || type == MP_DIALOG_VIDEO) { 
 		// add multithreading box and load state from preferences
-		[thePanel setAccessoryView:openFileSettings];
+		[openPanel setAccessoryView:openFileSettings];
 		[openMultithreading setState:[[self preferences] boolForKey:@"UseFFmpegMT"]];
 	} else if (type == MP_DIALOG_SUBTITLES) {
 		// beta: add encoding dropdown and load state from preferences
-		[thePanel setAccessoryView:openSubtitleSettings];
+		[openPanel setAccessoryView:openSubtitleSettings];
 		if ([[self preferences] objectForKey:@"SubtitlesEncoding"]) {
 			[openSubtitleEncoding selectItemWithTitle:[[self preferences] objectForKey:@"SubtitlesEncoding"]];
 			if ([openSubtitleEncoding indexOfSelectedItem] < 0)
@@ -344,8 +346,8 @@
 			[openSubtitleEncoding selectItemAtIndex:0];
 	}
 	
-    if ([thePanel runModalForDirectory:defDir file:nil types:typeList] == NSOKButton) {
-        theFile = [[thePanel filenames] objectAtIndex:0];
+    if ([openPanel runModalForDirectory:defDir file:nil types:nil] == NSOKButton) {
+        theFile = [[openPanel filenames] objectAtIndex:0];
 		[[NSUserDefaults standardUserDefaults]
 				setObject:[theFile stringByDeletingLastPathComponent]
 				forKey:@"DefaultDirectory"];
@@ -375,7 +377,48 @@
 	return theFile;
 }
 
+// enable the allowedFileTypes array to influence seleced file types in 
+// open dialogs - even after the dialog has opened.
+- (BOOL) panel:(id)sender shouldShowFilename:(NSString *)filename
+{
+	if (![sender allowedFileTypes])
+		return YES;
+	
+	NSString* ext = [filename pathExtension];
+	NSEnumerator* tagEnumerator = [[sender allowedFileTypes] objectEnumerator];
+	NSString* allowedExt;
+	BOOL isDirectory;
+	
+	while ((allowedExt = [tagEnumerator nextObject])) {
+		if ([ext caseInsensitiveCompare:allowedExt] == NSOrderedSame)
+			return YES;
+		if ([[NSFileManager defaultManager] fileExistsAtPath:filename isDirectory:&isDirectory] && isDirectory)
+			return YES;
+	}
+	
+	return NO;
+}
 
+// the show file popup in the open dialog has changed
+- (IBAction) showFilesChanged:(NSPopUpButton*)sender
+{
+	// Show all known media types
+	if ([sender indexOfSelectedItem] == 0)
+		[openPanel setAllowedFileTypes:[self getExtensionsForType:MP_DIALOG_MEDIA]];
+		
+	// Only show video files
+	else if ([sender indexOfSelectedItem] == 1)
+		[openPanel setAllowedFileTypes:[self getExtensionsForType:MP_DIALOG_VIDEO]];
+		
+	// Only show audio files
+	else if ([sender indexOfSelectedItem] == 2)
+		[openPanel setAllowedFileTypes:[self getExtensionsForType:MP_DIALOG_AUDIO]];
+		
+	// Show all fiels
+	else
+		[openPanel setAllowedFileTypes:nil];
+	
+}
 
 //beta
 /*
