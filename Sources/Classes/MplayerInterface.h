@@ -82,7 +82,7 @@
 	// file paths
 	NSString *myPathToPlayer;
 	NSString *myMovieFile;
-	NSString *mySubtitlesFile;
+	NSMutableArray *mySubtitlesFiles;
 	NSString *myAudioFile;
 	NSString *myAudioExportFile;
 	NSString *myFontFile;

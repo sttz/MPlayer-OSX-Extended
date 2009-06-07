@@ -62,6 +62,8 @@ static NSArray* parseRunLoopModes;
 	mySeconds = 0;
 	myVolume = 100;
 	
+	mySubtitlesFiles = [[NSMutableArray alloc] init];
+	
 	// *** playback
 	correctPTS = NO;
 	cacheSize = 0;
@@ -134,7 +136,7 @@ static NSArray* parseRunLoopModes;
 	[myMplayerTask release];
 	[myPathToPlayer release];
 	[myMovieFile release];
-	[mySubtitlesFile release];
+	[mySubtitlesFiles release];
 	[myAudioExportFile release];
 	[myAudioFile release];
 	[myFontFile release];
@@ -197,9 +199,9 @@ static NSArray* parseRunLoopModes;
 		return;
 	
 	// add subtitles file
-	if (mySubtitlesFile) {
+	if ([mySubtitlesFiles count] > 0) {
 		[params addObject:@"-sub"];
-		[params addObject:mySubtitlesFile];
+		[params addObject:[mySubtitlesFiles componentsJoinedByString:@","]];
 	}
 	else {
 		//[params addObject:@"-noautosub"];
@@ -742,24 +744,21 @@ static NSArray* parseRunLoopModes;
 - (void) setSubtitlesFile:(NSString *)aFile
 {
 	if (aFile) {
-		if (![aFile isEqualToString:mySubtitlesFile]) {
-			[mySubtitlesFile autorelease];
-			mySubtitlesFile = [aFile retain];
-			settingsChanged = YES;
+		if (![mySubtitlesFiles containsObject:aFile]) {
+			[mySubtitlesFiles addObject:aFile];
 			if (isRunning) {
 				[self performCommand: [NSString stringWithFormat:@"sub_load '%@'", aFile]];
 				if (info)
 					[self performCommand: [NSString stringWithFormat:
 							@"sub_file %u", [info subtitleCountForType:SubtitleTypeFile]]];
-			}
+			} else
+				settingsChanged = YES;
 		}
 	}
 	else {
-		if (mySubtitlesFile) {
-			[mySubtitlesFile release];
-			settingsChanged = YES;
-		}
-		mySubtitlesFile = nil;
+		[mySubtitlesFiles release];
+		mySubtitlesFiles = [[NSMutableArray alloc] init];
+		settingsChanged = YES;
 	}
 }
 
@@ -1161,9 +1160,11 @@ static NSArray* parseRunLoopModes;
 			settingsChanged = YES;
 		}
 	} else {
-		[subEncoding release];
-		subEncoding = nil;
-		settingsChanged = YES;
+		if (subEncoding) {
+			[subEncoding release];
+			subEncoding = nil;
+			settingsChanged = YES;
+		}
 	}
 }
 /************************************************************************************/
