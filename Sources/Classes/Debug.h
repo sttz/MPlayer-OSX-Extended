@@ -25,24 +25,38 @@
 #import <Cocoa/Cocoa.h>
 #import <asl.h>
 
-#define dSender		"MPlayer OSX"
-#define dFacility	"user"
-#define dFilterUpto	ASL_LEVEL_WARNING
+#define dSender				"MPlayer OSX"
+#define dFacility			"user"
+#define dFilterUpto			ASL_LEVEL_WARNING
+
+#define dLogMaxSize			512000LL // 500kb
+#define dSizeCheckInterval	3600 // 1 hour
 
 @interface Debug : NSObject {
 	
+	aslclient asc;
+	
+	NSMutableDictionary *logFiles;
+	
+	NSTimeInterval lastSizeCheck;
 }
 
+// Shared debugger instance
++ (Debug *) sharedDebugger;
+
+// Convenience method to log through shared instance
++ (void) log:(int)level withMessage:(NSString *)message, ...;
+
 // Initialize debugger
-+ (void) init;
+- (Debug *) init;
 
 // Unitialize debugger
-+ (void) uninit;
+- (void) uninit;
 
 // Log to file
-+ (void) logToFile:(NSString *)path;
+- (void) logToFile:(NSString *)path;
 
 // Log message
-+ (void) log:(int)level withMessage:(NSString *)message, ...;
+- (void) log:(int)level withMessage:(NSString *)message, ...;
 
 @end

@@ -13,8 +13,8 @@ int main(int argc, char *argv[])
 {
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	
-	[Debug init];
-	[Debug logToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Logs/MPlayerOSX.log"]];
+	Debug *logger = [Debug sharedDebugger];
+	[logger logToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Logs/MPlayerOSX.log"]];
 	
 	[Debug log:ASL_LEVEL_INFO withMessage: @"===================== MPlayer OSX Started ====================="];
     

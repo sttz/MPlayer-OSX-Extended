@@ -557,7 +557,7 @@
 	[LanguageCodes releaseCodes];
 	
 	// Uninit Debug class
-	[Debug uninit];
+	[[Debug sharedDebugger] uninit];
 	
 	return NSTerminateNow;
 }
