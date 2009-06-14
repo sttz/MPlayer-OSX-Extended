@@ -1,0 +1,313 @@
+#!/bin/bash
+# MPlayer OSX build script
+# Adrian Stutz 2008
+
+# **************************************************** #
+# *** PREPARE
+
+# Change to script directory
+script_dir=`dirname ${BASH_SOURCE[0]}`
+cd $script_dir
+script_dir=`pwd -P`
+
+# **************************************************** #
+# *** CONFIG
+
+if [ -f "build.config" ]; then
+	
+	# Load config file in same directory named "build.config"
+	source "build.config"
+	echo "Config script build.config loaded"
+	
+else
+	
+	# Load default config
+	binary_dest="/Users/example/dev/binaries"
+	target_system="i386"
+	binary_name="mplayer"
+	
+	# options
+	shared_libs=0
+	do_update=0
+	quiet=0
+	really_quiet=0
+	
+	# build stages
+	do_clean=1
+	do_configure=1
+	do_build=1
+	do_move=1
+	
+	echo "Default config loaded."
+fi
+
+# **************************************************** #
+# *** SETUP
+
+no_clean=0
+no_configure=0
+no_build=0
+no_move=0
+
+clean_only=0
+configure_only=0
+build_only=0
+move_only=0
+
+# **************************************************** #
+# *** OPTION PARSING
+
+usage() {
+cat << EOF
+Usage: $0 [options] [i386|ppc|ppcg3]
+
+General options:
+    -h, --help                  display this help
+    -q, --quiet                 do not print command output
+    -qq, --really-quiet         do not print anything at all
+
+Build options:
+    -u, --update                do an "svn update" before building
+    -s, --shared                do a build with shared libraries (including libav*)
+
+Build steps:
+    --no-STEP                   skip STEP in build process
+    --STEP-only                 only execute STEP of build process
+    
+Available STEPs are:
+    clean                       clean build directories ("make clean")
+    configure                   configure build ("./configure")
+    build                       build MPlayer ("make")
+    move                        move binaries after completion
+    
+One of either i386, ppc or ppcg3 can be passed to set the target system (default: i386).
+Headers and configure flags will be set accordingly.
+EOF
+}
+
+# Parse command line
+while [ -n "$1" ]; do
+	case $1 in
+		i386 | ppc | ppcg3 )	target_system=$1
+								;;
+		
+		-s | --shared )			shared_libs=1
+								;;
+		-u | --update )			do_update=1
+								;;
+		
+		--no-clean )			no_clean=1
+								;;
+		--no-configure )		no_configure=1
+								;;
+		--no-build )			no_build=1
+								;;
+		--no-move )				no_move=1
+								;;
+		
+		--clean-only )			clean_only=1
+								;;
+		--configure-only )		configure_only=1
+								;;
+		--build-only )			build_only=1
+								;;
+		--move-only )			move_only=1
+								;;
+		
+		-q | --quiet )			quiet=1
+								;;
+		-qq | --really-quiet )	really_quiet=1
+								;;
+		-h | --help )			usage
+								exit
+								;;
+		* )						usage
+								exit 1
+	esac
+	shift
+done
+
+# Quiet string
+if [ $quiet -eq 1 -o $really_quiet -eq 1 ]; then
+	# reset log file
+	echo "" > build.log
+	# redirect all output
+	if [ $really_quiet -eq 1 ]; then
+		exec >> build.log 2>> build.log
+	# redirect only commands' output
+	else
+		if [ $quiet -eq 1 ]; then
+			echo "" > build.log
+			c_output=" >> build.log 2>> build.log"
+		else
+			c_output=""
+		fi
+	fi
+fi
+
+# Check input
+let only_steps=$clean_only+$configure_only+$build_only+$move_only
+if [[ $only_steps > 1 ]]; then
+	echo "ERROR: only one --STEP-only option can be set at once."
+	exit 1
+fi
+
+let no_steps=$no_clean+$no_configure+$no_build+$no_move
+if [[ $no_steps > 1 && $only_steps > 1 ]]; then
+	echo "ERROR: --no-STEP options cannot be combined with --only-STEP options"
+	exit 1
+fi
+
+# Check for mposx_preparebuild
+which mposx_preparebuild || echo "ERROR: mposx_preparebuild not found."; exit 1
+
+# Apply --STEP-only options
+if [[ $clean_only == 1 ]]; then
+	do_clean=1
+	do_configure=0; do_build=0; do_move=0
+elif [[ $configure_only == 1 ]]; then
+	do_configure=1
+	do_clean=0; do_build=0; do_move=0
+elif [[ $build_only == 1 ]]; then
+	do_build=1
+	do_clean=0; do_configure=0; do_move=0
+elif [[ $move_only == 1 ]]; then
+	do_move=1
+	do_clean=0; do_configure=0; do_build=0
+fi
+
+# Apply --no-STEP options
+if [[ $no_clean == 1 ]]; then
+	do_clean=0
+elif [[ $no_configure == 1 ]]; then
+	do_configure=0
+elif [[ $no_build == 1 ]]; then
+	do_build=0
+elif [[ $no_move == 1 ]]; then
+	do_move=0
+fi
+
+# Destination for binary
+binary_dest="${binary_dest}/`date +%Y%m%d`"
+
+# **************************************************** #
+# *** SET PATHS/HEADERS/OPTIONS
+
+# Set paths and flags
+source mposx_preparebuild "`test $shared_libs -eq 1 && echo "--shared"`" "$target_system"
+
+# Additional compiler and linker flags
+export CFLAGS="-O4 -fomit-frame-pointer $CFLAGS"
+export CXXFLAGS="-O4 -fomit-frame-pointer $CXXFLAGS"
+
+# *** Base configure options
+config_opts=""
+config_opts="$config_opts --prefix=${BUILD_ROOT}"
+# Make sure that we link to static libraries (if found first)
+config_opts="$config_opts"' --extra-libs="-Wl,-search_paths_first"'
+# Disable X11 and GL outputs
+config_opts="$config_opts --disable-x11"
+config_opts="$config_opts --disable-gl"
+# Disable vorbis (decoding is in ffmpeg)
+config_opts="$config_opts --disable-libvorbis --disable-theora"
+# Disable MEncoder
+config_opts="$config_opts --disable-mencoder"
+# Enable the apple remote (in case we build on a system without infrared)
+config_opts="$config_opts --enable-apple-remote"
+# Disable jack (auto-enabled if installed)
+config_opts="$config_opts --disable-jack"
+
+# Disable static ffmpeg
+if [ $shared_libs -eq 1 ]; then
+	config_opts="$config_opts --disable-libavutil_a --disable-libavcodec_a --disable-libavformat_a"
+	config_opts="$config_opts --disable-libpostproc_a --disable-libswscale_a"
+fi
+
+# Intel platform options
+if [ "$target_system" = "i386" ]; then
+	# Disable 3Dnow and AMD machines because it can cause audio distortion
+	config_opts="$config_opts --disable-3dnow"
+	config_opts="$config_opts --disable-3dnowext"
+fi
+
+# PPC platform options
+if [ "$target_system" = "ppc" -o "$target_system" = "ppcg3" ]; then
+	# Enable PPC crosscompile
+	config_opts="$config_opts --target=ppc-Darwin"
+	
+	# PPC Altivec
+	if [ "$target_system" == "ppcg3" ]; then
+		config_opts="$config_opts --disable-altivec"
+	fi
+fi
+
+# *** DEBUG
+echo -e "\nBUILDING MPLAYER...\n"
+echo "  Target platform: $target_system"
+echo "  CFLAGS: $CFLAGS"
+echo "  CXXFLAGS: $CXXFLAGS"
+echo "  LDFLAGS: $LDFLAGS"
+echo "  configure options: $config_opts"
+echo ""
+if [ $do_move -eq 1 ]; then
+	echo "  binary will be moved to: $binary_dest"
+fi
+
+# **************************************************** #
+# *** CLEAN
+
+if [ $do_clean -eq 1 ]; then
+	echo -e "\nCLEANING...\n"
+	eval "make clean $c_output"
+fi
+
+# **************************************************** #
+# *** UPDATE
+
+if [ $do_update -eq 1 ]; then
+	echo -e "\nUPDATING...\n"
+	eval "svn update $c_output" || exit $?
+fi
+
+# **************************************************** #
+# *** CONFIGURE
+
+if [ $do_configure -eq 1 ]; then
+	echo -e "\nCONFIGURING...\n"
+	eval "./configure $config_opts $c_output" || exit $?
+fi
+
+# **************************************************** #
+# *** BUILD
+
+if [ $do_build -eq 1 ]; then
+	echo -e "\nBUILDING...\n"
+	eval "make $c_output" || exit $?
+fi
+
+# **************************************************** #
+# *** FINISH
+
+echo -e "\nFINISH...\n"
+if [ ! -f "mplayer" ]; then
+	# FAIL!
+	echo "Compilation failed!"
+	exit 1
+else
+	# WIN!
+	if [ $do_move -eq 1 ]; then
+		if [ ! -d "$binary_dest" ]; then
+			mkdir -p $binary_dest
+		fi
+		cp mplayer $binary_dest"/$binary_name.$target_system"
+		echo "Binary moved to: $binary_dest/$binary_name.$target_system"
+		
+		# Merge universal binary if possible
+		if [ -f "$binary_dest/$binary_name.i386" -a -f "$binary_dest/$binary_name.ppc" ]; then
+			lipo -create "$binary_dest/$binary_name.i386" "$binary_dest/$binary_name.ppc" -output "$binary_dest/$binary_name.ub"
+			echo "Universal binary merged at: $binary_dest/$binary_name.ub"
+		fi
+	fi
+	
+	echo "Compilation successful!"
+fi

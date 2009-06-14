@@ -1,61 +1,208 @@
 *******************************
-** MPlayer OSX Utility Scripts
+** MPlayer OSX compile scripts
 *******************************
-All scripts need to be configured with the correct paths.
 
-*******************************
-** build
-*******************************
-Script automating the MPlayer static binary build process. 
+The scripts in this folder are a set of helper scripts to compile
+MPlayer on an intel OSX machine. While the scripts support creating
+universal binaries, they do not support being used on a PPC machine.
 
-It expects a setup as follows:
-$build_dir/usr/local = $build_root in script config
-$build_dir/binaries = $binary_dest in script config
-$build_dir/mplayer/build = script inside the mplayer source root
+Last updated: 2009-06-14
 
-The build_root should contain static versions of all libraries 
-MPlayer needs. Besides the required libraries of mplayer, the 
-script assumes that expat and libdvdcss are in that root.
 
-The build_root should only contain static libraries or else 
-OSX will link with the shared libraries first.
+** Overview
 
-The script will only run on intel machines. It generates an i386 
-build by default. ppc and ppcg3 can be selected at the command line:
-./build ppc
-./build ppcg3
-./build i386
+mposx_buildconfig :
+Global config file for all build scripts. This script is attempted 
+to be loaded with "source mposx_buildconfig" and should therefore 
+be available at the $PATH.
 
-The script will optionally do an "svn update" (-u), "make clean",
-"./configure $opts" and finally "make".
+mposx_preparebuild :
+Set PATH, CFLAGS, LDFLAGS and BUILD_ROOT for compiling MPlayer 
+as well as all dependant libraries.
 
-If compilation is successful, the script will move the binary 
-to $binary_dest/CURRENT_DATE and append the platform it was built 
-for ("mplayer.i386", "mplayer.ppc" or "mplayer.ppcg3"). If the 
-directory contains a i386 and ppc build, the script will merge 
-them into an universal binary ("mplayer.ub").
+mplayer/build, ffmpeg/build :
+These build scripts are meant to be linked to the build directory 
+and then can be configured by creating a build.config file in the 
+build directory.
 
-"make clean" can be skipped with -nc or --no-clean, the binary 
-moving with -nm or --no-move.
+mplayer/build :
+Build script for MPlayer. Configures, builds and then moves 
+the binary to be installed.
 
-*******************************
-** install
-*******************************
-Script automating copying the binaries into the MPlayer OSX project.
+ffmpeg/build :
+Build script for FFmpeg. Only supports building shared versions of 
+the libav* libraries (static ones are built together with MPlayer).
 
-It expects a directory as argument and will look for "mplayer.ub" and 
-"mplayer.ppcg3" in that directory. If found, it will copy 
-"mplayer.ub" to $mplayerosx_path/External_Binaries/mplayer.app and 
-"mplayer.ppcg3" to $mplayerosx_path/External_Binaries/mplayer_noaltivec.app.
+mposx_install :
+Install the MPlayer binary and libraries (for a shared build) to 
+the MPlayer OSX source tree.
 
-Finally it touches $mplayerosx_path/External_Binaries to make XCode copy 
-the new binaries to the builds.
 
-*******************************
-** build_dmg
-*******************************
-Script automating creating a release DMG.
-Also used by the XCode project for Sparkle singing.
 
-Expects a version string as parameter and will create a DMG 
-from $source_dir to $output_dir.
+** Build Setup
+
+To build a portable MPlayer binary, only what a bare OSX system 
+provides can be linked against and all other dependencies must 
+be included in the build (either linked statically in the binary 
+or included alongside the binary with proper setup).
+
+Therefore it's best to create a separate install root or prefix 
+where all dependencies are installed to. The mposx_preparebuild 
+script takes care of resetting the PATH and setting the right 
+headers to make sure nothing on the system is wrongfully linked 
+against.
+
+Because OSX stubbornly links against shared libraries if they 
+exist in the same path as their static counterparts, the install 
+root for a static build most not contain any dynamic libraries.
+Therefore, these scripts have to separate roots, one for shared 
+and one for static builds. The static root could possibly be 
+created from the shared one by copying it and removing all 
+shared libraries.
+
+On my system, the setup looks like this:
+/Users/adrian/dev/mplayer/ 
+	: contains all sources, futher referred to as $root
+$root/usr/local            
+	: install root for static builds
+$root/usrs/local           
+	: install root for shared builds
+$root/binaries             
+	: final MPLayer binaries are copied here for installation
+$root/mplayer              
+	: MPlayer source
+
+/Users/adrian/dev/mplayerosx/ 
+	: MPlayer OSX root, futher referred to as $mposxroot
+$mposxroot/Scripts
+    : Location of all scripts, added to $PATH
+$mposxroot/External_Binaries
+    : app bundles the final binaries are installed to
+
+
+
+** Script Setup
+
+To avoid having multiple copies of the same scripts and 
+having the same settings in each script, the scripts are 
+linked as follows:
+
+It's assumed that the scripts all reside in the same path, 
+which is added to $PATH (e.g. $mposxroot/Scripts so they 
+are tracked by SVN).
+
+Both mposx_install and mposx_preparebuild then load 
+mposx_buildconfig from $PATH and the MPlayer and FFmpeg 
+build scripts get the config through mposx_preparebuild.
+
+To setup the scripts:
+1) Copy "mposx_buildconfig.example" to "mposx_buildconfig" and 
+   set all options in the file to the correct path.
+2) Add the script directory to $PATH
+   Either by calling 'PATH="/path/to/scripts:$PATH"' from the shell 
+   (only set for the current shell until closed)
+   or by adding that command to "~/.profile"
+   (set for each new shell)
+3) Link the build script to the respective source directory
+   ln -s /path/to/scripts/build /path/to/source/build
+4) Create a "build.config" file in the source directory to set 
+   custom build settings.
+
+
+
+** mposx_buildconfig
+
+Script that contains necessary build paths, loaded by all 
+other build scripts.
+
+
+
+** mposx_preparebuild
+
+Script that sets all necessary global variables to compile 
+MPlayer, FFmpeg as well as all dependencies. It sets OSX 10.4 
+as minimum target, resets $PATH and sets $CFLAGS and $LDFLAGS.
+
+It also sets $BUILD_ROOT, which should be passed to configure 
+for all dependencies with "--prefix=$BUILD_ROOT".
+
+NOTE: For mposx_preparebuild to work correctly, it needs to be 
+sourced, not executed:
+$ source setheaders [options]
+
+Either i386, ppc, ppcg3 or ub can be passed to mposx_preparebuild 
+to set the flags for a intel, ppc or universal build. Many 
+dependencies as well as MPlayer and FFmpeg don't support a direct
+universal build. In that case the two arches have to be build 
+separately and then combined with lipo.
+
+mposx_preparebuild defaults to the static intall root and 
+"--shared" can be set to switch to the shared one.
+
+
+
+*** mplayer/build, ffmpeg/build
+
+The two build scripts are location-dependant. They need to be 
+linked to the respective source directory and can be configured 
+by creating a "build.config" script in the same directory, containing 
+the options found at the top of the script.
+
+The build scripts take care of calling mposx_buildconfig, configuring, 
+building and postprocessing the build. See "./build --help" for all 
+available options and the scripts themselves for the configure flags used.
+
+
+
+*** mplayer/build
+
+The MPlayer build script doesn't install MPlayer to $BUILD_ROOT but 
+instead copies the compiled binary to the $binary_dest set in the 
+script's config, placed in a subfolder with the current date and the 
+$target_system appended to the name.
+
+mposx_install then takes such a subfolder as input, processes the binary
+and copies it to the correct place in the MPlayer OSX tree.
+
+
+
+*** ffmpeg/build
+
+The FFmpeg build script only creates a shared library and only of the 
+directories specified in build_dirs. The libraries are copied to 
+./libs/$target_system, combined to universal binaries if both i386 
+and ppc builds are in ./lib and then installed to $BUILD_ROOT.
+
+For ffmpeg-mt, not all libraries are required, install should be 
+skipped and the ./lib/ub directory set in mposx_buildconfig for 
+mposx_install to be able to correctly install the shared mplayer-mt build.
+
+
+
+*** mposx_install
+
+mposx_install takes a directory as input, which should contain a 
+mplayer.i386 and mplayer.ppc binary as input.
+
+If set to install a static binary, the script also looks for 
+mplayer-mt.i386 and mplayer-mt.ppc binaries. Both are merged to 
+universal binaries and copied to the correct location in $mplayerosx_path.
+
+If set to install a shared binary, the script looks for mplayer.i386 
+and mplayer.ppc and merges them into an universal binary. It then 
+uses otool to examine the dependencies and copies all libraries 
+that are linked from $build_root_shared to ./lib and then does 
+the same for all copied libraries.
+install_name_tool is then used to change all install_names to a 
+path local to the binary (using @executable_path) to make them 
+link correctly.
+
+The script then looks in $ffmpeg_mt_libs for ffmpeg-mt libraries, 
+copies them to ,/lib-mt and also corrects their install names.
+
+The binary is then copied together with the libraries to the 
+correct location in $mplayerosx_path. The same is done for the 
+ffmpeg-mt libraries but everything else needed for mplayer-mt 
+is then simply linked to the regular mplayer.
+
+

@@ -6,7 +6,7 @@
 privkey_keychain_name="MPlayerOSX Sparkle Private Key"
 
 if [ ! -f "$1" ]; then
-	echo "usage: ./sign file"
+	echo "usage: sign [file]"
 	exit 1
 fi
 

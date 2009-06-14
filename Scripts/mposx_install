@@ -1,0 +1,278 @@
+#!/bin/bash
+# Adrian Stutz 2008
+
+# **************************************************** #
+# *** CONFIG
+
+# GLOBAL CONFIG
+buildconfig=`which mposx_buildconfig`
+if [ $? -eq 0 ]; then
+	
+	# Load global config
+	source mposx_buildconfig
+	
+else
+	
+	# Load default config
+	mplayerosx_path="/Users/example/dev/mplayerosx"
+	build_root_shared="/Users/example/dev/usrs/local"
+	ffmpeg_mt_libs="/Users/example/dev/ffmpeg-mt/libs/ub"
+	
+fi
+
+# LOCAL CONFIG
+shared=1
+
+# **************************************************** #
+# *** OPTION PARSING
+
+usage() {
+cat << EOF
+Usage: $0 [options] [directory]
+
+General options:
+    -h, --help                  display this help
+
+Header options:
+    -s, --shared                install a binary with shared libraries
+	--static					install a static binary
+    
+[directory] will be searched for mplayer.i386 and mplayer.ppc and then 
+all necessary steps will be taken to install the binary (and all libraries 
+if --shared is set) into the mplayerosx root.
+EOF
+}
+
+# Parse command line
+while [ -n "$1" ]; do
+	case $1 in
+		-s | --shared )				shared=1
+									;;
+		--static )					shared=0
+									;;
+		-h | --help )				usage
+									exit
+									;;
+		* )							dir=$1
+									;;
+	esac
+	shift
+done
+
+# *** CHECK PARAMETERS
+if [ ! -n "$dir" ]; then
+	dir="."
+fi
+
+if [ ! -f "$dir/mplayer.i386" -o ! -f "$dir/mplayer.ppc" ]; then
+	echo "mplayer.i386 or mplayer.ppc binary not found at '$dir'."
+	exit 1
+fi
+
+if [ ! -d "$mplayerosx_path/External_Binaries" ]; then
+	echo "Invalid mplayerosx path."
+	exit 1
+fi
+
+echo "install binaries from '$dir' to '$mplayerosx_path'..."
+
+# **************************************************** #
+# *** RECREATE MPLAYER BINARY
+
+echo "recreate mplayer.ub..."
+
+# recreate ub from untouched mplayer.i386 mplayer.ub
+# (the install names in mplayer.ub could have been already changed)
+lipo -create "$dir/mplayer.i386" "$dir/mplayer.ppc" -output "$dir/mplayer.ub"
+
+# **************************************************** #
+# *** STATIC INSTALL
+
+if [ $shared -eq 0 ]; then
+	
+	echo "Clean install destination..."
+	
+	rm -rf "$mplayerosx_path/External_Binaries/mplayer.app/Contents/MacOS/"*
+	rm -rf "$mplayerosx_path/External_Binaries/mplayer-mt.app/Contents/MacOS/"*
+	
+	echo "Searching $dir for binaries..."
+	
+	# Copy universal binary (mplayer.ub) to mplayer.app
+	if [ -f "$dir/mplayer.ub" ]; then
+		cp "$dir/mplayer.ub" "$mplayerosx_path/External_Binaries/mplayer.app/Contents/MacOS/mplayer"
+		echo "mplayer.ub copied to mplayer.app/Contents/MacOS/mplayer"
+	fi
+	
+	# Copy ffmpeg-mt version (mplayer-mt.ub) to mplayer-mt.app
+	if [ -f "$dir/mplayer-mt.i386" -a -f "$dir/mplayer-mt.ppc" ]; then
+		lipo -create "$dir/mplayer-mt.i386" "$dir/mplayer-mt.ppc" -output "$dir/mplayer-mt.ub"
+		cp "$dir/mplayer-mt.ub" "$mplayerosx_path/External_Binaries/mplayer-mt.app/Contents/MacOS/mplayer"
+		echo "mplayer-mt.ub copied to mplayer-mt.app/Contents/MacOS/mplayer"
+	fi
+	
+	# Touch the folder to make XCode copy the new binaries
+	touch "$mplayerosx_path/External_Binaries"
+	
+	echo "Finished."
+	exit 0
+fi
+
+# **************************************************** #
+# *** SHARED INSTALL
+
+echo "Clean install destination..."
+
+rm -rf "$mplayerosx_path/External_Binaries/mplayer.app/Contents/MacOS/"*
+rm -rf "$mplayerosx_path/External_Binaries/mplayer-mt.app/Contents/MacOS/"*
+
+# **************************************************** #
+# *** GATHER LIBRARIES
+
+echo "gather libraries..."
+
+# recreate library direcotry
+mkdir "$dir/lib"
+
+# Gather mplayer dependencies
+for word in `otool -L "$dir/mplayer.ub"`; do
+	if echo "$word" | grep -q "$build_root_shared"; then
+		# Copy library to lib folder
+		cp "$word" "$dir/lib"
+		lib=`basename $word`
+		echo "... copied $lib to $dir/lib"
+		# Gather library dependencies
+		# (only direct dependencies of libraries are considered)
+		for subword in `otool -L "$dir/lib/$lib"`; do
+			if echo "$subword" | grep -q "$build_root_shared"; then
+				sublib=`basename $subword`
+				if [ ! -f "$dir/lib/$sublib" ]; then
+					cp "$subword" "$dir/lib"
+					echo "... copied $sublib to $dir/lib"
+				fi
+			fi
+		done
+	fi
+done
+
+echo "gather ffmpeg-mt libraries..."
+
+if [ -d $ffmpeg_mt_libs ]; then
+	
+	# recreate lib-mt directory
+	mkdir "$dir/lib-mt"
+	
+	# copy libraries from ffmpeg-mt directory
+	# (all dylibs in that directory are considered requried)
+	# (there should not be any other mt libraries than in $dir/lib/)
+	for path in $ffmpeg_mt_libs/*.dylib; do
+		lib=`basename $path`
+		cp "$path" "$dir/lib-mt"
+		echo "... copied $lib to $dir/lib-mt"
+	done
+fi
+
+# **************************************************** #
+# *** CHANGE INSTALL NAMES
+
+echo "changing install names..."
+
+# Loop through all libraries in ./lib
+for path in ./$dir/lib/*; do
+	
+	lib=`basename $path`
+	
+	echo "... change install name for: $lib"
+	
+	# change install path in mplayer
+	install_name_tool -change "$build_root_shared/lib/$lib" "@executable_path/lib/$lib" "$dir/mplayer.ub"
+	# change libraries own id
+	install_name_tool -id "@executable_path/lib/$lib" "$path" 
+	
+	# change install path in other libraries
+	for path2 in ./$dir/lib/*; do
+		install_name_tool -change "$build_root_shared/lib/$lib" "@executable_path/lib/$lib" "$path2"
+	done
+	
+	# change install path for mt libraries
+	if [ -d $ffmpeg_mt_libs -a -d "$dir/lib-mt" ]; then
+		for path2 in ./$dir/lib-mt/*; do
+			install_name_tool -change "$build_root_shared/lib/$lib" "@executable_path/lib/$lib" "$path2"
+		done
+	fi
+done
+
+# **************************************************** #
+# *** STRIP
+
+echo "stripping..."
+
+strip -x "$dir/mplayer.ub"
+echo "... stripped mplayer.ub"
+
+if [ -f "$dir/mplayer-mt.ub" ]; then
+	strip -x "$dir/mplayer-mt.ub"
+	echo "... stripped mplayer-mt.ub"
+fi
+
+for path in ./$dir/lib/*; do
+	lib=`basename $path`
+	strip -x "$path"
+	echo "... stripped $lib"
+done
+
+if [ -d "$dir/lib-mt" ]; then
+	for path in ./$dir/lib-mt/*; do
+		lib=`basename $path`
+		strip -x "$path"
+		echo "... stripped $lib (mplayer-mt)"
+	done
+fi
+
+# **************************************************** #
+# *** INSTALL
+
+echo "installing..."
+
+# copy mplayer binary
+cp "$dir/mplayer.ub" "$mplayerosx_path/External_Binaries/mplayer.app/Contents/MacOS/mplayer"
+# copy libraries
+cp -R "$dir/lib" "$mplayerosx_path/External_Binaries/mplayer.app/Contents/MacOS/"
+
+echo "... copied mplayer.ub and lib to mplayer.app"
+
+if [ -d "$dir/lib-mt" ]; then
+	
+	# clean direcotry: remove mplayer and librariy links
+	mkdir "$mplayerosx_path/External_Binaries/mplayer-mt.app/Contents/MacOS/lib"
+	
+	# change to direcotry to create relative links
+	olddir=`pwd`
+	cd "$mplayerosx_path/External_Binaries/mplayer-mt.app/Contents/MacOS"
+	
+	# link mplayer binary
+	ln -s "../../../mplayer.app/Contents/MacOS/mplayer" "mplayer"
+	# link all libraries in lib
+	cd lib
+	ln -s "../../../../mplayer.app/Contents/MacOS/lib/"* "."
+	
+	# change back to original directory
+	cd ..
+	cd $olddir
+	
+	# copy libraries in lib-mt
+	for mtlib in "$dir/lib-mt/"*; do
+		
+		libname=`basename $mtlib`
+		# remove links first so they are not followed
+		rm "$mplayerosx_path/External_Binaries/mplayer-mt.app/Contents/MacOS/lib/$libname"
+		cp "$dir/lib-mt/$libname" "$mplayerosx_path/External_Binaries/mplayer-mt.app/Contents/MacOS/lib"
+	
+	done
+	
+	echo "... copied lib-mt to mplayer-mt.app and created links back to mplayer.app"
+fi
+
+# Touch the folder to make XCode copy the new binaries
+touch "$mplayerosx_path/External_Binaries"
+
+echo "Done."
