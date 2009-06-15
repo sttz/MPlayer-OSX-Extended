@@ -1,0 +1,23 @@
+#!/bin/bash
+# MPlayer OSX build scripts
+# Adrian Stutz 2009
+
+# **************************************************** #
+# *** GLOBAL BUILD CONFIG
+
+# For the other scripts to find this config, it should be added to $PATH.
+
+# Path to the scripts folder (to reset $PATH correctly)
+scripts_path="/Users/example/mplayerosx/Scripts"
+
+# Path to the install root for static builds
+build_root_static="/Users/example/mplayer/usr/local"
+
+# Path tot the install root for shared builds
+build_root_shared="/Users/example/mplayer/usrs/local"
+
+# Path to the MPlayer OSX source root
+mplayerosx_path="/Users/example/dev/mplayerosx"
+
+# Path to the folder the ffmpeg-mt shared libraries are
+ffmpeg_mt_libs="/Users/example/dev/mplayer/ffmpeg-mt/libs/ub"

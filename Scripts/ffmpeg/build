@@ -1,0 +1,327 @@
+#!/bin/bash
+# MPlayer OSX FFmpeg build script
+# Adrian Stutz 2008
+
+# **************************************************** #
+# *** PREPARE
+
+# Change to script directory
+script_dir=`dirname ${BASH_SOURCE[0]}`
+cd $script_dir
+script_dir=`pwd -P`
+
+# **************************************************** #
+# *** CONFIG
+
+if [ -f "build.config" ]; then
+	
+	# Load config file in same directory named "build.config"
+	source "build.config"
+	echo "Config script build.config loaded"
+	
+else
+	
+	# Load default config
+	target_system="i386"
+	
+	# Build directories
+	build_dirs=( libavutil libavcodec libavformat libpostproc libswscale ) 
+	
+	# options
+	do_update=0
+	quiet=0
+	really_quiet=0
+	
+	# Build stages
+	do_clean=1
+	do_configure=1
+	do_build=1
+	do_install=1
+	
+	echo "Default config loaded."
+fi
+
+# **************************************************** #
+# *** SETUP
+
+no_clean=0
+no_configure=0
+no_build=0
+no_install=0
+
+clean_only=0
+configure_only=0
+build_only=0
+install_only=0
+
+# **************************************************** #
+# *** OPTION PARSING
+
+usage() {
+cat << EOF
+Usage: $0 [options] [i386|ppc|ppcg3]
+
+General options:
+    -h, --help                  display this help
+    -q, --quiet                 do not print command output
+    -qq, --really-quiet         do not print anything at all
+
+Build options:
+    -u, --update                do an "svn update" before building
+
+Build steps:
+    --no-STEP                   skip STEP in build process
+    --STEP-only                 only execute STEP of build process
+    
+Available STEPs are:
+    clean                       clean build directories ("make clean")
+    configure                   configure build ("./configure")
+    build                       build FFmpeg ("make")
+    install                     install libraries after completion
+    
+One of either i386, ppc or ppcg3 can be passed to set the target system (default: i386).
+Headers and configure flags will be set accordingly.
+EOF
+}
+
+# Parse command line
+while [ -n "$1" ]; do
+	case $1 in
+		i386 | ppc | ppcg3 )	target_system=$1
+								;;
+		
+		-u | --update )			do_update=1
+								;;
+		
+		--no-clean )			no_clean=1
+								;;
+		--no-configure )		no_configure=1
+								;;
+		--no-build )			no_build=1
+								;;
+		--no-install )			no_install=1
+								;;
+		
+		--clean-only )			clean_only=1
+								;;
+		--configure-only )		configure_only=1
+								;;
+		--build-only )			build_only=1
+								;;
+		--install-only )		install_only=1
+								;;
+		
+		-q | --quiet )			quiet=1
+								;;
+		-qq | --really-quiet )	really_quiet=1
+								;;
+		-h | --help )			usage
+								exit
+								;;
+		* )						usage
+								exit 1
+	esac
+	shift
+done
+
+# Quiet string
+if [ $quiet -eq 1 -o $really_quiet -eq 1 ]; then
+	# reset log file
+	echo "" > build.log
+	# redirect all output
+	if [ $really_quiet -eq 1 ]; then
+		exec >> build.log 2>> build.log
+	# redirect only commands' output
+	else
+		if [ $quiet -eq 1 ]; then
+			echo "" > build.log
+			c_output=" >> build.log 2>> build.log"
+		else
+			c_output=""
+		fi
+	fi
+fi
+
+# Check input
+let only_steps=$clean_only+$configure_only+$build_only+$install_only
+if [[ $only_steps > 1 ]]; then
+	echo "ERROR: only one --STEP-only option can be set at once."
+	exit 1
+fi
+
+let no_steps=$no_clean+$no_configure+$no_build+$no_install
+if [[ $no_steps > 1 && $only_steps > 1 ]]; then
+	echo "ERROR: --no-STEP options cannot be combined with --only-STEP options"
+	exit 1
+fi
+
+# Check for mposx_preparebuild
+which mposx_preparebuild || echo "ERROR: mposx_preparebuild not found."; exit 1
+
+# Apply --STEP-only options
+if [[ $clean_only == 1 ]]; then
+	do_clean=1
+	do_configure=0; do_build=0; do_install=0
+elif [[ $configure_only == 1 ]]; then
+	do_configure=1
+	do_clean=0; do_build=0; do_install=0
+elif [[ $build_only == 1 ]]; then
+	do_build=1
+	do_clean=0; do_configure=0; do_install=0
+elif [[ $install_only == 1 ]]; then
+	do_install=1
+	do_clean=0; do_configure=0; do_build=0
+fi
+
+# Apply --no-STEP options
+if [[ $no_clean == 1 ]]; then
+	do_clean=0
+elif [[ $no_configure == 1 ]]; then
+	do_configure=0
+elif [[ $no_build == 1 ]]; then
+	do_build=0
+elif [[ $no_install == 1 ]]; then
+	do_install=0
+fi
+
+# **************************************************** #
+# *** SET PATHS/HEADERS/OPTIONS
+
+# Set flags and paths
+source mposx_preparebuild -s "$target_system"
+
+# *** Base configure options
+config_opts=""
+config_opts="$config_opts --prefix=${BUILD_ROOT} --enable-gpl"
+# Build shared libraries
+config_opts="$config_opts --enable-shared --disable-static"
+# Disable unneeded tools
+config_opts="$config_opts --disable-ffmpeg --disable-ffplay --disable-ffserver"
+# Enable threads
+config_opts="$config_opts --enable-pthreads"
+# Disable unneeded stuff
+config_opts="$config_opts --disable-devices --disable-encoders --disable-muxers --disable-network"
+# Build libpostproc
+config_opts="$config_opts --enable-postproc"
+# Enable runtime cpu detection
+config_opts="$config_opts --enable-runtime-cpudetect"
+
+# PPC platform options
+if [ "$target_system" = "ppc" -o "$target_system" = "ppcg3" ]; then
+	config_opts="$config_opts --arch=ppc"
+fi
+
+# *** DEBUG
+echo -e "\nBUILDING LIBAV...\n"
+echo "	Target platform: $target_system"
+echo "	CFLAGS: $CFLAGS"
+echo "	CXXFLAGS: $CXXFLAGS"
+echo "	LDFLAGS: $LDFLAGS"
+echo "	configure options: $config_opts"
+echo ""
+
+# **************************************************** #
+# *** CLEAN
+
+if [ $do_clean -eq 1 ]; then
+	echo -e "\nCLEANING...\n"
+	eval "make clean $c_output"
+fi
+
+# **************************************************** #
+# *** UPDATE
+
+if [ $do_update -eq 1 ]; then
+	echo -e "\nUPDATING...\n"
+	eval "svn update $c_output" || exit $?
+fi
+
+# **************************************************** #
+# *** CONFIGURE
+
+if [ $do_configure -eq 1 ]; then
+	echo -e "\nCONFIGURING...\n"
+	eval "./configure $config_opts $c_output" || exit $?
+fi
+
+# **************************************************** #
+# *** BUILD
+
+if [ $do_build -eq 1 ]; then
+	echo -e "\nBUILDING...\n"
+	
+	# Reset libs folder
+	rm -rf "libs/$target_system"
+	mkdir -p "libs/$target_system"
+	
+	for dir in "${build_dirs[@]}"; do
+	
+		# Build in directory
+		echo "****** BUILD $dir ******"
+		cd "$dir"
+		eval "make $c_output" || exit $?
+	
+		# Strip and move library
+		strip -x "$dir.dylib"
+		cp "$dir.dylib" "../libs/$target_system"
+		cd ..
+	
+	done
+fi
+
+# **************************************************** #
+# *** FINISH
+
+echo -e "\nFINISH...\n"
+
+# Create universal binaries if possible
+if [ -d "libs/i386" -a -d "libs/ppc" ]; then
+	
+	rm -rf "libs/ub"
+	mkdir -p "libs/ub"
+	
+	for path in `ls libs/i386/*.dylib`; do
+		lib=`basename "$path"`
+		if [ -f "libs/ppc/$lib" ]; then
+			lipo -create "libs/i386/$lib" "libs/ppc/$lib" -output "libs/ub/$lib"
+		fi
+	done
+	
+fi
+
+if [ $do_install -eq 1 ]; then
+	# Install universal libraries if available
+	if [ -d "libs/ub" ]; then
+	
+		# Move lib back and install
+		for dir in "${build_dirs[@]}"; do
+			if [ ! -f "libs/ub/$dir.dylib" ]; then
+				echo "Missing $dir.dylib for install."
+			else
+				cp "libs/ub/$dir.dylib" "$dir/$dir.dylib"
+				cd "$dir"
+				eval "make install $c_output" || exit $?
+				cd ..
+			fi
+		done
+	
+	fi
+fi
+
+echo "Done."
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

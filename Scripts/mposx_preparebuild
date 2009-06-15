@@ -1,0 +1,119 @@
+#!/bin/bash
+# MPlayer OSX build script
+# Adrian Stutz 2008
+
+# **************************************************** #
+# *** CONFIG
+
+# GLOBAL CONFIG
+buildconfig=`which mposx_buildconfig`
+if [ $? -eq 0 ]; then
+	
+	# Load global config
+	source mposx_buildconfig
+	
+else
+	
+	# Load default config
+	build_root_static="/Users/example/dev/usr/local"
+	build_root_shared="/Users/example/dev/usrs/local"
+	
+fi
+
+# LOCAL CONFIG
+target_system="i386"
+shared=0
+
+# **************************************************** #
+# *** OPTION PARSING
+
+usage() {
+cat << EOF
+Usage: source $0 [options] [i386|ppc|ppcg3|ub]
+
+General options:
+    -h, --help                  display this help
+
+Header options:
+    -s, --shared                use shared build root
+    
+One of either i386, ppc, ppcg3 or ub can be passed to set the target system (default: i386).
+Headers and configure flags will be set accordingly.
+EOF
+}
+
+# Parse command line
+while [ -n "$1" ]; do
+	case $1 in
+		i386 | ppc | ppcg3 | ub )	target_system=$1
+									;;
+		-s | --shared )				shared=1
+									;;
+		-h | --help )				usage
+									exit
+									;;
+		* )							usage
+									exit 1
+	esac
+	shift
+done
+
+# Set build root
+if [ $shared -eq 1 ]; then
+	build_root="$build_root_shared"
+else
+	build_root="$build_root_static"
+fi
+
+# **************************************************** #
+# *** SET PATHS / FLAGS
+
+# Make sure pkg-config doesn't interfere
+export PKG_CONFIG_PATH=""
+# Reset path to default + our own build root
+export PATH="${build_root}/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin"
+# Add scripts path if set
+export PATH="$scripts_path:$PATH"
+
+# Set target to OSX 10.4
+export MACOSX_DEPLOYMENT_TARGET=10.4
+export CFLAGS="-mmacosx-version-min=10.4 -isystem /Developer/SDKs/MacOSX10.4u.sdk"
+export LDFLAGS="-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk"
+export LDFLAGS="$LDFLAGS -Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk"
+export CXXFLAGS="-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk"
+
+# Intel platform flags
+#if [ $target_system = "i386" ]; then
+	# None yet
+#fi
+
+# PPC platform flags
+if [ "$target_system" = "ppc" ]; then
+	export CFLAGS="$CFLAGS -arch ppc -mcpu=7450"
+	export LDFLAGS="$LDFLAGS -arch ppc"
+	export CXXFLAGS="$CXXFLAGS -arch ppc -mcpu=7450"
+fi
+
+# PPC G3 platform flags
+if [ "$target_system" = "ppcg3" ]; then
+	export CFLAGS="$CFLAGS -arch ppc -mcpu=750"
+	export LDFLAGS="$LDFLAGS -arch ppc"
+	export CXXFLAGS="$CXXFLAGS -arch ppc -mcpu=750"
+fi
+
+# Universal binary platform flags
+if [ "$target_system" = "ub" ]; then
+	export CFLAGS="$CFLAGS -arch i386 -arch ppc"
+	export LDFLAGS="$LDFLAGS -arch i386 -arch ppc"
+	export CXXFLAGS="$CXXFLAGS -arch i386 -arch ppc"
+fi
+
+# Set paths
+export LDFLAGS="$LDFLAGS -L${build_root}/lib -Wl,-search_paths_first"
+export CFLAGS="$CFLAGS -I${build_root}/include"
+export CXXFLAGS="$CXXFLAGS -I${build_root}/include"
+
+export BUILD_ROOT="$build_root"
+
+echo "Headers set for target system: $target_system"
+echo "Using build root: $build_root"
