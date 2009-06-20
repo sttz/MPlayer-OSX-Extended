@@ -156,7 +156,7 @@ if [[ $no_steps > 1 && $only_steps > 1 ]]; then
 fi
 
 # Check for mposx_preparebuild
-which mposx_preparebuild || echo "ERROR: mposx_preparebuild not found."; exit 1
+which mposx_preparebuild > /dev/null || (echo "ERROR: mposx_preparebuild not found."; exit 1)
 
 # Apply --STEP-only options
 if [[ $clean_only == 1 ]]; then
@@ -205,6 +205,9 @@ config_opts="$config_opts --disable-devices --disable-encoders --disable-muxers 
 config_opts="$config_opts --enable-postproc"
 # Enable runtime cpu detection
 config_opts="$config_opts --enable-runtime-cpudetect"
+# Enable LLCM
+config_opts="$config_opts --cc=llvm-gcc"
+
 
 # PPC platform options
 if [ "$target_system" = "ppc" -o "$target_system" = "ppcg3" ]; then

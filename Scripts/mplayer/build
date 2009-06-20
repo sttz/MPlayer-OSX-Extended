@@ -159,7 +159,7 @@ if [[ $no_steps > 1 && $only_steps > 1 ]]; then
 fi
 
 # Check for mposx_preparebuild
-which mposx_preparebuild || echo "ERROR: mposx_preparebuild not found."; exit 1
+which mposx_preparebuild > /dev/null || (echo "ERROR: mposx_preparebuild not found."; exit 1)
 
 # Apply --STEP-only options
 if [[ $clean_only == 1 ]]; then
