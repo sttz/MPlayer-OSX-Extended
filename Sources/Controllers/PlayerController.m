@@ -1265,21 +1265,29 @@
     {
         switch([buttonIdentifierNumber intValue])
         {
-				// Right: Seek forward
+			// Right: Seek forward
 			case kRemoteButtonRight_Hold:
 				[self seekFwd:nil];
 				break;
-				// Left: Seek back
+			// Left: Seek back
             case kRemoteButtonLeft_Hold:
 				[self seekBack:nil];
 				break;
-				// Volume+: Increase volume
+			// Volume+: Increase volume
             case kRemoteButtonVolume_Plus_Hold:
                 [self increaseVolume:nil];
 				break;
-				// Volume-: Decrease volume
+			// Volume-: Decrease volume
             case kRemoteButtonVolume_Minus_Hold:
                 [self decreaseVolume:nil];
+				break;
+			// Menu: Mute
+            case kRemoteButtonMenu_Hold:
+                [self toggleMute:nil];
+				break;
+			// Play: Stop
+            case kRemoteButtonPlay_Sleep:
+                [self stop:nil];
 				break;
         }
         if(appleRemoteHolding)
