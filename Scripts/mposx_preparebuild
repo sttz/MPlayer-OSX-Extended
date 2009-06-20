@@ -71,7 +71,7 @@ fi
 # Make sure pkg-config doesn't interfere
 export PKG_CONFIG_PATH=""
 # Reset path to default + our own build root
-export PATH="${build_root}/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin"
+export PATH="${build_root}/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin"
 # Add scripts path if set
 export PATH="$scripts_path:$PATH"
 
