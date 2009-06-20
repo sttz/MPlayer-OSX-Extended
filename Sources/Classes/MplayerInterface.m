@@ -126,6 +126,10 @@ static NSArray* parseRunLoopModes;
 	windowedVO = NO;
 	isFullscreen = NO;
 	
+	// Disable MPlayer AppleRemote code unconditionally, as it causing problems 
+	// when MPlayer runs in background only and we provide our own AR implementation.
+	disableAppleRemote = YES;
+	
 	return self;
 }
 
@@ -592,6 +596,10 @@ static NSArray* parseRunLoopModes;
 		[params addObject:@"identify=4:demux=6"];
 	} else
 		[params addObject:@"-identify"];
+	
+	// Disable Apple Remote
+	if (disableAppleRemote)
+		[params addObject:@"-noar"];
 	
 	// MovieInfo
 	if (mf == nil && (info == nil || ![myMovieFile isEqualToString:[info filename]])) {

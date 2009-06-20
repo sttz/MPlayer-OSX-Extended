@@ -98,6 +98,8 @@
 	
 	unsigned int cacheSize;
 	
+	BOOL disableAppleRemote;
+	
 	// display
 	unsigned int displayType;
 	
