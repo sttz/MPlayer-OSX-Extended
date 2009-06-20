@@ -515,10 +515,8 @@ static NSArray* parseRunLoopModes;
 		[audioFilters addObject:@"karaoke"];
 	}
 	// set initial volume
-	if (myVolume) {
-		[params addObject:@"-volume"];
-		[params addObject:[NSString stringWithFormat:@"%u", myVolume]];
-	}
+	[params addObject:@"-volume"];
+	[params addObject:[NSString stringWithFormat:@"%u", myVolume]];
 	
 	
 	
