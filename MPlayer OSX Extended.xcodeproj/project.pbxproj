@@ -86,15 +86,15 @@
 		3A5879C80EED42BD003408E8 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A5879C70EED42BD003408E8 /* Sparkle.framework */; };
 		3A5879D30EED42CB003408E8 /* Sparkle.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 3A5879C70EED42BD003408E8 /* Sparkle.framework */; };
 		3A5879E00EED4507003408E8 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 3A5879DF0EED4507003408E8 /* dsa_pub.pem */; };
-		3A66757E0F2BD7F3005EBCA6 /* libfontconfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A66757D0F2BD7F3005EBCA6 /* libfontconfig.a */; };
-		3A7263180EE5EFDC00945A3E /* libexpat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7263170EE5EFDC00945A3E /* libexpat.a */; };
-		3A72631B0EE5F00400945A3E /* libiconv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A72631A0EE5F00400945A3E /* libiconv.a */; };
-		3A72631E0EE5F01B00945A3E /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A72631D0EE5F01B00945A3E /* libz.a */; };
 		3AB2120C0EABE74900ACA509 /* PlayerFullscreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB2120B0EABE74900ACA509 /* PlayerFullscreenWindow.m */; };
 		3ABF85420EBFA084001FE779 /* FullscreenControls.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABF85410EBFA084001FE779 /* FullscreenControls.m */; };
 		3ABF86580EBFAD06001FE779 /* FullscreenControlsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABF86570EBFAD06001FE779 /* FullscreenControlsView.m */; };
 		3ABF86A80EBFAF4C001FE779 /* fc_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 3ABF86A70EBFAF4C001FE779 /* fc_background.png */; };
 		3ADA6F840FED749300F7AFB9 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADA6F830FED749300F7AFB9 /* IOKit.framework */; };
+		3ADA70970FED843800F7AFB9 /* libexpat.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADA70930FED843800F7AFB9 /* libexpat.1.dylib */; };
+		3ADA70980FED843800F7AFB9 /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADA70940FED843800F7AFB9 /* libfontconfig.1.dylib */; };
+		3ADA70990FED843800F7AFB9 /* libfreetype.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADA70950FED843800F7AFB9 /* libfreetype.6.dylib */; };
+		3ADA709A0FED843800F7AFB9 /* libiconv.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADA70960FED843800F7AFB9 /* libiconv.2.dylib */; };
 		3AE612370EC08130009F2F12 /* fc_scrub_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AE612290EC08130009F2F12 /* fc_scrub_bg.png */; };
 		3AE612380EC08130009F2F12 /* fc_srub_bar.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AE6122A0EC08130009F2F12 /* fc_srub_bar.png */; };
 		3AE612390EC08130009F2F12 /* fc_fast_rewind.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AE6122B0EC08130009F2F12 /* fc_fast_rewind.png */; };
@@ -121,7 +121,6 @@
 		3AE612660EC08C2D009F2F12 /* FullscreenControlsVolumeSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE612650EC08C2D009F2F12 /* FullscreenControlsVolumeSlider.m */; };
 		3AF152260F97B3F700409534 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AF152240F97B3F700409534 /* RegexKitLite.m */; };
 		3AF152A40F97C21500409534 /* iso-639.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3AF152A30F97C21500409534 /* iso-639.plist */; };
-		3AF7EFF60EEDDEB600BFEBBF /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7263150EE5EFD200945A3E /* libfreetype.a */; };
 		3AFE25310EC0FA29009FFEC5 /* FullscreenControlsScrubbingBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AFE25300EC0FA29009FFEC5 /* FullscreenControlsScrubbingBar.m */; };
 		3AFE25360EC0FEBB009FFEC5 /* fc_scrub_anim.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AFE25330EC0FEBB009FFEC5 /* fc_scrub_anim.png */; };
 		3AFE25370EC0FEBB009FFEC5 /* fc_scrub_run.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AFE25340EC0FEBB009FFEC5 /* fc_scrub_run.png */; };
@@ -240,11 +239,6 @@
 		3A38D3C40E50E45A00C1E468 /* Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Debug.m; path = Sources/Classes/Debug.m; sourceTree = "<group>"; };
 		3A5879C70EED42BD003408E8 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		3A5879DF0EED4507003408E8 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dsa_pub.pem; path = Resources/dsa_pub.pem; sourceTree = "<group>"; };
-		3A66757D0F2BD7F3005EBCA6 /* libfontconfig.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfontconfig.a; path = ../mplayer_static/usr/local/lib/libfontconfig.a; sourceTree = SOURCE_ROOT; };
-		3A7263150EE5EFD200945A3E /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfreetype.a; path = ../mplayer_static/usr/local/lib/libfreetype.a; sourceTree = SOURCE_ROOT; };
-		3A7263170EE5EFDC00945A3E /* libexpat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libexpat.a; path = ../mplayer_static/usr/local/lib/libexpat.a; sourceTree = SOURCE_ROOT; };
-		3A72631A0EE5F00400945A3E /* libiconv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libiconv.a; path = ../mplayer_static/usr/local/lib/libiconv.a; sourceTree = SOURCE_ROOT; };
-		3A72631D0EE5F01B00945A3E /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = ../mplayer_static/usr/local/lib/libz.a; sourceTree = SOURCE_ROOT; };
 		3A96C9590E4E20B800B7B261 /* iso-639-3.tab */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "iso-639-3.tab"; path = "Resources/iso-639-3.tab"; sourceTree = "<group>"; };
 		3AB2120A0EABE74900ACA509 /* PlayerFullscreenWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerFullscreenWindow.h; path = Sources/Classes/PlayerFullscreenWindow.h; sourceTree = "<group>"; };
 		3AB2120B0EABE74900ACA509 /* PlayerFullscreenWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlayerFullscreenWindow.m; path = Sources/Classes/PlayerFullscreenWindow.m; sourceTree = "<group>"; };
@@ -254,6 +248,10 @@
 		3ABF86570EBFAD06001FE779 /* FullscreenControlsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullscreenControlsView.m; path = Sources/Classes/FullscreenControlsView.m; sourceTree = "<group>"; };
 		3ABF86A70EBFAF4C001FE779 /* fc_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fc_background.png; path = Resources/Graphics/fc_background.png; sourceTree = "<group>"; };
 		3ADA6F830FED749300F7AFB9 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		3ADA70930FED843800F7AFB9 /* libexpat.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libexpat.1.dylib; path = External_Binaries/mplayer.app/Contents/MacOS/lib/libexpat.1.dylib; sourceTree = "<group>"; };
+		3ADA70940FED843800F7AFB9 /* libfontconfig.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfontconfig.1.dylib; path = External_Binaries/mplayer.app/Contents/MacOS/lib/libfontconfig.1.dylib; sourceTree = "<group>"; };
+		3ADA70950FED843800F7AFB9 /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.6.dylib; path = External_Binaries/mplayer.app/Contents/MacOS/lib/libfreetype.6.dylib; sourceTree = "<group>"; };
+		3ADA70960FED843800F7AFB9 /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = External_Binaries/mplayer.app/Contents/MacOS/lib/libiconv.2.dylib; sourceTree = "<group>"; };
 		3AE612290EC08130009F2F12 /* fc_scrub_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fc_scrub_bg.png; path = Resources/Graphics/fc_scrub_bg.png; sourceTree = "<group>"; };
 		3AE6122A0EC08130009F2F12 /* fc_srub_bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fc_srub_bar.png; path = Resources/Graphics/fc_srub_bar.png; sourceTree = "<group>"; };
 		3AE6122B0EC08130009F2F12 /* fc_fast_rewind.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fc_fast_rewind.png; path = Resources/Graphics/fc_fast_rewind.png; sourceTree = "<group>"; };
@@ -299,19 +297,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3AF7EFF60EEDDEB600BFEBBF /* libfreetype.a in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				3747F27D087EF9EC00980B71 /* Foundation.framework in Frameworks */,
 				3747F280087EFA0700980B71 /* AppKit.framework in Frameworks */,
 				3747F282087EFA4200980B71 /* Carbon.framework in Frameworks */,
 				3747F284087EFA5D00980B71 /* OpenGL.framework in Frameworks */,
 				3747F286087EFA6A00980B71 /* QuartzCore.framework in Frameworks */,
-				3A7263180EE5EFDC00945A3E /* libexpat.a in Frameworks */,
-				3A72631B0EE5F00400945A3E /* libiconv.a in Frameworks */,
-				3A72631E0EE5F01B00945A3E /* libz.a in Frameworks */,
 				3A5879C80EED42BD003408E8 /* Sparkle.framework in Frameworks */,
-				3A66757E0F2BD7F3005EBCA6 /* libfontconfig.a in Frameworks */,
 				3ADA6F840FED749300F7AFB9 /* IOKit.framework in Frameworks */,
+				3ADA70970FED843800F7AFB9 /* libexpat.1.dylib in Frameworks */,
+				3ADA70980FED843800F7AFB9 /* libfontconfig.1.dylib in Frameworks */,
+				3ADA70990FED843800F7AFB9 /* libfreetype.6.dylib in Frameworks */,
+				3ADA709A0FED843800F7AFB9 /* libiconv.2.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -337,11 +334,10 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3A66757D0F2BD7F3005EBCA6 /* libfontconfig.a */,
-				3A72631D0EE5F01B00945A3E /* libz.a */,
-				3A72631A0EE5F00400945A3E /* libiconv.a */,
-				3A7263170EE5EFDC00945A3E /* libexpat.a */,
-				3A7263150EE5EFD200945A3E /* libfreetype.a */,
+				3ADA70930FED843800F7AFB9 /* libexpat.1.dylib */,
+				3ADA70940FED843800F7AFB9 /* libfontconfig.1.dylib */,
+				3ADA70950FED843800F7AFB9 /* libfreetype.6.dylib */,
+				3ADA70960FED843800F7AFB9 /* libiconv.2.dylib */,
 				3A5879C70EED42BD003408E8 /* Sparkle.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 			);
@@ -372,7 +368,6 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				3ADA6F830FED749300F7AFB9 /* IOKit.framework */,
 			);
 			name = "MPlayer OSX";
 			sourceTree = "<group>";
@@ -475,6 +470,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3ADA6F830FED749300F7AFB9 /* IOKit.framework */,
 				371878190B230ABD0096E1ED /* QuickTime.framework */,
 				3747F285087EFA6A00980B71 /* QuartzCore.framework */,
 				3747F283087EFA5D00980B71 /* OpenGL.framework */,
@@ -542,6 +538,7 @@
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				3AFA91540E5858EF00B3998D /* Copy Files */,
+				3ADA709E0FED848600F7AFB9 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -675,6 +672,19 @@
 			shellPath = /bin/bash;
 			shellScript = "set -o errexit\n\n[ $BUILD_STYLE = Release ] || { echo Distribution target requires \"'Release'\" build style; false; }\n\nVERSION=$(defaults read \"$BUILT_PRODUCTS_DIR/$PROJECT_NAME.app/Contents/Info\" CFBundleShortVersionString)\nBUILD_ID=$(defaults read \"$BUILT_PRODUCTS_DIR/$PROJECT_NAME.app/Contents/Info\" CFBundleVersion)\nDOWNLOAD_BASE_URL=\"http://mplayerosx.sttz.ch/downloads\"\nRELEASENOTES_URL=\"http://mplayerosx.sttz.ch/changes/$VERSION.html\"\n\nARCHIVE_FILENAME=\"MPlayer-OSX-Extended_$VERSION.dmg\"\nDOWNLOAD_URL=\"$DOWNLOAD_BASE_URL/$ARCHIVE_FILENAME\"\nKEYCHAIN_PRIVKEY_NAME=\"MPlayerOSX Sparkle Private Key\"\nRELEASE_DIR=\"releases/\"\n\nWD=$PWD\nrm -f \"$RELEASE_DIR/$ARCHIVE_FILENAME\"\n./Scripts/mposx_create_dmg \"$VERSION\"\n\nSIZE=$(stat -f %z \"$RELEASE_DIR/$ARCHIVE_FILENAME\")\nPUBDATE=$(date +\"%a, %d %b %G %T %z\")\nSIGNATURE=$(\n\topenssl dgst -sha1 -binary < \"$RELEASE_DIR/$ARCHIVE_FILENAME\" \\\n\t| openssl dgst -dss1 -sign <(security find-generic-password -g -s \"$KEYCHAIN_PRIVKEY_NAME\" 2>&1 1>/dev/null | perl -pe '($_) = /\"(.+)\"/; s/\\\\012/\\n/g') \\\n\t| openssl enc -base64\n)\n\n[ $SIGNATURE ] || { echo Unable to load signing private key with name \"'$KEYCHAIN_PRIVKEY_NAME'\" from keychain; false; }\n\ncat <<EOF\n\t\t<item>\n\t\t\t<title>revision $VERSION</title>\n\t\t\t<sparkle:releaseNotesLink>$RELEASENOTES_URL</sparkle:releaseNotesLink>\n\t\t\t<pubDate>$PUBDATE</pubDate>\n\t\t\t<enclosure\n\t\t\t\turl=\"$DOWNLOAD_URL\"\n\t\t\t\tsparkle:version=\"$BUILD_ID\"\n\t\t\t\tsparkle:shortVersionString=\"$VERSION\"\n\t\t\t\ttype=\"application/octet-stream\"\n\t\t\t\tlength=\"$SIZE\"\n\t\t\t\tsparkle:dsaSignature=\"$SIGNATURE\"\n\t\t\t/>\n\t\t</item>\nEOF\n\necho scp \"'$HOME/svn/my-cool-app/build/Release/$ARCHIVE_FILENAME'\" www.example.com:download/\necho scp \"'$WD/appcast.xml'\" www.example.com:web/software/my-cool-app/appcast.xml";
 		};
+		3ADA709E0FED848600F7AFB9 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "set -o errexit\n\n# ***\n# Link Fontconfig dylib and depencies from binary to MPlayer OSX\n# ***\n\nextra_library_dir=\"$TARGET_BUILD_DIR/$CONTENTS_FOLDER_PATH/MacOS/lib\"\n\n# Create library directory\nif [ ! -d \"$extra_library_dir\" ]; then\n    mkdir \"$extra_library_dir\"\nfi\n\n# Switch to library directory\ncd \"$extra_library_dir\"\n\n# Link libraries\nln -sf ../../Resources/External_Binaries/mplayer.app/Contents/MacOS/lib/libfontconfig.1.dylib libfontconfig.1.dylib\nln -sf ../../Resources/External_Binaries/mplayer.app/Contents/MacOS/lib/libfreetype.6.dylib libfreetype.6.dylib\nln -sf ../../Resources/External_Binaries/mplayer.app/Contents/MacOS/lib/libiconv.2.dylib libiconv.2.dylib\nln -sf ../../Resources/External_Binaries/mplayer.app/Contents/MacOS/lib/libexpat.1.dylib libexpat.1.dylib";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -771,9 +781,13 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../mplayer_static/usr/local/lib\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../mplayer_static/usr/local/lib\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/build/Release/MPlayer OSX Extended.app/Contents/Resources/External_Binaries/mplayer.app/Contents/MacOS/lib\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/External_Binaries/mplayer.app/Contents/MacOS/lib\"";
 				OTHER_LDFLAGS = "-licucore";
 				PREBINDING = NO;
 				PRODUCT_NAME = "MPlayer OSX Extended";
@@ -809,13 +823,14 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../mplayer_static/usr/local/lib\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../mplayer_static/usr/local/lib\"";
-				OTHER_LDFLAGS = (
-					"-licucore",
-					"-Wl,-search_paths_first",
-				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/build/Release/MPlayer OSX Extended.app/Contents/Resources/External_Binaries/mplayer.app/Contents/MacOS/lib\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/External_Binaries/mplayer.app/Contents/MacOS/lib\"";
+				OTHER_LDFLAGS = "-licucore";
 				PREBINDING = NO;
 				PRODUCT_NAME = "MPlayer OSX Extended";
 				STRIP_INSTALLED_PRODUCT = YES;
