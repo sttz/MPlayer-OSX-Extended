@@ -19,6 +19,8 @@
 #define MP_DIALOG_VIDEO		2
 #define MP_DIALOG_SUBTITLES 3
 
+@class AppleRemote;
+
 @interface AppController : NSObject
 {
     // controller outlets
@@ -49,6 +51,9 @@
 	
 	// open dialog
 	NSOpenPanel *openPanel;
+	
+	// apple remote support
+	AppleRemote *appleRemote;
 }
 // app's interface
 - (NSUserDefaults *) preferences;
@@ -89,6 +94,8 @@
 
 
 // delegate methods
+- (void) applicationDidBecomeActive:(NSNotification *)aNotification;
+- (void) applicationDidResignActive:(NSNotification *)aNotification;
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename;
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender;
 - (BOOL) validateMenuItem:(NSMenuItem *)aMenuItem;

@@ -14,6 +14,8 @@
 #import "PlayerController.h"
 #import "PlayListController.h"
 
+#import "AppleRemote.h"
+
 @implementation AppController
 - (void) awakeFromNib;
 {
@@ -33,6 +35,11 @@
 			object:NSApp];
 	
 	[self updateAspectMenu];
+	
+	// enable apple remote support
+	appleRemote = [[AppleRemote alloc] init];
+	[appleRemote setClickCountEnabledButtons: kRemoteButtonPlay];
+	[appleRemote setDelegate: playerController];
 	
 	[LanguageCodes loadCodes];
 }
@@ -530,6 +537,16 @@
 	NSMutableDictionary *myItem = [NSMutableDictionary
 								   dictionaryWithObject:url forKey:@"MovieFile"];
 	[playerController playItem:myItem];
+}
+/************************************************************************************/
+- (void) applicationDidBecomeActive:(NSNotification *)aNotification
+{
+    [appleRemote startListening: self];
+}
+
+- (void) applicationDidResignActive:(NSNotification *)aNotification
+{
+    [appleRemote stopListening: self];
 }
 /************************************************************************************/
 // posted when application wants to terminate

@@ -81,6 +81,7 @@
 		3A0943290E44F8E300E6753F /* MovieInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A0943280E44F8E300E6753F /* MovieInfo.m */; };
 		3A09436C0E45043000E6753F /* LanguageCodes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A09436B0E45043000E6753F /* LanguageCodes.m */; };
 		3A0A3E550F670C89008C8507 /* External_Binaries in Resources */ = {isa = PBXBuildFile; fileRef = 3A0A3E510F670C89008C8507 /* External_Binaries */; };
+		3A36660F0FE6E6A500CF05DC /* AppleRemote.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A36660D0FE6E6A500CF05DC /* AppleRemote.m */; };
 		3A38D3C50E50E45A00C1E468 /* Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A38D3C40E50E45A00C1E468 /* Debug.m */; };
 		3A5879C80EED42BD003408E8 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A5879C70EED42BD003408E8 /* Sparkle.framework */; };
 		3A5879D30EED42CB003408E8 /* Sparkle.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 3A5879C70EED42BD003408E8 /* Sparkle.framework */; };
@@ -93,6 +94,7 @@
 		3ABF85420EBFA084001FE779 /* FullscreenControls.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABF85410EBFA084001FE779 /* FullscreenControls.m */; };
 		3ABF86580EBFAD06001FE779 /* FullscreenControlsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABF86570EBFAD06001FE779 /* FullscreenControlsView.m */; };
 		3ABF86A80EBFAF4C001FE779 /* fc_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 3ABF86A70EBFAF4C001FE779 /* fc_background.png */; };
+		3ADA6F840FED749300F7AFB9 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADA6F830FED749300F7AFB9 /* IOKit.framework */; };
 		3AE612370EC08130009F2F12 /* fc_scrub_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AE612290EC08130009F2F12 /* fc_scrub_bg.png */; };
 		3AE612380EC08130009F2F12 /* fc_srub_bar.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AE6122A0EC08130009F2F12 /* fc_srub_bar.png */; };
 		3AE612390EC08130009F2F12 /* fc_fast_rewind.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AE6122B0EC08130009F2F12 /* fc_fast_rewind.png */; };
@@ -232,6 +234,8 @@
 		3A09436A0E45043000E6753F /* LanguageCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LanguageCodes.h; path = Sources/Classes/LanguageCodes.h; sourceTree = "<group>"; };
 		3A09436B0E45043000E6753F /* LanguageCodes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LanguageCodes.m; path = Sources/Classes/LanguageCodes.m; sourceTree = "<group>"; };
 		3A0A3E510F670C89008C8507 /* External_Binaries */ = {isa = PBXFileReference; lastKnownFileType = folder; path = External_Binaries; sourceTree = "<group>"; };
+		3A36660D0FE6E6A500CF05DC /* AppleRemote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppleRemote.m; path = Sources/External/AppleRemote/AppleRemote.m; sourceTree = "<group>"; };
+		3A36660E0FE6E6A500CF05DC /* AppleRemote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppleRemote.h; path = Sources/External/AppleRemote/AppleRemote.h; sourceTree = "<group>"; };
 		3A38D3C30E50E45A00C1E468 /* Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Debug.h; path = Sources/Classes/Debug.h; sourceTree = "<group>"; };
 		3A38D3C40E50E45A00C1E468 /* Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Debug.m; path = Sources/Classes/Debug.m; sourceTree = "<group>"; };
 		3A5879C70EED42BD003408E8 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
@@ -249,6 +253,7 @@
 		3ABF86560EBFAD06001FE779 /* FullscreenControlsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FullscreenControlsView.h; path = Sources/Classes/FullscreenControlsView.h; sourceTree = "<group>"; };
 		3ABF86570EBFAD06001FE779 /* FullscreenControlsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullscreenControlsView.m; path = Sources/Classes/FullscreenControlsView.m; sourceTree = "<group>"; };
 		3ABF86A70EBFAF4C001FE779 /* fc_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fc_background.png; path = Resources/Graphics/fc_background.png; sourceTree = "<group>"; };
+		3ADA6F830FED749300F7AFB9 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		3AE612290EC08130009F2F12 /* fc_scrub_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fc_scrub_bg.png; path = Resources/Graphics/fc_scrub_bg.png; sourceTree = "<group>"; };
 		3AE6122A0EC08130009F2F12 /* fc_srub_bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fc_srub_bar.png; path = Resources/Graphics/fc_srub_bar.png; sourceTree = "<group>"; };
 		3AE6122B0EC08130009F2F12 /* fc_fast_rewind.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fc_fast_rewind.png; path = Resources/Graphics/fc_fast_rewind.png; sourceTree = "<group>"; };
@@ -306,6 +311,7 @@
 				3A72631E0EE5F01B00945A3E /* libz.a in Frameworks */,
 				3A5879C80EED42BD003408E8 /* Sparkle.framework in Frameworks */,
 				3A66757E0F2BD7F3005EBCA6 /* libfontconfig.a in Frameworks */,
+				3ADA6F840FED749300F7AFB9 /* IOKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -366,6 +372,7 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				3ADA6F830FED749300F7AFB9 /* IOKit.framework */,
 			);
 			name = "MPlayer OSX";
 			sourceTree = "<group>";
@@ -373,6 +380,8 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				3A36660D0FE6E6A500CF05DC /* AppleRemote.m */,
+				3A36660E0FE6E6A500CF05DC /* AppleRemote.h */,
 				3AF152240F97B3F700409534 /* RegexKitLite.m */,
 				3AF152250F97B3F700409534 /* RegexKitLite.h */,
 				32CA4F630368D1EE00C91783 /* MPlayer OSX_Prefix.pch */,
@@ -694,6 +703,7 @@
 				3AE612660EC08C2D009F2F12 /* FullscreenControlsVolumeSlider.m in Sources */,
 				3AFE25310EC0FA29009FFEC5 /* FullscreenControlsScrubbingBar.m in Sources */,
 				3AF152260F97B3F700409534 /* RegexKitLite.m in Sources */,
+				3A36660F0FE6E6A500CF05DC /* AppleRemote.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

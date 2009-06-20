@@ -130,8 +130,9 @@
 	NSImage *fcPauseImageOff;
 	NSImage *fcPauseImageOn;
 	
-	
 	NSRect org_frame;
+	
+	BOOL appleRemoteHolding;
 }
 
 // interface

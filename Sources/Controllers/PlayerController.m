@@ -20,6 +20,8 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
+#include "AppleRemote.h"
+
 #define		MP_VOLUME_POLL_INTERVAL		10.0f
 #define		MP_CHAPTER_CHECK_INTERVAL	0.5f
 
@@ -1256,7 +1258,85 @@
 	[self clearStreamMenus];
 	[self clearChapterMenu];
 }
-
+/************************************************************************************/
+- (void) executeHoldActionForRemoteButton:(NSNumber*)buttonIdentifierNumber
+{
+    if(appleRemoteHolding)
+    {
+        switch([buttonIdentifierNumber intValue])
+        {
+				// Right: Seek forward
+			case kRemoteButtonRight_Hold:
+				[self seekFwd:nil];
+				break;
+				// Left: Seek back
+            case kRemoteButtonLeft_Hold:
+				[self seekBack:nil];
+				break;
+				// Volume+: Increase volume
+            case kRemoteButtonVolume_Plus_Hold:
+                [self increaseVolume:nil];
+				break;
+				// Volume-: Decrease volume
+            case kRemoteButtonVolume_Minus_Hold:
+                [self decreaseVolume:nil];
+				break;
+        }
+        if(appleRemoteHolding)
+        {
+            // re-schedule event
+            [self performSelector:@selector(executeHoldActionForRemoteButton:)
+					   withObject:buttonIdentifierNumber
+					   afterDelay:0.25];
+        }
+    }
+}
+/************************************************************************************/
+- (void) appleRemoteButton:(AppleRemoteEventIdentifier)buttonIdentifier 
+			   pressedDown:(BOOL)pressedDown 
+				clickCount:(unsigned int)count
+{
+	switch(buttonIdentifier)
+    {
+        // Play: Play/Pause
+		case kRemoteButtonPlay:
+            [self playPause:nil];
+            break;
+        // Volume+: Increase volume
+		case kRemoteButtonVolume_Plus:
+            [self increaseVolume:nil];
+            break;
+        // Volume-: Decrease volume
+		case kRemoteButtonVolume_Minus:
+            [self decreaseVolume:nil];
+            break;
+		// Right: Skip forward
+        case kRemoteButtonRight:
+            [self seekNext:nil];
+            break;
+		// Left: Skip backward
+        case kRemoteButtonLeft:
+            [self seekPrevious:nil];
+            break;
+		// Menu: Switch fullscreen
+        case kRemoteButtonMenu:
+            [self switchFullscreen:nil];
+            break;
+		// Redirect hold events
+        case kRemoteButtonRight_Hold:
+        case kRemoteButtonLeft_Hold:
+        case kRemoteButtonVolume_Plus_Hold:
+        case kRemoteButtonVolume_Minus_Hold:
+            // Trigger periodic method for hold duration
+            appleRemoteHolding = pressedDown;
+            if (pressedDown) {
+                NSNumber* buttonIdentifierNumber = [NSNumber numberWithInt:buttonIdentifier];
+                [self performSelector:@selector(executeHoldActionForRemoteButton:)
+                           withObject:buttonIdentifierNumber];
+            }
+            break;
+    }
+}
 /************************************************************************************/
 - (NSWindow *) playerWindow
 {
