@@ -1782,8 +1782,6 @@ static NSArray* parseRunLoopModes;
 /************************************************************************************/
 - (void)readOutputC:(NSNotification *)notification
 {
-	NSAutoreleasePool * pool = [NSAutoreleasePool new];
-	
 	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 	
 	/*unsigned dataLength = [(NSData *)[[notification userInfo]
@@ -2438,7 +2436,6 @@ static NSArray* parseRunLoopModes;
 
 	//free((char *)dataPtr);
 	[data release];
-	[pool release];
 }
 
 @end
