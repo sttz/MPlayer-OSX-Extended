@@ -212,8 +212,8 @@ config_opts="$config_opts --disable-gl"
 config_opts="$config_opts --disable-libvorbis --disable-theora"
 # Disable MEncoder
 config_opts="$config_opts --disable-mencoder"
-# Enable the apple remote (in case we build on a system without infrared)
-config_opts="$config_opts --enable-apple-remote"
+# Disable the apple remote (support in the frontend)
+config_opts="$config_opts --disable-apple-remote"
 # Disable jack (auto-enabled if installed)
 config_opts="$config_opts --disable-jack"
 
