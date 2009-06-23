@@ -50,6 +50,9 @@
 // Initialize debugger
 - (Debug *) init;
 
+// Initialize with stderr as additional output
+- (Debug *) initWithStderr;
+
 // Unitialize debugger
 - (void) uninit;
 

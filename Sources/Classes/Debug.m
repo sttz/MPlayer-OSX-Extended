@@ -28,6 +28,7 @@ static Debug *sharedInstance;
 
 /// Internal methods
 @interface Debug ()
+- (void) createConnectionWithOptions:(uint32_t)options;
 - (void) turnLogIfNecessary;
 - (void) log:(int)level withMessage:(NSString *)message andParams:(va_list)ap;
 @end
@@ -40,7 +41,7 @@ static Debug *sharedInstance;
 + (Debug *) sharedDebugger {
 	
 	if (!sharedInstance)
-		sharedInstance = [[Debug alloc] init];
+		sharedInstance = [[Debug alloc] initWithStderr];
 	return sharedInstance;
 }
 
@@ -67,14 +68,33 @@ static Debug *sharedInstance;
 	
 	self = [super init];
 	
-	if (self) {
-		// Create ASL connection
-		asc = asl_open(dSender, dFacility, 0U);
-		// Only show message above level set in dFilterUpto
-		asl_set_filter(asc, ASL_FILTER_MASK_UPTO(dFilterUpto));
-	}
+	if (self)
+		[self createConnectionWithOptions:0U];
 	
 	return self;
+}
+
+/** Initialize Debug class with stderr as output.
+ *  Create ASL connection, apply message filter and add stderr as output.
+ */
+- (Debug *) initWithStderr {
+	
+	self = [super init];
+	
+	if (self)
+		[self createConnectionWithOptions:ASL_OPT_STDERR];
+	
+	return self; 
+}
+
+/** Initialize Debug class with specific sdl_open options.
+ */
+- (void) createConnectionWithOptions:(uint32_t)options {
+	
+	// Create ASL connection
+	asc = asl_open(dSender, dFacility, options);
+	// Only show message above level set in dFilterUpto
+	asl_set_filter(asc, ASL_FILTER_MASK_UPTO(dFilterUpto));
 }
 
 /** Uninitialize Debug class.
