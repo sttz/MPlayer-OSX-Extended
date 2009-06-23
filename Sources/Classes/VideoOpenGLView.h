@@ -90,6 +90,9 @@
 	// window dragging
 	NSPoint dragStartPoint;
 	
+	// animations
+	unsigned int runningAnimations;
+	
 	//struct shmid_ds shm_desc;
 	
 	//Movie menu outlets

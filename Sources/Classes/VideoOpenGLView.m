@@ -8,6 +8,8 @@
 #import "VideoOpenGLView.h"
 #import "PlayerController.h"
 
+static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
+
 @implementation VideoOpenGLView
 
 - (void) awakeFromNib
@@ -464,8 +466,8 @@
 		
 		// wait for animation to finish
 		if ([appController animateInterface]) {
-			NSTimeInterval waitFor = [fullscreenWindow animationResizeTime:screen_frame];
-			[self performSelector:@selector(toggleFullscreenWindowContinued) withObject:self afterDelay:waitFor+.1];
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreenWindowContinued) 
+														 name:VVAnimationsDidEnd object:self];
 		} else
 			[self toggleFullscreenWindowContinued];
 	}
@@ -494,8 +496,8 @@
 		
 		// wait for animation to finish
 		if ([appController animateInterface]) {
-			NSTimeInterval waitFor = [fullscreenWindow animationResizeTime:rect];
-			[self performSelector:@selector(toggleFullscreenWindowContinued) withObject:self afterDelay:waitFor+.1];
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreenWindowContinued) 
+														 name:VVAnimationsDidEnd object:self];
 		} else
 			[self toggleFullscreenWindowContinued];
 	}
@@ -530,6 +532,8 @@
 		
 		[threadProto finishToggleFullscreen];
 	}
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:VVAnimationsDidEnd object:nil];
 }
 
 
@@ -915,6 +919,7 @@
 	[animInfo setObject:[NSValue valueWithRect:frame] forKey:NSViewAnimationEndFrameKey];
 	
 	anim = [[NSViewAnimation alloc] initWithViewAnimations:[NSArray arrayWithObject:animInfo]];
+	[anim setDelegate:self];
 	
 	[anim setDuration:[window animationResizeTime:frame]];
 	if (!blocking)
@@ -924,6 +929,8 @@
 	
 	[anim startAnimation];
 	[anim release];
+	
+	runningAnimations++;
 }
 
 /*
@@ -946,6 +953,17 @@
 	
 	[anim startAnimation];
 	[anim release];
+}
+
+/*
+	Handle animations ending
+*/
+- (void)animationDidEnd:(NSAnimation *)animation {
+	
+	runningAnimations--;
+	
+	if (runningAnimations == 0)
+		[[NSNotificationCenter defaultCenter] postNotificationName:VVAnimationsDidEnd object:self]; 
 }
 
 @end
