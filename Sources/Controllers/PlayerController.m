@@ -341,6 +341,19 @@
 /************************************************************************************
  INTERFACE
  ************************************************************************************/
+- (void) chooseMPlayerBinary
+{
+	[Debug log:ASL_LEVEL_ERR withMessage:@"MT: %@, %@",[myPlayingItem objectForKey:@"UseFFmpegMT"],[[appController preferences] objectForKey:@"UseFFmpegMT"]];
+	if ((![myPlayingItem objectForKey:@"UseFFmpegMT"]
+		 && [[appController preferences] boolForKey:@"UseFFmpegMT"])
+		||
+		([myPlayingItem objectForKey:@"UseFFmpegMT"]
+		 && [[myPlayingItem objectForKey:@"UseFFmpegMT"] boolValue]))
+		[myPlayer setPlayerPath:mplayerMTPath];
+	else
+		[myPlayer setPlayerPath:mplayerPath];
+}
+/************************************************************************************/
 - (void) disableFFmpegMTForCurrentFile
 {
 	if (myPlayingItem) {
@@ -424,14 +437,7 @@
 	[self applySettings];
 	
 	// chose binary to use
-	if ((![myPlayingItem objectForKey:@"UseFFmpegMT"]
-			&& [[appController preferences] boolForKey:@"UseFFmpegMT"])
-		||
-		([myPlayingItem objectForKey:@"UseFFmpegMT"]
-			&& [[myPlayingItem objectForKey:@"UseFFmpegMT"] boolValue]))
-		[myPlayer setPlayerPath:mplayerMTPath];
-	else
-		[myPlayer setPlayerPath:mplayerPath];
+	[self chooseMPlayerBinary];
 	
 	// if monitors aspect ratio is not 4:3 set monitor aspect ratio to the real one
 	if ([[NSScreen mainScreen] frame].size.width/4 != 
@@ -879,6 +885,8 @@
 {
 	if ([myPlayer videoOutHasChanged])
 		[videoOpenGLView close];
+	
+	[self chooseMPlayerBinary];
 	
 	[myPlayer applySettingsWithRestart:restart];
 	

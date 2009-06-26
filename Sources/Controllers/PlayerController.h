@@ -164,6 +164,7 @@
 - (NSNumber *) gammaValue:(NSNumber *)input;
 - (MplayerInterface *)playerInterface;
 - (MplayerInterface *)preflightInterface;
+- (void) chooseMPlayerBinary;
 
 // player control actions
 - (IBAction)playPause:(id)sender;
