@@ -171,15 +171,15 @@ static Debug *sharedInstance;
 			if ([fm fileExistsAtPath:oldLog isDirectory:&isDirectory]) {
 				if (isDirectory) {
 					continueMove = NO;
-					[Debug log:ASL_LEVEL_ERR withMessage:@"Cannot move old log: '%@' is a directory."];
+					[Debug log:ASL_LEVEL_ERR withMessage:@"Cannot move old log: '%@' is a directory.", oldLog];
 				} else if (![fm removeFileAtPath:file handler:nil]) {
 					continueMove = NO;
-					[Debug log:ASL_LEVEL_ERR withMessage:@"Cannot remove old log at '%@'."];
+					[Debug log:ASL_LEVEL_ERR withMessage:@"Cannot remove old log at '%@'.", oldLog];
 				}
 			}
 			// Move file only if there's no file or directory in the way
 			if (!continueMove || ![fm movePath:file toPath:oldLog handler:nil])
-				[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to move old olg to '%@'."];
+				[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to move old olg to '%@'.", oldLog];
 			
 			// Re-open existing log and truncate if move failed
 			int fd = open([file cString], O_WRONLY | O_CREAT | O_TRUNC, 0644);
