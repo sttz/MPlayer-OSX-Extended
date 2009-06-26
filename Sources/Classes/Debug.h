@@ -41,6 +41,9 @@
 	NSTimeInterval lastSizeCheck;
 }
 
+// Connect shared instance to stderr
++ (void) setSharedDebuggerConnectsStderr:(BOOL)connect;
+
 // Shared debugger instance
 + (Debug *) sharedDebugger;
 

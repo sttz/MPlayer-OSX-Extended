@@ -25,6 +25,8 @@
 
 /// Shared debugger singleton instance
 static Debug *sharedInstance;
+/// Switch if the shared instance is initialized with stderr as output
+static BOOL sharedInstanceConnectsStderr = NO;
 
 /// Internal methods
 @interface Debug ()
@@ -35,13 +37,30 @@ static Debug *sharedInstance;
 
 @implementation Debug
 
+/** Sets if the shared instance connects stderr as an output
+ *  Sets if the shared instance adds stderr as an output for the log messages.
+ *  This message needs to be sent before the shared instance in initialized.
+ *  \param connect Connect stderr for the shared Debug instance
+ */
++ (void) setSharedDebuggerConnectsStderr:(BOOL)connect {
+	
+	if (!sharedInstance)
+		sharedInstanceConnectsStderr = connect;
+	else
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Cannot set sharedInstanceConnectsStderr: Shared instance already initialized."];
+}
+
 /** Return the shared singleton Debug instance.
  *  Returns the singleton instance and creates one if none exists.
  */
 + (Debug *) sharedDebugger {
 	
-	if (!sharedInstance)
-		sharedInstance = [[Debug alloc] initWithStderr];
+	if (!sharedInstance) {
+		if (sharedInstanceConnectsStderr)
+			sharedInstance = [[Debug alloc] initWithStderr];
+		else
+			sharedInstance = [[Debug alloc] init];
+	}
 	return sharedInstance;
 }
 
