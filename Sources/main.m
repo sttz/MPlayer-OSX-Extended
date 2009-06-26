@@ -13,6 +13,10 @@ int main(int argc, char *argv[])
 {
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	
+#ifdef DEBUG
+	[Debug setSharedDebuggerConnectsStderr:YES];
+#endif
+	
 	Debug *logger = [Debug sharedDebugger];
 	[logger logToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Logs/MPlayerOSX.log"]];
 	
