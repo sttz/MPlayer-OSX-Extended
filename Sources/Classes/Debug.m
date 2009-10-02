@@ -178,6 +178,9 @@ static BOOL sharedInstanceConnectsStderr = NO;
 		unsigned long long size = [[fm fileAttributesAtPath:file traverseLink:YES] fileSize];
 		if (size > dLogMaxSize) {
 			
+			// retain key because we remove the associated object from the dictionairy
+			[[file retain] autorelease];
+			
 			// remove old log file and remove FileHanlde to close fd
 			asl_remove_log_file(asc, [[logFiles objectForKey:file] fileDescriptor]);
 			[logFiles removeObjectForKey:file];
@@ -191,14 +194,14 @@ static BOOL sharedInstanceConnectsStderr = NO;
 				if (isDirectory) {
 					continueMove = NO;
 					[Debug log:ASL_LEVEL_ERR withMessage:@"Cannot move old log: '%@' is a directory.", oldLog];
-				} else if (![fm removeFileAtPath:file handler:nil]) {
+				} else if (![fm removeFileAtPath:oldLog handler:nil]) {
 					continueMove = NO;
 					[Debug log:ASL_LEVEL_ERR withMessage:@"Cannot remove old log at '%@'.", oldLog];
 				}
 			}
 			// Move file only if there's no file or directory in the way
 			if (!continueMove || ![fm movePath:file toPath:oldLog handler:nil])
-				[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to move old olg to '%@'.", oldLog];
+				[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to move log to '%@'.", oldLog];
 			
 			// Re-open existing log and truncate if move failed
 			int fd = open([file cString], O_WRONLY | O_CREAT | O_TRUNC, 0644);
