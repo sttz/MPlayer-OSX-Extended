@@ -210,7 +210,10 @@ config_opts="$config_opts --enable-runtime-cpudetect"
 # Enable LLVM
 # config_opts="$config_opts --cc=llvm-gcc" (still a bit early for that...)
 
-
+# Intel platform options
+if [ "$target_system" = "i386" ]; then
+	config_opts="$config_opts --arch=core2"
+fi
 # PPC platform options
 if [ "$target_system" = "ppc" -o "$target_system" = "ppcg3" ]; then
 	config_opts="$config_opts --arch=ppc"

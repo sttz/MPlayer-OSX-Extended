@@ -228,6 +228,8 @@ if [ "$target_system" = "i386" ]; then
 	# Disable 3Dnow and AMD machines because it can cause audio distortion
 	config_opts="$config_opts --disable-3dnow"
 	config_opts="$config_opts --disable-3dnowext"
+	# Set target
+	#config_opts="$config_opts --target=i686-Darwin"
 fi
 
 # PPC platform options

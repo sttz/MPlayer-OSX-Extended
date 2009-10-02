@@ -76,16 +76,18 @@ export PATH="${build_root}/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:
 export PATH="$scripts_path:$PATH"
 
 # Set target to OSX 10.4
-export MACOSX_DEPLOYMENT_TARGET=10.4
-export CFLAGS="-mmacosx-version-min=10.4 -isystem /Developer/SDKs/MacOSX10.4u.sdk"
-export LDFLAGS="-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk"
-export LDFLAGS="$LDFLAGS -Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk"
-export CXXFLAGS="-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk"
+export MACOSX_DEPLOYMENT_TARGET=10.5
+export CFLAGS="-mmacosx-version-min=10.5 -isystem /Developer/SDKs/MacOSX10.5.sdk"
+export LDFLAGS="-mmacosx-version-min=10.5 -isysroot /Developer/SDKs/MacOSX10.5.sdk"
+export LDFLAGS="$LDFLAGS -Wl,-syslibroot,/Developer/SDKs/MacOSX10.5.sdk"
+export CXXFLAGS="-mmacosx-version-min=10.5 -isysroot /Developer/SDKs/MacOSX10.5.sdk"
 
 # Intel platform flags
-#if [ $target_system = "i386" ]; then
-	# None yet
-#fi
+if [ $target_system = "i386" ]; then
+	export CFLAGS="$CFLAGS -arch i386 -march=core2"
+	export LDFLAGS="$LDFLAGS -arch i386"
+	export CXXFLAGS="$CXXFLAGS -arch i386 -march=core2"
+fi
 
 # PPC platform flags
 if [ "$target_system" = "ppc" ]; then
