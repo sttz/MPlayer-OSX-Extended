@@ -343,7 +343,6 @@
  ************************************************************************************/
 - (void) chooseMPlayerBinary
 {
-	[Debug log:ASL_LEVEL_ERR withMessage:@"MT: %@, %@",[myPlayingItem objectForKey:@"UseFFmpegMT"],[[appController preferences] objectForKey:@"UseFFmpegMT"]];
 	if ((![myPlayingItem objectForKey:@"UseFFmpegMT"]
 		 && [[appController preferences] boolForKey:@"UseFFmpegMT"])
 		||
