@@ -176,11 +176,11 @@
 	fcPauseImageOff = [[NSImage imageNamed:@"fc_pause"] retain];
 	
 	// set up prograss bar
-	[scrubbingBar setStyle:NSScrubbingBarEmptyStyle];
+	[scrubbingBar setScrubStyle:NSScrubbingBarEmptyStyle];
 	[scrubbingBar setIndeterminate:NO];
-	[scrubbingBarToolbar setStyle:NSScrubbingBarEmptyStyle];
+	[scrubbingBarToolbar setScrubStyle:NSScrubbingBarEmptyStyle];
 	[scrubbingBarToolbar setIndeterminate:NO];
-	[fcScrubbingBar setStyle:NSScrubbingBarEmptyStyle];
+	[fcScrubbingBar setScrubStyle:NSScrubbingBarEmptyStyle];
 	[fcScrubbingBar setIndeterminate:NO];
 	
 	// set mute status and reload unmuted volume
@@ -2173,34 +2173,34 @@
 			[path release];
 			
 			// progress bars
-			[scrubbingBar setStyle:NSScrubbingBarProgressStyle];
+			[scrubbingBar setScrubStyle:NSScrubbingBarProgressStyle];
 			[scrubbingBar setIndeterminate:YES];
-			[scrubbingBarToolbar setStyle:NSScrubbingBarProgressStyle];
+			[scrubbingBarToolbar setScrubStyle:NSScrubbingBarProgressStyle];
 			[scrubbingBarToolbar setIndeterminate:YES];
-			[fcScrubbingBar setStyle:NSScrubbingBarProgressStyle];
+			[fcScrubbingBar setScrubStyle:NSScrubbingBarProgressStyle];
 			[fcScrubbingBar setIndeterminate:YES];
 			break;
 		}
 		case kBuffering :
 			status = NSLocalizedString(@"Buffering",nil);
 			// progress bars
-			[scrubbingBar setStyle:NSScrubbingBarProgressStyle];
+			[scrubbingBar setScrubStyle:NSScrubbingBarProgressStyle];
 			[scrubbingBar setIndeterminate:YES];
-			[scrubbingBarToolbar setStyle:NSScrubbingBarProgressStyle];
+			[scrubbingBarToolbar setScrubStyle:NSScrubbingBarProgressStyle];
 			[scrubbingBarToolbar setIndeterminate:YES];
-			[fcScrubbingBar setStyle:NSScrubbingBarProgressStyle];
+			[fcScrubbingBar setScrubStyle:NSScrubbingBarProgressStyle];
 			[fcScrubbingBar setIndeterminate:YES];
 			break;
 		case kIndexing :
 			status = NSLocalizedString(@"Indexing",nil);
 			// progress bars
-			[scrubbingBar setStyle:NSScrubbingBarProgressStyle];
+			[scrubbingBar setScrubStyle:NSScrubbingBarProgressStyle];
 			[scrubbingBar setMaxValue:100];
 			[scrubbingBar setIndeterminate:NO];
-			[scrubbingBarToolbar setStyle:NSScrubbingBarProgressStyle];
+			[scrubbingBarToolbar setScrubStyle:NSScrubbingBarProgressStyle];
 			[scrubbingBarToolbar setMaxValue:100];
 			[scrubbingBarToolbar setIndeterminate:NO];
-			[fcScrubbingBar setStyle:NSScrubbingBarProgressStyle];
+			[fcScrubbingBar setScrubStyle:NSScrubbingBarProgressStyle];
 			[fcScrubbingBar setMaxValue:100];
 			[fcScrubbingBar setIndeterminate:NO];
 			break;
@@ -2211,15 +2211,15 @@
 			}
 			status = NSLocalizedString(@"Playing",nil);
 			// set default state of scrubbing bar
-			[scrubbingBar setStyle:NSScrubbingBarEmptyStyle];
+			[scrubbingBar setScrubStyle:NSScrubbingBarEmptyStyle];
 			[scrubbingBar setIndeterminate:NO];
 			[scrubbingBar setMaxValue:100];
 			
-			[scrubbingBarToolbar setStyle:NSScrubbingBarEmptyStyle];
+			[scrubbingBarToolbar setScrubStyle:NSScrubbingBarEmptyStyle];
 			[scrubbingBarToolbar setIndeterminate:NO];
 			[scrubbingBarToolbar setMaxValue:100];
 			
-			[fcScrubbingBar setStyle:NSScrubbingBarEmptyStyle];
+			[fcScrubbingBar setScrubStyle:NSScrubbingBarEmptyStyle];
 			[fcScrubbingBar setIndeterminate:NO];
 			[fcScrubbingBar setMaxValue:100];
 			
@@ -2233,11 +2233,11 @@
 			
 			if ([movieInfo length] > 0) {
 				[scrubbingBar setMaxValue: [movieInfo length]];
-				[scrubbingBar setStyle:NSScrubbingBarPositionStyle];
+				[scrubbingBar setScrubStyle:NSScrubbingBarPositionStyle];
 				[scrubbingBarToolbar setMaxValue: [movieInfo length]];
-				[scrubbingBarToolbar setStyle:NSScrubbingBarPositionStyle];
+				[scrubbingBarToolbar setScrubStyle:NSScrubbingBarPositionStyle];
 				[fcScrubbingBar setMaxValue: [movieInfo length]];
-				[fcScrubbingBar setStyle:NSScrubbingBarPositionStyle];
+				[fcScrubbingBar setScrubStyle:NSScrubbingBarPositionStyle];
 			}
 			break;
 		case kPaused :
@@ -2261,13 +2261,13 @@
 			[timeTextFieldToolbar setStringValue:@"00:00:00"];
 			[fcTimeTextField setStringValue:@"00:00:00"];
 			// hide progress bars
-			[scrubbingBar setStyle:NSScrubbingBarEmptyStyle];
+			[scrubbingBar setScrubStyle:NSScrubbingBarEmptyStyle];
 			[scrubbingBar setDoubleValue:0];
 			[scrubbingBar setIndeterminate:NO];
-			[scrubbingBarToolbar setStyle:NSScrubbingBarEmptyStyle];
+			[scrubbingBarToolbar setScrubStyle:NSScrubbingBarEmptyStyle];
 			[scrubbingBarToolbar setDoubleValue:0];
 			[scrubbingBarToolbar setIndeterminate:NO];
-			[fcScrubbingBar setStyle:NSScrubbingBarEmptyStyle];
+			[fcScrubbingBar setScrubStyle:NSScrubbingBarEmptyStyle];
 			[fcScrubbingBar setDoubleValue:0];
 			[fcScrubbingBar setIndeterminate:NO];
 			// disable stream menus

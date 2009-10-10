@@ -56,6 +56,9 @@ typedef enum _NSScrubbingBarStyle {
 - (void) startMyAnimation;
 - (void) stopMyAnimation;
 
+- (NSScrubbingBarStyle)scrubStyle;
+- (void) setScrubStyle:(NSScrubbingBarStyle)style;
+
 - (void)redrawAnim;
 - (void)animate:(NSTimer *)aTimer;
 
