@@ -12,6 +12,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#include <IOKit/pwr_mgt/IOPMLib.h>
 
 #import "MplayerInterface.h"
 #import "VideoOpenGLView.h"
@@ -21,7 +22,7 @@
 @interface PlayerController : NSObject
 {
 	// other controllers outlets
-    IBOutlet id	playListController;
+    IBOutlet PlayListController	*playListController;
 	IBOutlet id appController;
 	IBOutlet id preferencesController;
 	IBOutlet id settingsController;
@@ -133,6 +134,8 @@
 	NSRect org_frame;
 	
 	BOOL appleRemoteHolding;
+	
+	IOPMAssertionID sleepAssertionId;
 }
 
 // interface

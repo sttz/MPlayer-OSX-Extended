@@ -67,12 +67,7 @@
  ************************************************************************************/
 - (IBAction) openFile:(id)sender
 {
-	NSMutableArray *fileTypes;
 	NSString *theFile;
-	
-	// take both audio and movie files in account
-	fileTypes = [NSMutableArray arrayWithArray:[self typeExtensionsForName:@"Movie file"]];
-	[fileTypes addObjectsFromArray:[self typeExtensionsForName:@"Audio file"]];
 	
 	// present open dialog
 	theFile = [self openDialogForType:MP_DIALOG_MEDIA];

@@ -9,6 +9,5 @@
 	IBOutlet PlayerController *playerController;
 	
 	float scrollXAcc;
-	float scrollYAcc;
 }
 @end

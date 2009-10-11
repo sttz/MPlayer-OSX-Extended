@@ -148,8 +148,8 @@
 		
 		// seek when ready
 		if (![playerController isSeeking]) {
-			[playerController seek:(-dX*SCROLL_SEEK_MULT) mode:MIRelativeSeekingMode];
-			dX = 0;
+			[playerController seek:(-scrollXAcc*SCROLL_SEEK_MULT) mode:MIRelativeSeekingMode];
+			scrollXAcc = 0;
 		}
 	}
 }

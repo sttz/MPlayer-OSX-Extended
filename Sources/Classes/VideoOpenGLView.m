@@ -65,7 +65,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	
 	NSRunLoop* myRunLoop = [NSRunLoop currentRunLoop];
 	
-	long swapInterval = 1;
+	GLint swapInterval = 1;
 	
 	[[self openGLContext] setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
 	
@@ -105,7 +105,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	
 	isPlaying = YES;
 	
-	shm_fd = shm_open([buffer_name cString], O_RDONLY, S_IRUSR);
+	shm_fd = shm_open([buffer_name UTF8String], O_RDONLY, S_IRUSR);
 	if (shm_fd == -1)
 	{
 		[Debug log:ASL_LEVEL_ERR withMessage:@"mplayergui: shm_open failed"];
@@ -757,7 +757,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	[threadProto updateInThread];
 }
 
-- (void) drawRect: (NSRect *) bounds
+- (void) drawRect: (NSRect) bounds
 {
 	[threadProto drawRectInThread];
 }

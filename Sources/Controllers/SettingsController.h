@@ -27,7 +27,7 @@
 //	IBOutlet id movieExportBox;
 
 	
-    IBOutlet id encodingMenu;
+    IBOutlet NSPopUpButton *encodingMenu;
     IBOutlet id rebuildIndexButton;
     IBOutlet id subtitlesBox;
     IBOutlet id titleBox;

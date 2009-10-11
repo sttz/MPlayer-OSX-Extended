@@ -46,27 +46,27 @@
 	// Transform
 	IBOutlet id flipVertical;
 	IBOutlet id flipHorizontal;
-	IBOutlet id videoSizeMenu;
+	IBOutlet NSPopUpButton *videoSizeMenu;
 	IBOutlet id videoSizeBox;
-	IBOutlet id videoAspectMenu;
+	IBOutlet NSPopUpButton *videoAspectMenu;
 	IBOutlet id videoAspectBox;
 	// Output
 	IBOutlet id fullscreenSameAsPlayer;
 	IBOutlet id fullscreenDeviceId;
 	IBOutlet id blackoutScreens;
 	IBOutlet id deviceIdStepper;
-	IBOutlet id videoDriverMenu;
-	IBOutlet id screenshots;
+	IBOutlet NSPopUpButton *videoDriverMenu;
+	IBOutlet NSPopUpButton *screenshots;
 	// Interace
 	IBOutlet id animateInterface;
 	
 	// ** Text
 	// General
-	IBOutlet id subFontMenu;
-	IBOutlet id subStyleMenu;
-	IBOutlet id subEncodingMenu;
+	IBOutlet NSPopUpButton *subFontMenu;
+	IBOutlet NSPopUpButton *subStyleMenu;
+	IBOutlet NSPopUpButton *subEncodingMenu;
 	IBOutlet id guessEncoding;
-	IBOutlet id guessLanguage;
+	IBOutlet NSPopUpButton *guessLanguage;
 	// Subtitles
 	IBOutlet id assSubtitles;
 	IBOutlet id subSizeBox;
@@ -76,7 +76,7 @@
 	IBOutlet id subColorWell;
 	IBOutlet id subBorderColorWell;
 	// OSD
-	IBOutlet id osdLevel;
+	IBOutlet NSPopUpButton *osdLevel;
 	IBOutlet id osdScale;
 	
 	
@@ -85,13 +85,13 @@
 	IBOutlet id enableVideo;
 	IBOutlet id videoCodecs;
 	// Decoding
-	IBOutlet id framedrop;
+	IBOutlet NSSegmentedCell *framedrop;
 	IBOutlet id fastLibavcodec;
 	IBOutlet id useFFmpegMT;
-	IBOutlet id skipLoopfilter;
+	IBOutlet NSSegmentedCell *skipLoopfilter;
 	// Filters
-	IBOutlet id deinterlace;
-	IBOutlet id postprocessing;
+	IBOutlet NSSegmentedCell *deinterlace;
+	IBOutlet NSSegmentedCell *postprocessing;
 	
 	
 	// ** Audio
@@ -133,7 +133,7 @@
 	IBOutlet id veEnabled;
 	// Additional parameters
 	IBOutlet id addParamsButton;
-	IBOutlet id addParamsBox;
+	IBOutlet NSComboBox *addParamsBox;
 	
 	BOOL closeAfterApply;
 	NSMutableDictionary *fonts;

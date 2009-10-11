@@ -69,7 +69,7 @@
 	NSModalSession modal = NULL;
 	
 	// Initialize fontconfig with own config directory
-	setenv("FONTCONFIG_PATH", [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"fonts"] cString], 1);
+	setenv("FONTCONFIG_PATH", [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"fonts"] UTF8String], 1);
 	
 	config = FcInitLoadConfig();
 	if (!config)
@@ -124,15 +124,15 @@
 			if (FcPatternGetString(set->fonts[i], FC_FAMILY, 0, &family) == FcResultMatch) {
 				
 				// For now just take the 0th family and style name, which should be the english one
-				if (![fonts objectForKey:[NSString stringWithCString:(const char*)family]]) {
+				if (![fonts objectForKey:[NSString stringWithUTF8String:(const char*)family]]) {
 					styles = [NSMutableArray arrayWithCapacity:1];
-					[fonts setObject:styles	forKey:[NSString stringWithCString:(const char*)family]];
+					[fonts setObject:styles	forKey:[NSString stringWithUTF8String:(const char*)family]];
 				} else {
-					styles = [fonts objectForKey:[NSString stringWithCString:(const char*)family]];
+					styles = [fonts objectForKey:[NSString stringWithUTF8String:(const char*)family]];
 				}
 				
 				if (FcPatternGetString(set->fonts[i], FC_STYLE, 0, &fontstyle) == FcResultMatch)
-					[styles addObject:[NSString stringWithCString:(const char*)fontstyle]];
+					[styles addObject:[NSString stringWithUTF8String:(const char*)fontstyle]];
 				
 			}
 			
@@ -765,22 +765,22 @@
 	[thePrefs setObject:[videoCodecs stringValue] forKey:@"VideoCodecs"];
 	
 	// framedrop
-	[thePrefs setObject:[NSNumber numberWithInt:[framedrop indexOfSelectedItem]]
+	[thePrefs setObject:[NSNumber numberWithInt:[framedrop selectedSegment]]
 			forKey:@"Framedrop"];
 	
 	// fast libavcodec
 	[thePrefs setBool:[fastLibavcodec state] forKey:@"FastLibavcodecDecoding"];
 	
 	// deinterlace
-	[thePrefs setObject:[NSNumber numberWithInt:[deinterlace indexOfSelectedItem]]
+	[thePrefs setObject:[NSNumber numberWithInt:[deinterlace selectedSegment]]
 			forKey:@"Deinterlace_r9"];
 	
 	// postprocessing
-	[thePrefs setObject:[NSNumber numberWithInt:[postprocessing indexOfSelectedItem]]
+	[thePrefs setObject:[NSNumber numberWithInt:[postprocessing selectedSegment]]
 			forKey:@"Postprocessing"];
 	
 	// skip loopfilter
-	[thePrefs setObject:[NSNumber numberWithInt:[skipLoopfilter indexOfSelectedItem]]
+	[thePrefs setObject:[NSNumber numberWithInt:[skipLoopfilter selectedSegment]]
 			forKey:@"SkipLoopfilter"];
 	
 	// use ffmpeg-mt

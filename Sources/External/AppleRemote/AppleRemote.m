@@ -289,8 +289,8 @@ static AppleRemote* sharedInstance=nil;
 - (id)retain {
     return self;
 }
-- (unsigned int)retainCount {
-    return UINT_MAX;  //denotes an object that cannot be released
+- (NSUInteger)retainCount {
+    return NSUIntegerMax;  //denotes an object that cannot be released
 }
 - (void)release {
     //do nothing

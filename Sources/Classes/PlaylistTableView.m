@@ -32,7 +32,7 @@
 /************************************************************************************
  DELEGATE METHODS
  ************************************************************************************/
-- (BOOL)validateMenuItem:(id <NSMenuItem>)anItem
+- (BOOL)validateMenuItem:(NSMenuItem *)anItem
 {
 	BOOL	result = NO;
 	// clear menu item

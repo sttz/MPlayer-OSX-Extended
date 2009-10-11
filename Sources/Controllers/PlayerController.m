@@ -253,7 +253,7 @@
  /*
 	Validate Drop Opperation on player window
  */
-- (unsigned int) draggingEntered:(id <NSDraggingInfo>)sender
+- (NSDragOperation) draggingEntered:(id <NSDraggingInfo>)sender
 {
 	int i;
 	NSPasteboard *pboard;
@@ -476,6 +476,8 @@
 		[myPlayer loadInfoBeforePlayback:NO];
 	
 	[playListController updateView];
+	
+	IOPMAssertionCreate(kIOPMAssertionTypeNoDisplaySleep, kIOPMAssertionLevelOn, &sleepAssertionId);
 }
 
 /************************************************************************************/
@@ -1031,16 +1033,16 @@
 		
 	
 	//set volume icon
-	if(volume == 0)
+	if (volume == 0)
 		volumeImage = [[NSImage imageNamed:@"volume0"] retain];
 	
-	if(volume > 66)
+	 else if (volume > 66)
 		volumeImage = [[NSImage imageNamed:@"volume3"] retain];
 	
-	if(volume > 33 && volume < 67)
+	else if (volume > 33 && volume < 67)
 		volumeImage = [[NSImage imageNamed:@"volume2"] retain];
 	
-	if(volume > 0 && volume < 34)
+	else if (volume > 0 && volume < 34)
 		volumeImage = [[NSImage imageNamed:@"volume1"] retain];
 	
 	
@@ -1454,7 +1456,7 @@
 	// Same screen as player window
 	} else if (fullscreenDeviceId == -1) {
 		
-		int screenId = [[NSScreen screens] indexOfObject:[playerWindow screen]];
+		NSUInteger screenId = [[NSScreen screens] indexOfObject:[playerWindow screen]];
 		if (screenId != NSNotFound)
 			return screenId;
 		else
@@ -1567,6 +1569,8 @@
 			[newItem release];
 			
 			[audioWindowMenu setMenu:other];
+			[other release];
+
 		}
 		
 		hasItems = ([menu numberOfItems] > 0);
@@ -1633,6 +1637,7 @@
 			[newItem release];
 			
 			[subtitleWindowMenu setMenu:other];
+			[other release];
 		}
 		
 		hasItems = ([menu numberOfItems] > 0);
@@ -1809,6 +1814,7 @@
 			[newItem release];
 			
 			[chapterWindowMenu setMenu:other];
+			[other release];
 		}
 		
 		[chapterWindowMenu setEnabled:([menu numberOfItems] > 1)];
@@ -2103,8 +2109,8 @@
 - (void) statusUpdate:(NSNotification *)notification
 {	
 	// reset Idle time - Carbon PowerManager calls
-	if ([movieInfo isVideo])	// if there is a video
-		UpdateSystemActivity (UsrActivity);		// do not dim the display
+//	if ([movieInfo isVideo])	// if there is a video
+//		UpdateSystemActivity (UsrActivity);		// do not dim the display
 /*	else									// if there's only audio
 		UpdateSystemActivity (OverallAct);		// avoid sleeping only
 */
@@ -2301,6 +2307,9 @@
 				else
 					continuousPlayback = NO;
 			}
+			
+			IOPMAssertionRelease(sleepAssertionId);	
+			
 			break;
 		}
 		[statsStatusBox setStringValue:status];

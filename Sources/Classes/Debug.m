@@ -133,7 +133,7 @@ static BOOL sharedInstanceConnectsStderr = NO;
 	if (!logFiles)
 		logFiles = [[NSMutableDictionary alloc] init];
 	
-	int fd = open([path cString], O_WRONLY | O_CREAT | O_APPEND, 0644);
+	int fd = open([path UTF8String], O_WRONLY | O_CREAT | O_APPEND, 0644);
 	
 	if (fd == -1)
 		return [self log:ASL_LEVEL_ERR withMessage:@"Failed to open file for logging: %@", path];
@@ -204,7 +204,7 @@ static BOOL sharedInstanceConnectsStderr = NO;
 				[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to move log to '%@'.", oldLog];
 			
 			// Re-open existing log and truncate if move failed
-			int fd = open([file cString], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			int fd = open([file UTF8String], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			
 			if (fd == -1)
 				[self log:ASL_LEVEL_ERR withMessage:@"Failed turn over log file: %@", file];
@@ -230,7 +230,7 @@ static BOOL sharedInstanceConnectsStderr = NO;
 		NSString *pMessage;
 		pMessage = [[NSString alloc] initWithFormat:message arguments:ap];
 		
-		asl_log(asc, NULL, level, [pMessage UTF8String]);
+		asl_log(asc, NULL, level, "%s", [pMessage UTF8String]);
 		
 		[pMessage release];
 		

@@ -44,7 +44,7 @@
 	IBOutlet id openMultithreading;
 	
 	IBOutlet NSView *openSubtitleSettings;
-	IBOutlet id openSubtitleEncoding;
+	IBOutlet NSPopUpButton *openSubtitleEncoding;
 	
 	// other outlets
 	IBOutlet id theApp;

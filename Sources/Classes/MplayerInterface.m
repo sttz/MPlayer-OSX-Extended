@@ -377,14 +377,14 @@ static NSArray* parseRunLoopModes;
 		}
 		// subtitles color
 		if (subColor) {
-			float red, green, blue, alpha;
+			CGFloat red, green, blue, alpha;
 			[subColor getRed:&red green:&green blue:&blue alpha:&alpha];
 			[params addObject:@"-ass-color"];
 			[params addObject:[NSString stringWithFormat:@"%02X%02X%02X%02X",(unsigned)(red*255),(unsigned)(green*255),(unsigned)(blue*255),(unsigned)((1-alpha)*255)]];
 		}
 		// subtitles color
 		if (subBorderColor) {
-			float red, green, blue, alpha;
+			CGFloat red, green, blue, alpha;
 			[subBorderColor getRed:&red green:&green blue:&blue alpha:&alpha];
 			[params addObject:@"-ass-border-color"];
 			[params addObject:[NSString stringWithFormat:@"%02X%02X%02X%02X",(unsigned)(red*255),(unsigned)(green*255),(unsigned)(blue*255),(unsigned)((1-alpha)*255)]];
@@ -1811,7 +1811,7 @@ static NSArray* parseRunLoopModes;
 	
 	if (!data) {
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Couldn\'t read MPlayer data. Lost bytes: %u",
-			[[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"] length]];
+			[(NSData *)[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"] length]];
 		[data release];
 		return;
 	}
@@ -1873,7 +1873,7 @@ static NSArray* parseRunLoopModes;
 			continue;
 		
 		// create cstring for legacy code
-		stringPtr = [line lossyCString];
+		stringPtr = [line UTF8String];
 		
 		if (strstr(stringPtr, "A:") == stringPtr ||
 				strstr(stringPtr, "V:") == stringPtr) {
@@ -1900,7 +1900,7 @@ static NSArray* parseRunLoopModes;
 							break;
 						}
 					case 2:			// only video
-						if (sscanf(stringPtr, "V: %f %*d/%d*% %d%% %*f%% %d %d %d%%",
+						if (sscanf(stringPtr, "V: %f %*d/%*d %d%% %*f%% %d %d %d%%",
 								&mySeconds, &videoCPUUsage, &voCPUUsage, &myDroppedFrames,
 								&myPostProcLevel, &myCacheUsage) >= 5) {
 							myCPUUsage = (int)(videoCPUUsage + voCPUUsage);
@@ -2034,7 +2034,7 @@ static NSArray* parseRunLoopModes;
 		if (strstr(stringPtr, MI_PAUSED_STRING) != NULL) {
 			myState = kPaused;		
 			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
-			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
+			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 			
 			continue; 							// continue on next line
 		}
@@ -2325,7 +2325,7 @@ static NSArray* parseRunLoopModes;
 		// *** if player is playing then do not bother with parse anything else
 		if (myOutputReadMode > 0) {
 			// print unused line
-			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
+			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 			continue;
 		}
 		
@@ -2334,7 +2334,7 @@ static NSArray* parseRunLoopModes;
 		if (strncmp(stringPtr, MI_OPENING_STRING, 8) == 0) {
 			myState = kOpening;
 			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
-			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
+			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 			continue; 							// continue on next line	
 		}
 		
@@ -2349,7 +2349,7 @@ static NSArray* parseRunLoopModes;
 				myCacheUsage = cacheUsage;
 			}
 			// if the string is longer then supposed divide it and continue
-			/*[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
+			/*[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 			if (strlen(stringPtr) > 32) {
 				*(stringPtr + 31) = '\0';
 				stringPtr = (stringPtr + 32);
@@ -2366,7 +2366,7 @@ static NSArray* parseRunLoopModes;
 		tempPtr = strstr(stringPtr, " file format detected.");
 		if (tempPtr != NULL) {
 			*(tempPtr) = '\0';
-			[info setFileFormat:[NSString stringWithCString:stringPtr]];
+			[info setFileFormat:[NSString stringWithUTF8String:stringPtr]];
 			continue; 							// continue on next line	
 		}
 		
@@ -2380,7 +2380,7 @@ static NSArray* parseRunLoopModes;
 						forKey:@"CacheUsage"];
 				myCacheUsage = cacheUsage;
 			}
-			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
+			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 			continue; 							// continue on next line	
 		}
 		
@@ -2421,12 +2421,12 @@ static NSArray* parseRunLoopModes;
 					postNotificationName:@"MIInfoReadyNotification"
 					object:self
 					userInfo:nil];
-			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
+			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 			continue;
 		}
 		
 		// print unused output
-		[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithCString:stringPtr]];
+		[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 		
 	} // while
 	

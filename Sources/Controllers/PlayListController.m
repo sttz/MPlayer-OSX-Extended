@@ -207,7 +207,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 - (int) indexOfItem:(NSDictionary *)anItem
 {
 	if ([myData count] > 0 && anItem) {
-		unsigned aIndex = [myData indexOfObjectIdenticalTo:anItem];
+		NSUInteger aIndex = [myData indexOfObjectIdenticalTo:anItem];
 		if (aIndex != NSNotFound)
 			return aIndex;
 	}
@@ -242,8 +242,6 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 {
 	if ([myData objectAtIndex:index]) {
 		
-		// Release MovieInfo
-		[[[myData objectAtIndex:index] objectForKey:@"MovieInfo"] release];
 		// Remove object
 		[myData removeObjectAtIndex:index];
 	}
@@ -702,7 +700,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 		}
 		
 		// extract movieinfo
-		MovieInfo *info = [[MovieInfo fromDictionary:[notification userInfo]] retain];
+		MovieInfo *info = [MovieInfo fromDictionary:[notification userInfo]];
 		
 		// check if found and if preflight was successful
 		if (queueIndex > -1 && [info containsInfo]) {
@@ -844,7 +842,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 		for(i=0; i<[savedPlaylist count]; i++)
 		{
 			// add to preflight queue
-			[preflightQueue addObject:[[savedPlaylist objectAtIndex:i] mutableCopy]];
+			[preflightQueue addObject:[[[savedPlaylist objectAtIndex:i] mutableCopy] autorelease]];
 		}
 		
 		// start preflight

@@ -19,5 +19,5 @@
 - (void)keyDown:(NSEvent *)theEvent;
 - (void)clear:(id)sender;
 // delegate methods
-- (BOOL)validateMenuItem:(id <NSMenuItem>)anItem;
+- (BOOL)validateMenuItem:(NSMenuItem *)anItem;
 @end
