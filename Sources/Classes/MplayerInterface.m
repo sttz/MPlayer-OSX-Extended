@@ -588,11 +588,7 @@ static NSArray* parseRunLoopModes;
 	
 	[params addObject:@"-slave"];
 	
-	if (useIdentifyForPlayback) {
-		// -identify and demux=6 for matroska chapters
-		[params addObject:@"-msglevel"];
-		[params addObject:@"identify=4:demux=6"];
-	} else
+	if (useIdentifyForPlayback)
 		[params addObject:@"-identify"];
 	
 	// Disable Apple Remote
@@ -1834,11 +1830,6 @@ static NSArray* parseRunLoopModes;
 	NSString *streamInfoName;
 	NSString *streamInfoValue;
 	
-	// For mkv chapter matching
-	int chapterId;
-	float chapterTime[6];
-	NSString *chapterName;
-	
 	// Split data by newline characters
 	NSArray *myLines = [data componentsSeparatedByRegex:MI_NEWLINE_REGEX 
 							 options:RKLMultiline range:NSMakeRange(0, [data length]) error:NULL];
@@ -2176,6 +2167,22 @@ static NSArray* parseRunLoopModes;
 				}
 			}
 			
+			// chapters
+			if ([streamType isEqualToString:@"CHAPTER"]) {
+				
+				if ([streamInfoName isEqualToString:@"NAME"]) {
+					[Debug log:ASL_LEVEL_DEBUG withMessage:@"Chapter name: %d %@", streamId, streamInfoValue];
+					[info setChapterName:streamInfoValue forId:streamId];
+					continue;
+				}
+				
+				if ([streamInfoName isEqualToString:@"START"]) {
+					[Debug log:ASL_LEVEL_DEBUG withMessage:@"Chapter start: %d %@", streamId, streamInfoValue];
+					[info setChapterStartTime:[NSNumber numberWithFloat:[streamInfoValue floatValue]] forId:streamId];
+					continue;
+				}
+			}
+			
 			// Unmatched stream lines
 			[Debug log:ASL_LEVEL_DEBUG withMessage:@"STREAM not matched: %@ for #%d, %@ = %@",streamType,streamId,streamInfoName,streamInfoValue];
 			continue;
@@ -2311,6 +2318,14 @@ static NSArray* parseRunLoopModes;
 				continue;
 			}
 			
+			// chapter
+			if ([idName isEqualToString:@"CHAPTER_ID"]) {
+				[Debug log:ASL_LEVEL_DEBUG withMessage:@"New Chapter: %@", idValue];
+				[info newChapter:[idValue intValue]];
+				[userInfo setObject:[NSNumber numberWithBool:YES] forKey:@"StreamsHaveChanged"];
+				continue;
+			}
+			
 			// Unmatched IDENTIFY lines
 			[Debug log:ASL_LEVEL_DEBUG withMessage:@"IDENTIFY not matched: %@ = %@", idName, idValue];
 			[info setInfo:idValue forKey:idName];
@@ -2386,7 +2401,7 @@ static NSArray* parseRunLoopModes;
 		
 		
 		// mkv chapters
-		if ([line isMatchedByRegex:MI_MKVCHP_REGEX]) {
+		/*if ([line isMatchedByRegex:MI_MKVCHP_REGEX]) {
 			
 			// extract
 			chapterId		= [[line stringByMatching:MI_MKVCHP_REGEX capture:1] intValue];
@@ -2401,7 +2416,7 @@ static NSArray* parseRunLoopModes;
 			[info newChapter:(chapterId+1) from:(chapterTime[0]*3600+chapterTime[1]*60+chapterTime[2])
 						  to:(chapterTime[3]*3600+chapterTime[4]*60+chapterTime[5]) withName:chapterName];
 			continue;
-		}
+		}*/
 		
 		// mplayer is starting playback -- ignore for preflight
 		if (strstr(stringPtr, MI_STARTING_STRING) != NULL && !isPreflight) {

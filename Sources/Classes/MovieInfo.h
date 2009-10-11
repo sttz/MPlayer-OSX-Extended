@@ -160,10 +160,11 @@ typedef enum _SubtitleType {
 -(NSString *)descriptionForSubtitleStream:(unsigned int)streamId andType:(SubtitleType)type;
 
 // Set and get chapters
--(void)newChapter:(unsigned int)chapterId from:(float)fromSec to:(float)toSec withName:(NSString *)chapterName;
+-(void)newChapter:(unsigned int)chapterId;
+-(void)setChapterStartTime:(NSNumber *)startTime forId:(unsigned int)chapterId;
+-(void)setChapterName:(NSString *)chapterName forId:(unsigned int)chapterId;
 -(NSString *)nameForChapter:(unsigned int)chapterId;
 -(float)startOfChapter:(unsigned int)chapterId;
--(float)endOfChapter:(unsigned int)chapterId;
 -(unsigned int)chapterCount;
 -(NSEnumerator *)getChaptersEnumerator;
 

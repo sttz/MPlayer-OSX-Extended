@@ -370,16 +370,26 @@
 
 // **************************************************** //
 
--(void)newChapter:(unsigned int)chapterId from:(float)fromSec to:(float)toSec withName:(NSString *)chapterName {
+-(void)newChapter:(unsigned int)chapterId {
 	
-	[chapter setObject:[NSArray arrayWithObjects: 
-						[NSNumber numberWithFloat:fromSec], [NSNumber numberWithFloat:toSec], chapterName, nil] 
-				forKey:[NSNumber numberWithUnsignedInt:chapterId]];	
+	[chapter setObject:[NSMutableArray arrayWithObjects:[NSNumber numberWithFloat:0.0], @"", nil] forKey:[NSNumber numberWithUnsignedInt:chapterId]];
+}
+
+-(void)setChapterStartTime:(NSNumber *)startTime forId:(unsigned int)chapterId {
+	
+	[Debug log:ASL_LEVEL_DEBUG withMessage:@"Set start %@ in %@",startTime,chapter];
+	[[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]] replaceObjectAtIndex:0 withObject:startTime];
+}
+
+-(void)setChapterName:(NSString *)chapterName forId:(unsigned int)chapterId {
+	
+	[Debug log:ASL_LEVEL_DEBUG withMessage:@"Set name %@ in %@",chapterName,[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]]];
+	[[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]] replaceObjectAtIndex:1 withObject:chapterName];
 }
 
 -(NSString *)nameForChapter:(unsigned int)chapterId {
 	
-	return [[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]] objectAtIndex:2];
+	return [[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]] objectAtIndex:1];
 }
 
 -(float)startOfChapter:(unsigned int)chapterId {
@@ -387,10 +397,6 @@
 	return [[[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]] objectAtIndex:0] floatValue];
 }
 
--(float)endOfChapter:(unsigned int)chapterId {
-	
-	return [[[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]] objectAtIndex:1] floatValue];
-}
 
 -(unsigned int)chapterCount {
 
