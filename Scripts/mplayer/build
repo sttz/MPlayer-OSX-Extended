@@ -59,7 +59,7 @@ move_only=0
 
 usage() {
 cat << EOF
-Usage: $0 [options] [i386|ppc|ppcg3]
+Usage: $0 [options] [x86_64|i386|ppc|ppcg3]
 
 General options:
     -h, --help                  display this help
@@ -88,7 +88,7 @@ EOF
 # Parse command line
 while [ -n "$1" ]; do
 	case $1 in
-		i386 | ppc | ppcg3 )	target_system=$1
+		x86_64 | i386 | ppc | ppcg3 )	target_system=$1
 								;;
 		
 		-s | --shared )			shared_libs=1
@@ -305,8 +305,8 @@ else
 		echo "Binary moved to: $binary_dest/$binary_name.$target_system"
 		
 		# Merge universal binary if possible
-		if [ -f "$binary_dest/$binary_name.i386" -a -f "$binary_dest/$binary_name.ppc" ]; then
-			lipo -create "$binary_dest/$binary_name.i386" "$binary_dest/$binary_name.ppc" -output "$binary_dest/$binary_name.ub"
+		if [ -f "$binary_dest/$binary_name.i386" -a -f "$binary_dest/$binary_name.ppc" -a -f "$binary_dest/$binary_name.x86_64" ]; then
+			lipo -create "$binary_dest/$binary_name.x86_64" "$binary_dest/$binary_name.i386" "$binary_dest/$binary_name.ppc" -output "$binary_dest/$binary_name.ub"
 			echo "Universal binary merged at: $binary_dest/$binary_name.ub"
 		fi
 	fi

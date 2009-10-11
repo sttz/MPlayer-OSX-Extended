@@ -59,7 +59,7 @@ install_only=0
 
 usage() {
 cat << EOF
-Usage: $0 [options] [i386|ppc|ppcg3]
+Usage: $0 [options] [x86_64|i386|ppc|ppcg3]
 
 General options:
     -h, --help                  display this help
@@ -87,7 +87,7 @@ EOF
 # Parse command line
 while [ -n "$1" ]; do
 	case $1 in
-		i386 | ppc | ppcg3 )	target_system=$1
+		x86_64 | i386 | ppc | ppcg3 )	target_system=$1
 								;;
 		
 		-u | --update )			do_update=1
@@ -206,13 +206,18 @@ config_opts="$config_opts --enable-postproc"
 # Enable PNG encoder for screenshot filter in MPlayer
 config_opts="$config_opts --enable-encoder=png"
 # Enable runtime cpu detection
-config_opts="$config_opts --enable-runtime-cpudetect"
+#config_opts="$config_opts --enable-runtime-cpudetect"
 # Enable LLVM
 # config_opts="$config_opts --cc=llvm-gcc" (still a bit early for that...)
 
 # Intel platform options
+#if [ "$target_system" = "x86_64" ]; then
+#	config_opts="$config_opts"
+#fi
+# Intel platform options
 if [ "$target_system" = "i386" ]; then
-	config_opts="$config_opts --arch=core2"
+	config_opts="$config_opts --cc=gcc-4.0"
+#	config_opts="$config_opts --cpu=core2"
 fi
 # PPC platform options
 if [ "$target_system" = "ppc" -o "$target_system" = "ppcg3" ]; then
@@ -283,15 +288,15 @@ fi
 echo -e "\nFINISH...\n"
 
 # Create universal binaries if possible
-if [ -d "libs/i386" -a -d "libs/ppc" ]; then
+if [ -d "libs/i386" -a -d "libs/ppc" -a -d "libs/x86_64" ]; then
 	
 	rm -rf "libs/ub"
 	mkdir -p "libs/ub"
 	
 	for path in `ls libs/i386/*.dylib`; do
 		lib=`basename "$path"`
-		if [ -f "libs/ppc/$lib" ]; then
-			lipo -create "libs/i386/$lib" "libs/ppc/$lib" -output "libs/ub/$lib"
+		if [ -f "libs/ppc/$lib" -a -f "libs/x86_64/$lib" ]; then
+			lipo -create "libs/x86_64/$lib" "libs/i386/$lib" "libs/ppc/$lib" -output "libs/ub/$lib"
 		fi
 	done
 	
@@ -308,7 +313,7 @@ if [ $do_install -eq 1 ]; then
 			else
 				cp "libs/ub/$dir.dylib" "$dir/$dir.dylib"
 				cd "$dir"
-				eval "make install $c_output" || exit $?
+				eval "make install $c_output" || exit $?
 				cd ..
 			fi
 		done

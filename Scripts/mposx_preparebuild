@@ -22,14 +22,14 @@ fi
 
 # LOCAL CONFIG
 target_system="i386"
-shared=0
+shared=1
 
 # **************************************************** #
 # *** OPTION PARSING
 
 usage() {
 cat << EOF
-Usage: source $0 [options] [i386|ppc|ppcg3|ub]
+Usage: source $0 [options] [x86_64|i386|ppc|ppcg3|ub]
 
 General options:
     -h, --help                  display this help
@@ -45,15 +45,15 @@ EOF
 # Parse command line
 while [ -n "$1" ]; do
 	case $1 in
-		i386 | ppc | ppcg3 | ub )	target_system=$1
-									;;
-		-s | --shared )				shared=1
-									;;
-		-h | --help )				usage
-									exit
-									;;
-		* )							usage
-									exit 1
+		x86_64 | i386 | ppc | ppcg3 | ub )	target_system=$1
+											;;
+		-s | --shared )						shared=1
+							 				;;
+		-h | --help )		 				usage
+							 				exit
+							 				;;
+		* )					 				usage
+							 				exit 1
 	esac
 	shift
 done
@@ -82,18 +82,25 @@ export LDFLAGS="-mmacosx-version-min=10.5 -isysroot /Developer/SDKs/MacOSX10.5.s
 export LDFLAGS="$LDFLAGS -Wl,-syslibroot,/Developer/SDKs/MacOSX10.5.sdk"
 export CXXFLAGS="-mmacosx-version-min=10.5 -isysroot /Developer/SDKs/MacOSX10.5.sdk"
 
+# Intel 64bit platform flags
+if [ $target_system = "x86_64" ]; then
+	export CFLAGS="$CFLAGS -arch x86_64"
+	export LDFLAGS="$LDFLAGS -arch x86_64"
+	export CXXFLAGS="$CXXFLAGS -arch x86_64"
+fi
+
 # Intel platform flags
 if [ $target_system = "i386" ]; then
-	export CFLAGS="$CFLAGS -arch i386 -march=core2"
+	export CFLAGS="$CFLAGS -arch i386"
 	export LDFLAGS="$LDFLAGS -arch i386"
-	export CXXFLAGS="$CXXFLAGS -arch i386 -march=core2"
+	export CXXFLAGS="$CXXFLAGS -arch i386"
 fi
 
 # PPC platform flags
 if [ "$target_system" = "ppc" ]; then
-	export CFLAGS="$CFLAGS -arch ppc -mcpu=7450"
+	export CFLAGS="$CFLAGS -arch ppc -mcpu=7400"
 	export LDFLAGS="$LDFLAGS -arch ppc"
-	export CXXFLAGS="$CXXFLAGS -arch ppc -mcpu=7450"
+	export CXXFLAGS="$CXXFLAGS -arch ppc -mcpu=7400"
 fi
 
 # PPC G3 platform flags
@@ -105,9 +112,9 @@ fi
 
 # Universal binary platform flags
 if [ "$target_system" = "ub" ]; then
-	export CFLAGS="$CFLAGS -arch i386 -arch ppc"
-	export LDFLAGS="$LDFLAGS -arch i386 -arch ppc"
-	export CXXFLAGS="$CXXFLAGS -arch i386 -arch ppc"
+	export CFLAGS="$CFLAGS -arch x86_64 -arch i386 -arch ppc"
+	export LDFLAGS="$LDFLAGS -arch x86_64 -arch i386 -arch ppc"
+	export CXXFLAGS="$CXXFLAGS -arch x86_64 -arch i386 -arch ppc"
 fi
 
 # Set paths

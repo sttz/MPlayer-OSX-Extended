@@ -64,8 +64,8 @@ if [ ! -n "$dir" ]; then
 	dir="."
 fi
 
-if [ ! -f "$dir/mplayer.i386" -o ! -f "$dir/mplayer.ppc" ]; then
-	echo "mplayer.i386 or mplayer.ppc binary not found at '$dir'."
+if [ ! -f "$dir/mplayer.i386" -o ! -f "$dir/mplayer.ppc" -o ! -f "$dir/mplayer.x86_64" ]; then
+	echo "mplayer.x86_64 mplayer.i386 or mplayer.ppc binary not found at '$dir'."
 	exit 1
 fi
 
@@ -83,7 +83,7 @@ echo "recreate mplayer.ub..."
 
 # recreate ub from untouched mplayer.i386 mplayer.ub
 # (the install names in mplayer.ub could have been already changed)
-lipo -create "$dir/mplayer.i386" "$dir/mplayer.ppc" -output "$dir/mplayer.ub"
+lipo -create "$dir/mplayer.x86_64" "$dir/mplayer.i386" "$dir/mplayer.ppc" -output "$dir/mplayer.ub"
 
 # **************************************************** #
 # *** STATIC INSTALL
@@ -105,7 +105,7 @@ if [ $shared -eq 0 ]; then
 	
 	# Copy ffmpeg-mt version (mplayer-mt.ub) to mplayer-mt.app
 	if [ -f "$dir/mplayer-mt.i386" -a -f "$dir/mplayer-mt.ppc" ]; then
-		lipo -create "$dir/mplayer-mt.i386" "$dir/mplayer-mt.ppc" -output "$dir/mplayer-mt.ub"
+		lipo -create "$dir/mplayer.x86_64" "$dir/mplayer-mt.i386" "$dir/mplayer-mt.ppc" -output "$dir/mplayer-mt.ub"
 		cp "$dir/mplayer-mt.ub" "$mplayerosx_path/External_Binaries/mplayer-mt.app/Contents/MacOS/mplayer"
 		echo "mplayer-mt.ub copied to mplayer-mt.app/Contents/MacOS/mplayer"
 	fi
@@ -200,6 +200,18 @@ for path in ./$dir/lib/*; do
 		done
 	fi
 done
+
+# change ids for mt libraries
+if [ -d $ffmpeg_mt_libs -a -d "$dir/lib-mt" ]; then
+	for path in ./$dir/lib-mt/*; do
+		
+		lib=`basename $path`
+		
+		echo "... change library id for: $lib"
+		
+		install_name_tool -id "@executable_path/lib/$lib" "$path" 
+	done
+fi
 
 # **************************************************** #
 # *** STRIP
