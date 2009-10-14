@@ -1794,7 +1794,7 @@
 		
 		while ((key = [en nextObject])) {
 			newItem = [[NSMenuItem alloc]
-					   initWithTitle:[NSString stringWithFormat:@"%d: %@", [key intValue], [movieInfo nameForChapter:[key intValue]]]
+					   initWithTitle:[NSString stringWithFormat:@"%d: %@", [key intValue]+1, [movieInfo nameForChapter:[key intValue]]]
 					   action:@selector(chapterMenuAction:)
 					   keyEquivalent:@""];
 			[newItem setRepresentedObject:key];

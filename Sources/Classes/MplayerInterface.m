@@ -2178,7 +2178,7 @@ static NSArray* parseRunLoopModes;
 				
 				if ([streamInfoName isEqualToString:@"START"]) {
 					[Debug log:ASL_LEVEL_DEBUG withMessage:@"Chapter start: %d %@", streamId, streamInfoValue];
-					[info setChapterStartTime:[NSNumber numberWithFloat:[streamInfoValue floatValue]] forId:streamId];
+					[info setChapterStartTime:[NSNumber numberWithFloat:[streamInfoValue floatValue]/1000.] forId:streamId];
 					continue;
 				}
 			}
