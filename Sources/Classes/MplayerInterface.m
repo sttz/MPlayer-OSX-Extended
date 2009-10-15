@@ -749,7 +749,7 @@ static NSArray* parseRunLoopModes;
 		if (![mySubtitlesFiles containsObject:aFile]) {
 			[mySubtitlesFiles addObject:aFile];
 			if (isRunning) {
-				[self performCommand: [NSString stringWithFormat:@"sub_load '%@'", aFile]];
+				[self performCommand: [NSString stringWithFormat:@"sub_load '%@'", [aFile stringByReplacingOccurrencesOfString:@"'" withString:@"\\'"]]];
 				if (info)
 					[self performCommand: [NSString stringWithFormat:
 							@"sub_file %u", [info subtitleCountForType:SubtitleTypeFile]]];
