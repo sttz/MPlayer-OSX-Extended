@@ -1545,7 +1545,7 @@ static NSArray* parseRunLoopModes;
 /************************************************************************************/
 - (void) takeScreenshot
 {
-	[self sendCommand:@"screenshot 0\n"];
+	[self sendCommand:@"screenshot 0"];
 }
 /************************************************************************************/
 - (void)runMplayerWithParams:(NSArray *)aParams
