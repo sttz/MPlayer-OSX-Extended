@@ -118,6 +118,7 @@
 	IBOutlet id settingsController;
 	IBOutlet id playerController;
 	
+	IBOutlet NSWindow *fcControlWindow;
 	IBOutlet PlayerFullscreenWindow* fullscreenWindow;
 	
 	// Inter-thread communication
@@ -158,6 +159,8 @@
 - (void) finishClosing;
 - (void) setWindowSizeMode:(int)mode withValue:(float)val;
 - (void) ontop;
+- (void) setOntop:(BOOL)ontop;
+- (void) updateOntop;
 
 //Action
 - (IBAction)MovieMenuAction:(id)sender;

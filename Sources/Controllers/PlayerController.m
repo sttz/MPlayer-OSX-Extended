@@ -1365,12 +1365,14 @@
     if(aBool)
 	{
 		[playerWindow setLevel:NSModalPanelWindowLevel];
+		[videoOpenGLView setOntop:YES];
 		[myPlayer setOntop:YES];
 		isOntop = YES;
 	}
 	else
 	{
 		[playerWindow setLevel:NSNormalWindowLevel];
+		[videoOpenGLView setOntop:NO];
 		[myPlayer setOntop:NO];
 		isOntop = NO;
 	}

@@ -429,7 +429,6 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 		// hide menu and dock if on same screen
 		if (fullscreenId == 0)
 			SetSystemUIMode( kUIModeAllHidden, kUIOptionAutoShowMenuBar);
-		[fullscreenWindow setFullscreen:YES];
 		
 		// place fswin above video in player window
 		NSRect rect = [self frame];
@@ -440,13 +439,10 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 		old_win_size = [[playerController playerWindow] frame].size;
 		old_view_frame = [self frame];
 		
-		// move to ontop level if needed
-		if ([playerController isOntop])
-			[fullscreenWindow setLevel:NSModalPanelWindowLevel];
-		else
-			[fullscreenWindow setLevel:NSNormalWindowLevel];
-		
 		[fullscreenWindow makeKeyAndOrderFront:nil];
+		[self updateOntop];
+		
+		[fullscreenWindow setFullscreen:YES];
 		
 		// move view to fswin and redraw to avoid flicker
 		[fullscreenWindow setContentView:self];
@@ -729,19 +725,35 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 }
 
 /*
-	Toggle ontop
+	Toggle ontop (sent by MPlayer)
 */
 - (void) ontop
 {
-	isOntop = !isOntop;
-	if(isOntop) {
-		[[self window] setLevel:NSModalPanelWindowLevel];
+	// Let PlayerController handle ontop
+}
+
+/*
+	Set Ontop (sent by PlayerController)
+*/
+- (void) setOntop:(BOOL)ontop
+{
+	isOntop = ontop;
+	[self updateOntop];
+}
+
+/*
+	Update window level based on ontop status
+*/
+- (void) updateOntop
+{
+	if (![fullscreenWindow isVisible])
+		return;
+	if (isOntop) {
 		[fullscreenWindow setLevel:NSModalPanelWindowLevel];
-	}
-	else {
-		[[self window] setLevel:NSNormalWindowLevel];
+		[fullscreenWindow orderWindow:NSWindowBelow relativeTo:[fcControlWindow windowNumber]];
+		[[playerController playerWindow] orderWindow:NSWindowBelow relativeTo:[fullscreenWindow windowNumber]];
+	} else
 		[fullscreenWindow setLevel:NSNormalWindowLevel];
-	}
 }
 
 /*
