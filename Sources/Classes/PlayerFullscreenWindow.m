@@ -24,6 +24,7 @@
 
 #import "PlayerFullscreenWindow.h"
 #import "PlayerController.h"
+#import "FullscreenControls.h"
 #import "Debug.h"
 
 #define MP_FC_HIDEAFTERSECONDS	3
@@ -187,6 +188,8 @@
 
 - (void)mouseExitedFCWindow
 {
+	if ([fullscreenControls beingDragged])
+		return;
 	mouseOverControls = NO;
 	[self refreshOSDTimer];
 }

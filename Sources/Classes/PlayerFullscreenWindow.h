@@ -26,9 +26,11 @@
 #import "PlayerWindow.h"
 #import "AppController.h"
 
+@class FullscreenControls;
+
 @interface PlayerFullscreenWindow : PlayerWindow {
 	
-	IBOutlet NSWindow *fullscreenControls;
+	IBOutlet FullscreenControls *fullscreenControls;
 	IBOutlet AppController *appController;
 	
 	BOOL isFullscreen;

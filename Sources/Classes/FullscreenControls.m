@@ -27,6 +27,7 @@
 #import "Debug.h"
 
 @implementation FullscreenControls
+@synthesize beingDragged;
 
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag {
 	
@@ -43,7 +44,6 @@
 	
 	// Enable shadow
     [result setHasShadow:YES];
-	
 	
 	// Animation attributes
 	currentFade = 0;
@@ -70,6 +70,12 @@
 	dragStartPoint = [self convertBaseToScreen:[theEvent locationInWindow]];
 	dragStartPoint.x -= windowFrame.origin.x;
 	dragStartPoint.y -= windowFrame.origin.y;
+	beingDragged = YES;
+}
+
+- (void)mouseUp:(NSEvent *)theEvent
+{
+	beingDragged = NO;
 }
 
 - (void)orderFront:(id)sender

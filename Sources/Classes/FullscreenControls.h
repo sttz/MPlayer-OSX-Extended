@@ -32,8 +32,13 @@
 	int currentFade;
 	int currentState;
 	BOOL isOpen;
+	BOOL beingDragged;
 	
 	IBOutlet PlayerController *playerController;
 }
+
+@property (readonly) BOOL beingDragged;
+
 - (void)fadeWith:(NSString*)effect;
+
 @end
