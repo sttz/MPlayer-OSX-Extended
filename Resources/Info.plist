@@ -67,6 +67,23 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>binaries.icns</string>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>mpBinaries</string>
+				<string>mpbinaries</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>MPlayer Binary Package</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSTypeIsPackage</key>
+			<true/>
+		</dict>
+		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>flac</string>
@@ -186,9 +203,9 @@
 	<key>CFBundleSignature</key>
 	<string>MPHQ</string>
 	<key>CFBundleVersion</key>
-	<string>1201</string>
+	<string>1205</string>
 	<key>CFBundleShortVersionString</key>
-	<string>rev12-test1</string>
+	<string>rev12-test5</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
