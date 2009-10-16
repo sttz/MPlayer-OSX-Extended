@@ -1269,11 +1269,11 @@
         {
 			// Right: Seek forward
 			case kRemoteButtonRight_Hold:
-				[self seekFwd:nil];
+				[self seek:10*pow(2,remoteHoldIncrement) mode:MIRelativeSeekingMode];
 				break;
 			// Left: Seek back
             case kRemoteButtonLeft_Hold:
-				[self seekBack:nil];
+				[self seek:-10*pow(2,remoteHoldIncrement) mode:MIRelativeSeekingMode];
 				break;
 			// Volume+: Increase volume
             case kRemoteButtonVolume_Plus_Hold:
@@ -1292,13 +1292,12 @@
                 [self stop:nil];
 				break;
         }
-        if(appleRemoteHolding)
-        {
-            // re-schedule event
-            [self performSelector:@selector(executeHoldActionForRemoteButton:)
-					   withObject:buttonIdentifierNumber
-					   afterDelay:0.25];
-        }
+        // re-schedule event
+		if (remoteHoldIncrement < 6)
+			remoteHoldIncrement++;
+        [self performSelector:@selector(executeHoldActionForRemoteButton:)
+				   withObject:buttonIdentifierNumber
+				   afterDelay:1.];
     }
 }
 /************************************************************************************/
@@ -1320,13 +1319,19 @@
 		case kRemoteButtonVolume_Minus:
             [self decreaseVolume:nil];
             break;
-		// Right: Skip forward
+		// Right: Skip forward (skip to next chapter if available, skip 10m else)
         case kRemoteButtonRight:
-            [self seekNext:nil];
+			if (movieInfo && [movieInfo chapterCount] > 0)
+				[self seekNext:nil];
+			else
+				[self seek:600 mode:MIRelativeSeekingMode];
             break;
 		// Left: Skip backward
         case kRemoteButtonLeft:
-            [self seekPrevious:nil];
+            if (movieInfo && [movieInfo chapterCount] > 0)
+				[self seekPrevious:nil];
+			else
+				[self seek:-600 mode:MIRelativeSeekingMode];
             break;
 		// Menu: Switch fullscreen
         case kRemoteButtonMenu:
@@ -1339,6 +1344,7 @@
         case kRemoteButtonVolume_Minus_Hold:
             // Trigger periodic method for hold duration
             appleRemoteHolding = pressedDown;
+			remoteHoldIncrement = 1;
             if (pressedDown) {
                 NSNumber* buttonIdentifierNumber = [NSNumber numberWithInt:buttonIdentifier];
                 [self performSelector:@selector(executeHoldActionForRemoteButton:)

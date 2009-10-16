@@ -134,6 +134,7 @@
 	NSRect org_frame;
 	
 	BOOL appleRemoteHolding;
+	uint remoteHoldIncrement;
 	
 	IOPMAssertionID sleepAssertionId;
 }
