@@ -75,7 +75,6 @@ static NSArray* parseRunLoopModes;
 	flipHorizontal = NO;
 	movieSize = NSMakeSize(0,0);
 	aspectRatio = 0;
-	monitorAspect = 0;
 	deviceId = 0;
 	voModule = 0;
 	screenshotPath = nil;
@@ -301,10 +300,6 @@ static NSArray* parseRunLoopModes;
 	if (aspectRatio > 0) {
 		[params addObject:@"-aspect"];
 		[params addObject:[NSString stringWithFormat:@"%1.6f", aspectRatio]];
-	}
-	if (monitorAspect > 0) {
-		[params addObject:@"-monitoraspect"];
-		[params addObject:[NSString stringWithFormat:@"%1.6f", monitorAspect]];
 	}
 	// video output
 	// force corevideo for rootwin if mplayerosx is selected
@@ -1099,15 +1094,6 @@ static NSArray* parseRunLoopModes;
 {
 	if (aspectRatio != ratio) {
 		aspectRatio = ratio;
-		settingsChanged = YES;
-	}
-}
-
-/************************************************************************************/
-- (void) setMonitorAspectRatio:(double)ratio
-{
-	if (monitorAspect != ratio) {
-		monitorAspect = ratio;
 		settingsChanged = YES;
 	}
 }

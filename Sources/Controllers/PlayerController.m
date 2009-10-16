@@ -437,13 +437,6 @@
 	
 	// chose binary to use
 	[self chooseMPlayerBinary];
-	
-	// if monitors aspect ratio is not 4:3 set monitor aspect ratio to the real one
-	if ([[NSScreen mainScreen] frame].size.width/4 != 
-			[[NSScreen mainScreen] frame].size.height/3) {
-		[myPlayer setMonitorAspectRatio:([[NSScreen mainScreen] frame].size.width /
-				[[NSScreen mainScreen] frame].size.height)];
-    }
 
 	// set video size for case it is set to fit screen so we have to compare
 	// screen size with movie size

@@ -107,7 +107,6 @@
 	BOOL flipHorizontal;
 	NSSize movieSize;
 	double aspectRatio;
-	double monitorAspect;
 	
 	unsigned int deviceId;
 	unsigned int voModule;
@@ -251,7 +250,6 @@
 - (void) setMovieSize:(NSSize)aSize;				// set height to 0 to keep aspect ratio)
 - (NSSize) movieSize;
 - (void) setAspectRatio:(double)ratio;
-- (void) setMonitorAspectRatio:(double)ratio;
 - (void) setDeviceId:(unsigned int)dId;
 - (unsigned int)getDeviceId;
 - (void) setVideoOutModule:(int)module;
