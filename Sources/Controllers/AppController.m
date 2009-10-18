@@ -15,6 +15,7 @@
 #import "PlayListController.h"
 
 #import "AppleRemote.h"
+#import "PFMoveApplication.h"
 
 @implementation AppController
 - (void) awakeFromNib;
@@ -599,6 +600,13 @@
 	
 	// set sparkle feed url for prereleases
 	[self setSparkleFeed];
+	
+	// offer to move application
+	BOOL willMove = PFMoveToApplicationsFolderIfNecessary();
+	
+	// show main window if we won't be moved
+	if (!willMove)
+		[playerController displayWindow:self];
 }
 /******************************************************************************/
 - (void) setSparkleFeed

@@ -192,8 +192,6 @@
 		[self setVolume:[[prefs objectForKey:@"LastAudioVolume"] doubleValue]];
 	else
 		[self setVolume:50];
-	
-	[self displayWindow:self];
 		
 	//setup drag & drop
 	[playerWindow registerForDraggedTypes:[NSArray arrayWithObjects: NSFilenamesPboardType, nil]];

@@ -85,6 +85,9 @@
 		3A5879C80EED42BD003408E8 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A5879C70EED42BD003408E8 /* Sparkle.framework */; };
 		3A5879D30EED42CB003408E8 /* Sparkle.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 3A5879C70EED42BD003408E8 /* Sparkle.framework */; };
 		3A5879E00EED4507003408E8 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 3A5879DF0EED4507003408E8 /* dsa_pub.pem */; };
+		3A638951108B953F00E90936 /* PFMoveApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A638950108B953F00E90936 /* PFMoveApplication.m */; };
+		3A638955108B95B000E90936 /* MoveApplication.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A638953108B95B000E90936 /* MoveApplication.strings */; };
+		3A638959108B95D300E90936 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A638958108B95D300E90936 /* Security.framework */; };
 		3A861D961084C97800ADE9B9 /* binaries.icns in Resources */ = {isa = PBXBuildFile; fileRef = 3A861D951084C97800ADE9B9 /* binaries.icns */; };
 		3A861DD51085112C00ADE9B9 /* JobLarge.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DD21085112C00ADE9B9 /* JobLarge.png */; };
 		3A861DD61085112C00ADE9B9 /* pref-audio.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DD31085112C00ADE9B9 /* pref-audio.tiff */; };
@@ -255,6 +258,10 @@
 		3A38D3C40E50E45A00C1E468 /* Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Debug.m; path = Sources/Classes/Debug.m; sourceTree = "<group>"; };
 		3A5879C70EED42BD003408E8 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		3A5879DF0EED4507003408E8 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dsa_pub.pem; path = Resources/dsa_pub.pem; sourceTree = "<group>"; };
+		3A63894F108B953F00E90936 /* PFMoveApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFMoveApplication.h; sourceTree = "<group>"; };
+		3A638950108B953F00E90936 /* PFMoveApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFMoveApplication.m; sourceTree = "<group>"; };
+		3A638954108B95B000E90936 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/MoveApplication.strings; sourceTree = "<group>"; };
+		3A638958108B95D300E90936 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		3A861D951084C97800ADE9B9 /* binaries.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = binaries.icns; path = Resources/Graphics/binaries.icns; sourceTree = "<group>"; };
 		3A861DD21085112C00ADE9B9 /* JobLarge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = JobLarge.png; sourceTree = "<group>"; };
 		3A861DD31085112C00ADE9B9 /* pref-audio.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "pref-audio.tiff"; sourceTree = "<group>"; };
@@ -343,6 +350,7 @@
 				3ADA70980FED843800F7AFB9 /* libfontconfig.1.dylib in Frameworks */,
 				3ADA70990FED843800F7AFB9 /* libfreetype.6.dylib in Frameworks */,
 				3ADA709A0FED843800F7AFB9 /* libiconv.2.dylib in Frameworks */,
+				3A638959108B95D300E90936 /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -402,6 +410,7 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				3A638958108B95D300E90936 /* Security.framework */,
 			);
 			name = "MPlayer OSX";
 			sourceTree = "<group>";
@@ -409,6 +418,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				3A63894E108B953F00E90936 /* MoveApplication */,
 				3A36660D0FE6E6A500CF05DC /* AppleRemote.m */,
 				3A36660E0FE6E6A500CF05DC /* AppleRemote.h */,
 				3AF152240F97B3F700409534 /* RegexKitLite.m */,
@@ -434,6 +444,7 @@
 				37DCF881088868B300DBF422 /* gotob_button_on.png */,
 				37DCF882088868B300DBF422 /* gotoe_button_off.png */,
 				3ABF86A70EBFAF4C001FE779 /* fc_background.png */,
+				3A638953108B95B000E90936 /* MoveApplication.strings */,
 				3AE612290EC08130009F2F12 /* fc_scrub_bg.png */,
 				3AE6122A0EC08130009F2F12 /* fc_srub_bar.png */,
 				3AE6122B0EC08130009F2F12 /* fc_fast_rewind.png */,
@@ -560,6 +571,16 @@
 				3AFE25300EC0FA29009FFEC5 /* FullscreenControlsScrubbingBar.m */,
 			);
 			name = Interface;
+			sourceTree = "<group>";
+		};
+		3A63894E108B953F00E90936 /* MoveApplication */ = {
+			isa = PBXGroup;
+			children = (
+				3A63894F108B953F00E90936 /* PFMoveApplication.h */,
+				3A638950108B953F00E90936 /* PFMoveApplication.m */,
+			);
+			name = MoveApplication;
+			path = Sources/External/MoveApplication;
 			sourceTree = "<group>";
 		};
 		3A861DD11085112C00ADE9B9 /* PreferencesIcons */ = {
@@ -730,6 +751,7 @@
 				3A861DF11085153E00ADE9B9 /* system-file-manager.png in Resources */,
 				3A861DF21085153E00ADE9B9 /* video-display.png in Resources */,
 				3A861DF31085153E00ADE9B9 /* video-x-generic.png in Resources */,
+				3A638955108B95B000E90936 /* MoveApplication.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -791,6 +813,7 @@
 				3AFE25310EC0FA29009FFEC5 /* FullscreenControlsScrubbingBar.m in Sources */,
 				3AF152260F97B3F700409534 /* RegexKitLite.m in Sources */,
 				3A36660F0FE6E6A500CF05DC /* AppleRemote.m in Sources */,
+				3A638951108B953F00E90936 /* PFMoveApplication.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -819,6 +842,14 @@
 				37EA4A300861D0980026216A /* English */,
 			);
 			name = MainMenu.nib;
+			sourceTree = "<group>";
+		};
+		3A638953108B95B000E90936 /* MoveApplication.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3A638954108B95B000E90936 /* English */,
+			);
+			name = MoveApplication.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

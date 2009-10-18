@@ -11,6 +11,7 @@
 			<string key="NS.object.0">732</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
+			<integer value="944"/>
 			<integer value="106"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
@@ -2503,7 +2504,7 @@
 				</object>
 				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<object class="NSView" key="NSWindowView" id="782087522">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSPopUpButton" id="550814593">
@@ -3189,6 +3190,7 @@
 						</object>
 					</array>
 					<string key="NSFrameSize">{450, 300}</string>
+					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
@@ -21070,7 +21072,7 @@ U2VlayAxMCBtaW51dGVzIGZvcndhcmQ</string>
 				<string key="944.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="944.IBWindowTemplateEditedContentRect">{{482, 693}, {450, 300}}</string>
 				<boolean value="YES" key="944.ImportedFromIB2"/>
-				<boolean value="YES" key="944.NSWindowTemplate.visibleAtLaunch"/>
+				<boolean value="NO" key="944.NSWindowTemplate.visibleAtLaunch"/>
 				<object class="NSMutableDictionary" key="945.IBAttributePlaceholdersKey">
 					<string key="NS.key.0">ToolTip</string>
 					<object class="IBToolTipAttribute" key="NS.object.0">
