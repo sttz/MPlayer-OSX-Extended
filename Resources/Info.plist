@@ -203,9 +203,9 @@
 	<key>CFBundleSignature</key>
 	<string>MPHQ</string>
 	<key>CFBundleVersion</key>
-	<string>1205</string>
+	<string>1210</string>
 	<key>CFBundleShortVersionString</key>
-	<string>rev12-test5</string>
+	<string>rev12</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
@@ -216,5 +216,7 @@
 	<string>http://mplayerosx.sttz.ch/prereleases.xml</string>
 	<key>SUPublicDSAKeyFile</key>
 	<string>dsa_pub.pem</string>
+	<key>CFBundleHomepage</key>
+	<string>http://mplayerosx.sttz.ch/</string>
 </dict>
 </plist>

@@ -254,7 +254,14 @@
 
 - (IBAction) openHomepage:(id)sender
 {
-	[[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: @"http://mplayerosx.sttz.ch/"]];
+	NSURL *homepage = [NSURL URLWithString:[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleHomepage"]];
+	[[NSWorkspace sharedWorkspace] openURL:homepage];
+}
+
+- (IBAction) openLicenseAndCredits:(id)sender
+{
+	NSString *locBookName = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleHelpBookName"];
+	AHGotoPage(locBookName, @"creditslicense.html", 0);
 }
 
 - (IBAction) closeWindow:(id)sender {

@@ -9,6 +9,7 @@ p		{ font-size: 9pt; font-family: Lucida Grande, Arial, sans-serif; margin-top: 
 p1		{ font-size: 9pt; font-family: Lucida Grande, Arial, sans-serif; }
 a		{ color: #00f; font-family: Lucida Grande, Arial, sans-serif; text-decoration: none }
 a:hover	{ text-decoration: underline }
+ul		{ margin-top: 0.1em; padding-left: 1.5em; }
 
 #contentleft	{ margin-top: 38px; width: 235px; float: left }
 #contentcenter	{ margin-top: 2px; padding: 0; width: 18px; float: left }

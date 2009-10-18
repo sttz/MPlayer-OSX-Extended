@@ -75,6 +75,7 @@
 - (IBAction) applyLocation:(id)sender;
 - (IBAction) cancelLocation:(id)sender;
 - (IBAction) openHomepage:(id)sender;
+- (IBAction) openLicenseAndCredits:(id)sender;
 - (IBAction) closeWindow:(id)sender;
 
 // bundle access
