@@ -85,13 +85,13 @@
 	IBOutlet id enableVideo;
 	IBOutlet id videoCodecs;
 	// Decoding
-	IBOutlet NSSegmentedCell *framedrop;
+	IBOutlet NSSegmentedControl *framedrop;
 	IBOutlet id fastLibavcodec;
 	IBOutlet id useFFmpegMT;
-	IBOutlet NSSegmentedCell *skipLoopfilter;
+	IBOutlet NSSegmentedControl *skipLoopfilter;
 	// Filters
-	IBOutlet NSSegmentedCell *deinterlace;
-	IBOutlet NSSegmentedCell *postprocessing;
+	IBOutlet NSSegmentedControl *deinterlace;
+	IBOutlet NSSegmentedControl *postprocessing;
 	
 	
 	// ** Audio
