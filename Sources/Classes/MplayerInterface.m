@@ -13,10 +13,7 @@
 
 // directly parsed mplayer output strings
 // strings that are used to get certain data from output are not included
-#define MI_PAUSED_STRING			"=====  PAUSE  ====="
-#define MI_EXITING_STRING			"Exiting..."
-#define MI_EXITING_QUIT_STRING		"Exiting... (Quit)"
-#define MI_EXITING_EOF_STRING		"Exiting... (End of file)"
+#define MI_PAUSED_STRING			"ID_PAUSED"
 #define MI_OPENING_STRING			"Playing "
 #define MI_AUDIO_FILE_STRING		"Audio file detected."
 #define MI_STARTING_STRING			"Starting playback..."
