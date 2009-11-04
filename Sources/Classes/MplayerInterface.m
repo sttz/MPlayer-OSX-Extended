@@ -1819,29 +1819,12 @@ static NSArray* parseRunLoopModes;
 	
 	int lineIndex = -1;
 	
-	while (1) {
+	while (++lineIndex < [myLines count]) {
 		char *tempPtr;
 		
 		// Read next line of data
-		lineIndex++;
-		// check if end reached (save last unfinished line)
-		if (lineIndex >= [myLines count] - 1) {
-			[lastUnparsedLine release];
-			if (lineIndex < [myLines count])
-				lastUnparsedLine = [[myLines objectAtIndex:lineIndex] retain];
-			else
-				lastUnparsedLine = nil;
-			break;
-		}
-		// load line
 		line = [myLines objectAtIndex:lineIndex];
 		
-		// prepend unfinished line
-		if (lastUnparsedLine) {
-			line = [lastUnparsedLine stringByAppendingString:line];
-			[lastUnparsedLine release];
-			lastUnparsedLine = nil;
-		}
 		// skip empty lines
 		if ([[line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length] == 0)
 			continue;
