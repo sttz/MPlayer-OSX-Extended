@@ -1885,12 +1885,12 @@ static NSArray* parseRunLoopModes;
 						if (sscanf(stringPtr, "A: %d:%2d:%f %f%% %d%%", &hours, &mins,
 								&mySeconds, &audioCPUUsage, &myCacheUsage) >= 4) {
 							myCPUUsage = (int)audioCPUUsage;
-							mySeconds =+ (3600 * hours + 60 * mins);
+							mySeconds += (3600 * hours + 60 * mins);
 						}
 						else if (sscanf(stringPtr, "A: %2d:%f %f%% %d%%", &mins,
 								&mySeconds, &audioCPUUsage, &myCacheUsage) >= 3) {
 							myCPUUsage = (int)audioCPUUsage;
-							mySeconds =+ 60 * mins;
+							mySeconds += 60 * mins;
 						}
 						else if (sscanf(stringPtr, "A: %f %f%% %d%%", &mySeconds,
 								&audioCPUUsage, &myCacheUsage) >= 2) {
