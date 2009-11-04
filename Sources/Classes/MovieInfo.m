@@ -377,13 +377,11 @@
 
 -(void)setChapterStartTime:(NSNumber *)startTime forId:(unsigned int)chapterId {
 	
-	[Debug log:ASL_LEVEL_DEBUG withMessage:@"Set start %@ in %@",startTime,chapter];
 	[[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]] replaceObjectAtIndex:0 withObject:startTime];
 }
 
 -(void)setChapterName:(NSString *)chapterName forId:(unsigned int)chapterId {
 	
-	[Debug log:ASL_LEVEL_DEBUG withMessage:@"Set name %@ in %@",chapterName,[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]]];
 	[[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]] replaceObjectAtIndex:1 withObject:chapterName];
 }
 
