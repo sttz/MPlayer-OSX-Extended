@@ -2120,7 +2120,7 @@
 		// status is changing
 		// switch Play menu item title and playbutton image
 		
-		switch ([[[notification userInfo] objectForKey:@"PlayerStatus"] unsignedIntValue]) {
+		switch ([[[notification userInfo] objectForKey:@"PlayerStatus"] intValue]) {
 		case kOpening :
 		case kBuffering :
 		case kIndexing :
@@ -2158,7 +2158,7 @@
 			break;
 		}
 		
-		switch ([[[notification userInfo] objectForKey:@"PlayerStatus"] unsignedIntValue]) {
+		switch ([[[notification userInfo] objectForKey:@"PlayerStatus"] intValue]) {
 		case kOpening :
 		{
 			
@@ -2292,7 +2292,7 @@
 			if (playingFromPlaylist) {
 				// if playback finished itself (not by user) let playListController know
 				if ([[[notification userInfo]
-						objectForKey:@"PlayerStatus"] unsignedIntValue] == kFinished)
+						objectForKey:@"PlayerStatus"] intValue] == kFinished)
 					[playListController finishedPlayingItem:myPlayingItem];
 				// close view otherwise
 				else if (!continuousPlayback)
