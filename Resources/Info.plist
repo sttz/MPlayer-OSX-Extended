@@ -2,6 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleName</key>
+	<string>${PRODUCT_NAME}</string>
+	<key>CFBundleShortVersionString</key>
+	<string>rev12</string>
+	<key>CFBundleVersion</key>
+	<string>1210</string>
+	<key>CFBundleExecutable</key>
+	<string>${EXECUTABLE_NAME}</string>
+	<key>CFBundleIdentifier</key>
+	<string>hu.mplayerhq.mplayerosx.extended</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -62,8 +74,6 @@
 			<string>Viewer</string>
 		</dict>
 	</array>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -186,26 +196,20 @@
 			<string>XML</string>
 		</dict>
 	</array>
-	<key>CFBundleExecutable</key>
-	<string>MPlayer OSX Extended</string>
 	<key>CFBundleHelpBookFolder</key>
 	<string>MPlayer OSX Help</string>
 	<key>CFBundleHelpBookName</key>
 	<string>MPlayer OSX Help</string>
 	<key>CFBundleIconFile</key>
 	<string>icon</string>
-	<key>CFBundleIdentifier</key>
-	<string>hu.mplayerhq.mplayerosx.extended</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
 	<string>MPHQ</string>
-	<key>CFBundleVersion</key>
-	<string>1210</string>
-	<key>CFBundleShortVersionString</key>
-	<string>rev12</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
