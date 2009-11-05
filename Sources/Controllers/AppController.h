@@ -55,6 +55,9 @@
 	// apple remote support
 	AppleRemote *appleRemote;
 }
+
++ (AppController *) sharedController;
+
 // app's interface
 - (NSUserDefaults *) preferences;
 - (BOOL) savePrefs;

@@ -113,7 +113,6 @@
 	
 	// other controllers outlets
 	IBOutlet id	playListController;
-	IBOutlet id appController;
 	IBOutlet id preferencesController;
 	IBOutlet id settingsController;
 	IBOutlet id playerController;

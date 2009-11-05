@@ -15,7 +15,6 @@
 @interface SettingsController : NSObject
 {
 	// controller outlets
-	IBOutlet id appController;
     IBOutlet id playerController;
 	IBOutlet id playListController;
 	

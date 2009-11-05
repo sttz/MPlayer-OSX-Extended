@@ -16,7 +16,6 @@
 @interface PreferencesController : NSObject
 {
 	// controller outlets
-	IBOutlet id appController;
 	IBOutlet id playListController;
 	IBOutlet id playerController;
 	

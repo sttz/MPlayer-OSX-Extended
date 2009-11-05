@@ -457,11 +457,11 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 		
 		[self setFrame:frame onWindow:[playerController playerWindow] blocking:NO];
 		
-		if ([[appController preferences] boolForKey:@"BlackOutOtherScreens"])
+		if ([[[AppController sharedController] preferences] boolForKey:@"BlackOutOtherScreens"])
 			[self blackScreensExcept:fullscreenId];
 		
 		// wait for animation to finish
-		if ([appController animateInterface]) {
+		if ([[AppController sharedController] animateInterface]) {
 			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreenWindowContinued) 
 														 name:VVAnimationsDidEnd object:self];
 		} else
@@ -491,7 +491,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 		[self unblackScreens];
 		
 		// wait for animation to finish
-		if ([appController animateInterface]) {
+		if ([[AppController sharedController] animateInterface]) {
 			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreenWindowContinued) 
 														 name:VVAnimationsDidEnd object:self];
 		} else
@@ -571,7 +571,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 		[win setLevel:NSFloatingWindowLevel];
 		[win orderFront:nil];
 		
-		if ([appController animateInterface])
+		if ([[AppController sharedController] animateInterface])
 			[self fadeWindow:win withEffect:NSViewAnimationFadeInEffect];
 		
 		[blackingWindows addObject:win];
@@ -590,7 +590,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	
 	unsigned int i;
 	for (i = 0; i < [blackingWindows count]; i++) {
-		if (![appController animateInterface])
+		if (![[AppController sharedController] animateInterface])
 			[[blackingWindows objectAtIndex:i] close];
 		else
 			[self fadeWindow:[blackingWindows objectAtIndex:i] withEffect:NSViewAnimationFadeOutEffect];
@@ -638,7 +638,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	else
 		win_frame.size.width += image_height*image_aspect*zoomFactor - mov_frame.size.width;
 	
-	[[self window] setFrame:win_frame display:YES animate:[appController animateInterface]];
+	[[self window] setFrame:win_frame display:YES animate:[[AppController sharedController] animateInterface]];
 	
 	// remove fullscreen callback
 	[[NSNotificationCenter defaultCenter] removeObserver:self
@@ -679,7 +679,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	NSRect frame = [[self window] frame];
 	frame.size = [[playerController playerWindow] contentMinSize];
 	frame = [[playerController playerWindow] frameRectForContentRect:frame];
-	[[self window] setFrame:frame display:YES animate:[appController animateInterface]];
+	[[self window] setFrame:frame display:YES animate:[[AppController sharedController] animateInterface]];
 	
 	// remove fullscreen callback
 	[[NSNotificationCenter defaultCenter] removeObserver:self
@@ -857,7 +857,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 		}
 		
 		if (sender == CustomAspectMenuItem) {
-			image_aspect = [[appController preferences] floatForKey:@"CustomVideoAspectValue"];
+			image_aspect = [[[AppController sharedController] preferences] floatForKey:@"CustomVideoAspectValue"];
 			[self reshape];
 		}
 	}
@@ -914,7 +914,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 - (void) setFrame:(NSRect)frame onWindow:(NSWindow *)window blocking:(BOOL)blocking
 {
 	// apply directly if animations are disabled
-	if (![appController animateInterface]) {
+	if (![[AppController sharedController] animateInterface]) {
 		[window setFrame:frame display:YES];
 		return;
 	}/* else {

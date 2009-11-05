@@ -23,6 +23,8 @@
  */
 
 #import "PlayerFullscreenWindow.h"
+
+#import "AppController.h"
 #import "PlayerController.h"
 #import "FullscreenControls.h"
 #import "Debug.h"
@@ -88,8 +90,8 @@
 	
 	// place controls on screen
 	NSArray *pos;
-	if ([[appController preferences] objectForKey:@"FullscreenControlsPosition"]) 
-		pos = [[appController preferences] arrayForKey:@"FullscreenControlsPosition"];
+	if ([[[AppController sharedController] preferences] objectForKey:@"FullscreenControlsPosition"]) 
+		pos = [[[AppController sharedController] preferences] arrayForKey:@"FullscreenControlsPosition"];
 	else
 		pos = [NSArray arrayWithObjects:[NSNumber numberWithFloat:INITIAL_FC_X_POS],[NSNumber numberWithFloat:INITIAL_FC_Y_POS], nil];
 	
@@ -139,12 +141,12 @@
 	
 	// check values for sanity and reset to defaults if so
 	if (!isfinite(px) || isnan(px) || !isfinite(py) || isnan(py))
-		[[appController preferences] removeObjectForKey:@"FullscreenControlsPosition"];
+		[[[AppController sharedController] preferences] removeObjectForKey:@"FullscreenControlsPosition"];
 	// save sane values in preferences
 	else {
 		NSArray *pos = [NSArray arrayWithObjects:
 			[NSNumber numberWithFloat:px],[NSNumber numberWithFloat:py],nil];
-		[[appController preferences] setObject:pos forKey:@"FullscreenControlsPosition"];
+		[[[AppController sharedController] preferences] setObject:pos forKey:@"FullscreenControlsPosition"];
 	}
 }
 

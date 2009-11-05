@@ -273,14 +273,14 @@
 /************************************************************************************/
 - (IBAction)chooseAudio:(id)sender
 {
-	NSString *newPath = [appController openDialogForType:MP_DIALOG_AUDIO];
+	NSString *newPath = [[AppController sharedController] openDialogForType:MP_DIALOG_AUDIO];
 	if (newPath)
 		[audioBox setStringValue:newPath];
 }
 /************************************************************************************/
 - (IBAction)chooseSubtitles:(id)sender
 {
-	NSString *newPath = [appController openDialogForType:MP_DIALOG_SUBTITLES];
+	NSString *newPath = [[AppController sharedController] openDialogForType:MP_DIALOG_SUBTITLES];
 	if (newPath)
 		[subtitlesBox setStringValue:newPath];
 }
@@ -300,8 +300,8 @@
 /**********************************************AudioExportFile**************/
 //- (IBAction)chooseAudioExport:(id)sender
 //{
-//	NSString *newPath = [appController
-///			saveDialogForTypes:[appController typeExtensionsForName:@"AudioExportFile"]];
+//	NSString *newPath = [[AppController sharedController]
+///			saveDialogForTypes:[[AppController sharedController] typeExtensionsForName:@"AudioExportFile"]];
 //	if (newPath)
 //		[audioExportBox setStringValue:newPath];
 //}

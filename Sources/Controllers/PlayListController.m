@@ -43,6 +43,8 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 /************************************************************************************/
 -(void)awakeFromNib
 {	    
+	NSUserDefaults *defaults = [[AppController sharedController] preferences];
+	
 	//window
 	[playListWindow setLevel:NSNormalWindowLevel];
 	[playListWindow setHidesOnDeactivate:NO];
@@ -106,8 +108,8 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 							ofType:@"png"]];
 
 	// set play mode
-	if ([[appController preferences] objectForKey:@"PlayMode"])
-		myPlayMode = [[[appController preferences] objectForKey:@"PlayMode"] intValue];
+	if ([defaults objectForKey:@"PlayMode"])
+		myPlayMode = [[defaults objectForKey:@"PlayMode"] intValue];
 	else
 		myPlayMode = 0;
 	
@@ -143,7 +145,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
     [playListWindow setToolbar:toolbar];
 	
 	//display if set in pref or if playlist was opened on last quit
-	if ([[appController preferences] boolForKey:@"PlaylistOnStartup"] || [[appController preferences] boolForKey:@"PlaylistOpen"]) 
+	if ([defaults boolForKey:@"PlaylistOnStartup"] || [defaults boolForKey:@"PlaylistOpen"]) 
 	{
 		[self displayWindow:nil];
 	}
@@ -325,9 +327,11 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	NSTableColumn *column;
 	float textSize;
 	
+	NSUserDefaults *defaults = [[AppController sharedController] preferences];
+	
 	// set playlist text font size
-	if ([[appController preferences] objectForKey:@"SmallPlaylistText"]) {
-		if ([[appController preferences] boolForKey:@"SmallPlaylistText"])
+	if ([defaults objectForKey:@"SmallPlaylistText"]) {
+		if ([defaults boolForKey:@"SmallPlaylistText"])
 			textSize = kSmallerTextSize;
 		else
 			textSize = kDefaultTextSize;
@@ -487,17 +491,17 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 		
 		for (i=0;i<[propertyList count];i++) {
 			// get extension of the path and check if it is not subtitles extension
-			if ([appController isExtension:[[propertyList objectAtIndex:i] pathExtension]
+			if ([[AppController sharedController] isExtension:[[propertyList objectAtIndex:i] pathExtension]
 					ofType:MP_DIALOG_SUBTITLES]) {
 				subsCount++;
 				continue;
 			}
-			if ([appController isExtension:[[propertyList objectAtIndex:i] pathExtension]
+			if ([[AppController sharedController] isExtension:[[propertyList objectAtIndex:i] pathExtension]
 					ofType:MP_DIALOG_VIDEO]) {
 				movieCount++;
 				continue;
 			}
-			if ([appController isExtension:[[propertyList objectAtIndex:i] pathExtension]
+			if ([[AppController sharedController] isExtension:[[propertyList objectAtIndex:i] pathExtension]
 					ofType:MP_DIALOG_AUDIO]) {
 				audioCount++;
 				continue;
@@ -586,11 +590,11 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 		// divide dragged files to arrays by its type
 		while (path = [fileEnum nextObject])
 		{
-			if ([appController isExtension:[path pathExtension] ofType:MP_DIALOG_SUBTITLES]) {
+			if ([[AppController sharedController] isExtension:[path pathExtension] ofType:MP_DIALOG_SUBTITLES]) {
 				[subtitlesList addObject:path];
 				continue;
 			}
-			if ([appController isExtension:[path pathExtension] ofType:MP_DIALOG_AUDIO]) {
+			if ([[AppController sharedController] isExtension:[path pathExtension] ofType:MP_DIALOG_AUDIO]) {
 				[audioList addObject:path];
 				continue;
 			}
@@ -831,7 +835,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 - (void) appFinishedLaunching
 {
 	// load playlist from preferences
-	NSArray *savedPlaylist = [[appController preferences] objectForKey:@"PlayList"];
+	NSArray *savedPlaylist = [[[AppController sharedController] preferences] objectForKey:@"PlayList"];
 	
 	if (savedPlaylist)
 	{
@@ -860,13 +864,15 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 - (void) appShouldTerminate
 {
 	// save values to prefs
-	[[appController preferences] setObject:[NSNumber numberWithInt:myPlayMode] forKey:@"PlayMode"];
+	[[[AppController sharedController] preferences] setObject:[NSNumber numberWithInt:myPlayMode] forKey:@"PlayMode"];
 }
 /************************************************************************************/
 - (void)appTerminating
 {	
+	NSUserDefaults *defaults = [[AppController sharedController] preferences];
+	
 	// save current playlist window state
-	[[appController preferences] setBool:[playListWindow isVisible] forKey:@"PlaylistOpen"];
+	[defaults setBool:[playListWindow isVisible] forKey:@"PlaylistOpen"];
 	
 	// Remove MovieInfo from items
 	int i;
@@ -875,7 +881,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	}
 	
 	// save playlist to prefs
-	[[appController preferences] setObject:myData forKey:@"PlayList"];
+	[defaults setObject:myData forKey:@"PlayList"];
  }
 
 - (void)windowWillClose:(NSNotification *)aNotification

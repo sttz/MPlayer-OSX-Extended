@@ -21,7 +21,6 @@
 @interface PlayListController : NSObject
 {
     // controllers outlets
-    IBOutlet id appController;
 	IBOutlet id playerController;
 	IBOutlet id settingsController;
 

@@ -2038,7 +2038,7 @@ static NSArray* parseRunLoopModes;
 			isPlaying = NO;
 			
 			restartingPlayer = NO;
-			[Debug log:ASL_LEVEL_INFO withMessage:line];
+			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithFormat:@"Exited with state %d",myState]];
 			continue;							// continue on next line
 		}
 		

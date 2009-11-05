@@ -18,8 +18,30 @@
 #import "PFMoveApplication.h"
 
 @implementation AppController
+
+static AppController *instance = nil;
+/************************************************************************************
+ INITIALIZATION
+ ************************************************************************************/
++ (AppController *) init
+{
+	if (self == [super init])
+	{
+		instance = self;
+	}
+	
+	return self;
+}
+
++ (AppController *) sharedController
+{
+	return instance;
+}
+
 - (void) awakeFromNib;
 {
+	instance = self;
+	
 	// create preferences and register application factory presets
 	[[NSUserDefaults standardUserDefaults] registerDefaults:
 	[[[NSBundle mainBundle] infoDictionary] objectForKey:@"ApplicationDefaults"]];

@@ -938,7 +938,7 @@
 			<object class="NSWindowTemplate" id="109425175">
 				<int key="NSWindowStyleMask">1</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{110, 741}, {440, 335}}</string>
+				<string key="NSWindowRect">{{715, 384}, {440, 335}}</string>
 				<int key="NSWTFlags">1886912512</int>
 				<string key="NSWindowTitle">Movie Info</string>
 				<string key="NSWindowClass">NSPanel</string>
@@ -2117,7 +2117,7 @@
 					</array>
 					<string key="NSFrameSize">{440, 335}</string>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1920, 1058}}</string>
 				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
 			</object>
 			<object class="NSCustomObject" id="719709749">
@@ -3199,7 +3199,7 @@
 			<object class="NSWindowTemplate" id="791108872">
 				<int key="NSWindowStyleMask">1</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{660, 949}, {360, 121}}</string>
+				<string key="NSWindowRect">{{733, 442}, {360, 121}}</string>
 				<int key="NSWTFlags">1886912512</int>
 				<string key="NSWindowTitle">Loading Files</string>
 				<string key="NSWindowClass">NSPanel</string>
@@ -3264,7 +3264,7 @@
 					</array>
 					<string key="NSFrameSize">{360, 121}</string>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1920, 1058}}</string>
 				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
 			</object>
 			<object class="NSWindowTemplate" id="660613583">
@@ -10747,14 +10747,6 @@ dG8gYSBjb3VwbGUgb2YgbWludXRlcy4</string>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
-						<string key="label">appController</string>
-						<reference key="source" ref="348361117"/>
-						<reference key="destination" ref="700428315"/>
-					</object>
-					<int key="connectionID">780</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
 						<string key="label">rebuildIndexButton</string>
 						<reference key="source" ref="348361117"/>
 						<reference key="destination" ref="1032411878"/>
@@ -10856,14 +10848,6 @@ dG8gYSBjb3VwbGUgb2YgbWludXRlcy4</string>
 						<reference key="destination" ref="825415791"/>
 					</object>
 					<int key="connectionID">843</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">appController</string>
-						<reference key="source" ref="719709749"/>
-						<reference key="destination" ref="700428315"/>
-					</object>
-					<int key="connectionID">889</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -11099,14 +11083,6 @@ dG8gYSBjb3VwbGUgb2YgbWludXRlcy4</string>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
-						<string key="label">appController</string>
-						<reference key="source" ref="462648460"/>
-						<reference key="destination" ref="700428315"/>
-					</object>
-					<int key="connectionID">1516</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
 						<string key="label">playListTable</string>
 						<reference key="source" ref="462648460"/>
 						<reference key="destination" ref="560458770"/>
@@ -11200,14 +11176,6 @@ dG8gYSBjb3VwbGUgb2YgbWludXRlcy4</string>
 						<reference key="destination" ref="277199025"/>
 					</object>
 					<int key="connectionID">1637</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">appController</string>
-						<reference key="source" ref="688940419"/>
-						<reference key="destination" ref="700428315"/>
-					</object>
-					<int key="connectionID">1671</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -11400,14 +11368,6 @@ dG8gYSBjb3VwbGUgb2YgbWludXRlcy4</string>
 						<reference key="destination" ref="205572036"/>
 					</object>
 					<int key="connectionID">1986</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">appController</string>
-						<reference key="source" ref="566134870"/>
-						<reference key="destination" ref="700428315"/>
-					</object>
-					<int key="connectionID">1987</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -13091,14 +13051,6 @@ dG8gYSBjb3VwbGUgb2YgbWludXRlcy4</string>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
-						<string key="label">appController</string>
-						<reference key="source" ref="45784582"/>
-						<reference key="destination" ref="700428315"/>
-					</object>
-					<int key="connectionID">14856</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
 						<string key="label">playerController</string>
 						<reference key="source" ref="769143587"/>
 						<reference key="destination" ref="688940419"/>
@@ -13208,14 +13160,6 @@ dG8gYSBjb3VwbGUgb2YgbWludXRlcy4</string>
 						<reference key="destination" ref="194377568"/>
 					</object>
 					<int key="connectionID">18356</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">fullscreenWindow</string>
-						<reference key="source" ref="688940419"/>
-						<reference key="destination" ref="45784582"/>
-					</object>
-					<int key="connectionID">19035</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -19377,7 +19321,7 @@ dG8gYSBjb3VwbGUgb2YgbWludXRlcy4</string>
 				<boolean value="YES" key="103.ImportedFromIB2"/>
 				<string key="10597.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="10597.ImportedFromIB2"/>
-				<string key="106.IBEditorWindowLastContentRect">{{573, 1015}, {300, 63}}</string>
+				<string key="106.IBEditorWindowLastContentRect">{{618, 784}, {300, 63}}</string>
 				<string key="106.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="106.ImportedFromIB2"/>
 				<string key="1079.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -20580,10 +20524,12 @@ dG8gYSBjb3VwbGUgb2YgbWludXRlcy4</string>
 				<boolean value="YES" key="2869.ImportedFromIB2"/>
 				<string key="2874.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="2874.ImportedFromIB2"/>
-				<string key="29.IBEditorWindowLastContentRect">{{89, 1078}, {545, 20}}</string>
+				<string key="29.IBEditorWindowLastContentRect">{{134, 847}, {545, 20}}</string>
 				<string key="29.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="29.ImportedFromIB2"/>
+				<string key="358.IBEditorWindowLastContentRect">{{35, 656}, {440, 335}}</string>
 				<string key="358.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="358.IBWindowTemplateEditedContentRect">{{35, 656}, {440, 335}}</string>
 				<boolean value="YES" key="358.ImportedFromIB2"/>
 				<string key="359.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="359.ImportedFromIB2"/>
@@ -21096,7 +21042,9 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 				<boolean value="YES" key="947.ImportedFromIB2"/>
 				<string key="948.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="948.ImportedFromIB2"/>
+				<string key="985.IBEditorWindowLastContentRect">{{14, 893}, {360, 121}}</string>
 				<string key="985.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="985.IBWindowTemplateEditedContentRect">{{14, 893}, {360, 121}}</string>
 				<boolean value="YES" key="985.ImportedFromIB2"/>
 				<string key="986.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="986.ImportedFromIB2"/>
@@ -21291,7 +21239,6 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 						<string key="playPrevious:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="appController">id</string>
 						<string key="filenameBox">id</string>
 						<string key="playListButton">id</string>
 						<string key="playListCount">id</string>
@@ -21354,7 +21301,6 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 						<string key="videoMenuAction:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="appController">id</string>
 						<string key="audioCycleButton">id</string>
 						<string key="audioStreamMenu">id</string>
 						<string key="audioWindowMenu">id</string>
@@ -21424,10 +21370,10 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 				<object class="IBPartialClassDescription">
 					<string key="className">PlayerFullscreenWindow</string>
 					<string key="superclassName">PlayerWindow</string>
-					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="appController">AppController</string>
-						<string key="fullscreenControls">FullscreenControls</string>
-					</dictionary>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">fullscreenControls</string>
+						<string key="NS.object.0">FullscreenControls</string>
+					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Sources/Classes/PlayerFullscreenWindow.h</string>
@@ -21509,7 +21455,6 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 						<string key="addParamsBox">NSComboBox</string>
 						<string key="addParamsButton">id</string>
 						<string key="animateInterface">id</string>
-						<string key="appController">id</string>
 						<string key="assPreFilter">id</string>
 						<string key="assSubtitles">id</string>
 						<string key="audioCodecs">id</string>
@@ -21641,7 +21586,6 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 						<string key="removeSubtitles:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="appController">id</string>
 						<string key="audioBox">id</string>
 						<string key="audioFormatBox">id</string>
 						<string key="encodingMenu">NSPopUpButton</string>
@@ -21690,7 +21634,6 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 						<string key="NormalSizeMenuItem">id</string>
 						<string key="OriginalAspectMenuItem">id</string>
 						<string key="PanScanMenuItem">id</string>
-						<string key="appController">id</string>
 						<string key="fcControlWindow">NSWindow</string>
 						<string key="fullscreenWindow">PlayerFullscreenWindow</string>
 						<string key="playListController">id</string>

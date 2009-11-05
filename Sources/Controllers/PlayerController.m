@@ -31,7 +31,7 @@
 -(void)awakeFromNib
 {	
 	
-	NSUserDefaults *prefs = [appController preferences];
+	NSUserDefaults *prefs = [[AppController sharedController] preferences];
     NSString *playerPath;
 	NSString *preflightPlayerPath;
 	saveTime = YES;
@@ -275,10 +275,14 @@
 				propertyList = [pboard propertyListForType:availableType];
 				for (i=0;i<[propertyList count];i++)
 				{
-					if ([appController isExtension:[[propertyList objectAtIndex:i] pathExtension] ofType:MP_DIALOG_MEDIA])
+					if ([[AppController sharedController] 
+							isExtension:[[propertyList objectAtIndex:i] pathExtension] 
+								 ofType:MP_DIALOG_MEDIA])
 						return NSDragOperationCopy; //its a movie file, good
 					
-					if ([self isPlaying] && [appController isExtension:[[propertyList objectAtIndex:i] pathExtension] ofType:MP_DIALOG_SUBTITLES])
+					if ([self isPlaying] && [[AppController sharedController] 
+												isExtension:[[propertyList objectAtIndex:i] pathExtension] 
+													 ofType:MP_DIALOG_SUBTITLES])
 						return NSDragOperationCopy; // subtitles are good when playing
 					
 					// let the choice be overridden with the command key
@@ -321,7 +325,7 @@
 			{
 				// Open if a media file or if forced with the command key
 				if ([sender draggingSourceOperationMask] == NSDragOperationGeneric || 
-						[appController isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]) {
+						[[AppController sharedController] isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]) {
 					// create an item from it and play it
 					myItem = [NSMutableDictionary dictionaryWithObject:filename forKey:@"MovieFile"];
 					[self playItem:myItem];
@@ -342,7 +346,7 @@
 - (void) chooseMPlayerBinary
 {
 	if ((![myPlayingItem objectForKey:@"UseFFmpegMT"]
-		 && [[appController preferences] boolForKey:@"UseFFmpegMT"])
+		 && [[[AppController sharedController] preferences] boolForKey:@"UseFFmpegMT"])
 		||
 		([myPlayingItem objectForKey:@"UseFFmpegMT"]
 		 && [[myPlayingItem objectForKey:@"UseFFmpegMT"] boolValue]))
@@ -520,8 +524,7 @@
 /************************************************************************************/
 - (BOOL) isInternalVideoOutput
 {
-	NSUserDefaults *preferences = [appController preferences];
-	if ([preferences integerForKey:@"VideoDriver"] == 0)
+	if ([[[AppController sharedController] preferences] integerForKey:@"VideoDriver"] == 0)
 		return YES;
 	else
 		return NO;
@@ -531,7 +534,7 @@
 // applay values from preferences to player controller
 - (void) applyPrefs
 {
-	NSUserDefaults *preferences = [appController preferences];
+	NSUserDefaults *preferences = [[AppController sharedController] preferences];
 	
 	// *** Playback
 	
@@ -899,7 +902,7 @@
  ************************************************************************************/
 - (void) setMovieSize
 {
-	NSUserDefaults *preferences = [appController preferences];
+	NSUserDefaults *preferences = [[AppController sharedController] preferences];
 
 	if ([preferences objectForKey:@"VideoSize"]) {
 		switch ([[preferences objectForKey:@"VideoSize"] intValue]) {
@@ -948,7 +951,7 @@
 /************************************************************************************/
 - (void) setSubtitlesEncoding
 {
-	NSUserDefaults *preferences = [appController preferences];
+	NSUserDefaults *preferences = [[AppController sharedController] preferences];
 	
 	if (myPlayingItem && [myPlayingItem objectForKey:@"SubtitlesEncoding"]
 			&& ![[myPlayingItem objectForKey:@"SubtitlesEncoding"] isEqualToString:@"None"])
@@ -965,7 +968,7 @@
 /************************************************************************************/
 - (void) setVideoEqualizer
 {
-	NSUserDefaults *preferences = [appController preferences];
+	NSUserDefaults *preferences = [[AppController sharedController] preferences];
 	if ([preferences objectForKey:@"VideoEqualizer"]) {
 		NSArray *values = [NSArray arrayWithArray:[preferences arrayForKey:@"VideoEqualizer"]];
 		
@@ -1018,9 +1021,9 @@
 	NSImage *volumeImage;
 	
 	if (volume > 0)
-		[[appController preferences] setObject:[NSNumber numberWithDouble:volume] forKey:@"LastAudioVolume"];
+		[[[AppController sharedController] preferences] setObject:[NSNumber numberWithDouble:volume] forKey:@"LastAudioVolume"];
 	
-	[[appController preferences] setBool:(volume == 0) forKey:@"LastAudioMute"];
+	[[[AppController sharedController] preferences] setBool:(volume == 0) forKey:@"LastAudioMute"];
 		
 	
 	//set volume icon
@@ -1062,7 +1065,7 @@
 - (IBAction)increaseVolume:(id)sender
 {
 	
-	double newVolume = [[appController preferences] floatForKey:@"LastAudioVolume"] + volumeStep;
+	double newVolume = [[[AppController sharedController] preferences] floatForKey:@"LastAudioVolume"] + volumeStep;
 	if (newVolume > 100)
 		newVolume = 100;
 		
@@ -1072,7 +1075,7 @@
 - (IBAction)decreaseVolume:(id)sender
 {
 	
-	double newVolume = [[appController preferences] floatForKey:@"LastAudioVolume"] - volumeStep;
+	double newVolume = [[[AppController sharedController] preferences] floatForKey:@"LastAudioVolume"] - volumeStep;
 	if (newVolume < 0)
 		newVolume = 0;
 	
@@ -1103,15 +1106,17 @@
 	}
 	else 
 	{
+		NSUserDefaults *preferences = [[AppController sharedController] preferences];
+		
 		// set the item to play
 		if ([playListController indexOfSelectedItem] < 0)
 			[playListController selectItemAtIndex:0];
 		
 		// if it is not set in the prefs by default play in window
-		if ([[appController preferences] objectForKey:@"DisplayType"])
+		if ([preferences objectForKey:@"DisplayType"])
 		{
-			if ([[appController preferences] integerForKey:@"DisplayType"] != 3 
-					&& [[appController preferences] integerForKey:@"DisplayType"] != 4)
+			if ([preferences integerForKey:@"DisplayType"] != 3 
+					&& [preferences integerForKey:@"DisplayType"] != 4)
 				[myPlayer setFullscreen:NO];
 		}
 		
@@ -1387,7 +1392,7 @@
 		
 		if (![myPlayer fullscreen]) {
 			
-			NSUserDefaults *prefs = [appController preferences];
+			NSUserDefaults *prefs = [[AppController sharedController] preferences];
 			
 			// check if restart is needed (for non-integrated video and changed fullscreen device)
 			if ([self fullscreenDeviceId] != [myPlayer getDeviceId] && [prefs integerForKey:@"VideoDriver"] != 0) {
@@ -1434,13 +1439,12 @@
 /************************************************************************************/
 - (BOOL) startInFullscreen {
 	
-	NSUserDefaults *prefs = [appController preferences];
-	return ([prefs integerForKey:@"DisplayType"] == 3);
+	return ([[[AppController sharedController] preferences] integerForKey:@"DisplayType"] == 3);
 }
 /************************************************************************************/
 - (int) fullscreenDeviceId {
 	
-	NSUserDefaults *prefs = [appController preferences];
+	NSUserDefaults *prefs = [[AppController sharedController] preferences];
 	
 	// Default value from preferences
 	if (fullscreenDeviceId == -2) {
@@ -1949,7 +1953,7 @@
 /************************************************************************************/
 - (void)fullscreenMenuAction:(id)sender {
 	
-	NSUserDefaults *prefs = [appController preferences];
+	NSUserDefaults *prefs = [[AppController sharedController] preferences];
 	int devid = [[sender representedObject] intValue];
 	
 	if ([prefs integerForKey:@"VideoDriver"] != 0 && devid != fullscreenDeviceId) {
@@ -1990,7 +1994,7 @@
 	// select auto entry
 	if (fullscreenDeviceId == -2) {
 		
-		NSUserDefaults *prefs = [appController preferences];
+		NSUserDefaults *prefs = [[AppController sharedController] preferences];
 		int index = [[fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-2]];
 		
 		[[[fullscreenMenu submenu] itemAtIndex:index] setState:NSOnState];
@@ -2020,7 +2024,7 @@
 	
 	// Reset devide id to preferences value if auto or unavailable
 	if (fullscreenDeviceId == -2 || [self fullscreenDeviceId] >= [[NSScreen screens] count]) {
-		NSUserDefaults *prefs = [appController preferences];
+		NSUserDefaults *prefs = [[AppController sharedController] preferences];
 		fullscreenDeviceId = [prefs integerForKey:@"FullscreenDevice"];
 	}
 	// Rebuild menu and select current id
@@ -2043,7 +2047,7 @@
 /************************************************************************************/
 - (void) appFinishedLaunching
 {
-	NSUserDefaults *prefs = [appController preferences];
+	NSUserDefaults *prefs = [[AppController sharedController] preferences];
 	
 	// play the last played movie if it is set to do so
 	if ([prefs objectForKey:@"PlaylistRemember"] && [prefs objectForKey:@"LastTrack"]
@@ -2062,11 +2066,11 @@
 - (void) appShouldTerminate
 {
 	// save values before all is saved to disk and released
-	if ([myPlayer status] > 0 && [[appController preferences] objectForKey:@"PlaylistRemember"])
+	if ([myPlayer status] > 0 && [[[AppController sharedController] preferences] objectForKey:@"PlaylistRemember"])
 	{
-		if ([[appController preferences] boolForKey:@"PlaylistRemember"])
+		if ([[[AppController sharedController] preferences] boolForKey:@"PlaylistRemember"])
 		{
-			//[[appController preferences] setObject:[NSNumber numberWithInt:[playListController indexOfItem:myPlayingItem]] forKey:@"LastTrack"];
+			//[[[AppController sharedController] preferences] setObject:[NSNumber numberWithInt:[playListController indexOfItem:myPlayingItem]] forKey:@"LastTrack"];
 			
 			if (myPlayingItem)
 				[myPlayingItem setObject:[NSNumber numberWithFloat:[myPlayer seconds]] forKey:@"LastSeconds"];			
@@ -2363,6 +2367,7 @@
 }
 /************************************************************************************/
 - (void) statsUpdate:(NSNotification *)notification {
+	
 	if ([myPlayer status] == kPlaying || [myPlayer status] == kSeeking) {
 		if (myPlayingItem) {
 			// update windows

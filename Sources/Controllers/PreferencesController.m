@@ -150,7 +150,7 @@
  ************************************************************************************/
 - (void) reloadValues
 {
-	NSUserDefaults *thePrefs = [appController preferences];
+	NSUserDefaults *thePrefs = [[AppController sharedController] preferences];
 	
 	// ** Playback
 	
@@ -546,7 +546,7 @@
 {
 	if ([subFontMenu indexOfSelectedItem] != 0) {
 		
-		NSUserDefaults *thePrefs = [appController preferences];
+		NSUserDefaults *thePrefs = [[AppController sharedController] preferences];
 		
 		[subStyleMenu removeAllItems];
 		
@@ -592,7 +592,7 @@
 /************************************************************************************/
 - (IBAction)applyPrefs:(id)sender
 {
-	NSUserDefaults *thePrefs = [appController preferences];
+	NSUserDefaults *thePrefs = [[AppController sharedController] preferences];
 	
 	[thePrefs setObject:@"rev7" forKey:@"Version"];
 	
@@ -622,7 +622,7 @@
 	
 	// check for prereleases
 	[thePrefs setBool:[checkForPrereleases state] forKey:@"CheckForPrereleases"];
-	[appController setSparkleFeed];
+	[[AppController sharedController] setSparkleFeed];
 	
 	
 	
@@ -672,7 +672,7 @@
 		[thePrefs setFloat:0.0 forKey:@"CustomVideoAspectValue"];
 	
 	// update aspect menu
-	[appController updateAspectMenu];
+	[[AppController sharedController] updateAspectMenu];
 	
 	// fullscreen device id
 	[thePrefs setBool:[fullscreenSameAsPlayer state] forKey:@"FullscreenDeviceSameAsPlayer"];
