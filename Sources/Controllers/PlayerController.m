@@ -60,47 +60,6 @@
     playerPath = mplayerPath;
 	preflightPlayerPath = mplayerPath;
 	
-	/* G3 support removed /
-	NSString *player_noaltivec = @"External_Binaries/mplayer_noaltivec.app/Contents/MacOS/mplayer";
-	
-	//check if we have Altivec
-    static int hasAltivec = 0;
-	static int isIntel = 0;
-	static char machine[255];
-	
-    int selectors[2] = { CTL_HW, HW_MACHINE };
-    size_t length = sizeof(machine);
-	sysctl(selectors, 2, &machine, &length, NULL, 0);
-
-	if(strcmp(machine,"i386") != 0)
-	{
-		int selectors_altivec[2] = { CTL_HW, HW_VECTORUNIT };
-		length = sizeof(hasAltivec);
-		sysctl(selectors_altivec, 2, &hasAltivec, &length, NULL, 0);	
-	}
-	else
-	{
-		isIntel = 1;
-	}
-    
-	// choose altivec or not	
-    if(hasAltivec)
-    {
-		playerPath = player;
-    }
-    else
-	{
-    	if(isIntel)
-        {
-            playerPath = player;
-        }
-        else
-        {
-            playerPath = player_noaltivec;
-        }
-	}
-	*/
-	
     myPlayer = [[MplayerInterface alloc] initWithPathToPlayer: playerPath];
 	myPreflightPlayer = [[MplayerInterface alloc] initWithPathToPlayer: preflightPlayerPath];
 	
