@@ -73,7 +73,8 @@ static AppController *instance = nil;
 	[appleRemote setClickCountEnabledButtons: kRemoteButtonPlay];
 	[appleRemote setDelegate: playerController];
 	
-	[LanguageCodes loadCodes];
+	// pre-load language codes
+	[LanguageCodes sharedInstance];
 }
 
 /************************************************************************************
@@ -603,9 +604,6 @@ static AppController *instance = nil;
 	}
 	
 	[Debug log:ASL_LEVEL_INFO withMessage:@"===================== MPlayer OSX Terminated ====================="];
-	
-	// Release language code mappings
-	[LanguageCodes releaseCodes];
 	
 	// Uninit Debug class
 	[[Debug sharedDebugger] uninit];

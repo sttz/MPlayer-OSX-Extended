@@ -25,13 +25,24 @@
 
 #import "LanguageCodes.h"
 
-static NSDictionary *codes_2;
-static NSDictionary *codes_3;
-static NSDictionary *codes_2_to_3;
+static LanguageCodes *instance;
 
 @implementation LanguageCodes
 
-+ (BOOL)loadCodes {
++ (LanguageCodes *)sharedInstance {
+	
+	if (!instance)
+		instance = [LanguageCodes new];
+	
+	return instance;
+}
+
+- (id)init {
+	
+	self = [super init];
+	
+	if (!self)
+		return self;
 	
 	// Try to load cached archive
 	NSString *archive_path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"iso-639.plist"];
@@ -53,7 +64,7 @@ static NSDictionary *codes_2_to_3;
 			codes_2 = [[archive objectForKey:@"codes_2"] retain];
 			codes_3 = [[archive objectForKey:@"codes_3"] retain];
 			codes_2_to_3 = [[archive objectForKey:@"codes_2_to_3"] retain];
-			return YES;
+			return self;
 		}
 	} else
 		[Debug log:ASL_LEVEL_WARNING withMessage:@"Language code cache couldn't be found or opened, reading tab file."];
@@ -64,7 +75,7 @@ static NSDictionary *codes_2_to_3;
 	
 	if (content == nil) {
 		[Debug log:ASL_LEVEL_WARNING withMessage:@"Failed to read language codes at %@", path];
-		return NO;
+		return self;
 	}
 	
 	// Parse file
@@ -123,18 +134,18 @@ static NSDictionary *codes_2_to_3;
 	codes_2 = m_codes_2;
 	codes_3 = m_codes_3;
 	codes_2_to_3 = m_codes_2_to_3;
-	return YES;
+	return self;
 	
 }
 
-+ (NSString *)resolveCode:(NSString *)code {
+- (NSString *)resolveCode:(NSString *)code {
 	
 	// Check code length
 	if ([code length] != 2 && [code length] != 3)
 		return [NSString stringWithFormat:@"Unknown (%@)", code];
 	
-	// Initialize
-	if (codes_2 == nil && ![LanguageCodes loadCodes])
+	// Fallback if no codes are loaded
+	if (codes_2 == nil)
 		return [NSString stringWithFormat:@"(%@)", code];
 	
 	NSString *name;
@@ -152,10 +163,10 @@ static NSDictionary *codes_2_to_3;
 	
 }
 
-+ (NSString *)threeLetterCodeForToken:(NSString *)token {
+- (NSString *)threeLetterCodeForToken:(NSString *)token {
 	
-	// Initialize
-	if (codes_2 == nil && ![LanguageCodes loadCodes])
+	// Fallback if no codes are loaded
+	if (codes_3 == nil)
 		return nil;
 	
 	NSString *code = [token lowercaseString];
@@ -174,10 +185,10 @@ static NSDictionary *codes_2_to_3;
 		return nil;
 }
 
-+ (NSString *)nameForCode:(NSString *)code {
+- (NSString *)nameForCode:(NSString *)code {
 	
-	// Initialize
-	if (codes_2 == nil && ![LanguageCodes loadCodes])
+	// Fallback if no codes are loaded
+	if (codes_2 == nil)
 		return nil;
 	
 	// Three-letter code
@@ -190,10 +201,13 @@ static NSDictionary *codes_2_to_3;
 	return nil;
 }
 
-+ (void)releaseCodes
+- (void)dealloc
 {
 	[codes_2 release];
 	[codes_3 release];
+	[codes_2_to_3 release];
+	
+	[super dealloc];
 }
 
 @end

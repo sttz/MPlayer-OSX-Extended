@@ -28,14 +28,15 @@
 
 @interface LanguageCodes : NSObject {
 	
+	NSDictionary *codes_2;
+	NSDictionary *codes_3;
+	NSDictionary *codes_2_to_3;
 }
 
-+ (BOOL)loadCodes;
++ (LanguageCodes *)sharedInstance;
 
-+ (NSString *)resolveCode:(NSString *)code;
-+ (NSString *)threeLetterCodeForToken:(NSString *)token;
-+ (NSString *)nameForCode:(NSString *)code;
-
-+ (void)releaseCodes;
+- (NSString *)resolveCode:(NSString *)code;
+- (NSString *)threeLetterCodeForToken:(NSString *)token;
+- (NSString *)nameForCode:(NSString *)code;
 
 @end

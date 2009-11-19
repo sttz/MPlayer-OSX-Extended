@@ -266,12 +266,15 @@
 -(void)setAudioStreamLanguage:(NSString *)streamLanguage forId:(unsigned int)streamId {
 	
 	[[audio objectForKey:[NSNumber numberWithUnsignedInt:streamId]] replaceObjectAtIndex:1 withObject:streamLanguage];
-	[[audio objectForKey:[NSNumber numberWithUnsignedInt:streamId]] replaceObjectAtIndex:2 withObject:[LanguageCodes resolveCode:streamLanguage]];
+	[[audio		objectForKey:[NSNumber numberWithUnsignedInt:streamId]] 
+		replaceObjectAtIndex:2 
+				  withObject:[[LanguageCodes sharedInstance] resolveCode:streamLanguage]];
 }
 
 -(void)addAudioStream:(unsigned int)streamId withName:(NSString *)streamName andLanguage:(NSString *)lang {
 	
-	[audio setObject:[NSMutableArray arrayWithObjects:streamName, lang, [LanguageCodes resolveCode:lang], nil] forKey:[NSNumber numberWithUnsignedInt:streamId]];
+	[audio setObject:[NSMutableArray arrayWithObjects:streamName, lang, [[LanguageCodes sharedInstance] resolveCode:lang], nil] 
+			  forKey:[NSNumber numberWithUnsignedInt:streamId]];
 }
 
 -(NSString *)audioNameForStream:(unsigned int)streamId {
@@ -322,7 +325,8 @@
 -(void)setSubtitleStreamLanguage:(NSString *)streamLanguage forId:(unsigned int)streamId andType:(SubtitleType)type {
 	
 	[[[self subDictForType: type] objectForKey:[NSNumber numberWithUnsignedInt:streamId]] replaceObjectAtIndex:1 withObject:streamLanguage];
-	[[[self subDictForType: type] objectForKey:[NSNumber numberWithUnsignedInt:streamId]] replaceObjectAtIndex:2 withObject:[LanguageCodes resolveCode:streamLanguage]];
+	[[[self subDictForType: type] objectForKey:[NSNumber numberWithUnsignedInt:streamId]] 
+			 replaceObjectAtIndex:2 withObject:[[LanguageCodes sharedInstance] resolveCode:streamLanguage]];
 }
 
 -(NSString *)subtitleNameForStream:(unsigned int)streamId andType:(SubtitleType)type {
