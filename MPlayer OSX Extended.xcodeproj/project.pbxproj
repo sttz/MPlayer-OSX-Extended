@@ -93,22 +93,10 @@
 		3A81883010B2FB8300AB1E07 /* LanguageTokenFieldDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A81882F10B2FB8300AB1E07 /* LanguageTokenFieldDelegate.m */; };
 		3A81883C10B3020A00AB1E07 /* iso-639.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A81883B10B3020A00AB1E07 /* iso-639.plist */; };
 		3A861D961084C97800ADE9B9 /* binaries.icns in Resources */ = {isa = PBXBuildFile; fileRef = 3A861D951084C97800ADE9B9 /* binaries.icns */; };
-		3A861DD51085112C00ADE9B9 /* JobLarge.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DD21085112C00ADE9B9 /* JobLarge.png */; };
-		3A861DD61085112C00ADE9B9 /* pref-audio.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DD31085112C00ADE9B9 /* pref-audio.tiff */; };
-		3A861DD71085112C00ADE9B9 /* pref-picture.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DD41085112C00ADE9B9 /* pref-picture.tiff */; };
-		3A861DE61085153E00ADE9B9 /* applications-accessories.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DD81085153E00ADE9B9 /* applications-accessories.png */; };
 		3A861DE71085153E00ADE9B9 /* applications-multimedia.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DD91085153E00ADE9B9 /* applications-multimedia.png */; };
-		3A861DE81085153E00ADE9B9 /* applications-system.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DDA1085153E00ADE9B9 /* applications-system.png */; };
 		3A861DE91085153E00ADE9B9 /* audio-input-microphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DDB1085153E00ADE9B9 /* audio-input-microphone.png */; };
-		3A861DEA1085153E00ADE9B9 /* audio-volume-high.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DDC1085153E00ADE9B9 /* audio-volume-high.png */; };
-		3A861DEB1085153E00ADE9B9 /* camera-video.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DDD1085153E00ADE9B9 /* camera-video.png */; };
-		3A861DEC1085153E00ADE9B9 /* emblem-system.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DDE1085153E00ADE9B9 /* emblem-system.png */; };
 		3A861DED1085153E00ADE9B9 /* font-x-generic.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DDF1085153E00ADE9B9 /* font-x-generic.png */; };
-		3A861DEE1085153E00ADE9B9 /* media-playback-start.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DE01085153E00ADE9B9 /* media-playback-start.png */; };
-		3A861DEF1085153E00ADE9B9 /* preferences-desktop.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DE11085153E00ADE9B9 /* preferences-desktop.png */; };
-		3A861DF01085153E00ADE9B9 /* preferences-system.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DE21085153E00ADE9B9 /* preferences-system.png */; };
 		3A861DF11085153E00ADE9B9 /* system-file-manager.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DE31085153E00ADE9B9 /* system-file-manager.png */; };
-		3A861DF21085153E00ADE9B9 /* video-display.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DE41085153E00ADE9B9 /* video-display.png */; };
 		3A861DF31085153E00ADE9B9 /* video-x-generic.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DE51085153E00ADE9B9 /* video-x-generic.png */; };
 		3AB2120C0EABE74900ACA509 /* PlayerFullscreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB2120B0EABE74900ACA509 /* PlayerFullscreenWindow.m */; };
 		3ABF85420EBFA084001FE779 /* FullscreenControls.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABF85410EBFA084001FE779 /* FullscreenControls.m */; };
@@ -274,22 +262,10 @@
 		3A81882F10B2FB8300AB1E07 /* LanguageTokenFieldDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LanguageTokenFieldDelegate.m; path = Sources/Classes/LanguageTokenFieldDelegate.m; sourceTree = "<group>"; };
 		3A81883B10B3020A00AB1E07 /* iso-639.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; name = "iso-639.plist"; path = "Resources/iso-639.plist"; sourceTree = "<group>"; };
 		3A861D951084C97800ADE9B9 /* binaries.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = binaries.icns; path = Resources/Graphics/binaries.icns; sourceTree = "<group>"; };
-		3A861DD21085112C00ADE9B9 /* JobLarge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = JobLarge.png; sourceTree = "<group>"; };
-		3A861DD31085112C00ADE9B9 /* pref-audio.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "pref-audio.tiff"; sourceTree = "<group>"; };
-		3A861DD41085112C00ADE9B9 /* pref-picture.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "pref-picture.tiff"; sourceTree = "<group>"; };
-		3A861DD81085153E00ADE9B9 /* applications-accessories.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "applications-accessories.png"; sourceTree = "<group>"; };
 		3A861DD91085153E00ADE9B9 /* applications-multimedia.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "applications-multimedia.png"; sourceTree = "<group>"; };
-		3A861DDA1085153E00ADE9B9 /* applications-system.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "applications-system.png"; sourceTree = "<group>"; };
 		3A861DDB1085153E00ADE9B9 /* audio-input-microphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "audio-input-microphone.png"; sourceTree = "<group>"; };
-		3A861DDC1085153E00ADE9B9 /* audio-volume-high.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "audio-volume-high.png"; sourceTree = "<group>"; };
-		3A861DDD1085153E00ADE9B9 /* camera-video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera-video.png"; sourceTree = "<group>"; };
-		3A861DDE1085153E00ADE9B9 /* emblem-system.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "emblem-system.png"; sourceTree = "<group>"; };
 		3A861DDF1085153E00ADE9B9 /* font-x-generic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "font-x-generic.png"; sourceTree = "<group>"; };
-		3A861DE01085153E00ADE9B9 /* media-playback-start.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "media-playback-start.png"; sourceTree = "<group>"; };
-		3A861DE11085153E00ADE9B9 /* preferences-desktop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "preferences-desktop.png"; sourceTree = "<group>"; };
-		3A861DE21085153E00ADE9B9 /* preferences-system.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "preferences-system.png"; sourceTree = "<group>"; };
 		3A861DE31085153E00ADE9B9 /* system-file-manager.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "system-file-manager.png"; sourceTree = "<group>"; };
-		3A861DE41085153E00ADE9B9 /* video-display.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "video-display.png"; sourceTree = "<group>"; };
 		3A861DE51085153E00ADE9B9 /* video-x-generic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "video-x-generic.png"; sourceTree = "<group>"; };
 		3A96C9590E4E20B800B7B261 /* iso-639-3.tab */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "iso-639-3.tab"; path = "Resources/iso-639-3.tab"; sourceTree = "<group>"; };
 		3AB2120A0EABE74900ACA509 /* PlayerFullscreenWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerFullscreenWindow.h; path = Sources/Classes/PlayerFullscreenWindow.h; sourceTree = "<group>"; };
@@ -604,23 +580,11 @@
 			isa = PBXGroup;
 			children = (
 				3AC489CD10B48DDC00054A0E /* dialog-warning.png */,
-				3A861DD81085153E00ADE9B9 /* applications-accessories.png */,
 				3A861DD91085153E00ADE9B9 /* applications-multimedia.png */,
-				3A861DDA1085153E00ADE9B9 /* applications-system.png */,
 				3A861DDB1085153E00ADE9B9 /* audio-input-microphone.png */,
-				3A861DDC1085153E00ADE9B9 /* audio-volume-high.png */,
-				3A861DDD1085153E00ADE9B9 /* camera-video.png */,
-				3A861DDE1085153E00ADE9B9 /* emblem-system.png */,
 				3A861DDF1085153E00ADE9B9 /* font-x-generic.png */,
-				3A861DE01085153E00ADE9B9 /* media-playback-start.png */,
-				3A861DE11085153E00ADE9B9 /* preferences-desktop.png */,
-				3A861DE21085153E00ADE9B9 /* preferences-system.png */,
 				3A861DE31085153E00ADE9B9 /* system-file-manager.png */,
-				3A861DE41085153E00ADE9B9 /* video-display.png */,
 				3A861DE51085153E00ADE9B9 /* video-x-generic.png */,
-				3A861DD21085112C00ADE9B9 /* JobLarge.png */,
-				3A861DD31085112C00ADE9B9 /* pref-audio.tiff */,
-				3A861DD41085112C00ADE9B9 /* pref-picture.tiff */,
 			);
 			name = PreferencesIcons;
 			path = Resources/Graphics/PreferencesIcons;
@@ -751,22 +715,10 @@
 				3A5879E00EED4507003408E8 /* dsa_pub.pem in Resources */,
 				3A0A3E550F670C89008C8507 /* External_Binaries in Resources */,
 				3A861D961084C97800ADE9B9 /* binaries.icns in Resources */,
-				3A861DD51085112C00ADE9B9 /* JobLarge.png in Resources */,
-				3A861DD61085112C00ADE9B9 /* pref-audio.tiff in Resources */,
-				3A861DD71085112C00ADE9B9 /* pref-picture.tiff in Resources */,
-				3A861DE61085153E00ADE9B9 /* applications-accessories.png in Resources */,
 				3A861DE71085153E00ADE9B9 /* applications-multimedia.png in Resources */,
-				3A861DE81085153E00ADE9B9 /* applications-system.png in Resources */,
 				3A861DE91085153E00ADE9B9 /* audio-input-microphone.png in Resources */,
-				3A861DEA1085153E00ADE9B9 /* audio-volume-high.png in Resources */,
-				3A861DEB1085153E00ADE9B9 /* camera-video.png in Resources */,
-				3A861DEC1085153E00ADE9B9 /* emblem-system.png in Resources */,
 				3A861DED1085153E00ADE9B9 /* font-x-generic.png in Resources */,
-				3A861DEE1085153E00ADE9B9 /* media-playback-start.png in Resources */,
-				3A861DEF1085153E00ADE9B9 /* preferences-desktop.png in Resources */,
-				3A861DF01085153E00ADE9B9 /* preferences-system.png in Resources */,
 				3A861DF11085153E00ADE9B9 /* system-file-manager.png in Resources */,
-				3A861DF21085153E00ADE9B9 /* video-display.png in Resources */,
 				3A861DF31085153E00ADE9B9 /* video-x-generic.png in Resources */,
 				3A638955108B95B000E90936 /* MoveApplication.strings in Resources */,
 				3A07C707108E44C10033FA47 /* Preferences.xib in Resources */,

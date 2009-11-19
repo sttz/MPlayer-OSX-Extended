@@ -75,6 +75,8 @@ static AppController *instance = nil;
 	
 	// pre-load language codes
 	[LanguageCodes sharedInstance];
+	
+	[NSBundle loadNibNamed:@"Preferences" owner:NSApp];
 }
 
 /************************************************************************************
