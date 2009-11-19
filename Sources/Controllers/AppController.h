@@ -54,6 +54,9 @@
 	
 	// apple remote support
 	AppleRemote *appleRemote;
+	
+	// Preferences defaults&restart
+	NSDictionary *preferencesSpecs;
 }
 
 @property (readonly) PlayerController *playerController;

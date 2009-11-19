@@ -36,6 +36,13 @@ static AppController *instance = nil;
 	return self;
 }
 
+- (void)dealloc
+{
+	[preferencesSpecs release];
+	
+	[super dealloc];
+}
+
 + (AppController *) sharedController
 {
 	return instance;
@@ -52,8 +59,13 @@ static AppController *instance = nil;
 	instance = self;
 	
 	// create preferences and register application factory presets
-	[[NSUserDefaults standardUserDefaults] registerDefaults:
-	[[[NSBundle mainBundle] infoDictionary] objectForKey:@"ApplicationDefaults"]];
+	NSString *specFilePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"Preferences.plist"];
+	preferencesSpecs = [[NSDictionary alloc] initWithContentsOfFile:specFilePath];
+	
+	if (preferencesSpecs)
+		[[NSUserDefaults standardUserDefaults] registerDefaults:[preferencesSpecs objectForKey:@"Defaults"]];
+	else
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to load preferences specs."];
 	
 	// register for urls
 	[[NSAppleEventManager sharedAppleEventManager] 

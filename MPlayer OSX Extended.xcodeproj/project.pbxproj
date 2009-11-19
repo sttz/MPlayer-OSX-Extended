@@ -103,6 +103,7 @@
 		3ABF86580EBFAD06001FE779 /* FullscreenControlsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABF86570EBFAD06001FE779 /* FullscreenControlsView.m */; };
 		3ABF86A80EBFAF4C001FE779 /* fc_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 3ABF86A70EBFAF4C001FE779 /* fc_background.png */; };
 		3AC489CE10B48DDC00054A0E /* dialog-warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AC489CD10B48DDC00054A0E /* dialog-warning.png */; };
+		3AD50F8610B5E22500F17C6C /* Preferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3AD50F8510B5E22500F17C6C /* Preferences.plist */; };
 		3ADA6F840FED749300F7AFB9 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADA6F830FED749300F7AFB9 /* IOKit.framework */; };
 		3ADA70970FED843800F7AFB9 /* libexpat.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADA70930FED843800F7AFB9 /* libexpat.1.dylib */; };
 		3ADA70980FED843800F7AFB9 /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADA70940FED843800F7AFB9 /* libfontconfig.1.dylib */; };
@@ -276,6 +277,7 @@
 		3ABF86570EBFAD06001FE779 /* FullscreenControlsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullscreenControlsView.m; path = Sources/Classes/FullscreenControlsView.m; sourceTree = "<group>"; };
 		3ABF86A70EBFAF4C001FE779 /* fc_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fc_background.png; path = Resources/Graphics/fc_background.png; sourceTree = "<group>"; };
 		3AC489CD10B48DDC00054A0E /* dialog-warning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dialog-warning.png"; sourceTree = "<group>"; };
+		3AD50F8510B5E22500F17C6C /* Preferences.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Preferences.plist; path = Resources/Preferences.plist; sourceTree = "<group>"; };
 		3ADA6F830FED749300F7AFB9 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		3ADA70930FED843800F7AFB9 /* libexpat.1.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; name = libexpat.1.dylib; path = "build/Release/MPlayer OSX Extended.app/Contents/Resources/External_Binaries/mplayer.app/Contents/MacOS/lib/libexpat.1.dylib"; sourceTree = "<group>"; };
 		3ADA70940FED843800F7AFB9 /* libfontconfig.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfontconfig.1.dylib; path = "build/Release/MPlayer OSX Extended.app/Contents/Resources/External_Binaries/mplayer.app/Contents/MacOS/lib/libfontconfig.1.dylib"; sourceTree = "<group>"; };
@@ -419,6 +421,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3AD50F8510B5E22500F17C6C /* Preferences.plist */,
 				3A861D951084C97800ADE9B9 /* binaries.icns */,
 				3A861DD11085112C00ADE9B9 /* PreferencesIcons */,
 				3A0A3E510F670C89008C8507 /* External_Binaries */,
@@ -724,6 +727,7 @@
 				3A07C707108E44C10033FA47 /* Preferences.xib in Resources */,
 				3A81883C10B3020A00AB1E07 /* iso-639.plist in Resources */,
 				3AC489CE10B48DDC00054A0E /* dialog-warning.png in Resources */,
+				3AD50F8610B5E22500F17C6C /* Preferences.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
