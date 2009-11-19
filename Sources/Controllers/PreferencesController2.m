@@ -203,7 +203,7 @@
 	
 	// Read fonts into dictionary
 	if (set) {
-		fonts = [[NSMutableDictionary dictionaryWithCapacity:set->nfont] retain];
+		NSMutableDictionary *mfonts = [[NSMutableDictionary dictionaryWithCapacity:set->nfont] retain];
 		
 		int i;
 		for (i = 0; i < set->nfont; i++) {
@@ -215,21 +215,24 @@
 			if (FcPatternGetString(set->fonts[i], FC_FAMILY, 0, &family) == FcResultMatch) {
 				
 				// For now just take the 0th family and style name, which should be the english one
-				if (![fonts objectForKey:[NSString stringWithUTF8String:(const char*)family]]) {
+				if (![mfonts objectForKey:[NSString stringWithUTF8String:(const char*)family]]) {
 					styles = [NSMutableArray arrayWithCapacity:1];
-					[fonts setObject:styles	forKey:[NSString stringWithUTF8String:(const char*)family]];
+					[mfonts setObject:styles	forKey:[NSString stringWithUTF8String:(const char*)family]];
 				} else {
-					styles = [fonts objectForKey:[NSString stringWithUTF8String:(const char*)family]];
+					styles = [mfonts objectForKey:[NSString stringWithUTF8String:(const char*)family]];
 				}
 				
 				if (FcPatternGetString(set->fonts[i], FC_STYLE, 0, &fontstyle) == FcResultMatch)
 					[styles addObject:[NSString stringWithUTF8String:(const char*)fontstyle]];
-				
 			}
 			
 		}
 		
-		[fontsController setContent:fonts];
+		for (NSString *key in mfonts) {
+			[[mfonts objectForKey:key] sortUsingSelector:@selector(caseInsensitiveCompare:)];
+		}
+		
+		[self setFonts:mfonts];
 	} else {
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to create font list."];
 	}
@@ -242,7 +245,7 @@
 	else
 		defaultFont = @"Helvetica";
 	
-	[fontsMenu selectItemWithTitle:defaultFont];
+	[fontsController setSelectionIndex:[fontsMenu indexOfItemWithTitle:defaultFont]];
 	
 	FcFontSetDestroy(set);
 	FcFini();
@@ -272,7 +275,7 @@
 {
 	if ((self = [super init])) {
 		codes = [[NSDictionary alloc] initWithObjectsAndKeys:
-				 @"Disabled",	@"",
+				 @"Disabled",	@"disabled",
 				 @"Multibyte encodings only",@"__",
 				 @"Belarussian",@"be",
 				 @"Bulgarian",	@"bg",
