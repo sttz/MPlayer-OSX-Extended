@@ -41,6 +41,12 @@ static AppController *instance = nil;
 	return instance;
 }
 
++ (void)initialize
+{
+	[NSValueTransformer setValueTransformer:[[ENCACodeTransformer new] autorelease]
+									forName:@"ENCACodeTransformer"];
+}
+
 - (void) awakeFromNib
 {
 	instance = self;

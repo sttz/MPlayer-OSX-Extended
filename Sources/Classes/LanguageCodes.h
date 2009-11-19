@@ -33,6 +33,8 @@
 + (BOOL)loadCodes;
 
 + (NSString *)resolveCode:(NSString *)code;
++ (NSString *)threeLetterCodeForToken:(NSString *)token;
++ (NSString *)nameForCode:(NSString *)code;
 
 + (void)releaseCodes;
 

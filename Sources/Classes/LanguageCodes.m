@@ -27,6 +27,7 @@
 
 static NSDictionary *codes_2;
 static NSDictionary *codes_3;
+static NSDictionary *codes_2_to_3;
 
 @implementation LanguageCodes
 
@@ -51,6 +52,7 @@ static NSDictionary *codes_3;
 		} else {
 			codes_2 = [[archive objectForKey:@"codes_2"] retain];
 			codes_3 = [[archive objectForKey:@"codes_3"] retain];
+			codes_2_to_3 = [[archive objectForKey:@"codes_2_to_3"] retain];
 			return YES;
 		}
 	} else
@@ -68,6 +70,7 @@ static NSDictionary *codes_3;
 	// Parse file
 	NSMutableDictionary *m_codes_2 = [[NSMutableDictionary dictionary] retain];
 	NSMutableDictionary *m_codes_3 = [[NSMutableDictionary dictionary] retain];
+	NSMutableDictionary *m_codes_2_to_3 = [[NSMutableDictionary dictionary] retain];
 	NSArray  *lines = [content componentsSeparatedByString:@"\n"];
 	NSEnumerator *theEnum = [lines objectEnumerator];
 	NSString *theLine;
@@ -98,12 +101,14 @@ static NSDictionary *codes_3;
 			// Add 639-1 code
 			[m_codes_2 setObject:[values objectAtIndex:6] forKey:[values objectAtIndex:3]];
 			
+			// Add 639-1 to 639-2 mapping
+			[m_codes_2_to_3 setObject:[values objectAtIndex:0] forKey:[values objectAtIndex:3]];
 		}
 	}
 	
 	// Try to cache as archive
 	NSDictionary *codes = [NSDictionary dictionaryWithObjectsAndKeys:
-							m_codes_2, @"codes_2", m_codes_3, @"codes_3", nil];
+							m_codes_2, @"codes_2", m_codes_3, @"codes_3", m_codes_2_to_3, @"codes_2_to_3", nil];
 	NSString *error;
 	NSData *data =		  [NSPropertyListSerialization dataFromPropertyList:codes
 							format:NSPropertyListBinaryFormat_v1_0 errorDescription:&error];
@@ -117,6 +122,7 @@ static NSDictionary *codes_3;
 	
 	codes_2 = m_codes_2;
 	codes_3 = m_codes_3;
+	codes_2_to_3 = m_codes_2_to_3;
 	return YES;
 	
 }
@@ -144,6 +150,44 @@ static NSDictionary *codes_3;
 	else
 		return name;
 	
+}
+
++ (NSString *)threeLetterCodeForToken:(NSString *)token {
+	
+	// Initialize
+	if (codes_2 == nil && ![LanguageCodes loadCodes])
+		return nil;
+	
+	NSString *code = [token lowercaseString];
+	
+	// Look for three-letter code
+	if ([code length] == 3 && [codes_3	objectForKey:code])
+		return code;
+	// Look for two-letter code
+	if ([code length] == 2 && [codes_2_to_3 objectForKey:code])
+		return [codes_2_to_3 objectForKey:code];
+	// Look for language name
+	NSArray *keys = [codes_3 allKeysForObject:[token capitalizedString]];
+	if ([keys count] > 0)
+		return [keys objectAtIndex:0];
+	else
+		return nil;
+}
+
++ (NSString *)nameForCode:(NSString *)code {
+	
+	// Initialize
+	if (codes_2 == nil && ![LanguageCodes loadCodes])
+		return nil;
+	
+	// Three-letter code
+	if ([code length] == 3)
+		return [codes_3 objectForKey:code];
+	// Two-letter code
+	if ([code length] == 2)
+		return [codes_2 objectForKey:code];
+	
+	return nil;
 }
 
 + (void)releaseCodes
