@@ -27,7 +27,7 @@
 	IBOutlet id settingsController;
 	
 	//Player Window
-	IBOutlet id playerWindow;
+	IBOutlet NSWindow *playerWindow;
 	IBOutlet NSButton *playButton;
 	IBOutlet NSButton *playButtonToolbar;
     IBOutlet id volumeSlider;
