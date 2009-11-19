@@ -19,12 +19,12 @@
 #define MP_DIALOG_VIDEO		2
 #define MP_DIALOG_SUBTITLES 3
 
-@class AppleRemote;
+@class AppleRemote, PlayerController;
 
 @interface AppController : NSObject
 {
     // controller outlets
-	IBOutlet id playerController;
+	IBOutlet PlayerController *playerController;
 	IBOutlet id playListController;
 	IBOutlet id preferencesController;
 	
@@ -55,6 +55,8 @@
 	// apple remote support
 	AppleRemote *appleRemote;
 }
+
+@property (readonly) PlayerController *playerController;
 
 + (AppController *) sharedController;
 

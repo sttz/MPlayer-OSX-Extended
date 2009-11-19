@@ -16,10 +16,13 @@
 
 #import "AppleRemote.h"
 #import "PFMoveApplication.h"
+#import "PreferencesController2.h"
 
 @implementation AppController
+@synthesize playerController;
 
 static AppController *instance = nil;
+
 /************************************************************************************
  INITIALIZATION
  ************************************************************************************/
@@ -38,7 +41,7 @@ static AppController *instance = nil;
 	return instance;
 }
 
-- (void) awakeFromNib;
+- (void) awakeFromNib
 {
 	instance = self;
 	
