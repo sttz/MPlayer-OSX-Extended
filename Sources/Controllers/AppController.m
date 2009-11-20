@@ -26,16 +26,6 @@ static AppController *instance = nil;
 /************************************************************************************
  INITIALIZATION
  ************************************************************************************/
-+ (AppController *) init
-{
-	if (self == [super init])
-	{
-		instance = self;
-	}
-	
-	return self;
-}
-
 - (void)dealloc
 {
 	[preferencesSpecs release];
@@ -56,6 +46,11 @@ static AppController *instance = nil;
 
 - (void) awakeFromNib
 {
+	// make sure initialization is not repeated
+	if (preferencesSpecs)
+		return;
+	
+	// save instance for sharedController
 	instance = self;
 	
 	// create preferences and register application factory presets
@@ -88,7 +83,8 @@ static AppController *instance = nil;
 	// pre-load language codes
 	[LanguageCodes sharedInstance];
 	
-	[NSBundle loadNibNamed:@"Preferences" owner:NSApp];
+	// load preferences nib to initialize fontconfig
+	[NSBundle loadNibNamed:@"Preferences" owner:self];
 }
 
 /************************************************************************************
@@ -99,9 +95,9 @@ static AppController *instance = nil;
 	return [NSUserDefaults standardUserDefaults];
 }
 /************************************************************************************/
-- (BOOL) savePrefs
+- (IBAction) openPreferences:(id)sender
 {
-	return [[self preferences] synchronize];
+	[[preferencesController window] makeKeyAndOrderFront:self];
 }
 /************************************************************************************/
 - (void)quitApp
@@ -636,11 +632,6 @@ static AppController *instance = nil;
 /******************************************************************************/
 - (void) appFinishedLaunching
 {
-	if (![[NSUserDefaults standardUserDefaults] objectForKey:@"Version"]) {
-		[preferencesController reloadValues];
-		[preferencesController applyPrefs:nil];
-	}
-	
 	// set sparkle feed url for prereleases
 	[self setSparkleFeed];
 	

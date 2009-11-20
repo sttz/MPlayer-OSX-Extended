@@ -23,7 +23,6 @@
 {
 	// other controllers outlets
     IBOutlet PlayListController	*playListController;
-	IBOutlet id preferencesController;
 	IBOutlet id settingsController;
 	
 	//Player Window

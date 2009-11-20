@@ -19,15 +19,14 @@
 #define MP_DIALOG_VIDEO		2
 #define MP_DIALOG_SUBTITLES 3
 
-@class AppleRemote, PlayerController;
+@class AppleRemote, PlayerController, PreferencesController2;
 
 @interface AppController : NSObject
 {
     // controller outlets
 	IBOutlet PlayerController *playerController;
 	IBOutlet id playListController;
-	IBOutlet id preferencesController;
-	
+		
 	// GUI outlets
 	IBOutlet id locationPanel;
 	IBOutlet id locationBox;
@@ -55,7 +54,8 @@
 	// apple remote support
 	AppleRemote *appleRemote;
 	
-	// Preferences defaults&restart
+	// Preferences
+	IBOutlet PreferencesController2 *preferencesController;
 	NSDictionary *preferencesSpecs;
 }
 
@@ -65,7 +65,8 @@
 
 // app's interface
 - (NSUserDefaults *) preferences;
-- (BOOL) savePrefs;
+- (IBAction) openPreferences:(id)sender;
+
 - (void) quitApp;
 	
 // actions

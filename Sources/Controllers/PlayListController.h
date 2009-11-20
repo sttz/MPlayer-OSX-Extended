@@ -13,8 +13,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-#import "PreferencesController.h"
-
 #define kDefaultTextSize		13
 #define kSmallerTextSize		11
 
