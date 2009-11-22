@@ -4,8 +4,6 @@
 <dict>
 	<key>Defaults</key>
 	<dict>
-		<key>MPECheckForUpdates</key>
-		<true/>
 		<key>MPECheckForUpdatesIncludesPrereleases</key>
 		<false/>
 		<key>MPECacheSizeInMB</key>

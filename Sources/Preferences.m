@@ -14,7 +14,6 @@ NSString* const MPEAspectRatio                        = @"MPEAspectRatio";
 NSString* const MPEBS2BFilter                         = @"MPEBS2BFilter";
 NSString* const MPEBlackOutOtherScreensInFullscreen   = @"MPEBlackOutOtherScreensInFullscreen";
 NSString* const MPECacheSizeInMB                      = @"MPECacheSizeInMB";
-NSString* const MPECheckForUpdates                    = @"MPECheckForUpdates";
 NSString* const MPECheckForUpdatesIncludesPrereleases = @"MPECheckForUpdatesIncludesPrereleases";
 NSString* const MPECustomAspectRatio                  = @"MPECustomAspectRatio";
 NSString* const MPECustomSizeInPx                     = @"MPECustomSizeInPx";

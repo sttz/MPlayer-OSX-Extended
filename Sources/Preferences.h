@@ -15,7 +15,6 @@ extern NSString* const MPEAspectRatio;
 extern NSString* const MPEBS2BFilter;
 extern NSString* const MPEBlackOutOtherScreensInFullscreen;
 extern NSString* const MPECacheSizeInMB;
-extern NSString* const MPECheckForUpdates;
 extern NSString* const MPECheckForUpdatesIncludesPrereleases;
 extern NSString* const MPECustomAspectRatio;
 extern NSString* const MPECustomSizeInPx;

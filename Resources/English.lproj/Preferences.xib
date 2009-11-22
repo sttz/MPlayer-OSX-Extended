@@ -11,7 +11,7 @@
 			<string key="NS.object.0">732</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="1002"/>
+			<integer value="55"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -391,6 +391,7 @@ dG8gYSBjb3VwbGUgb2YgbWludXRlcy4</string>
 			<object class="NSUserDefaultsController" id="510309140">
 				<array class="NSMutableArray" key="NSDeclaredKeys">
 					<string>MPECustomAspectRatio</string>
+					<string>SUEnableAutomaticChecks</string>
 				</array>
 				<bool key="NSSharedInstance">YES</bool>
 			</object>
@@ -436,7 +437,7 @@ dG8gYSBjb3VwbGUgb2YgbWludXRlcy4</string>
 				<string key="NSClassName">LanguageTokenFieldDelegate</string>
 			</object>
 			<object class="NSCustomView" id="495739361">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="NSTokenField" id="719473862">
@@ -1177,6 +1178,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					</object>
 				</array>
 				<string key="NSFrameSize">{620, 483}</string>
+				<reference key="NSSuperview"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 			<object class="NSCustomView" id="500521935">
@@ -5833,7 +5835,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 			<object class="NSCustomObject" id="1071411155">
 				<string key="NSClassName">AspectRatioFormatter</string>
 			</object>
-			<object class="NSWindowTemplate" id="21454309">
+			<object class="NSWindowTemplate" id="1000910727">
 				<int key="NSWindowStyleMask">3</int>
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{712, 573}, {422, 145}}</string>
@@ -5841,71 +5843,71 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				<string key="NSWindowTitle">Choose Aspect Ratio</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>
-				<object class="NSView" key="NSWindowView" id="258625258">
-					<reference key="NSNextResponder"/>
+				<object class="NSView" key="NSWindowView" id="1891717">
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
-						<object class="NSTextField" id="305320942">
-							<reference key="NSNextResponder" ref="258625258"/>
+						<object class="NSTextField" id="939526610">
+							<reference key="NSNextResponder" ref="1891717"/>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{12, 58}, {135, 17}}</string>
-							<reference key="NSSuperview" ref="258625258"/>
+							<reference key="NSSuperview" ref="1891717"/>
 							<bool key="NSEnabled">YES</bool>
-							<object class="NSTextFieldCell" key="NSCell" id="172071509">
+							<object class="NSTextFieldCell" key="NSCell" id="586299765">
 								<int key="NSCellFlags">68288064</int>
 								<int key="NSCellFlags2">272630784</int>
 								<string key="NSContents">Custom aspect ratio:</string>
 								<reference key="NSSupport" ref="658876446"/>
-								<reference key="NSControlView" ref="305320942"/>
+								<reference key="NSControlView" ref="939526610"/>
 								<reference key="NSBackgroundColor" ref="283641460"/>
 								<reference key="NSTextColor" ref="327378435"/>
 							</object>
 						</object>
-						<object class="NSTextField" id="371791370">
-							<reference key="NSNextResponder" ref="258625258"/>
+						<object class="NSTextField" id="187009752">
+							<reference key="NSNextResponder" ref="1891717"/>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{152, 56}, {255, 22}}</string>
-							<reference key="NSSuperview" ref="258625258"/>
+							<reference key="NSSuperview" ref="1891717"/>
 							<bool key="NSEnabled">YES</bool>
-							<object class="NSTextFieldCell" key="NSCell" id="146682074">
+							<object class="NSTextFieldCell" key="NSCell" id="1032435836">
 								<int key="NSCellFlags">-1804468671</int>
 								<int key="NSCellFlags2">272630784</int>
 								<string key="NSContents"/>
 								<reference key="NSSupport" ref="658876446"/>
-								<reference key="NSControlView" ref="371791370"/>
+								<reference key="NSControlView" ref="187009752"/>
 								<bool key="NSDrawsBackground">YES</bool>
 								<reference key="NSBackgroundColor" ref="802793081"/>
 								<reference key="NSTextColor" ref="707487995"/>
 							</object>
 						</object>
-						<object class="NSTextField" id="722936096">
-							<reference key="NSNextResponder" ref="258625258"/>
+						<object class="NSTextField" id="586208339">
+							<reference key="NSNextResponder" ref="1891717"/>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{12, 96}, {398, 34}}</string>
-							<reference key="NSSuperview" ref="258625258"/>
+							<reference key="NSSuperview" ref="1891717"/>
 							<bool key="NSEnabled">YES</bool>
-							<object class="NSTextFieldCell" key="NSCell" id="553241627">
+							<object class="NSTextFieldCell" key="NSCell" id="1046388821">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">272629760</int>
 								<string key="NSContents">Enter a custom aspect ratio in the field below. Ratios can be entered as either decimals (1.33) or fractions (4:3).</string>
 								<reference key="NSSupport" ref="658876446"/>
-								<reference key="NSControlView" ref="722936096"/>
+								<reference key="NSControlView" ref="586208339"/>
 								<reference key="NSBackgroundColor" ref="283641460"/>
 								<reference key="NSTextColor" ref="327378435"/>
 							</object>
 						</object>
-						<object class="NSButton" id="1064312883">
-							<reference key="NSNextResponder" ref="258625258"/>
+						<object class="NSButton" id="856670093">
+							<reference key="NSNextResponder" ref="1891717"/>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{275, 12}, {138, 32}}</string>
-							<reference key="NSSuperview" ref="258625258"/>
+							<reference key="NSSuperview" ref="1891717"/>
 							<bool key="NSEnabled">YES</bool>
-							<object class="NSButtonCell" key="NSCell" id="778548443">
+							<object class="NSButtonCell" key="NSCell" id="958181561">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">134217728</int>
 								<string key="NSContents">OK</string>
 								<reference key="NSSupport" ref="658876446"/>
-								<reference key="NSControlView" ref="1064312883"/>
+								<reference key="NSControlView" ref="856670093"/>
 								<int key="NSButtonFlags">-2038284033</int>
 								<int key="NSButtonFlags2">129</int>
 								<string key="NSAlternateContents"/>
@@ -5916,7 +5918,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						</object>
 					</array>
 					<string key="NSFrameSize">{422, 145}</string>
-					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
@@ -6682,22 +6683,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: values.MPECheckForUpdates</string>
-						<reference key="source" ref="579731239"/>
-						<reference key="destination" ref="510309140"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="579731239"/>
-							<reference key="NSDestination" ref="510309140"/>
-							<string key="NSLabel">value: values.MPECheckForUpdates</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">values.MPECheckForUpdates</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">956</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
 						<string key="label">selectedTag: values.MPECheckForUpdatesIncludesPrereleases</string>
 						<reference key="source" ref="991940247"/>
 						<reference key="destination" ref="510309140"/>
@@ -7171,7 +7156,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">formatter</string>
-						<reference key="source" ref="371791370"/>
+						<reference key="source" ref="187009752"/>
 						<reference key="destination" ref="1071411155"/>
 					</object>
 					<int key="connectionID">1013</int>
@@ -7179,10 +7164,10 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">value: values.MPECustomAspectRatio</string>
-						<reference key="source" ref="371791370"/>
+						<reference key="source" ref="187009752"/>
 						<reference key="destination" ref="510309140"/>
 						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="371791370"/>
+							<reference key="NSSource" ref="187009752"/>
 							<reference key="NSDestination" ref="510309140"/>
 							<string key="NSLabel">value: values.MPECustomAspectRatio</string>
 							<string key="NSBinding">value</string>
@@ -7196,7 +7181,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">customAspectRatioChooser</string>
 						<reference key="source" ref="785479483"/>
-						<reference key="destination" ref="21454309"/>
+						<reference key="destination" ref="1000910727"/>
 					</object>
 					<int key="connectionID">1020</int>
 				</object>
@@ -7204,9 +7189,25 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<object class="IBActionConnection" key="connection">
 						<string key="label">chooseCustomAspectRatio:</string>
 						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="1064312883"/>
+						<reference key="destination" ref="856670093"/>
 					</object>
 					<int key="connectionID">1021</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: values.SUEnableAutomaticChecks</string>
+						<reference key="source" ref="579731239"/>
+						<reference key="destination" ref="510309140"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="579731239"/>
+							<reference key="NSDestination" ref="510309140"/>
+							<string key="NSLabel">value: values.SUEnableAutomaticChecks</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">values.SUEnableAutomaticChecks</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">1022</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -9991,75 +9992,75 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1001</int>
-						<reference key="object" ref="21454309"/>
+						<reference key="object" ref="1000910727"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="258625258"/>
+							<reference ref="1891717"/>
 						</array>
 						<reference key="parent" ref="0"/>
 						<string key="objectName">Aspect Ratio Chooser</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1002</int>
-						<reference key="object" ref="258625258"/>
+						<reference key="object" ref="1891717"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="305320942"/>
-							<reference ref="371791370"/>
-							<reference ref="722936096"/>
-							<reference ref="1064312883"/>
+							<reference ref="939526610"/>
+							<reference ref="187009752"/>
+							<reference ref="586208339"/>
+							<reference ref="856670093"/>
 						</array>
-						<reference key="parent" ref="21454309"/>
+						<reference key="parent" ref="1000910727"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1003</int>
-						<reference key="object" ref="305320942"/>
+						<reference key="object" ref="939526610"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="172071509"/>
+							<reference ref="586299765"/>
 						</array>
-						<reference key="parent" ref="258625258"/>
+						<reference key="parent" ref="1891717"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1004</int>
-						<reference key="object" ref="172071509"/>
-						<reference key="parent" ref="305320942"/>
+						<reference key="object" ref="586299765"/>
+						<reference key="parent" ref="939526610"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1005</int>
-						<reference key="object" ref="371791370"/>
+						<reference key="object" ref="187009752"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="146682074"/>
+							<reference ref="1032435836"/>
 						</array>
-						<reference key="parent" ref="258625258"/>
+						<reference key="parent" ref="1891717"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1006</int>
-						<reference key="object" ref="146682074"/>
-						<reference key="parent" ref="371791370"/>
+						<reference key="object" ref="1032435836"/>
+						<reference key="parent" ref="187009752"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1011</int>
-						<reference key="object" ref="722936096"/>
+						<reference key="object" ref="586208339"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="553241627"/>
+							<reference ref="1046388821"/>
 						</array>
-						<reference key="parent" ref="258625258"/>
+						<reference key="parent" ref="1891717"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1012</int>
-						<reference key="object" ref="553241627"/>
-						<reference key="parent" ref="722936096"/>
+						<reference key="object" ref="1046388821"/>
+						<reference key="parent" ref="586208339"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1017</int>
-						<reference key="object" ref="1064312883"/>
+						<reference key="object" ref="856670093"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="778548443"/>
+							<reference ref="958181561"/>
 						</array>
-						<reference key="parent" ref="258625258"/>
+						<reference key="parent" ref="1891717"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1018</int>
-						<reference key="object" ref="778548443"/>
-						<reference key="parent" ref="1064312883"/>
+						<reference key="object" ref="958181561"/>
+						<reference key="parent" ref="856670093"/>
 					</object>
 				</array>
 			</object>
@@ -10631,7 +10632,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1021</int>
+			<int key="maxID">1022</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -10644,7 +10645,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<string key="applyVIDEO_TSLocation:">id</string>
 						<string key="cancelLocation:">id</string>
 						<string key="cancelVIDEO_TSLocation:">id</string>
-						<string key="chooseCustomAspectRatio:">id</string>
+						<string key="chooseCustomAspectRatio:">NSButton</string>
 						<string key="closeWindow:">id</string>
 						<string key="displayLogWindow:">id</string>
 						<string key="displayPlayList:">id</string>
@@ -10661,6 +10662,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="aspectMenu">NSMenu</string>
 						<string key="closeMenuItem">id</string>
+						<string key="customAspectMenuItem">NSMenuItem</string>
 						<string key="locationBox">id</string>
 						<string key="locationPanel">id</string>
 						<string key="openFileSettings">NSView</string>
