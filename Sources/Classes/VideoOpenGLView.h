@@ -113,7 +113,6 @@
 	
 	// other controllers outlets
 	IBOutlet id	playListController;
-	IBOutlet id preferencesController;
 	IBOutlet id settingsController;
 	IBOutlet id playerController;
 	
@@ -163,6 +162,7 @@
 
 //Action
 - (IBAction)MovieMenuAction:(id)sender;
+- (IBAction)setAspectRatio:(NSMenuItem *)sender;
 //Event
 - (void) mouseDown: (NSEvent *) theEvent;
 

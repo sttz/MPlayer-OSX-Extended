@@ -186,7 +186,6 @@
 	BOOL restartingPlayer;			// set when player is teminated to be restarted
 	BOOL pausedOnRestart;			// set when paused during attemp to restart player
 	BOOL isRunning;					// set off after recieving termination notification
-	BOOL isPlaying;					// set off after reading "Exiting" from output
 	BOOL useIdentifyForPlayback;	// sets whether -identify is sent on starting playback
 	BOOL windowedVO;
 	int myOutputReadMode;				// defines playback output form 

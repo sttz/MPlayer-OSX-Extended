@@ -10,11 +10,16 @@
 
 #import "AppController.h"
 #import "Debug.h"
+#import "Preferences.h"
 
 #import <fontconfig/fontconfig.h>
+#import "RegexKitLite.h"
+
+// regex for parsing aspect ratio
+#define ASPECT_REGEX	@"^(\\d+\\.?\\d*|\\.\\d+)(?:\\:(\\d+\\.?\\d*|\\.\\d+))?$"
 
 @implementation PreferencesController2
-@synthesize fonts;
+@synthesize fonts, customAspectRatioChooser;
 
 - (void) awakeFromNib
 {
@@ -256,6 +261,32 @@
 	[[NSUserDefaults standardUserDefaults] setObject:[sender titleOfSelectedItem] forKey:@"MPEFont"];
 }
 
++ (float) parseAspectRatio:(NSString *)aspectString
+{
+	if ([aspectString length] > 0) {
+		
+		// Parse custom aspect ratio field (eiher "x.x or x.x:x.x)
+		if ([aspectString isMatchedByRegex:ASPECT_REGEX]) {
+			
+			// Parts of custom aspect ratio
+			NSString *part1 = [aspectString stringByMatching:ASPECT_REGEX capture:1];
+			NSString *part2 = [aspectString stringByMatching:ASPECT_REGEX capture:2];
+			
+			float aspectValue;
+			
+			if (part1 && part2)				
+				aspectValue = [part1 floatValue] / [part2 floatValue];
+			else
+				aspectValue = [part1 floatValue];
+			
+			return aspectValue;
+		} else
+			return -1;
+	}
+	
+	return 0;
+}
+
 @end
 
 
@@ -321,4 +352,53 @@
 		return @"";
 }
 
+@end
+
+
+@implementation AspectRatioFormatter
+
+- (NSString *)stringForObjectValue:(id)anObject
+{	
+	if (![anObject isKindOfClass:[NSDictionary class]])
+		return nil;
+	
+	if ([anObject objectForKey:MPECustomAspectRatioStringKey])
+		return [anObject objectForKey:MPECustomAspectRatioStringKey];
+	
+	else if ([anObject objectForKey:MPECustomAspectRatioValueKey])
+		return [NSString stringWithFormat:@"%.2f", 
+				[[anObject objectForKey:MPECustomAspectRatioValueKey] floatValue]];
+	
+	return nil;
+}
+
+- (BOOL)getObjectValue:(id *)anObject forString:(NSString *)string errorDescription:(NSString **)error
+{
+	float aspectValue = 0;
+	
+	if (string) {
+		
+		aspectValue = [PreferencesController2 parseAspectRatio:string];
+		
+		if (aspectValue < 0) {
+			
+			if (error)
+				*error = @"Unrecognized aspect ratio. Please enter aspect ratios as either \
+decimal values (1.33) or fractions (4:3).";
+			
+			return NO;
+		}
+		
+	}
+		
+	if (aspectValue > 0)
+		*anObject = [NSDictionary dictionaryWithObjectsAndKeys:
+					 [[string copy] autorelease], MPECustomAspectRatioStringKey,
+					 [NSNumber numberWithFloat:aspectValue], MPECustomAspectRatioValueKey,
+					 nil];
+	else
+		*anObject = nil;
+	
+	return YES;
+}
 @end

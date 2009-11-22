@@ -37,9 +37,7 @@
 		<key>MPECustomSizeInPx</key>
 		<integer>1280</integer>
 		<key>MPEAspectRatio</key>
-		<string>0</string>
-		<key>MPECustomAspectRatio</key>
-		<string></string>
+		<integer>0</integer>
 		<key>MPEFont</key>
 		<string>Myriad Pro</string>
 		<key>MPEFontStyle</key>

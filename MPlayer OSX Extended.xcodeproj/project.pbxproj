@@ -77,6 +77,7 @@
 		37EA4ABE086220530026216A /* volumeKnobOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 37EA4ABD086220520026216A /* volumeKnobOn.png */; };
 		37EA4B6C086256590026216A /* VolumeSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 37EA4AA4086214030026216A /* VolumeSlider.m */; };
 		37EA4BC2086271480026216A /* scrub_bar_anim.png in Resources */ = {isa = PBXBuildFile; fileRef = 37EA4BC1086271480026216A /* scrub_bar_anim.png */; };
+		3A02CDCB10B6E76700ECF073 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A02CDCA10B6E76700ECF073 /* Preferences.m */; };
 		3A07C707108E44C10033FA47 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A07C705108E44C10033FA47 /* Preferences.xib */; };
 		3A0943290E44F8E300E6753F /* MovieInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A0943280E44F8E300E6753F /* MovieInfo.m */; };
 		3A09436C0E45043000E6753F /* LanguageCodes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A09436B0E45043000E6753F /* LanguageCodes.m */; };
@@ -240,6 +241,8 @@
 		37EA4AB5086218D50026216A /* volumeKnobOff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = volumeKnobOff.png; path = Resources/Graphics/volumeKnobOff.png; sourceTree = "<group>"; };
 		37EA4ABD086220520026216A /* volumeKnobOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = volumeKnobOn.png; path = Resources/Graphics/volumeKnobOn.png; sourceTree = "<group>"; };
 		37EA4BC1086271480026216A /* scrub_bar_anim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = scrub_bar_anim.png; path = Resources/Graphics/scrub_bar_anim.png; sourceTree = "<group>"; };
+		3A02CDC910B6E62000ECF073 /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Preferences.h; path = Sources/Preferences.h; sourceTree = "<group>"; };
+		3A02CDCA10B6E76700ECF073 /* Preferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Preferences.m; path = Sources/Preferences.m; sourceTree = "<group>"; };
 		3A07C706108E44C10033FA47 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Resources/English.lproj/Preferences.xib; sourceTree = "<group>"; };
 		3A0943270E44F8E300E6753F /* MovieInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MovieInfo.h; path = Sources/Classes/MovieInfo.h; sourceTree = "<group>"; };
 		3A0943280E44F8E300E6753F /* MovieInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MovieInfo.m; path = Sources/Classes/MovieInfo.m; sourceTree = "<group>"; };
@@ -414,6 +417,8 @@
 				3AF152250F97B3F700409534 /* RegexKitLite.h */,
 				32CA4F630368D1EE00C91783 /* MPlayer OSX_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
+				3A02CDC910B6E62000ECF073 /* Preferences.h */,
+				3A02CDCA10B6E76700ECF073 /* Preferences.m */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -792,6 +797,7 @@
 				3A638951108B953F00E90936 /* PFMoveApplication.m in Sources */,
 				3A6E433210A33AE400B0BDC3 /* PreferencesController2.m in Sources */,
 				3A81883010B2FB8300AB1E07 /* LanguageTokenFieldDelegate.m in Sources */,
+				3A02CDCB10B6E76700ECF073 /* Preferences.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

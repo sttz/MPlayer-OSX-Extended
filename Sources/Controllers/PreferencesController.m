@@ -10,6 +10,8 @@
 #import "PreferencesController.h"
 #import "RegexKitLite.h" 
 
+#import "Preferences.h"
+
 // other controllers
 #import "AppController.h"
 #import "PlayerController.h"
@@ -311,8 +313,8 @@
 	}
 	
 	// subtitles encoding
-	if ([thePrefs objectForKey:@"SubtitlesEncoding"]) {
-		[subEncodingMenu selectItemWithTitle:[thePrefs objectForKey:@"SubtitlesEncoding"]];
+	if ([thePrefs objectForKey:MPETextEncoding]) {
+		[subEncodingMenu selectItemWithTitle:[thePrefs objectForKey:MPETextEncoding]];
 		if ([subEncodingMenu indexOfSelectedItem] < 0)
 			[subEncodingMenu selectItemAtIndex:0];
 	}
@@ -671,9 +673,6 @@
 	} else
 		[thePrefs setFloat:0.0 forKey:@"CustomVideoAspectValue"];
 	
-	// update aspect menu
-	[[AppController sharedController] updateAspectMenu];
-	
 	// fullscreen device id
 	[thePrefs setBool:[fullscreenSameAsPlayer state] forKey:@"FullscreenDeviceSameAsPlayer"];
 	
@@ -715,7 +714,7 @@
 	
 	// subtitles encoding
 	[thePrefs setObject:[subEncodingMenu titleOfSelectedItem]
-				 forKey:@"SubtitlesEncoding"];
+				 forKey:MPETextEncoding];
 	
 	// guess encoding
 	[thePrefs setBool:[guessEncoding state] forKey:@"SubtitlesGuessEncoding"];

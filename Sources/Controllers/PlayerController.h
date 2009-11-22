@@ -99,7 +99,6 @@
 	unsigned movieSeconds;		// stores actual movie seconds for further use
 	BOOL  fullscreenStatus;
 	BOOL isOntop;
-	BOOL isOntopWhilePlaying;
 	BOOL continuousPlayback;
 	BOOL playingFromPlaylist;
 	int currentChapter;

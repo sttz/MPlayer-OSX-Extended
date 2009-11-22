@@ -112,7 +112,6 @@ static NSArray* parseRunLoopModes;
 	restartingPlayer = NO;
 	pausedOnRestart = NO;
 	isRunning = NO;
-	isPlaying = NO;
 	takeEffectImediately = NO;
 	useIdentifyForPlayback = NO;
 	myOutputReadMode = 0;
@@ -1420,7 +1419,7 @@ static NSArray* parseRunLoopModes;
 
 - (BOOL)isPlaying
 {
-	return isPlaying;
+	return (myState == kPlaying || myState == kSeeking || myState == kBuffering);
 }
 
 - (BOOL)isWindowed
@@ -1617,7 +1616,6 @@ static NSArray* parseRunLoopModes;
 	// launch mplayer task
 	[myMplayerTask launch];
 	isRunning = YES;
-	isPlaying = YES;
 	myState = kInitializing;
 	
 	[Debug log:ASL_LEVEL_INFO withMessage:@"Path to fontconfig: %@", [[myMplayerTask environment] objectForKey:@"FONTCONFIG_PATH"]];
@@ -2034,9 +2032,7 @@ static NSArray* parseRunLoopModes;
 			}
 
 			myOutputReadMode = 0;				// reset output read mode
-			
-			isPlaying = NO;
-			
+						
 			restartingPlayer = NO;
 			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithFormat:@"Exited with state %d",myState]];
 			continue;							// continue on next line

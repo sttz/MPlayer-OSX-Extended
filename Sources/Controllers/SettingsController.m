@@ -9,6 +9,8 @@
 
 #import "SettingsController.h"
 
+#import "Preferences.h"
+
 // other controllers
 #import "AppController.h"
 #import "PlayerController.h"
@@ -98,8 +100,8 @@
 		[rebuildIndexButton setState:NSOffState];
 	
 	// subtitles encoding menu
-	if ([myItem objectForKey:@"SubtitlesEncoding"]) {
-		[encodingMenu selectItemWithTitle:[myItem objectForKey:@"SubtitlesEncoding"]];
+	if ([myItem objectForKey:MPETextEncoding]) {
+		[encodingMenu selectItemWithTitle:[myItem objectForKey:MPETextEncoding]];
 		if ([encodingMenu indexOfSelectedItem] < 0)
 			[encodingMenu selectItemWithTitle:NSLocalizedString(@"default",nil)];
 		}
@@ -237,9 +239,9 @@
 	
 	if ([[encodingMenu titleOfSelectedItem] isEqualToString:
 			NSLocalizedString(@"default",nil)])
-		[myItem removeObjectForKey:@"SubtitlesEncoding"];
+		[myItem removeObjectForKey:MPETextEncoding];
 	else
-		[myItem setObject:[encodingMenu titleOfSelectedItem] forKey:@"SubtitlesEncoding"];
+		[myItem setObject:[encodingMenu titleOfSelectedItem] forKey:MPETextEncoding];
 	
 	// item will no longer be needed
 	[myItem release];

@@ -779,7 +779,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 
 - (IBAction)playPrevious:(id)sender;
 {
-	if (![playerController isPlaying])
+	if (![playerController isRunning])
 		return;
 	
 	int itemIdx = [self indexOfItem:[playerController playingItem]];
@@ -795,7 +795,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 
 - (IBAction)playNext:(id)sender;
 {
-	if (![playerController isPlaying])
+	if (![playerController isRunning])
 		return;
 	
 	int itemIdx = [self indexOfItem:[playerController playingItem]];

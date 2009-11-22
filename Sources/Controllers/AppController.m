@@ -14,12 +14,13 @@
 #import "PlayerController.h"
 #import "PlayListController.h"
 
+#import "Preferences.h"
 #import "AppleRemote.h"
 #import "PFMoveApplication.h"
 #import "PreferencesController2.h"
 
 @implementation AppController
-@synthesize playerController;
+@synthesize playerController, aspectMenu;
 
 static AppController *instance = nil;
 
@@ -73,8 +74,6 @@ static AppController *instance = nil;
 			name: NSApplicationDidFinishLaunchingNotification
 			object:NSApp];
 	
-	[self updateAspectMenu];
-	
 	// enable apple remote support
 	appleRemote = [[AppleRemote alloc] init];
 	[appleRemote setClickCountEnabledButtons: kRemoteButtonPlay];
@@ -98,6 +97,18 @@ static AppController *instance = nil;
 - (IBAction) openPreferences:(id)sender
 {
 	[[preferencesController window] makeKeyAndOrderFront:self];
+}
+- (IBAction) openCustomAspectRatioChooser:(id)sender
+{
+	[[preferencesController customAspectRatioChooser] makeKeyAndOrderFront:self];
+}
+- (IBAction) chooseCustomAspectRatio:(NSButton *)sender
+{
+	// Trigger the custom aspect menu item's action to relay the aspect ratio
+	[[customAspectMenuItem target] performSelector:[customAspectMenuItem action] 
+										withObject:customAspectMenuItem];
+	
+	[[sender window] orderOut:self];
 }
 /************************************************************************************/
 - (void)quitApp
@@ -130,7 +141,7 @@ static AppController *instance = nil;
 	NSString *theDir = nil;
 	NSString *defDir;
 	
-	if (!(defDir = [[self preferences] objectForKey:@"DefaultDirectory"]))
+	if (!(defDir = [[self preferences] objectForKey:MPEDefaultDirectory]))
 		defDir = NSHomeDirectory();
 
     [thePanel setAllowsMultipleSelection:NO];
@@ -141,7 +152,7 @@ static AppController *instance = nil;
         theDir = [[thePanel filenames] objectAtIndex:0];
 		[[NSUserDefaults standardUserDefaults]
 				setObject:[theDir stringByDeletingLastPathComponent]
-				forKey:@"DefaultDirectory"];
+				forKey:MPEDefaultDirectory];
 		if ([[theDir lastPathComponent] isEqualToString:@"VIDEO_TS"]) {
 			NSMutableDictionary *theItem = [NSMutableDictionary
 					dictionaryWithObject:theDir forKey:@"MovieFile"];
@@ -167,7 +178,7 @@ static AppController *instance = nil;
 	[fileTypes addObjectsFromArray:[self typeExtensionsForName:@"Audio file"]];
 	
 	// present open dialog
-	if (!(defDir = [[self preferences] objectForKey:@"DefaultDirectory"]))
+	if (!(defDir = [[self preferences] objectForKey:MPEDefaultDirectory]))
 		defDir = NSHomeDirectory();
 	
 	// allow multiple selection
@@ -183,7 +194,7 @@ static AppController *instance = nil;
 			[[self preferences]
 					setObject:[[[thePanel filenames] objectAtIndex:i]
 					stringByDeletingLastPathComponent]
-					forKey:@"DefaultDirectory"];
+					forKey:MPEDefaultDirectory];
 			[playListController appendItem:theItem];
 		}
     }
@@ -207,7 +218,7 @@ static AppController *instance = nil;
 	if (theFile) {
 		NSMutableDictionary *theItem = [NSMutableDictionary
 				dictionaryWithObject:theFile forKey:@"SubtitlesFile"];
-		[theItem setObject:[openSubtitleEncoding titleOfSelectedItem] forKey:@"SubtitlesEncoding"];
+		[theItem setObject:[openSubtitleEncoding titleOfSelectedItem] forKey:MPETextEncoding];
 		[playerController playItem:theItem];
 	}
 }
@@ -310,7 +321,7 @@ static AppController *instance = nil;
 - (IBAction) closeWindow:(id)sender {
 	
 	if ([NSApp keyWindow]) {
-		if ([NSApp keyWindow] == playerWindow && [playerController isPlaying])
+		if ([NSApp keyWindow] == playerWindow && [playerController isRunning])
 			[playerController stop:self];
 		else
 			[[NSApp keyWindow] performClose:self];
@@ -374,7 +385,7 @@ static AppController *instance = nil;
 	NSString *theFile = nil;
 	NSString *defDir;
 	
-	if (!(defDir = [[self preferences] objectForKey:@"DefaultDirectory"]))
+	if (!(defDir = [[self preferences] objectForKey:MPEDefaultDirectory]))
 		defDir = NSHomeDirectory();
 
     [openPanel setAllowsMultipleSelection:NO];
@@ -389,8 +400,8 @@ static AppController *instance = nil;
 	} else if (type == MP_DIALOG_SUBTITLES) {
 		// beta: add encoding dropdown and load state from preferences
 		[openPanel setAccessoryView:openSubtitleSettings];
-		if ([[self preferences] objectForKey:@"SubtitlesEncoding"]) {
-			[openSubtitleEncoding selectItemWithTitle:[[self preferences] objectForKey:@"SubtitlesEncoding"]];
+		if ([[self preferences] objectForKey:MPETextEncoding]) {
+			[openSubtitleEncoding selectItemWithTitle:[[self preferences] objectForKey:MPETextEncoding]];
 			if ([openSubtitleEncoding indexOfSelectedItem] < 0)
 				[openSubtitleEncoding selectItemAtIndex:0];
 		}
@@ -402,7 +413,7 @@ static AppController *instance = nil;
         theFile = [[openPanel filenames] objectAtIndex:0];
 		[[NSUserDefaults standardUserDefaults]
 				setObject:[theFile stringByDeletingLastPathComponent]
-				forKey:@"DefaultDirectory"];
+				forKey:MPEDefaultDirectory];
     }
 	return theFile;
 }
@@ -413,7 +424,7 @@ static AppController *instance = nil;
 	NSString *theFile = nil;
 	NSString *defDir;
 	
-	if (!(defDir = [[self preferences] objectForKey:@"DefaultDirectory"]))
+	if (!(defDir = [[self preferences] objectForKey:MPEDefaultDirectory]))
 		defDir = NSHomeDirectory();
 
     [thePanel setAllowsMultipleSelection:NO];
@@ -424,7 +435,7 @@ static AppController *instance = nil;
         theFile = [[thePanel filenames] objectAtIndex:0];
 		[[NSUserDefaults standardUserDefaults]
 				setObject:[theFile stringByDeletingLastPathComponent]
-				forKey:@"DefaultDirectory"];
+				forKey:MPEDefaultDirectory];
     }
 	return theFile;
 }
@@ -480,7 +491,7 @@ static AppController *instance = nil;
 	NSString *theFile = nil;
 	NSString *defDir;
 	
-	if (!(defDir = [[self preferences] objectForKey:@"DefaultDirectory"]))
+	if (!(defDir = [[self preferences] objectForKey:MPEDefaultDirectory]))
 		defDir = NSHomeDirectory();
 
  //   [thePanel setAllowsMultipleSelection:NO];
@@ -489,32 +500,18 @@ static AppController *instance = nil;
         theFile = [[thePanel filenames] objectAtIndex:0];
 		[[NSUserDefaults standardUserDefaults]
 				setObject:[theFile stringByDeletingLastPathComponent]
-				forKey:@"DefaultDirectory"];
+				forKey:MPEDefaultDirectory];
     }
 	return theFile;
 }
 */
 
 
-// update custom aspect in aspect menu
-- (void) updateAspectMenu
-{
-	float customAspect = [[self preferences] floatForKey:@"CustomVideoAspectValue"];
-	if (customAspect == 0) {
-		[customAspectMenuItem setEnabled:NO];
-		[customAspectMenuItem setTitle:@"Custom (set in Preferences)"];
-	} else {
-		[customAspectMenuItem setEnabled:YES];
-		[customAspectMenuItem setTitle:[[self preferences] stringForKey:@"CustomVideoAspect"]];
-	}
-}
-
-
 // animate interface transitions
 - (BOOL) animateInterface
 {
-	if ([[self preferences] objectForKey:@"AnimateInterfaceTransitions"])
-		return [[self preferences] boolForKey:@"AnimateInterfaceTransitions"];
+	if ([[self preferences] objectForKey:MPEAnimateInterfaceTransitions])
+		return [[self preferences] boolForKey:MPEAnimateInterfaceTransitions];
 	else
 		return YES;
 }
@@ -535,7 +532,7 @@ static AppController *instance = nil;
 										   dictionaryWithObject:filename forKey:@"MovieFile"];
 			[playerController playItem:myItem];
 		// load subtitles while playing
-		} else if ([playerController isPlaying]
+		} else if ([playerController isRunning]
 				   && [self isExtension:[filename pathExtension] ofType:MP_DIALOG_SUBTITLES]) {
 			NSMutableDictionary *myItem = [NSMutableDictionary
 										   dictionaryWithObject:filename forKey:@"SubtitlesFile"];
@@ -626,7 +623,7 @@ static AppController *instance = nil;
 - (BOOL) validateMenuItem:(NSMenuItem *)aMenuItem
 {
 	if ([aMenuItem action] == @selector(openSubtitle:))
-		return [playerController isPlaying];
+		return [playerController isRunning];
 	return YES;
 }
 /******************************************************************************/

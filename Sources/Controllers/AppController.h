@@ -37,6 +37,7 @@
 	
 	IBOutlet id closeMenuItem;
 	IBOutlet id playerWindow;
+	IBOutlet NSMenu *aspectMenu;
 	IBOutlet NSMenuItem *customAspectMenuItem;
 	
 	IBOutlet NSView *openFileSettings;
@@ -60,12 +61,15 @@
 }
 
 @property (readonly) PlayerController *playerController;
+@property (readonly) NSMenu *aspectMenu;
 
 + (AppController *) sharedController;
 
 // app's interface
 - (NSUserDefaults *) preferences;
 - (IBAction) openPreferences:(id)sender;
+- (IBAction) openCustomAspectRatioChooser:(id)sender;
+- (IBAction) chooseCustomAspectRatio:(NSButton *)sender;
 
 - (void) quitApp;
 	
@@ -94,7 +98,6 @@
 
 // misc methods
 - (NSString *) openDialogForType:(int)type;
-- (void) updateAspectMenu;
 - (BOOL) animateInterface;
 - (void) setSparkleFeed;
 

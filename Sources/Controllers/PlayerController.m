@@ -13,6 +13,8 @@
 #import "AppController.h"
 #import "PlayListController.h"
 
+#import "Preferences.h"
+
 // custom classes
 #import "VideoOpenGLView.h"
 #import "VolumeSlider.h"
@@ -43,10 +45,6 @@
 	//resize window
 	[playerWindow setContentMinSize:NSMakeSize(450, 78)]; // Temp workaround for IB always forgetting the min-size
 	[playerWindow setContentSize:[playerWindow contentMinSize] ];
-	
-	// make window ontop
-	if ([prefs integerForKey:@"DisplayType"] == 2)
-		[self setOntop:YES];
 	
 	// set path to mplayer binary
 	mplayerPath = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: 
@@ -122,6 +120,12 @@
 			selector: @selector(appShouldTerminate)
 			name: @"ApplicationShouldTerminateNotification"
 			object:NSApp];
+	
+	// register for ontop changes
+	[[NSUserDefaults standardUserDefaults] addObserver:self
+											forKeyPath:MPEWindowOnTopMode
+											   options:NSKeyValueObservingOptionInitial
+											   context:nil];
 	
 	// load images
 	playImageOn = [[NSImage imageNamed:@"play_button_on"] retain];
@@ -239,7 +243,7 @@
 								 ofType:MP_DIALOG_MEDIA])
 						return NSDragOperationCopy; //its a movie file, good
 					
-					if ([self isPlaying] && [[AppController sharedController] 
+					if ([self isRunning] && [[AppController sharedController] 
 												isExtension:[[propertyList objectAtIndex:i] pathExtension] 
 													 ofType:MP_DIALOG_SUBTITLES])
 						return NSDragOperationCopy; // subtitles are good when playing
@@ -351,7 +355,7 @@
 	aPath = [anItem objectForKey:@"MovieFile"];
 	if (aPath) {
 		// stops mplayer if it is running
-		if ([myPlayer isPlaying]) {
+		if ([myPlayer isRunning]) {
 			continuousPlayback = YES;	// don't close view
 			saveTime = NO;		// don't save time
 			[myPlayer stop];
@@ -373,7 +377,7 @@
 		if (aPath)
 			[myPlayer setSubtitlesFile:aPath];
 		// set encoding from open dialog drop-down
-		[myPlayingItem setObject:[anItem objectForKey:@"SubtitlesEncoding"] forKey:@"SubtitlesEncoding"];
+		[myPlayingItem setObject:[anItem objectForKey:MPETextEncoding] forKey:MPETextEncoding];
 		[self setSubtitlesEncoding];
 		// restart playback if encoding has changed
 		if ([myPlayer changesNeedsRestart])
@@ -475,10 +479,7 @@
 /************************************************************************************/
 - (BOOL) isPlaying
 {	
-	if ([myPlayer status] != kStopped && [myPlayer status] != kFinished)
-		return YES;
-	else
-		return NO;
+	return [myPlayer isPlaying];
 }
 /************************************************************************************/
 - (BOOL) isInternalVideoOutput
@@ -521,16 +522,6 @@
 	if ([preferences objectForKey:@"DisplayType"])
 		[myPlayer setDisplayType: [preferences integerForKey:@"DisplayType"]];
 	
-	// ontop for internal video
-	if ([self isInternalVideoOutput] && [preferences integerForKey:@"DisplayType"] == 2)
-		[self setOntop:YES];
-	else
-		[self setOntop:NO];
-	
-	// ontop while playing
-	if ([preferences objectForKey:@"DisplayType"])
-		isOntopWhilePlaying = ([preferences integerForKey:@"DisplayType"] == 5);
-	
 	// flip vertical
 	if ([preferences objectForKey:@"FlipVertical"])
 		[myPlayer setFlipVertical: [preferences boolForKey:@"FlipVertical"]];
@@ -542,37 +533,6 @@
 	// set video size
 	[self setMovieSize];
 	
-	// set aspect ratio
-	if ([preferences objectForKey:@"VideoAspect"]) {
-		switch ([[preferences objectForKey:@"VideoAspect"] intValue]) {
-		case 1 :
-			[myPlayer setAspectRatio:4.0/3.0];		// 4:3
-			break;
-		case 2 :
-			[myPlayer setAspectRatio:3.0/2.0];		// 3:2
-			break;
-		case 3 :
-			[myPlayer setAspectRatio:5.0/3.0];		// 5:3
-			break;
-		case 4 :
-			[myPlayer setAspectRatio:16.0/9.0];		// 16:9
-			break;
-		case 5 :
-			[myPlayer setAspectRatio:1.85];		// 1.85:1
-			break;
-		case 6 :
-			[myPlayer setAspectRatio:2.93];	// 2.39:1
-			break;
-		case 7 :
-			[myPlayer setAspectRatio:[preferences floatForKey:@"CustomVideoAspectValue"]];
-			break;
-		default :
-			[myPlayer setAspectRatio:0];
-			break;
-		}
-	}
-	else
-		[myPlayer setAspectRatio:0];
 	
 	// fullscreen device id for not integrated video window
 	if ([[preferences objectForKey:@"VideoDriver"] intValue] != 0) {
@@ -912,13 +872,13 @@
 {
 	NSUserDefaults *preferences = [[AppController sharedController] preferences];
 	
-	if (myPlayingItem && [myPlayingItem objectForKey:@"SubtitlesEncoding"]
-			&& ![[myPlayingItem objectForKey:@"SubtitlesEncoding"] isEqualToString:@"None"])
-		[myPlayer setSubtitlesEncoding:[myPlayingItem objectForKey:@"SubtitlesEncoding"]];
+	if (myPlayingItem && [myPlayingItem objectForKey:MPETextEncoding]
+			&& ![[myPlayingItem objectForKey:MPETextEncoding] isEqualToString:@"None"])
+		[myPlayer setSubtitlesEncoding:[myPlayingItem objectForKey:MPETextEncoding]];
 	
-	else if ([preferences objectForKey:@"SubtitlesEncoding"] 
-				&& ![[preferences stringForKey:@"SubtitlesEncoding"] isEqualToString:@"None"])
-		[myPlayer setSubtitlesEncoding:[preferences objectForKey:@"SubtitlesEncoding"]];
+	else if ([preferences objectForKey:MPETextEncoding] 
+				&& ![[preferences stringForKey:MPETextEncoding] isEqualToString:@"None"])
+		[myPlayer setSubtitlesEncoding:[preferences objectForKey:MPETextEncoding]];
 	
 	else
 		[myPlayer setSubtitlesEncoding:nil];
@@ -1065,19 +1025,9 @@
 	}
 	else 
 	{
-		NSUserDefaults *preferences = [[AppController sharedController] preferences];
-		
 		// set the item to play
 		if ([playListController indexOfSelectedItem] < 0)
 			[playListController selectItemAtIndex:0];
-		
-		// if it is not set in the prefs by default play in window
-		if ([preferences objectForKey:@"DisplayType"])
-		{
-			if ([preferences integerForKey:@"DisplayType"] != 3 
-					&& [preferences integerForKey:@"DisplayType"] != 4)
-				[myPlayer setFullscreen:NO];
-		}
 		
 		// play the items
 		[self playItem:(NSMutableDictionary *)[playListController selectedItem]];
@@ -1327,16 +1277,23 @@
 	{
 		[playerWindow setLevel:NSModalPanelWindowLevel];
 		[videoOpenGLView setOntop:YES];
-		[myPlayer setOntop:YES];
 		isOntop = YES;
 	}
 	else
 	{
 		[playerWindow setLevel:NSNormalWindowLevel];
 		[videoOpenGLView setOntop:NO];
-		[myPlayer setOntop:NO];
 		isOntop = NO;
 	}
+}
+- (void)updateWindowOnTop
+{
+	if ([PREFS integerForKey:MPEWindowOnTopMode] == MPEWindowOnTopModeNever)
+		[self setOntop:NO];
+	else if ([PREFS integerForKey:MPEWindowOnTopMode] == MPEWindowOnTopModeAlways)
+		[self setOntop:YES];
+	else // [PREFS integerForKey:MPEWindowOnTopMode] == MPEWindowOnTopModeWhilePlaying
+		[self setOntop:[self isPlaying]];
 }
 - (BOOL) isOntop
 {
@@ -1398,7 +1355,7 @@
 /************************************************************************************/
 - (BOOL) startInFullscreen {
 	
-	return ([[[AppController sharedController] preferences] integerForKey:@"DisplayType"] == 3);
+	return ([PREFS integerForKey:MPEStartPlaybackDisplayType] == MPEStartPlaybackDisplayTypeFullscreen);
 }
 /************************************************************************************/
 - (int) fullscreenDeviceId {
@@ -2068,6 +2025,12 @@
 			name: @"NSWindowWillCloseNotification" object:statsPanel];
 }
 /************************************************************************************/
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if ([keyPath isEqualToString:MPEWindowOnTopMode])
+		[self updateWindowOnTop];
+}
+/************************************************************************************/
 - (void) statusUpdate:(NSNotification *)notification
 {	
 	// reset Idle time - Carbon PowerManager calls
@@ -2099,8 +2062,7 @@
 			[skipBeginningMenuItem setEnabled:YES];
 			[skipEndMenuItem setEnabled:YES];
 			[fullscreenButton setEnabled:YES];
-			if (isOntopWhilePlaying)
-				[self setOntop:YES];
+			[self updateWindowOnTop];
 			break;
 		case kPaused :
 		case kStopped :
@@ -2116,8 +2078,7 @@
 			[skipBeginningMenuItem setEnabled:NO];
 			[skipEndMenuItem setEnabled:NO];
 			[fullscreenButton setEnabled:NO];
-			if (isOntopWhilePlaying)
-				[self setOntop:NO];
+			[self updateWindowOnTop];
 			break;
 		}
 		

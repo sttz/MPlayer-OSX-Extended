@@ -1,5 +1,6 @@
 #import <Carbon/Carbon.h>
 #import <Foundation/NSByteOrder.h>
+
 // other controllers
 #import "AppController.h"
 #import "PlayListController.h"
@@ -7,6 +8,9 @@
 //Custom Class
 #import "VideoOpenGLView.h"
 #import "PlayerController.h"
+
+#import "PreferencesController2.h"
+#import "Preferences.h"
 
 static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 
@@ -818,49 +822,24 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 		{
 			image_aspect = org_image_aspect;
 			[self reshape];
-		}	
-		
-		if(sender == Aspect4to3MenuItem)
-		{
-			image_aspect = 4.0f/3.0f;
-			[self reshape];
-		}
-		
-		if(sender == Aspect3to2MenuItem)
-		{
-			image_aspect = 3.0f/2.0f;
-			[self reshape];
-		}
-		
-		if(sender == Aspect5to3MenuItem)
-		{
-			image_aspect = 5.0f/3.0f;
-			[self reshape];
-		}
-		
-		if(sender == Aspect16to9MenuItem)
-		{
-			image_aspect = 16.0f/9.0f;
-			[self reshape];
-		}
-		
-		if(sender == Aspect185to1MenuItem)
-		{
-			image_aspect = 1.85f/1.0f;
-			[self reshape];
-		}
-		
-		if(sender == Aspect239to1MenuItem)
-		{
-			image_aspect = 2.39f/1.0f;
-			[self reshape];
-		}
-		
-		if (sender == CustomAspectMenuItem) {
-			image_aspect = [[[AppController sharedController] preferences] floatForKey:@"CustomVideoAspectValue"];
-			[self reshape];
 		}
 	}
+}
+
+/*
+	Set aspect ratio by parsing the menu item title
+*/
+- (IBAction)setAspectRatio:(NSMenuItem *)sender
+{
+	float aspectValue = [PreferencesController2 parseAspectRatio:[sender title]];
+	
+	if (aspectValue <= 0) {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Couldn't parse aspect menu item with title '%@'",[sender title]];
+		return;
+	}
+	
+	image_aspect = aspectValue;
+	[self reshape];
 }
 
 /*

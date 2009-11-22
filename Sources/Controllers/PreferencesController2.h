@@ -8,8 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 
+#define MPE
 
 @interface PreferencesController2 : NSWindowController {
+	
+	IBOutlet NSUserDefaultsController *defaultsController;
 	
 	NSString *currentViewName;
 	
@@ -34,9 +37,12 @@
 	NSMutableDictionary *fonts;
 	IBOutlet NSWindow *cacheStatusWindow;
 	IBOutlet NSProgressIndicator *cacheStatusIndicator;
+	
+	IBOutlet NSWindow *customAspectRatioChooser;
 }
 
 @property (retain) NSMutableDictionary *fonts;
+@property (readonly) NSWindow *customAspectRatioChooser;
 
 - (IBAction) switchView:(NSToolbarItem*)sender;
 - (void) loadView:(NSString*)viewName;
@@ -49,10 +55,17 @@
 - (void) loadFonts;
 - (IBAction) changeFont:(NSPopUpButton *)sender;
 
++ (float) parseAspectRatio:(NSString *)aspectString;
+
 @end
 
 
 @interface ENCACodeTransformer : NSValueTransformer {
 	NSDictionary *codes;
+}
+@end
+
+@interface AspectRatioFormatter : NSFormatter {
+
 }
 @end
