@@ -1302,55 +1302,7 @@
 /************************************************************************************/
 - (IBAction)switchFullscreen:(id)sender
 {
-	BOOL withRestart = NO;
-	
-	if ([myPlayer status] > 0) {
-		
-		if (![myPlayer fullscreen]) {
-			
-			NSUserDefaults *prefs = [[AppController sharedController] preferences];
-			
-			// check if restart is needed (for non-integrated video and changed fullscreen device)
-			if ([self fullscreenDeviceId] != [myPlayer getDeviceId] && [prefs integerForKey:@"VideoDriver"] != 0) {
-				
-				// Ask for restart if current movie is not seekable
-				if (movieInfo && ![movieInfo isSeekable]) {
-					
-					int result = NSRunAlertPanel(@"Alert", @"The fullscreen device id has changed. A restart is required.", @"Cancel", @"Restart", nil);
-					
-					if(result == 0)
-					{
-						withRestart = YES;
-					} else {
-						return;
-					}
-				
-				// Restart if current movie is seekable
-				} else {
-					
-					withRestart = YES;
-				}
-			}
-			
-		}
-		
-		// Set device id for non-integrated video
-		if (withRestart) {
-			
-			[myPlayer setDisplayType:3];
-			[myPlayer setDeviceId:[self fullscreenDeviceId]];
-
-		} else {
-			
-			// if mplayer is playing
-			if ([myPlayer fullscreen])
-				[myPlayer setFullscreen:NO];
-			else
-				[myPlayer setFullscreen:YES];
-		}
-		
-		[myPlayer applySettingsWithRestart:withRestart];
-	}
+	[videoOpenGLView toggleFullscreen];
 }
 /************************************************************************************/
 - (BOOL) startInFullscreen {
@@ -1360,15 +1312,13 @@
 /************************************************************************************/
 - (int) fullscreenDeviceId {
 	
-	NSUserDefaults *prefs = [[AppController sharedController] preferences];
-	
 	// Default value from preferences
 	if (fullscreenDeviceId == -2) {
 		
-		if ([prefs integerForKey:@"FullscreenDeviceSameAsPlayer"])
+		if ([PREFS integerForKey:MPEGoToFullscreenOn] == MPEGoToFullscreenOnSameScreen)
 			return [[NSScreen screens] indexOfObject:[playerWindow screen]];
-		else if ([prefs integerForKey:@"FullscreenDevice"] < [[NSScreen screens] count])
-			return [prefs integerForKey:@"FullscreenDevice"];
+		else if ([PREFS integerForKey:MPEFullscreenDisplayNumber] < [[NSScreen screens] count])
+			return [PREFS integerForKey:MPEFullscreenDisplayNumber];
 		else
 			return [[NSScreen screens] count] - 1;
 	
@@ -1836,7 +1786,7 @@
 	for (i=0; i < [screens count]; i++) {
 		
 		newItem = [[NSMenuItem alloc]
-				   initWithTitle:[NSString stringWithFormat:@"Screen %d: %.0fx%.0f", i, [[screens objectAtIndex:i] frame].size.width, [[screens objectAtIndex:i] frame].size.height]
+				   initWithTitle:[NSString stringWithFormat:@"Screen %d: %.0fx%.0f", (i+1), [[screens objectAtIndex:i] frame].size.width, [[screens objectAtIndex:i] frame].size.height]
 				   action:@selector(fullscreenMenuAction:)
 				   keyEquivalent:@""];
 		[newItem setRepresentedObject:[NSNumber numberWithInt:i]];
@@ -1851,7 +1801,7 @@
 	if ([menu numberOfItems] > 0) {
 		
 		// Copy menu for window popup
-		NSMenu *other = [menu copy];
+		NSMenu *other = [[menu copy] autorelease];
 		[other setDelegate:self];
 		newItem = [[NSMenuItem alloc]
 				   initWithTitle:@""
@@ -1869,22 +1819,7 @@
 /************************************************************************************/
 - (void)fullscreenMenuAction:(id)sender {
 	
-	NSUserDefaults *prefs = [[AppController sharedController] preferences];
 	int devid = [[sender representedObject] intValue];
-	
-	if ([prefs integerForKey:@"VideoDriver"] != 0 && devid != fullscreenDeviceId) {
-		
-		if ([myPlayer status] > 0 && ![movieInfo isSeekable]) {
-			
-			int result = NSRunAlertPanel(@"Alert", @"Changing the fullscreen device requires a restart of the playback.", @"Cancel", @"Restart", nil);
-			
-			if(result != 0)
-				return;
-		}
-		
-		[myPlayer setDeviceId:devid];
-		[myPlayer applySettingsWithRestart:YES];
-	}
 	
 	if (devid >= -2 && devid < (int)[[NSScreen screens] count]) {
 		
@@ -1910,14 +1845,13 @@
 	// select auto entry
 	if (fullscreenDeviceId == -2) {
 		
-		NSUserDefaults *prefs = [[AppController sharedController] preferences];
 		int index = [[fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-2]];
 		
 		[[[fullscreenMenu submenu] itemAtIndex:index] setState:NSOnState];
 		[[[fullscreenWindowMenu menu] itemAtIndex:(index+1)] setState:NSOnState];
 	
 		// same entry implicit selection
-		if ([prefs boolForKey:@"FullscreenDeviceSameAsPlayer"]) {
+		if ([PREFS integerForKey:MPEGoToFullscreenOn] == MPEGoToFullscreenOnSameScreen) {
 			
 			int index = [[fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-1]];
 			
@@ -1939,10 +1873,8 @@
 - (void)screensDidChange {
 	
 	// Reset devide id to preferences value if auto or unavailable
-	if (fullscreenDeviceId == -2 || [self fullscreenDeviceId] >= [[NSScreen screens] count]) {
-		NSUserDefaults *prefs = [[AppController sharedController] preferences];
-		fullscreenDeviceId = [prefs integerForKey:@"FullscreenDevice"];
-	}
+	if (fullscreenDeviceId == -2 || [self fullscreenDeviceId] >= [[NSScreen screens] count])
+		fullscreenDeviceId = [PREFS integerForKey:MPEFullscreenDisplayNumber];
 	// Rebuild menu and select current id
 	[self fillFullscreenMenu];
 	[self selectFullscreenDevice];

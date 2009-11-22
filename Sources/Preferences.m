@@ -16,6 +16,7 @@ NSString* const MPEBlackOutOtherScreensInFullscreen   = @"MPEBlackOutOtherScreen
 NSString* const MPECacheSizeInMB                      = @"MPECacheSizeInMB";
 NSString* const MPECheckForUpdatesIncludesPrereleases = @"MPECheckForUpdatesIncludesPrereleases";
 NSString* const MPECustomAspectRatio                  = @"MPECustomAspectRatio";
+NSString* const MPECustomScreenshotsSavePath          = @"MPECustomScreenshotsSavePath";
 NSString* const MPECustomSizeInPx                     = @"MPECustomSizeInPx";
 NSString* const MPEDefaultAudioLanguages              = @"MPEDefaultAudioLanguages";
 NSString* const MPEDefaultDirectory                   = @"MPEDefaultDirectory";
@@ -62,3 +63,12 @@ int const MPEStartPlaybackDisplayTypeDesktop          = 2;
 int const MPEWindowOnTopModeNever                     = 0;
 int const MPEWindowOnTopModeWhilePlaying              = 1;
 int const MPEWindowOnTopModeAlways                    = 2;
+
+int const MPEScreenshotsDisabled                      = 0;
+int const MPEScreenshotSaveLocationHomeFolder         = 1;
+int const MPEScreenshotSaveLocationPicturesFolder     = 2;
+int const MPEScreenshotSaveLocationDesktop            = 3;
+int const MPEScreenshotSaveLocationCustom             = 4;
+
+int const MPEGoToFullscreenOnSameScreen               = 0;
+int const MPEGoToFullscreenOnFixedScreen              = 1;
