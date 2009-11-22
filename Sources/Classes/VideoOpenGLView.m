@@ -461,7 +461,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 		
 		[self setFrame:frame onWindow:[playerController playerWindow] blocking:NO];
 		
-		if ([[[AppController sharedController] preferences] boolForKey:@"BlackOutOtherScreens"])
+		if ([PREFS boolForKey:MPEBlackOutOtherScreensInFullscreen])
 			[self blackScreensExcept:fullscreenId];
 		
 		// wait for animation to finish
