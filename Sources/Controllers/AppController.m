@@ -93,6 +93,10 @@ static AppController *instance = nil;
 {
 	return [NSUserDefaults standardUserDefaults];
 }
+- (NSArray *) preferencesRequiringRestart
+{
+	return [preferencesSpecs objectForKey:@"RequiresRestart"];
+}
 /************************************************************************************/
 - (IBAction) openPreferences:(id)sender
 {

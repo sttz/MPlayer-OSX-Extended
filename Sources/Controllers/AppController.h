@@ -67,6 +67,7 @@
 
 // app's interface
 - (NSUserDefaults *) preferences;
+- (NSArray *) preferencesRequiringRestart;
 - (IBAction) openPreferences:(id)sender;
 - (IBAction) openCustomAspectRatioChooser:(id)sender;
 - (IBAction) chooseCustomAspectRatio:(NSButton *)sender;

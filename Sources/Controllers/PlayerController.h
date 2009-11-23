@@ -146,7 +146,6 @@
 - (BOOL) isInternalVideoOutput;
 - (void) setOntop:(BOOL)aBool;
 - (BOOL) isOntop;
-- (void) applyPrefs;
 - (void) applySettings;
 - (BOOL) changesRequireRestart;
 - (BOOL) movieIsSeekable;

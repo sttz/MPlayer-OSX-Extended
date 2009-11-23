@@ -175,10 +175,6 @@
 			selector:@selector(screensDidChange)
 			name:NSApplicationDidChangeScreenParametersNotification
 			object:NSApp];
-	
-	// apply prefs to player
-	[self applyPrefs];
-	
 }
 
 - (void) dealloc
@@ -378,7 +374,7 @@
 		[myPlayingItem setObject:[anItem objectForKey:MPETextEncoding] forKey:MPETextEncoding];
 		[self setSubtitlesEncoding];
 		// restart playback if encoding has changed
-		if ([myPlayer changesNeedsRestart])
+		if ([myPlayer changesNeedRestart])
 			[self applyChangesWithRestart:YES];
    		return;
 	}
@@ -396,7 +392,6 @@
 	myPlayingItem = [anItem retain];
 	
 	// apply item settings
-	[self applyPrefs];
 	[self applySettings];
 	
 	// chose binary to use
@@ -488,13 +483,6 @@
 	else
 		return NO;
 }
-
-/************************************************************************************/
-// applay values from preferences to player controller
-- (void) applyPrefs
-{
-	[myPlayer setPreferences:[PREFS dictionaryRepresentation]];
-}
 /************************************************************************************/
 - (void) applySettings
 {
@@ -543,7 +531,7 @@
 - (BOOL) changesRequireRestart
 {
 	if ([myPlayer isRunning])
-		return [myPlayer changesNeedsRestart];
+		return [myPlayer changesNeedRestart];
 	return NO;
 }
 /************************************************************************************/

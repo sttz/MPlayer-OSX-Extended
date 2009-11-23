@@ -86,7 +86,9 @@
 	<key>RequiresRestart</key>
 	<array>
 		<string>MPECacheSizeInMB</string>
-		<string>MPEStartPlaybackDisplayType</string>
+		<string>MPEDefaultAudioLanguages</string>
+		<string>MPEDefaultSubtitleLanguages</string>
+		<string>MPEScreenshotSaveLocation</string>
 		<string>MPEFlipDisplayVertically</string>
 		<string>MPEFlipDisplayHorizontally</string>
 		<string>MPEFont</string>

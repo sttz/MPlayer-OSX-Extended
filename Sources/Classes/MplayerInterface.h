@@ -159,7 +159,6 @@
 - (id) initWithPathToPlayer:(NSString *)aPath;		// init with movie file path
 - (void) setBufferName:(NSString *)name;
 - (void) setPlayerPath:(NSString *)path;
-- (void) setPreferences:(NSDictionary *)preferences;
 
 // playback controls (take effect imediately)
 - (void) playWithInfo:(MovieInfo *)mf;				// play item from saved time
@@ -201,7 +200,7 @@
 - (MovieInfo *) info;							// returns the content of info dictionary 
 - (int) status;
 - (float) seconds;									// returns number of seconds, elapsed
-- (BOOL) changesNeedsRestart;						// retuns YES if changes needs restart
+- (BOOL) changesNeedRestart;						// retuns YES if changes needs restart
 
 - (BOOL) isRunning;
 - (BOOL) isPlaying;

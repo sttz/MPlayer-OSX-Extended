@@ -9,6 +9,8 @@
 #import "PreferencesController2.h"
 
 #import "AppController.h"
+#import "PlayerController.h"
+
 #import "Debug.h"
 #import "Preferences.h"
 
@@ -115,14 +117,28 @@
 
 - (IBAction) requireRestart:(id)sender
 {
-	[[[self window] contentView] addSubview:restartView];
-	[self loadView:currentViewName];
+	BOOL restart = [[[AppController sharedController] playerController] changesRequireRestart];
+	NSLog(@"require restart? %d",restart);
+	
+	if (restart	&& !restartIsRequired) {
+		[[[self window] contentView] addSubview:restartView];
+		[self loadView:currentViewName];
+	
+	} else if (!restart && restartIsRequired) {
+		[restartView removeFromSuperview];
+		[self loadView:currentViewName];
+	}
+	
+	restartIsRequired = restart;
 }
 
 - (IBAction) restartPlayback:(id)sender
 {
 	[restartView removeFromSuperview];
 	[self loadView:currentViewName];
+	
+	[[[AppController sharedController] playerController] applyChangesWithRestart:YES];
+	restartIsRequired = NO;
 }
 
 - (IBAction) selectNewScreenshotPath:(NSPopUpButton *)sender
@@ -147,6 +163,8 @@
     } else {
 		[sender selectItemWithTag:screenshotSavePathLastSelection];
 	}
+	
+	[self requireRestart:sender];
 }
 
 - (BOOL)control:(NSControl *)control textShouldBeginEditing:(NSText *)fieldEditor
@@ -259,6 +277,8 @@
 - (IBAction) changeFont:(NSPopUpButton *)sender
 {
 	[[NSUserDefaults standardUserDefaults] setObject:[sender titleOfSelectedItem] forKey:MPEFont];
+	
+	[self requireRestart:sender];
 }
 
 + (float) parseAspectRatio:(NSString *)aspectString

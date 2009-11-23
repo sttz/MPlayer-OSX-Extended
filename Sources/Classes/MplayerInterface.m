@@ -11,6 +11,7 @@
 #import "RegexKitLite.h"
 #import <sys/sysctl.h>
 
+#import "AppController.h"
 #import "PreferencesController2.h"
 #import "Preferences.h"
 
@@ -137,12 +138,6 @@ static NSArray* parseRunLoopModes;
 	[myPathToPlayer release];
 	myPathToPlayer = [path retain];
 }
-/************************************************************************************/
-- (void) setPreferences:(NSDictionary *)preferences
-{
-	[prefs release];
-	prefs = [preferences copy];
-}
 
 /************************************************************************************
  PLAYBACK CONTROL
@@ -153,6 +148,10 @@ static NSArray* parseRunLoopModes;
 	NSMutableArray *videoFilters = [NSMutableArray array];
 	NSMutableArray *audioFilters = [NSMutableArray array];
 	NSMutableArray *audioCodecsArr = [NSMutableArray array];
+	
+	// copy preferences to keep track of changes
+	[prefs release];
+	prefs = [[PREFS dictionaryRepresentation] copy];
 	
 	// Detect number of cores/cpus
 	size_t len = sizeof(numberOfThreads);
@@ -872,31 +871,9 @@ static NSArray* parseRunLoopModes;
 - (void) applySettingsWithRestart:(BOOL)restartIt
 {
 	if ([self isRunning]) {
-		if (settingsChanged && restartIt) {
-			// all settings will be applied by restarting player
-			restartingPlayer = YES;		// set it not to send termination notification
-			[self play];				// restart playback if player is running
-			takeEffectImediately = NO;
-		}
-		else {
-			// only settings that don't need restart will be applied
-			if ([myCommandsBuffer count] > 0) {
-				if (myState == kPaused) {
-					if (takeEffectImediately) {
-						
-						[self sendCommands:myCommandsBuffer withType:MI_CMD_SHOW_COND];
-						[myCommandsBuffer removeAllObjects];
-						takeEffectImediately = NO;
-					}
-				// else the commands will be sent on unpausing
-				}
-				else {
-					
-					[self sendCommands:myCommandsBuffer withType:MI_CMD_SHOW_COND];
-					[myCommandsBuffer removeAllObjects];
-				}
-			}
-		}
+		restartingPlayer = YES;		// set it not to send termination notification
+		[self play];				// restart playback if player is running
+		takeEffectImediately = NO;
 	}
 	
 }
@@ -945,31 +922,33 @@ static NSArray* parseRunLoopModes;
 	return mySeconds;
 }
 /************************************************************************************/
-- (BOOL) changesNeedsRestart
+- (BOOL) changesNeedRestart
 {
-	if (myState > 0)
-		return settingsChanged;
-	return NO;
-}
-/************************************************************************************/
-- (BOOL) videoOutHasChanged
-{
-	return videoOutChanged;
+	NSArray *requiresRestart = [[AppController sharedController] preferencesRequiringRestart];
+	NSDictionary *currentPrefs = [PREFS dictionaryRepresentation];
+	
+	BOOL different = NO;
+	for (NSString *option in requiresRestart) {
+		id op1 = [prefs objectForKey:option];
+		id op2 = [currentPrefs objectForKey:option];
+		if (op1 == nil && op2 == nil)
+			continue;
+		if (op1 && ![op1 isEqual:op2]) {
+			different = YES;
+			break;
+		}
+	}
+	
+	return different;
 }
 /************************************************************************************/
 - (BOOL)isRunning
 {	
 	return isRunning;
 }
-
 - (BOOL)isPlaying
 {
 	return (myState == kPlaying || myState == kSeeking || myState == kBuffering);
-}
-
-- (BOOL)isWindowed
-{	
-	return windowedVO;
 }
 /************************************************************************************
  STATISTICS
