@@ -23,8 +23,6 @@
 
 - (void) awakeFromNib
 {
-	NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-	
 	views = [[NSDictionary alloc] initWithObjectsAndKeys:
 			 generalView,	@"General",
 			 displayView,	@"Display",
@@ -35,12 +33,14 @@
 			 advancedView,	@"Advanced",
 			 nil];
 	
-	if ([prefs objectForKey:@"MPESelectedPreferencesSection"])
-		[self loadView:[prefs stringForKey:@"MPESelectedPreferencesSection"]];
+	if ([PREFS objectForKey:@"MPESelectedPreferencesSection"])
+		[self loadView:[PREFS stringForKey:@"MPESelectedPreferencesSection"]];
 	else
 		[self loadView:@"General"];
 	
-	screenshotSavePathLastSelection = [prefs integerForKey:@"MPEScreenshotSaveLocation"];
+	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES]; 
+	
+	screenshotSavePathLastSelection = [PREFS integerForKey:MPECustomScreenshotsSavePath];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(loadFonts)
@@ -138,12 +138,12 @@
 	[panel setCanChooseDirectories:YES];
 	[panel setCanChooseFiles:NO];
 	
-	NSString *oldPath = [prefs objectForKey:@"MPECustomScreenshotsSavePath"];
+	NSString *oldPath = [prefs objectForKey:MPECustomScreenshotsSavePath];
 	
 	if ([panel runModalForDirectory:oldPath file:nil types:nil] == NSOKButton) {
 		[prefs setObject:[[panel filenames] objectAtIndex:0] 
-				  forKey:@"MPECustomScreenshotsSavePath"];
-		[sender selectItemWithTag:4];
+				  forKey:MPECustomScreenshotsSavePath];
+		[sender selectItemWithTag:MPEScreenshotSaveLocationCustom];
     } else {
 		[sender selectItemWithTag:screenshotSavePathLastSelection];
 	}
@@ -245,8 +245,8 @@
 	// Load font selection
 	NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
 	NSString *defaultFont;
-	if ([prefs objectForKey:@"MPEFont"])
-		defaultFont = [prefs stringForKey:@"MPEFont"];
+	if ([prefs objectForKey:MPEFont])
+		defaultFont = [prefs stringForKey:MPEFont];
 	else
 		defaultFont = @"Helvetica";
 	
@@ -258,7 +258,7 @@
 
 - (IBAction) changeFont:(NSPopUpButton *)sender
 {
-	[[NSUserDefaults standardUserDefaults] setObject:[sender titleOfSelectedItem] forKey:@"MPEFont"];
+	[[NSUserDefaults standardUserDefaults] setObject:[sender titleOfSelectedItem] forKey:MPEFont];
 }
 
 + (float) parseAspectRatio:(NSString *)aspectString
@@ -285,6 +285,16 @@
 	}
 	
 	return 0;
+}
+
++ (NSColor *) unarchiveColor:(NSData *)data
+{
+	NSColor *aColor = nil;
+	
+	if (data != nil)
+		aColor = (NSColor *)[NSUnarchiver unarchiveObjectWithData:data];
+	
+	return aColor;
 }
 
 @end

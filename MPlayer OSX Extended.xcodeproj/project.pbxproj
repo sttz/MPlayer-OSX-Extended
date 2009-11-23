@@ -202,7 +202,7 @@
 		377E032C085E3ED500D64A26 /* volume2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = volume2.png; path = Resources/Graphics/volume2.png; sourceTree = "<group>"; };
 		377E032D085E3ED500D64A26 /* volume3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = volume3.png; path = Resources/Graphics/volume3.png; sourceTree = "<group>"; };
 		377E0369085E480E00D64A26 /* MplayerInterface.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = MplayerInterface.h; path = Sources/Classes/MplayerInterface.h; sourceTree = "<group>"; };
-		377E036A085E480E00D64A26 /* MplayerInterface.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = MplayerInterface.m; path = Sources/Classes/MplayerInterface.m; sourceTree = "<group>"; };
+		377E036A085E480E00D64A26 /* MplayerInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MplayerInterface.m; path = Sources/Classes/MplayerInterface.m; sourceTree = "<group>"; };
 		377E036D085E480E00D64A26 /* ScrubbingBar.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ScrubbingBar.h; path = Sources/Classes/ScrubbingBar.h; sourceTree = "<group>"; };
 		377E036E085E480E00D64A26 /* ScrubbingBar.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ScrubbingBar.m; path = Sources/Classes/ScrubbingBar.m; sourceTree = "<group>"; };
 		377E0373085E482B00D64A26 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AppController.h; path = Sources/Controllers/AppController.h; sourceTree = "<group>"; };

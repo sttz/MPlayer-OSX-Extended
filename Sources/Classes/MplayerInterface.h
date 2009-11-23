@@ -87,74 +87,27 @@
 	NSString *myAudioExportFile;
 	NSString *myFontFile;
 	
+	NSDictionary *prefs;
+	
 	NSString *buffer_name;
 	
 	// playback
-	NSString *audioLanguages;
-	NSString *subtitleLanguages;
 	BOOL osdSilenced;
-	BOOL correctPTS;
 	int numberOfThreads;
-	
-	unsigned int cacheSize;
 	
 	BOOL disableAppleRemote;
 	
 	// display
-	unsigned int displayType;
-	
-	BOOL flipVertical;
-	BOOL flipHorizontal;
-	NSSize movieSize;
-	double aspectRatio;
-	
-	unsigned int deviceId;
-	unsigned int voModule;
 	NSString *screenshotPath;
 	
 	// text
-	NSString *subEncoding;
-	NSString *guessEncodingLang;
-	
-	BOOL assSubtitles;
-	unsigned int subScale;
-	
-	BOOL embeddedFonts;
-	BOOL assPreFilter;
-	NSColor *subColor;
-	NSColor *subBorderColor;
-	
 	int osdLevel;
-	unsigned int osdScale;
-	
-	// video
-	BOOL enableVideo;
-	NSString *videoCodecs;
-	
-	unsigned int framedrop;
-	BOOL fastLibavcodec;
-	unsigned int skipLoopfilter;
-	
-	BOOL deinterlace;
-	unsigned int postprocessing;
-	
-	// audio
-	BOOL enableAudio;
-	NSString *audioCodecs;
-	
-	BOOL passthroughAC3;
-	BOOL passthroughDTS;
-	
-	BOOL hrtfFilter;
-	BOOL bs2bFilter;
-	BOOL karaokeFilter;
 	
 	// advanced
 	BOOL equalizerEnabled;
 	NSArray *equalizerValues;
 	BOOL videoEqualizerEnabled;
 	NSArray *videoEqualizerValues;
-	NSArray *addParams;
 	
 	// properties
 	BOOL myRebuildIndex;
@@ -206,6 +159,7 @@
 - (id) initWithPathToPlayer:(NSString *)aPath;		// init with movie file path
 - (void) setBufferName:(NSString *)name;
 - (void) setPlayerPath:(NSString *)path;
+- (void) setPreferences:(NSDictionary *)preferences;
 
 // playback controls (take effect imediately)
 - (void) playWithInfo:(MovieInfo *)mf;				// play item from saved time
@@ -223,68 +177,15 @@
 //beta
 - (void) setAudioExportFile:(NSString *)aFile;
 
-// playback
-- (void) setAudioLanguages:(NSString *)langString;
-- (void) setSubtitleLanguages:(NSString *)langString;
-- (void) setCorrectPTS:(BOOL)aBool;
-- (void) setCacheSize:(unsigned int)kilobytes;
-
-// text
-- (void) setFont:(NSString *)aFile;
-- (void) setGuessEncodingLang:(NSString *)aLang;
-- (void) setAssSubtitles:(BOOL)aBool;
-- (void) setEmbeddedFonts:(BOOL)aBool;
-- (void) setSubtitlesEncoding:(NSString *)aEncoding;// sets subtitles file encoding
-- (void) setSubtitlesScale:(unsigned int)aScale;	// sets subtitle scale in % (see man mplayer)
-- (void) setAssPreFilter:(BOOL)aBool;
-- (void) setSubtitlesColor:(NSColor *)color;
-- (void) setSubtitlesBorderColor:(NSColor *)color;
-- (void) setOsdLevel:(int)anInt;
-- (void) setOsdScale:(unsigned int)anInt;
-
-// display
-- (void) setDisplayType:(unsigned int)mode;
-- (void) setFlipVertical:(BOOL)aBool;
-- (void) setFlipHorizontal:(BOOL)aBool;
-- (void) setMovieSize:(NSSize)aSize;				// set height to 0 to keep aspect ratio)
-- (NSSize) movieSize;
-- (void) setAspectRatio:(double)ratio;
-- (void) setDeviceId:(unsigned int)dId;
-- (unsigned int)getDeviceId;
-- (void) setVideoOutModule:(int)module;
-- (void) setScreenshotPath:(NSString*)path;
-
-// video
-- (void) setVideoEnabled:(BOOL)aBool;
-- (void) setVideoCodecs:(NSString *)codecString;
-- (void) setFramedrop:(unsigned int)mode;
-- (void) setFastLibavcodec:(BOOL)aBool;
-- (void) setDeinterlace:(unsigned int)mode;
-- (void) setPostprocessing:(unsigned int)mode;
-- (void) setSkipLoopfilter:(unsigned int)mode;
-
-// audio
-- (void) setAudioEnabled:(BOOL)aBool;
-- (void) setAudioCodecs:(NSString *)codecString;
-- (void) setAC3Passthrough:(BOOL)aBool;
-- (void) setDTSPassthrough:(BOOL)aBool;
-- (void) setHRTFFilter:(BOOL)aBool;
-- (void) setBS2BFilter:(BOOL)aBool;
-- (void) setKaraokeFilter:(BOOL)aBool;
-
 // advanced
 - (void) setEqualizerEnabled:(BOOL)aBool;
 - (void) setEqualizer:(NSArray *)freqs;
 - (void) setVideoEqualizerEnabled:(BOOL)aBool;
 - (void) setVideoEqualizer:(NSArray *)values;
-- (void) setAdditionalParams:(NSArray *)params;
 
 //- (void) setVIDEO_TS:(BOOL)aBool;					// dvd folder
 
 - (void) setRebuildIndex:(BOOL)aBool;				// take effect after restarting playback
-- (void) setFullscreen:(BOOL)aBool;
-- (BOOL) fullscreen;
-- (void) setOntop:(BOOL)ontop;
 
 // misc settings (don't work during playback)
 - (void) setVolume:(unsigned int)percents;			// set audio volume
@@ -301,10 +202,9 @@
 - (int) status;
 - (float) seconds;									// returns number of seconds, elapsed
 - (BOOL) changesNeedsRestart;						// retuns YES if changes needs restart
-- (BOOL) videoOutHasChanged;
+
 - (BOOL) isRunning;
 - (BOOL) isPlaying;
-- (BOOL) isWindowed;
 
 // statistics
 - (void) setUpdateStatistics:(BOOL)aBool;			// sets whether to update stats

@@ -57,6 +57,9 @@ extern NSString* const MPEWindowOnTopMode;
 extern NSString* const MPECustomAspectRatioStringKey;
 extern NSString* const MPECustomAspectRatioValueKey;
 
+extern NSString* const MPEAdvancedOptionsStringKey;
+extern NSString* const MPEAdvancedOptionsEnabledKey;
+
 extern int const MPEStartPlaybackDisplayTypeWindow;
 extern int const MPEStartPlaybackDisplayTypeFullscreen;
 extern int const MPEStartPlaybackDisplayTypeDesktop;
@@ -65,11 +68,34 @@ extern int const MPEWindowOnTopModeNever;
 extern int const MPEWindowOnTopModeWhilePlaying;
 extern int const MPEWindowOnTopModeAlways;
 
+extern int const MPEDisplaySizeHalf;
+extern int const MPEDisplaySizeOriginal;
+extern int const MPEDisplaySizeDouble;
+extern int const MPEDisplaySizeFitScreen;
+extern int const MPEDisplaySizeCustom;
+
 extern int const MPEScreenshotsDisabled;
 extern int const MPEScreenshotSaveLocationHomeFolder;
+extern int const MPEScreenshotSaveLocationDocumentsFolder;
 extern int const MPEScreenshotSaveLocationPicturesFolder;
 extern int const MPEScreenshotSaveLocationDesktop;
 extern int const MPEScreenshotSaveLocationCustom;
 
 extern int const MPEGoToFullscreenOnSameScreen;
 extern int const MPEGoToFullscreenOnFixedScreen;
+
+extern int const MPEDropFramesNever;
+extern int const MPEDropFramesSoft;
+extern int const MPEDropFramesHard;
+
+extern int const MPEDeinterlaceFilterOff;
+extern int const MPEDeinterlaceFilterYadif;
+extern int const MPEDeinterlaceFilterKernel;
+extern int const MPEDeinterlaceFilterFFmpeg;
+extern int const MPEDeinterlaceFilterFilm;
+extern int const MPEDeinterlaceFilterBlend;
+
+extern int const MPEPostprocessingFilterOff;
+extern int const MPEPostprocessingFilterDefault;
+extern int const MPEPostprocessingFilterFast;
+extern int const MPEPostprocessingFilterHighQuality;

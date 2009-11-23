@@ -201,6 +201,30 @@ static LanguageCodes *instance;
 	return nil;
 }
 
+- (NSString *)mplayerArgumentFromArray:(NSArray *)codes {
+	
+	if (!codes_2_to_3)
+		return nil;
+	
+	NSMutableArray *expanded = [[codes mutableCopy] autorelease];
+	NSArray *twoLetterCodes;
+	
+	// add two-letter fro three-letter codes in array
+	for (NSString* code in codes) {
+		
+		if ([code length] != 3)
+			continue;
+		
+		twoLetterCodes = [codes_2_to_3 allKeysForObject:code];
+		
+		if ([twoLetterCodes count] > 0)
+			[expanded insertObject:[twoLetterCodes objectAtIndex:0] 
+						   atIndex:[expanded indexOfObject:code]];
+	}
+	
+	return [expanded componentsJoinedByString:@","];
+}
+
 - (void)dealloc
 {
 	[codes_2 release];

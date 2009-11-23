@@ -56,6 +56,9 @@ NSString* const MPEWindowOnTopMode                    = @"MPEWindowOnTopMode";
 NSString* const MPECustomAspectRatioStringKey         = @"MPECustomAspectRatioString";
 NSString* const MPECustomAspectRatioValueKey          = @"MPECustomAspectRatioValue";
 
+NSString* const MPEAdvancedOptionsStringKey           = @"MPEAdvancedOptionString";
+NSString* const MPEAdvancedOptionsEnabledKey          = @"MPEAdvancedOptionEnabled";
+
 int const MPEStartPlaybackDisplayTypeWindow           = 0;
 int const MPEStartPlaybackDisplayTypeFullscreen       = 1;
 int const MPEStartPlaybackDisplayTypeDesktop          = 2;
@@ -64,11 +67,37 @@ int const MPEWindowOnTopModeNever                     = 0;
 int const MPEWindowOnTopModeWhilePlaying              = 1;
 int const MPEWindowOnTopModeAlways                    = 2;
 
+int const MPEDisplaySizeHalf                          = 0;
+int const MPEDisplaySizeOriginal                      = 1;  
+int const MPEDisplaySizeDouble                        = 2;
+int const MPEDisplaySizeFitScreen                     = 3;
+int const MPEDisplaySizeCustom                        = 4;
+
 int const MPEScreenshotsDisabled                      = 0;
 int const MPEScreenshotSaveLocationHomeFolder         = 1;
-int const MPEScreenshotSaveLocationPicturesFolder     = 2;
-int const MPEScreenshotSaveLocationDesktop            = 3;
-int const MPEScreenshotSaveLocationCustom             = 4;
+int const MPEScreenshotSaveLocationDocumentsFolder    = 2;
+int const MPEScreenshotSaveLocationPicturesFolder     = 3;
+int const MPEScreenshotSaveLocationDesktop            = 4;
+int const MPEScreenshotSaveLocationCustom             = 5;
 
 int const MPEGoToFullscreenOnSameScreen               = 0;
 int const MPEGoToFullscreenOnFixedScreen              = 1;
+
+int const MPEDropFramesNever                          = 0;
+int const MPEDropFramesSoft                           = 1;
+int const MPEDropFramesHard                           = 2;
+
+int const MPEDeinterlaceFilterOff                     = 0;
+int const MPEDeinterlaceFilterYadif                   = 1;
+int const MPEDeinterlaceFilterKernel                  = 2;
+int const MPEDeinterlaceFilterFFmpeg                  = 3;
+int const MPEDeinterlaceFilterFilm                    = 4;
+int const MPEDeinterlaceFilterBlend                   = 5;
+
+int const MPEPostprocessingFilterOff                  = 0;
+int const MPEPostprocessingFilterDefault              = 1;
+int const MPEPostprocessingFilterFast                 = 2;
+int const MPEPostprocessingFilterHighQuality          = 3;
+
+
+

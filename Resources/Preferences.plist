@@ -15,7 +15,7 @@
 		<key>MPEAnimateInterfaceTransitions</key>
 		<true/>
 		<key>MPEScreenshotSaveLocation</key>
-		<integer>3</integer>
+		<integer>4</integer>
 		<key>MPEStartPlaybackDisplayType</key>
 		<integer>0</integer>
 		<key>MPEWindowOnTopMode</key>
@@ -45,11 +45,11 @@
 		<key>MPEGuessTextEncoding</key>
 		<string>disabled</string>
 		<key>MPELoadEmbeddedFonts</key>
-		<false/>
-		<key>MPERenderSubtitlesFirst</key>
 		<true/>
+		<key>MPERenderSubtitlesFirst</key>
+		<false/>
 		<key>MPESubtitleScale</key>
-		<integer>1</integer>
+		<real>1.25</real>
 		<key>MPESubtitleTextColor</key>
 		<data>BAtzdHJlYW10eXBlZIHoA4QBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARmZmZmAQEBAYY=</data>
 		<key>MPESubtitleBorderColor</key>
@@ -57,11 +57,9 @@
 		<key>MPEOSDLevel</key>
 		<integer>1</integer>
 		<key>MPEOSDScale</key>
-		<integer>1</integer>
+		<real>0.75</real>
 		<key>MPEEnableVideo</key>
 		<true/>
-		<key>MPEOverrideVideoCodecs</key>
-		<string></string>
 		<key>MPEFastDecoding</key>
 		<false/>
 		<key>MPEDropFrames</key>
@@ -72,8 +70,6 @@
 		<integer>0</integer>
 		<key>MPEEnableAudio</key>
 		<true/>
-		<key>MPEOverrideAudioCodecs</key>
-		<string></string>
 		<key>MPEHardwareAC3Passthrough</key>
 		<false/>
 		<key>MPEHardwareDTSPassthrough</key>

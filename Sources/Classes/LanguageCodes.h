@@ -37,6 +37,7 @@
 
 - (NSString *)resolveCode:(NSString *)code;
 - (NSString *)threeLetterCodeForToken:(NSString *)token;
+- (NSString *)mplayerArgumentFromArray:(NSArray *)codes;
 - (NSString *)nameForCode:(NSString *)code;
 
 @end

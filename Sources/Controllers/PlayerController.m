@@ -32,8 +32,6 @@
 /************************************************************************************/
 -(void)awakeFromNib
 {	
-	
-	NSUserDefaults *prefs = [[AppController sharedController] preferences];
     NSString *playerPath;
 	NSString *preflightPlayerPath;
 	saveTime = YES;
@@ -147,12 +145,12 @@
 	[fcScrubbingBar setIndeterminate:NO];
 	
 	// set mute status and reload unmuted volume
-	if ([prefs objectForKey:@"LastAudioVolume"] && [prefs boolForKey:@"LastAudioMute"]) {
+	if ([PREFS objectForKey:@"LastAudioVolume"] && [PREFS boolForKey:@"LastAudioMute"]) {
 		[self setVolume:0];
-		muteLastVolume = [prefs floatForKey:@"LastAudioVolume"];
+		muteLastVolume = [PREFS floatForKey:@"LastAudioVolume"];
 	// set volume to the last used value
-	} else if ([prefs objectForKey:@"LastAudioVolume"])
-		[self setVolume:[[prefs objectForKey:@"LastAudioVolume"] doubleValue]];
+	} else if ([PREFS objectForKey:@"LastAudioVolume"])
+		[self setVolume:[[PREFS objectForKey:@"LastAudioVolume"] doubleValue]];
 	else
 		[self setVolume:50];
 		
@@ -398,6 +396,7 @@
 	myPlayingItem = [anItem retain];
 	
 	// apply item settings
+	[self applyPrefs];
 	[self applySettings];
 	
 	// chose binary to use
@@ -494,247 +493,7 @@
 // applay values from preferences to player controller
 - (void) applyPrefs
 {
-	NSUserDefaults *preferences = [[AppController sharedController] preferences];
-	
-	// *** Playback
-	
-	// audio languages
-	if ([[preferences stringForKey:@"AudioLanguages"] length] > 0)
-		[myPlayer setAudioLanguages: [preferences stringForKey:@"AudioLanguages"]];
-	else
-		[myPlayer setAudioLanguages:nil];
-	
-	// subtitle languages
-	if ([[preferences stringForKey:@"SubtitleLanguages"] length] > 0)
-		[myPlayer setSubtitleLanguages: [preferences stringForKey:@"SubtitleLanguages"]];
-	else
-		[myPlayer setSubtitleLanguages:nil];
-	
-	// cache size
-	if ([preferences objectForKey:@"CacheSize"])
-		[myPlayer setCacheSize: [[NSNumber numberWithFloat: ([preferences floatForKey:@"CacheSize"] * 1024)] unsignedIntValue]];
-	
-	
-	
-	// *** Display
-	
-	// display type (force to fullscreen if overridden)
-	if ([preferences objectForKey:@"DisplayType"])
-		[myPlayer setDisplayType: [preferences integerForKey:@"DisplayType"]];
-	
-	// flip vertical
-	if ([preferences objectForKey:@"FlipVertical"])
-		[myPlayer setFlipVertical: [preferences boolForKey:@"FlipVertical"]];
-	
-	// flip horizontal
-	if ([preferences objectForKey:@"FlipHorizontal"])
-		[myPlayer setFlipHorizontal: [preferences boolForKey:@"FlipHorizontal"]];
-	
-	// set video size
-	[self setMovieSize];
-	
-	
-	// fullscreen device id for not integrated video window
-	if ([[preferences objectForKey:@"VideoDriver"] intValue] != 0) {
-		[myPlayer setDeviceId: [self fullscreenDeviceId]];
-	}
-	
-	//vo driver
-	if ([preferences objectForKey:@"VideoDriver"])
-	{
-		switch ([[preferences objectForKey:@"VideoDriver"] intValue]) 
-		{
-		case 0 :
-			[myPlayer setVideoOutModule:2]; // MPlayer OSX
-			break;
-		case 1 :
-			[myPlayer setVideoOutModule:0]; // Quartz / Quicktime
-			break;
-		case 2 :
-			[myPlayer setVideoOutModule:1]; // CoreVideo
-			break;
-		default :
-			[myPlayer setVideoOutModule:2]; // MPlayer OSX
-			break;
-		}
-	}
-	else
-		[myPlayer setVideoOutModule:2];	// MPlayer OSX
-	
-	// Screenshot path
-	switch ([preferences integerForKey:@"Screenshots"]) {
-		case 0: // disabled
-			[myPlayer setScreenshotPath:nil];
-			break;
-		case 1: // desktop
-			[myPlayer setScreenshotPath:
-				[NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) objectAtIndex:0]];
-			break;
-		case 2: // documents
-			[myPlayer setScreenshotPath:
-				[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]];
-			break;
-		case 3: // home
-			[myPlayer setScreenshotPath:NSHomeDirectory()];
-			break;
-		case 4: // pictures
-			[myPlayer setScreenshotPath:[NSHomeDirectory() stringByAppendingString:@"/Pictures"]];
-			break;
-	}
-	
-	
-	
-	// *** Text
-	
-	// subtitle font
-	if ([preferences objectForKey:@"SubtitlesFontName"]) {
-		NSString *fontname = [preferences stringForKey:@"SubtitlesFontName"];
-		if ([preferences objectForKey:@"SubtitlesStyleName"])
-			fontname = [NSString stringWithFormat:@"%@:style=%@", fontname, [preferences stringForKey:@"SubtitlesStyleName"]];
-		[myPlayer setFont:fontname];
-	} else
-		[myPlayer setFont:nil];
-	
-	// subtitle encoding
-	[self setSubtitlesEncoding];
-	
-	// guess encoding
-	if (![preferences boolForKey:@"SubtitlesGuessEncoding"])
-		[myPlayer setGuessEncodingLang:nil];
-	else
-		[myPlayer setGuessEncodingLang:[preferences stringForKey:@"SubtitlesGuessLanguage"]];
-	
-	// ass subtitles
-	if ([preferences objectForKey:@"ASSSubtitles"])
-		[myPlayer setAssSubtitles: [preferences boolForKey:@"ASSSubtitles"]];
-	
-	// subtitle scale
-	if ([preferences objectForKey:@"SubtitlesScale"])
-		[myPlayer setSubtitlesScale:[preferences integerForKey:@"SubtitlesScale"]];
-	
-	// embedded fonts
-	if ([preferences objectForKey:@"EmbeddedFonts"])
-		[myPlayer setEmbeddedFonts: [preferences boolForKey:@"EmbeddedFonts"]];
-	
-	// ass pre filter
-	if ([preferences objectForKey:@"ASSPreFilter"])
-		[myPlayer setAssPreFilter: [preferences boolForKey:@"ASSPreFilter"]];
-	
-	// subtitle color
-	if ([preferences objectForKey:@"SubtitlesColor"])
-		[myPlayer setSubtitlesColor:(NSColor *)[NSUnarchiver unarchiveObjectWithData:[preferences objectForKey:@"SubtitlesColor"]]];
-	
-	// subtitle color
-	if ([preferences objectForKey:@"SubtitlesBorderColor"])
-		[myPlayer setSubtitlesBorderColor:(NSColor *)[NSUnarchiver unarchiveObjectWithData:[preferences objectForKey:@"SubtitlesBorderColor"]]];
-	
-	// osd level
-	if ([preferences objectForKey:@"OSDLevel"])
-		[myPlayer setOsdLevel:[preferences integerForKey:@"OSDLevel"]];
-	
-	// osd scale
-	if ([preferences objectForKey:@"OSDScale"])
-		[myPlayer setOsdScale:[preferences integerForKey:@"OSDScale"]];
-	
-	
-	
-	// *** Video
-	
-	// enable video
-	if ([preferences objectForKey:@"EnableVideo"])
-		[myPlayer setVideoEnabled: [preferences boolForKey:@"EnableVideo"]];
-	
-	// video codecs
-	if ([[preferences stringForKey:@"VideoCodecs"] length] > 0)
-		[myPlayer setVideoCodecs: [preferences stringForKey:@"VideoCodecs"]];
-	else
-		[myPlayer setVideoCodecs:nil];
-	
-	// framedrop
-	if ([preferences objectForKey:@"Framedrop"])
-		[myPlayer setFramedrop: [preferences integerForKey:@"Framedrop"]];
-	
-	// fast libavcodec decoding
-	if ([preferences objectForKey:@"FastLibavcodecDecoding"])
-		[myPlayer setFastLibavcodec: [preferences boolForKey:@"FastLibavcodecDecoding"]];
-	
-	// deinterlace
-	if ([preferences objectForKey:@"Deinterlace_r9"])
-		[myPlayer setDeinterlace: [preferences integerForKey:@"Deinterlace_r9"]];
-	
-	// postprocessing
-	if ([preferences objectForKey:@"Postprocessing"])
-		[myPlayer setPostprocessing: [preferences integerForKey:@"Postprocessing"]];
-	
-	// skip loopfilter
-	if ([preferences objectForKey:@"SkipLoopfilter"])
-		[myPlayer setSkipLoopfilter: [preferences integerForKey:@"SkipLoopfilter"]];
-	
-	
-	// *** Audio
-	
-	// enable audio
-	if ([preferences objectForKey:@"EnableAudio"])
-		[myPlayer setAudioEnabled: [preferences boolForKey:@"EnableAudio"]];
-	
-	// audio codecs
-	if ([[preferences stringForKey:@"AudioCodecs"] length] > 0)
-		[myPlayer setAudioCodecs: [preferences stringForKey:@"AudioCodecs"]];
-	else
-		[myPlayer setAudioCodecs:nil];
-	
-	// ac3 passthrough
-	if ([preferences objectForKey:@"PassthroughAC3"])
-		[myPlayer setAC3Passthrough:[preferences boolForKey:@"PassthroughAC3"]];
-	
-	// dts passthrough
-	if ([preferences objectForKey:@"PassthroughDTS"])
-		[myPlayer setDTSPassthrough:[preferences boolForKey:@"PassthroughDTS"]];
-	
-	// hrtf filter
-	if ([preferences objectForKey:@"HRTFFilter"])
-		[myPlayer setHRTFFilter: [preferences boolForKey:@"HRTFFilter"]];
-	
-	// b2bs filter
-	if ([preferences objectForKey:@"BS2BFilter"])
-		[myPlayer setBS2BFilter: [preferences boolForKey:@"BS2BFilter"]];
-	
-	// karaoke filter
-	if ([preferences objectForKey:@"KaraokeFilter"])
-		[myPlayer setKaraokeFilter: [preferences boolForKey:@"KaraokeFilter"]];
-	
-	
-	
-	// *** Advanced
-	
-	// equalizer
-	if ([preferences objectForKey:@"AudioEqualizerEnabled"])
-		[myPlayer setEqualizerEnabled: [preferences boolForKey:@"AudioEqualizerEnabled"]];
-	if ([preferences objectForKey:@"AudioEqualizerValues"])
-		[myPlayer setEqualizer: [preferences arrayForKey:@"AudioEqualizerValues"]];
-	
-	// video software equalizer
-	if ([preferences objectForKey:@"VideoEqualizerEnabled"])
-		[myPlayer setVideoEqualizerEnabled: [preferences boolForKey:@"VideoEqualizerEnabled"]];
-	[self setVideoEqualizer];
-	
-	// additional params
-	if ([preferences objectForKey:@"EnableAdditionalParams"])
-		if ([preferences boolForKey:@"EnableAdditionalParams"]
-				&& [preferences objectForKey:@"AdditionalParams"]) {
-			[myPlayer setAdditionalParams:
-					[[[preferences objectForKey:@"AdditionalParams"] objectAtIndex:0]
-							componentsSeparatedByString:@" "]];
-		}
-		else
-			[myPlayer setAdditionalParams:nil];
-	else
-		[myPlayer setAdditionalParams:nil];
-	
-	// update fullscreen device menu if set to auto
-	if (fullscreenDeviceId == -2)
-		[self selectFullscreenDevice];
-	
+	[myPlayer setPreferences:[PREFS dictionaryRepresentation]];
 }
 /************************************************************************************/
 - (void) applySettings
@@ -797,9 +556,6 @@
 /************************************************************************************/
 - (void) applyChangesWithRestart:(BOOL)restart
 {
-	if ([myPlayer videoOutHasChanged])
-		[videoOpenGLView close];
-	
 	[self chooseMPlayerBinary];
 	
 	[myPlayer applySettingsWithRestart:restart];
@@ -821,68 +577,29 @@
  ************************************************************************************/
 - (void) setMovieSize
 {
-	NSUserDefaults *preferences = [[AppController sharedController] preferences];
-
-	if ([preferences objectForKey:@"VideoSize"]) {
-		switch ([[preferences objectForKey:@"VideoSize"] intValue]) {
-		case 0 :		// original
-			[myPlayer setMovieSize:kDefaultMovieSize];
-			[videoOpenGLView setWindowSizeMode:WSM_SCALE withValue:1];
-			break;
-		case 1 :		// half
-			[myPlayer setMovieSize:NSMakeSize(0.5, 0)];
-			[videoOpenGLView setWindowSizeMode:WSM_SCALE withValue:0.5];
-			break;
-		case 2 :		// double
-			[myPlayer setMovieSize:NSMakeSize(2, 0)];
-			[videoOpenGLView setWindowSizeMode:WSM_SCALE withValue:2];
-			break;
-		case 3 :		// fit screen it (it is set before actual playback)
-			if ([movieInfo videoWidth] && [movieInfo videoHeight]) {
-				NSSize screenSize = [[playerWindow screen] visibleFrame].size;
-				double theWidth = ((screenSize.height - 28) /	// 28 pixels for window caption
-						[movieInfo videoHeight] * [movieInfo videoWidth]);
-				if (theWidth < screenSize.width)
-					[myPlayer setMovieSize:NSMakeSize(theWidth, 0)];
-				else
-					[myPlayer setMovieSize:NSMakeSize(screenSize.width, 0)];
-			}
-			[videoOpenGLView setWindowSizeMode:WSM_FIT_SCREEN withValue:0];
-			break;
-		case 4 :		// fit width
-			if ([preferences objectForKey:@"CustomVideoSize"]) {
-				[myPlayer setMovieSize:NSMakeSize([[preferences
-						objectForKey:@"CustomVideoSize"] unsignedIntValue], 0)];
-				[videoOpenGLView setWindowSizeMode:WSM_FIT_WIDTH withValue:[[preferences objectForKey:@"CustomVideoSize"] floatValue]];
-			} else {
-				[myPlayer setMovieSize:kDefaultMovieSize];
-				[videoOpenGLView setWindowSizeMode:WSM_SCALE withValue:1];
-			}
-			break;
-		default :
-			[myPlayer setMovieSize:kDefaultMovieSize];
-			break;
-		}
-	}
-	else
-		[myPlayer setMovieSize:kDefaultMovieSize];
+	if ([PREFS integerForKey:MPEDisplaySize] == MPEDisplaySizeHalf)
+		[videoOpenGLView setWindowSizeMode:WSM_SCALE withValue:0.5];
+	
+	else if ([PREFS integerForKey:MPEDisplaySize] == MPEDisplaySizeOriginal)
+		[videoOpenGLView setWindowSizeMode:WSM_SCALE withValue:1];
+	
+	else if ([PREFS integerForKey:MPEDisplaySize] == MPEDisplaySizeDouble)
+		[videoOpenGLView setWindowSizeMode:WSM_SCALE withValue:2];
+	
+	else if ([PREFS integerForKey:MPEDisplaySize] == MPEDisplaySizeFitScreen)
+		[videoOpenGLView setWindowSizeMode:WSM_FIT_SCREEN withValue:0];
+	
+	else if ([PREFS integerForKey:MPEDisplaySize] == MPEDisplaySizeCustom
+			 && [PREFS integerForKey:MPECustomSizeInPx] > 0) {
+		[videoOpenGLView setWindowSizeMode:WSM_FIT_WIDTH withValue:[PREFS floatForKey:MPECustomSizeInPx]];
+	
+	} else
+		[videoOpenGLView setWindowSizeMode:WSM_SCALE withValue:1];
 }
 /************************************************************************************/
 - (void) setSubtitlesEncoding
 {
-	NSUserDefaults *preferences = [[AppController sharedController] preferences];
-	
-	if (myPlayingItem && [myPlayingItem objectForKey:MPETextEncoding]
-			&& ![[myPlayingItem objectForKey:MPETextEncoding] isEqualToString:@"None"])
-		[myPlayer setSubtitlesEncoding:[myPlayingItem objectForKey:MPETextEncoding]];
-	
-	else if ([preferences objectForKey:MPETextEncoding] 
-				&& ![[preferences stringForKey:MPETextEncoding] isEqualToString:@"None"])
-		[myPlayer setSubtitlesEncoding:[preferences objectForKey:MPETextEncoding]];
-	
-	else
-		[myPlayer setSubtitlesEncoding:nil];
-	
+	// TODO: Fix custom encoding!
 }
 /************************************************************************************/
 - (void) setVideoEqualizer
@@ -936,7 +653,6 @@
 // Apply volume to images and sliders (don't send it to mplayer)
 - (void) applyVolume:(double)volume
 {
-	
 	NSImage *volumeImage;
 	
 	if (volume > 0)

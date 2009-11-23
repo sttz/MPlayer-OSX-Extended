@@ -11,6 +11,9 @@
 #import "RegexKitLite.h"
 #import <sys/sysctl.h>
 
+#import "PreferencesController2.h"
+#import "Preferences.h"
+
 // directly parsed mplayer output strings
 // strings that are used to get certain data from output are not included
 #define MI_PAUSED_STRING			"ID_PAUSED"
@@ -48,7 +51,7 @@ static NSArray* parseRunLoopModes;
 	if (![super init])
 		return  nil;
 	
-	if (parseRunLoopModes==nil)
+	if (parseRunLoopModes == nil)
 		parseRunLoopModes = [[NSArray arrayWithObjects:NSDefaultRunLoopMode, NSEventTrackingRunLoopMode, nil] retain];
 	
 	myPathToPlayer = [aPath retain];
@@ -62,41 +65,13 @@ static NSArray* parseRunLoopModes;
 	mySubtitlesFiles = [[NSMutableArray alloc] init];
 	
 	// *** playback
-	correctPTS = NO;
-	cacheSize = 0;
 	// addParams
 	
 	// *** display
-	displayType = 0;
-	flipVertical = NO;
-	flipHorizontal = NO;
-	movieSize = NSMakeSize(0,0);
-	aspectRatio = 0;
-	deviceId = 0;
-	voModule = 0;
 	screenshotPath = nil;
 	
 	// *** text
 	osdLevel = 1;
-	osdScale = 100;
-	
-	// *** video
-	videoCodecs = @"";
-	enableVideo = YES;
-	framedrop = 0;
-	fastLibavcodec = NO;
-	deinterlace = NO;
-	postprocessing = 0;
-	assSubtitles = YES;
-	embeddedFonts = YES;
-	subScale = 100;
-	assPreFilter = NO;
-	
-	// *** audio
-	audioCodecs = @"";
-	enableAudio = YES;
-	hrtfFilter = NO;
-	karaokeFilter = NO;
 	
 	// *** advanced
 	equalizerEnabled = NO;
@@ -139,18 +114,14 @@ static NSArray* parseRunLoopModes;
 	[myAudioExportFile release];
 	[myAudioFile release];
 	[myFontFile release];
-	[subEncoding release];
-	[addParams release];
 	[myCommandsBuffer release];
 	[info release];
-	[audioLanguages release];
-	[subtitleLanguages release];
-	[videoCodecs release];
-	[audioCodecs release];
 	[equalizerValues release];
 	[lastUnparsedLine release];
 	[lastUnparsedErrorLine release];
 	[buffer_name release];
+	[prefs release];
+	[screenshotPath release];
 	
 	[super dealloc];
 }
@@ -165,6 +136,12 @@ static NSArray* parseRunLoopModes;
 {
 	[myPathToPlayer release];
 	myPathToPlayer = [path retain];
+}
+/************************************************************************************/
+- (void) setPreferences:(NSDictionary *)preferences
+{
+	[prefs release];
+	prefs = [preferences copy];
 }
 
 /************************************************************************************
@@ -221,297 +198,252 @@ static NSArray* parseRunLoopModes;
 		[params addObject:@"-audiofile"];
 		[params addObject:myAudioFile];
 	}
-
 	
 	
 	
 	// *** PLAYBACK
 	
 	// audio languages
-	if (audioLanguages) {
-		[params addObject:@"-alang"];
-		[params addObject:audioLanguages];
+	if ([prefs objectForKey:MPEDefaultAudioLanguages]) {
+		NSArray *audioLangs = [prefs objectForKey:MPEDefaultAudioLanguages];
+		if ([audioLangs count] > 0) {
+			[params addObject:@"-alang"];
+			[params addObject:[[LanguageCodes sharedInstance] mplayerArgumentFromArray:audioLangs]];
+		}
 	}
+	
 	// subtitle languages
-	if (subtitleLanguages) {
-		[params addObject:@"-slang"];
-		[params addObject:subtitleLanguages];
+	if ([prefs objectForKey:MPEDefaultSubtitleLanguages]) {
+		NSArray *subtitleLangs = [prefs objectForKey:MPEDefaultSubtitleLanguages];
+		if ([subtitleLangs count] > 0) {
+			[params addObject:@"-slang"];
+			[params addObject:[[LanguageCodes sharedInstance] mplayerArgumentFromArray:subtitleLangs]];
+		}
 	}
-	// correct pts
-	if (correctPTS)
-		[params addObject:@"-correct-pts"];
+	
+	
+	// *** PLAYBACK
+	
 	// cache settings
-	if (cacheSize > 0) {
-		[params addObject:@"-cache"];
-		[params addObject:[NSString stringWithFormat:@"%d",cacheSize]];
+	if ([prefs objectForKey:MPECacheSizeInMB]) {
+		int cacheSize = [[prefs objectForKey:MPECacheSizeInMB] floatValue] * 1024;
+		if (cacheSize > 0) {
+			[params addObject:@"-cache"];
+			[params addObject:[NSString stringWithFormat:@"%d",cacheSize]];
+		} else
+			[params addObject:@"-nocache"];
 	}
+	
 	// number of threads
 	if (numberOfThreads > 0) {
 		[params addObject:@"-lavdopts"];
 		[params addObject:[NSString stringWithFormat:@"threads=%d",numberOfThreads]];
 	}
 	
-	
-	// *** DISPLAY
-	// display type
-	switch (displayType) {
-		case 1: // windowed
-			break;
-		case 2: // ontop
-			[params addObject:@"-ontop"];
-			break;
-		case 3: // fullscreen
-			[params addObject:@"-fs"];
-			isFullscreen = YES;
-			break;
-		case 4: // rootwin
-			[params addObject:@"-rootwin"];
-			[params addObject:@"-fs"];
-			break;
-		default:
-			break;
+	// rootwin
+	if ([[prefs objectForKey:MPEStartPlaybackDisplayType] intValue] == MPEStartPlaybackDisplayTypeDesktop) {
+		[params addObject:@"-rootwin"];
+		[params addObject:@"-fs"];
 	}
+	
 	// flip vertical
-	if (flipVertical) {
+	if ([[prefs objectForKey:MPEFlipDisplayVertically] boolValue]) {
 		[videoFilters addObject:@"flip"];
 	}
 	// flip horizontal
-	if (flipHorizontal) {
+	if ([[prefs objectForKey:MPEFlipDisplayHorizontally] boolValue]) {
 		[videoFilters addObject:@"mirror"];
 	}
-	// movie size
-	if (movieSize.width != 0) {
-		if (movieSize.height != 0) {
-			[params addObject:@"-x"];
-			[params addObject:[NSString stringWithFormat:@"%1.1f",movieSize.width]];
-			[params addObject:@"-y"];
-			[params addObject:[NSString stringWithFormat:@"%1.1f",movieSize.height]];
-		}
-		else {
-			[params addObject:@"-xy"];
-			[params addObject:[NSString stringWithFormat:@"%1.1f",movieSize.width]];
-		}
-	}
-	// aspect ratio
-	if (aspectRatio > 0) {
-		[params addObject:@"-aspect"];
-		[params addObject:[NSString stringWithFormat:@"%1.6f", aspectRatio]];
-	}
-	// video output
-	// force corevideo for rootwin if mplayerosx is selected
-	if (displayType == 4 && voModule == 2)
-		voModule = 1;
-	//core video
-	if(voModule == 1) 
-	{
-		[params addObject:@"-vo"];
-		[params addObject:[@"corevideo:device_id=" stringByAppendingString: [[NSNumber numberWithUnsignedInt: deviceId] stringValue]]];
-		windowedVO = YES;
-	}
-	//mplayer osx
-	else if(voModule == 2) 
-	{
-		[params addObject:@"-vo"];
-		[params addObject:[NSString stringWithFormat:@"corevideo:buffer_name=%@:device_id=%i",buffer_name, deviceId]];
-		windowedVO = NO;
-	}
-	//quartz/quicktime
-	else 
-	{
-		[params addObject:@"-vo"];
-		[params addObject:[@"quartz:device_id=" stringByAppendingString: [[NSNumber numberWithUnsignedInt: deviceId] stringValue]]];
-		windowedVO = YES;
-	}
 	
+	// select video out (if video is enabled and not playing in rootwin)
+	if ([[prefs objectForKey:MPEStartPlaybackDisplayType] intValue] != MPEStartPlaybackDisplayTypeDesktop
+			&& [[prefs objectForKey:MPEEnableVideo] boolValue]) {
+		[params addObject:@"-vo"];
+		[params addObject:[NSString stringWithFormat:@"corevideo:buffer_name=%@",buffer_name]];
+	}
 	
 	
 	// *** TEXT
 	
 	// add font
-	if (myFontFile) {
+	if ([prefs objectForKey:MPEFont]) {
+		NSString *fcPattern = [prefs objectForKey:MPEFont];
+		if ([prefs objectForKey:MPEFontStyle])
+			fcPattern = [NSString stringWithFormat:@"%@:style=%@", fcPattern, [prefs objectForKey:MPEFontStyle]];
 		[params addObject:@"-font"];
-		[params addObject:myFontFile];
+		[params addObject:fcPattern];
 	}
+	
 	// guess encoding with enca
-	if (guessEncodingLang) {
+	if ([prefs objectForKey:MPEGuessTextEncoding] && 
+			![[prefs objectForKey:MPEGuessTextEncoding] isEqualToString:@"disabled"]) {
+		NSString *subEncoding = [prefs objectForKey:MPETextEncoding];
 		if (!subEncoding)
 			subEncoding = @"none";
 		[params addObject:@"-subcp"];
-		[params addObject:[NSString stringWithFormat:@"enca:%@:%@", guessEncodingLang, subEncoding]];
+		[params addObject:[NSString stringWithFormat:@"enca:%@:%@", 
+						   [prefs objectForKey:MPEGuessTextEncoding], subEncoding]];
 	// fix encoding
-	} else if (subEncoding) {
+	} else if ([prefs objectForKey:MPETextEncoding]
+			   && ![[prefs objectForKey:MPETextEncoding] isEqualToString:@"None"]) {
 		[params addObject:@"-subcp"];
-		[params addObject:subEncoding];
+		[params addObject:[prefs objectForKey:MPETextEncoding]];
 	}
-	// ass subtitles
-	if (assSubtitles) {
-		[params addObject:@"-ass"];
-	}
+	
+	// *** TEXT
+	
+	// enable ass subtitles
+	[params addObject:@"-ass"];
+	
 	// subtitles scale
-	if (subScale > 0) {
-		if (assSubtitles) {
+	if ([prefs objectForKey:MPESubtitleScale]) {
+		float subtitleScale = [[prefs objectForKey:MPESubtitleScale] floatValue];
+		if (subtitleScale > 0) {
 			[params addObject:@"-ass-font-scale"];
-			[params addObject:[NSString stringWithFormat:@"%.3f",(subScale/100.0)]];
-		} else {
-			[params addObject:@"-subfont-text-scale"];
-			[params addObject:[NSString stringWithFormat:@"%.3f",(5.0*(subScale/100.0))]];
+			[params addObject:[NSString stringWithFormat:@"%.3f",subtitleScale]];
 		}
 	}
-	if (assSubtitles) {
-		// embedded fonts
-		if (embeddedFonts) {
-			[params addObject:@"-embeddedfonts"];
-		}
-		// ass pre filter
-		if (assPreFilter) {
-			[videoFilters insertObject:@"ass" atIndex:0];
-		}
-		// subtitles color
-		if (subColor) {
-			CGFloat red, green, blue, alpha;
-			[subColor getRed:&red green:&green blue:&blue alpha:&alpha];
-			[params addObject:@"-ass-color"];
-			[params addObject:[NSString stringWithFormat:@"%02X%02X%02X%02X",(unsigned)(red*255),(unsigned)(green*255),(unsigned)(blue*255),(unsigned)((1-alpha)*255)]];
-		}
-		// subtitles color
-		if (subBorderColor) {
-			CGFloat red, green, blue, alpha;
-			[subBorderColor getRed:&red green:&green blue:&blue alpha:&alpha];
-			[params addObject:@"-ass-border-color"];
-			[params addObject:[NSString stringWithFormat:@"%02X%02X%02X%02X",(unsigned)(red*255),(unsigned)(green*255),(unsigned)(blue*255),(unsigned)((1-alpha)*255)]];
-		}
-	}
-	if (osdLevel != 1 && osdLevel != 2) {
-		[params addObject:@"-osdlevel"];
-		[params addObject:[NSString stringWithFormat:@"%i",(osdLevel == 0 ? 0 : osdLevel - 1)]];
-	}
-	// osd scale
-	if (osdScale > 0) {
-		[params addObject:@"-subfont-osd-scale"];
-		[params addObject:[NSString stringWithFormat:@"%.3f",(6.0*(osdScale/100.0))]];
-	}
-	// always enable fontconfig
-	[params addObject:@"-fontconfig"];
 	
+	// embedded fonts
+	if ([[prefs objectForKey:MPELoadEmbeddedFonts] boolValue]) {
+		[params addObject:@"-embeddedfonts"];
+	}
 	
+	// ass pre filter
+	if ([[prefs objectForKey:MPERenderSubtitlesFirst] boolValue]) {
+		[videoFilters insertObject:@"ass" atIndex:0];
+	}
+	
+	// subtitles color
+	if ([prefs objectForKey:MPESubtitleTextColor]) {
+		NSColor *textColor = [PreferencesController2 unarchiveColor:[prefs objectForKey:MPESubtitleTextColor]];
+		CGFloat red, green, blue, alpha;
+		[textColor getRed:&red green:&green blue:&blue alpha:&alpha];
+		[params addObject:@"-ass-color"];
+		[params addObject:[NSString stringWithFormat:@"%02X%02X%02X%02X",(unsigned)(red*255),(unsigned)(green*255),(unsigned)(blue*255),(unsigned)((1-alpha)*255)]];
+	}
+	// subtitles color
+	if ([prefs objectForKey:MPESubtitleBorderColor]) {
+		NSColor *borderColor = [PreferencesController2 unarchiveColor:[prefs objectForKey:MPESubtitleBorderColor]];
+		CGFloat red, green, blue, alpha;
+		[borderColor getRed:&red green:&green blue:&blue alpha:&alpha];
+		[params addObject:@"-ass-border-color"];
+		[params addObject:[NSString stringWithFormat:@"%02X%02X%02X%02X",(unsigned)(red*255),(unsigned)(green*255),(unsigned)(blue*255),(unsigned)((1-alpha)*255)]];
+	}
+	
+	if ([prefs objectForKey:MPEOSDLevel]) {
+		osdLevel = [[prefs objectForKey:MPEOSDLevel] intValue];
+		if (osdLevel != 1 && osdLevel != 2) {
+			[params addObject:@"-osdlevel"];
+			[params addObject:[NSString stringWithFormat:@"%i",(osdLevel == 0 ? 0 : osdLevel - 1)]];
+		}
+	}
+	
+	// subtitles scale
+	if ([prefs objectForKey:MPEOSDScale]) {
+		float osdScale = [[prefs objectForKey:MPEOSDScale] floatValue];
+		if (osdScale > 0) {
+			[params addObject:@"-subfont-osd-scale"];
+			[params addObject:[NSString stringWithFormat:@"%.3f",osdScale*6.0]];
+		}
+	}
 	
 	
 	// *** VIDEO
-	// enable video
-	if (!enableVideo) {
+	
+	// disable video
+	if (![[prefs objectForKey:MPEEnableVideo] boolValue]) {
 		[params addObject:@"-vc"];
 		[params addObject:@"null"];
+		[params addObject:@"-vo"];
+		[params addObject:@"null"];
 	// video codecs
-	}
-	else if ([videoCodecs length] > 0) {
+	} else if ([prefs objectForKey:MPEOverrideVideoCodecs]) {
 		[params addObject:@"-vc"];
-		[params addObject:videoCodecs];
+		[params addObject:[prefs objectForKey:MPEOverrideVideoCodecs]];
 	}
+	
 	// framedrop
-	switch (framedrop) {
-		case 0: // disabled
-			break;
-		case 1: // soft
+	if ([prefs objectForKey:MPEDropFrames]) {
+		int dropFrames = [[prefs objectForKey:MPEDropFrames] intValue];
+		if (dropFrames == MPEDropFramesSoft)
 			[params addObject:@"-framedrop"];
-			break;
-		case 2: // hard
+		else if (dropFrames == MPEDropFramesHard)
 			[params addObject:@"-hardframedrop"];
-			break;
 	}
-	// fast libavcodec
-	if (fastLibavcodec) {
+	
+	// fast decoding
+	if ([[prefs objectForKey:MPEFastDecoding] boolValue]) {
 		[params addObject:@"-lavdopts"];
-		[params addObject:@"fast"];
+		[params addObject:@"fast:skiploopfilter=all"];
 	}
+	
 	// deinterlace
-	switch (deinterlace) {
-		case 0: // disabled
-			break;
-		case 1: // yadif
+	if ([prefs objectForKey:MPEDeinterlaceFilter]) {
+		int deinterlace = [[prefs objectForKey:MPEDeinterlaceFilter] intValue];
+		if (deinterlace == MPEDeinterlaceFilterYadif)
 			[videoFilters addObject:@"yadif=1"];
-			break;
-		case 2: // kernel
+		else if (deinterlace == MPEDeinterlaceFilterKernel)
 			[videoFilters addObject:@"kerndeint"];
-			break;
-		case 3: // ffmpeg
+		else if (deinterlace == MPEDeinterlaceFilterFFmpeg)
 			[videoFilters addObject:@"pp=fd"];
-			break;
-		case 4: // film
+		else if (deinterlace == MPEDeinterlaceFilterFilm)
 			[videoFilters addObject:@"filmdint"];
-			break;
-		case 5: // blend
+		else if (deinterlace == MPEDeinterlaceFilterBlend)
 			[videoFilters addObject:@"pp=lb"];
-			break;
 	}
+	
 	// postprocessing
-	switch (postprocessing) {
-		case 0: // disabled
-			break;
-		case 1: // default
+	if ([prefs objectForKey:MPEPostprocessingFilter]) {
+		int postprocessing = [[prefs objectForKey:MPEPostprocessingFilter] intValue];
+		if (postprocessing == MPEPostprocessingFilterDefault)
 			[videoFilters addObject:@"pp=default"];
-			break;
-		case 2: // fast
+		else if (postprocessing == MPEPostprocessingFilterFast)
 			[videoFilters addObject:@"pp=fast"];
-			break;
-		case 3: // high quality
+		else if (postprocessing == MPEPostprocessingFilterHighQuality)
 			[videoFilters addObject:@"pp=ac"];
-			break;
-	}
-	// skip loopfilters
-	if (skipLoopfilter > 0) {
-		[params addObject:@"-lavdopts"];
-		switch (skipLoopfilter) {
-			case 1: // NoRef
-				[params addObject:@"skiploopfilter=noref"];
-				break;
-			case 2: // DiDir
-				[params addObject:@"skiploopfilter=bidir"];
-				break;
-			case 3: // NoKey
-				[params addObject:@"skiploopfilter=nokey"];
-				break;
-			case 4: // All
-				[params addObject:@"skiploopfilter=all"];
-				break;
-		}
 	}
 	
 	
 	// *** AUDIO
-	// enable audio
-	if (!enableAudio)
+	
+	// disable audio
+	if (![[prefs objectForKey:MPEEnableAudio] boolValue])
 		[params addObject:@"-nosound"];
 	// audio codecs
-	if ([audioCodecs length] > 0) {
-		[audioCodecsArr addObject:audioCodecs];
+	else if ([prefs objectForKey:MPEOverrideAudioCodecs]) {
+		[audioCodecsArr addObject:[prefs objectForKey:MPEOverrideAudioCodecs]];
 	}
+	
 	// ac3/dts passthrough
-	if (passthroughAC3) {
+	if ([[prefs objectForKey:MPEHardwareAC3Passthrough] boolValue]) {
 		[audioCodecsArr insertObject:@"hwac3" atIndex:0];
 	}
-	if (passthroughDTS) {
+	if ([[prefs objectForKey:MPEHardwareDTSPassthrough] boolValue]) {
 		[audioCodecsArr insertObject:@"hwdts" atIndex:0];
 	}
+	
 	// hrtf filter
-	if (hrtfFilter) {
+	if ([[prefs objectForKey:MPEHRTFFilter] boolValue]) {
 		[audioFilters addObject:@"resample=48000"];
 		[audioFilters addObject:@"hrtf"];
 	}
 	// bs2b filter
-	if (bs2bFilter) {
+	if ([[prefs objectForKey:MPEBS2BFilter] boolValue]) {
 		[audioFilters addObject:@"bs2b"];
 	}
 	// karaoke filter
-	if (karaokeFilter) {
+	if ([[prefs objectForKey:MPEKaraokeFilter] boolValue]) {
 		[audioFilters addObject:@"karaoke"];
 	}
+	
 	// set initial volume
 	[params addObject:@"-volume"];
 	[params addObject:[NSString stringWithFormat:@"%u", myVolume]];
 	
 	
-	
 	// *** ADVANCED
+	
 	// aduio equalizer filter
 	if (equalizerEnabled && equalizerValues && [equalizerValues count] == 10) {
 		[audioFilters addObject:[@"equalizer=" stringByAppendingString: [equalizerValues componentsJoinedByString:@":"]]];
@@ -521,13 +453,38 @@ static NSArray* parseRunLoopModes;
 		[videoFilters addObject:[@"eq2=" stringByAppendingString: [videoEqualizerValues componentsJoinedByString:@":"]]];
 	}
 	
-	
-	
 	// *** Video filters
 	// add screenshot filter
-	if (screenshotPath) {
-		[videoFilters addObject:@"screenshot"];
+	if ([prefs objectForKey:MPEScreenshotSaveLocation]) {
+		int screenshot = [[prefs objectForKey:MPEScreenshotSaveLocation] intValue];
+		
+		if (screenshot != MPEScreenshotsDisabled) {
+			[videoFilters addObject:@"screenshot"];
+			
+			[screenshotPath release];
+			
+			if (screenshot == MPEScreenshotSaveLocationCustom
+					&& [prefs objectForKey:MPECustomScreenshotsSavePath])
+				screenshotPath = [prefs objectForKey:MPECustomScreenshotsSavePath];
+			
+			else if (screenshot == MPEScreenshotSaveLocationHomeFolder)
+				screenshotPath = NSHomeDirectory();
+			
+			else if (screenshot == MPEScreenshotSaveLocationDocumentsFolder)
+				screenshotPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) 
+									objectAtIndex:0];
+			
+			else if (screenshot == MPEScreenshotSaveLocationPicturesFolder)
+				screenshotPath = [NSHomeDirectory() stringByAppendingString:@"/Pictures"];
+			
+			else // fallback, if (screenshot == MPEScreenshotSaveLocationDesktop)
+				screenshotPath = [NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) 
+									objectAtIndex:0];
+			
+			[screenshotPath retain];
+		}
 	}
+	
 	// add filter chain
 	if ([videoFilters count] > 0) {
 		[params addObject:@"-vf-add"];
@@ -544,7 +501,8 @@ static NSArray* parseRunLoopModes;
 	if ([audioCodecsArr count] > 0) {
 		NSString *acstring = [audioCodecsArr componentsJoinedByString:@","];
 		// add trailing , if audioCodecs is empty
-		if ([audioCodecs length] == 0)
+		if (![prefs objectForKey:MPEOverrideAudioCodecs]
+				|| [(NSString*)[prefs objectForKey:MPEOverrideAudioCodecs] length] == 0)
 			acstring = [acstring stringByAppendingString:@","];
 		
 		[params addObject:@"-ac"];
@@ -564,18 +522,19 @@ static NSArray* parseRunLoopModes;
 		[params addObject:@"-ss"];
 		[params addObject:[NSString stringWithFormat:@"%1.1f",mySeconds]];
 	}
-	// set volume
-/*	[params addObject:@"-aop"];
-	[params addObject:[NSString stringWithFormat:@"list=volume:volume=%d", myVolume]];
-*/	// append additional params
 	
 	// additional parameters
-	if (addParams) {
-		if ([addParams count] > 0)
-			[params addObjectsFromArray:addParams];
+	if ([prefs objectForKey:MPEAdvancedOptions]) {
+		NSArray *options = [prefs objectForKey:MPEAdvancedOptions];
+		NSLog(@"load advanced options!");
+		for (NSDictionary *option in options) {
+			NSLog(@"option: %@",option);
+			if ([[option objectForKey:MPEAdvancedOptionsEnabledKey] boolValue])
+				[params addObjectsFromArray:
+					[[option objectForKey:MPEAdvancedOptionsStringKey] componentsSeparatedByString:@" "]];
+		}
+		NSLog(@"finished loading!");
 	}
-	
-	
 	
 	[params addObject:@"-slave"];
 	
@@ -794,142 +753,9 @@ static NSArray* parseRunLoopModes;
 		myAudioFile = nil;
 	}
 }
-
-
-/************************************************************************************/
-- (void) setFont:(NSString *)aFile
-{
-	if (aFile) {
-		if (![aFile isEqualToString:myFontFile]) {
-			[myFontFile autorelease];
-			myFontFile = [aFile retain];
-			settingsChanged = YES;
-		}
-	}
-	else {
-		if (myFontFile) {
-			[myFontFile release];
-			settingsChanged = YES;
-		}
-		myFontFile = nil;
-	}
-}
-/************************************************************************************
- PLAYBACK
- ************************************************************************************/
-- (void) setAudioLanguages:(NSString *)langString
-{
-	if (audioLanguages != langString) {
-		audioLanguages = langString;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setSubtitleLanguages:(NSString *)langString
-{
-	if (subtitleLanguages != langString) {
-		subtitleLanguages = langString;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setCorrectPTS:(BOOL)aBool
-{
-	if (correctPTS != aBool) {
-		correctPTS = aBool;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setCacheSize:(unsigned int)kilobytes
-{
-	if (cacheSize != kilobytes) {
-		cacheSize = kilobytes;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setAdditionalParams:(NSArray *)params
-{
-	if (addParams && params) {
-		if (![addParams isEqualTo:params]) {
-			if (addParams)
-				[addParams release];
-			
-			if (params)
-				addParams = [[NSArray arrayWithArray:params] retain];
-			else
-				addParams = nil;
-			
-			settingsChanged = YES;
-		}
-		return;
-	}
-	if (addParams == nil && params) {
-		addParams = [[NSArray arrayWithArray:params] retain];
-		settingsChanged = YES;
-		return;
-	}
-	if (addParams && params == nil) {
-		[addParams release];
-		addParams = nil;
-		settingsChanged = YES;
-		return;
-	}
-}
 /************************************************************************************
  VIDEO
  ************************************************************************************/
-- (void) setVideoEnabled:(BOOL)aBool
-{
-	if (enableVideo != aBool) {
-		enableVideo = aBool;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setVideoCodecs:(NSString *)codecString
-{
-	if (videoCodecs != codecString) {
-		[videoCodecs release];
-		videoCodecs = [codecString retain];;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setFramedrop:(unsigned int)mode
-{
-	if (framedrop != mode) {
-		framedrop = mode;
-		if (myState == kPlaying || myState == kPaused || myState == kSeeking)
-			[myCommandsBuffer addObject:[@"frame_drop=" stringByAppendingString: [[NSNumber numberWithInt: mode] stringValue]]];
-	}
-}
-/************************************************************************************/
-- (void) setFastLibavcodec:(BOOL)aBool
-{
-	if (fastLibavcodec != aBool) {
-		fastLibavcodec = aBool;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setSkipLoopfilter:(unsigned int)mode
-{
-	if (skipLoopfilter != mode) {
-		skipLoopfilter = mode;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setDeinterlace:(unsigned int)mode
-{
-	if (deinterlace != mode) {
-		deinterlace = mode;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
 - (void) setVideoEqualizer:(NSArray *)values;
 {
 	if (videoEqualizerValues && values && ![videoEqualizerValues isEqualTo:values]) {
@@ -950,74 +776,9 @@ static NSArray* parseRunLoopModes;
 		return;
 	}
 }
-/************************************************************************************/
-- (void) setPostprocessing:(unsigned int)mode
-{
-	if (postprocessing != mode) {
-		postprocessing = mode;
-		settingsChanged = YES;
-	}
-}
 /************************************************************************************
  AUDIO
  ************************************************************************************/
-- (void) setAudioEnabled:(BOOL)aBool
-{
-	if (enableAudio != aBool) {
-		enableAudio = aBool;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setAudioCodecs:(NSString *)codecString
-{
-	if ([audioCodecs isEqualToString:codecString]) {
-		[audioCodecs release];
-		audioCodecs = [codecString retain];
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setHRTFFilter:(BOOL)aBool
-{
-	if (hrtfFilter != aBool) {
-		hrtfFilter = aBool;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setBS2BFilter:(BOOL)aBool
-{
-	if (bs2bFilter != aBool) {
-		bs2bFilter = aBool;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setAC3Passthrough:(BOOL)aBool
-{
-	if (passthroughAC3 != aBool) {
-		passthroughAC3 = aBool;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setDTSPassthrough:(BOOL)aBool
-{
-	if (passthroughDTS != aBool) {
-		passthroughDTS = aBool;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setKaraokeFilter:(BOOL)aBool
-{
-	if (karaokeFilter != aBool) {
-		karaokeFilter = aBool;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
 - (void) setEqualizer:(NSArray *)freqs
 {
 	int i;
@@ -1048,183 +809,10 @@ static NSArray* parseRunLoopModes;
 /************************************************************************************
  DISPLAY
  ************************************************************************************/
-- (void) setDisplayType:(unsigned int)mode
-{
-	if (displayType != mode) {
-		displayType = mode;
-		settingsChanged = YES;
-		
-		isOntop = (displayType == 2);
-	}
-}
-/************************************************************************************/
-- (void) setFlipVertical:(BOOL)aBool
-{
-	if (flipVertical != aBool) {
-		flipVertical = aBool;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setFlipHorizontal:(BOOL)aBool
-{
-	if (flipHorizontal != aBool) {
-		flipHorizontal = aBool;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setMovieSize:(NSSize)aSize
-{
-	if (aSize.width != movieSize.width ||  aSize.height != movieSize.height) {
-		movieSize = aSize;
-		settingsChanged = YES;
-	}
-}
-- (NSSize) movieSize
-{	
-	return movieSize;
-}
-/************************************************************************************/
-- (void) setAspectRatio:(double)ratio;
-{
-	if (aspectRatio != ratio) {
-		aspectRatio = ratio;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setDeviceId:(unsigned int)dId
-{
-	if (deviceId != dId) {
-		deviceId = dId;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (unsigned int)getDeviceId
-{
-	return deviceId;
-}
-/************************************************************************************/
-- (void) setVideoOutModule:(int)module
-{
-	if (voModule != module)
-	{
-		voModule = module;
-		settingsChanged = YES;
-		videoOutChanged = YES;
-	}
-}
-/************************************************************************************/
-// ass subtitles
-- (void) setAssSubtitles:(BOOL)aBool
-{
-	if (assSubtitles != aBool) {
-		assSubtitles = aBool;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-// ass subtitles
-- (void) setEmbeddedFonts:(BOOL)aBool
-{
-	if (embeddedFonts != aBool) {
-		embeddedFonts = aBool;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setSubtitlesEncoding:(NSString *)aEncoding
-{
-	if (aEncoding) {
-		if (![aEncoding isEqualToString:subEncoding]) {
-			[subEncoding release];
-			subEncoding = [aEncoding retain];
-			settingsChanged = YES;
-		}
-	} else {
-		if (subEncoding) {
-			[subEncoding release];
-			subEncoding = nil;
-			settingsChanged = YES;
-		}
-	}
-}
-/************************************************************************************/
-- (void) setGuessEncodingLang:(NSString *)aLang
-{
-	if (aLang) {
-		if (![aLang isEqualToString:guessEncodingLang]) {
-			[guessEncodingLang release];
-			guessEncodingLang = [aLang retain];
-			settingsChanged = YES;
-		}
-	} else {
-		[guessEncodingLang release];
-		guessEncodingLang = nil;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setSubtitlesScale:(unsigned int)aScale
-{
-	if (subScale != aScale) {
-		subScale = aScale;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setSubtitlesColor:(NSColor *)color
-{
-	if (color != nil) {
-		if (subColor == nil || 
-				[color redComponent] != [subColor redComponent] ||
-				[color greenComponent] != [subColor greenComponent] ||
-				[color blueComponent] != [subColor blueComponent] ||
-				[color alphaComponent] != [subColor alphaComponent]) {
-			[subColor release];
-			subColor = [color retain];
-			settingsChanged = YES;
-		}
-	} else {
-		[subColor release];
-		subColor = nil;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setSubtitlesBorderColor:(NSColor *)color
-{
-	if (color != nil) {
-		if (subBorderColor == nil || 
-			[color redComponent] != [subBorderColor redComponent] ||
-			[color greenComponent] != [subBorderColor greenComponent] ||
-			[color blueComponent] != [subBorderColor blueComponent] ||
-			[color alphaComponent] != [subBorderColor alphaComponent]) {
-			[subBorderColor release];
-			subBorderColor = [color retain];
-			settingsChanged = YES;
-		}
-	} else {
-		[subBorderColor release];
-		subBorderColor = nil;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
 - (void) setOsdLevel:(int)anInt
 {
 	if (osdLevel != anInt) {
 		osdLevel = anInt;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setOsdScale:(unsigned int)anInt {
-	
-	if (osdScale != anInt) {
-		osdScale = anInt;
 		settingsChanged = YES;
 	}
 }
@@ -1243,24 +831,6 @@ static NSArray* parseRunLoopModes;
 {
 	if (videoEqualizerEnabled != aBool) {
 		videoEqualizerEnabled = aBool;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-// ass pre filter
-- (void) setAssPreFilter:(BOOL)aBool
-{
-	if (assPreFilter != aBool) {
-		assPreFilter = aBool;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-- (void) setScreenshotPath:(NSString*)path
-{
-	if (screenshotPath != path) {
-		[screenshotPath release];
-		screenshotPath = [path retain];
 		settingsChanged = YES;
 	}
 }
@@ -1286,31 +856,6 @@ static NSArray* parseRunLoopModes;
 	}
 }
 */
-
-/************************************************************************************/
-- (void) setFullscreen:(BOOL)aBool
-{
-	if (isFullscreen != aBool) {
-		isFullscreen = aBool;
-		if (myState == kPlaying || myState == kPaused || myState == kSeeking) {
-			[myCommandsBuffer addObject:@"vo_fullscreen"];
-			takeEffectImediately = YES;
-		}
-	}
-}
-- (BOOL) fullscreen
-{
-	return isFullscreen;
-}
-/************************************************************************************/
-- (void) setOntop:(BOOL)ontop
-{
-	if (isOntop != ontop) {
-		isOntop = ontop;
-		if (myState > kStopped)
-			[self sendCommand:[NSString stringWithFormat:@"pausing_keep_force set_property ontop %d",ontop]];
-	}
-}
 /************************************************************************************/
 - (void) setVolume:(unsigned int)percents
 {
@@ -1600,6 +1145,7 @@ static NSArray* parseRunLoopModes;
 		[Debug log:ASL_LEVEL_INFO withMessage:@"Arg: %@", [aParams objectAtIndex:count]];
 	
 	[Debug log:ASL_LEVEL_INFO withMessage:@"Command: mplayer %@", [aParams componentsJoinedByString:@" "]];
+	NSLog(@"args: %@",aParams);
 	
 	// activate notification for available data at output
 	[[[myMplayerTask standardOutput] fileHandleForReading]
@@ -2133,13 +1679,11 @@ static NSArray* parseRunLoopModes;
 			if ([streamType isEqualToString:@"CHAPTER"]) {
 				
 				if ([streamInfoName isEqualToString:@"NAME"]) {
-					[Debug log:ASL_LEVEL_DEBUG withMessage:@"Chapter name: %d %@", streamId, streamInfoValue];
 					[info setChapterName:streamInfoValue forId:streamId];
 					continue;
 				}
 				
 				if ([streamInfoName isEqualToString:@"START"]) {
-					[Debug log:ASL_LEVEL_DEBUG withMessage:@"Chapter start: %d %@", streamId, streamInfoValue];
 					[info setChapterStartTime:[NSNumber numberWithFloat:[streamInfoValue floatValue]/1000.] forId:streamId];
 					continue;
 				}
@@ -2282,7 +1826,6 @@ static NSArray* parseRunLoopModes;
 			
 			// chapter
 			if ([idName isEqualToString:@"CHAPTER_ID"]) {
-				[Debug log:ASL_LEVEL_DEBUG withMessage:@"New Chapter: %@", idValue];
 				[info newChapter:[idValue intValue]];
 				[userInfo setObject:[NSNumber numberWithBool:YES] forKey:@"StreamsHaveChanged"];
 				continue;
@@ -2302,7 +1845,7 @@ static NSArray* parseRunLoopModes;
 		// *** if player is playing then do not bother with parse anything else
 		if (myOutputReadMode > 0) {
 			// print unused line
-			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
+			//[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 			continue;
 		}
 		
@@ -2403,7 +1946,7 @@ static NSArray* parseRunLoopModes;
 		}
 		
 		// print unused output
-		[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
+		//[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 		
 	} // while
 	

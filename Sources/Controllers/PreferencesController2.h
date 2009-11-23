@@ -56,6 +56,7 @@
 - (IBAction) changeFont:(NSPopUpButton *)sender;
 
 + (float) parseAspectRatio:(NSString *)aspectString;
++ (NSColor *) unarchiveColor:(NSData *)data;
 
 @end
 
