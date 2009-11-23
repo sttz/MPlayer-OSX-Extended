@@ -101,6 +101,12 @@ static NSArray* parseRunLoopModes;
 	// when MPlayer runs in background only and we provide our own AR implementation.
 	disableAppleRemote = YES;
 	
+	// Watch for framedrop changes
+	[PREFS addObserver:self
+			forKeyPath:MPEDropFrames
+			   options:NSKeyValueObservingOptionNew
+			   context:nil];
+	
 	return self;
 }
 
@@ -670,7 +676,14 @@ static NSArray* parseRunLoopModes;
 		break;
 	}
 }
-
+/************************************************************************************/
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if ([keyPath isEqualToString:MPEDropFrames] && [self isRunning]) {
+		int framedrop = [[change objectForKey:NSKeyValueChangeNewKey] intValue];
+		[self sendCommand:[NSString stringWithFormat:@"set_property framedropping %d",framedrop]];
+	}
+}
 /************************************************************************************
  SETTINGS
  ************************************************************************************/
