@@ -92,13 +92,13 @@
 		3A638959108B95D300E90936 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A638958108B95D300E90936 /* Security.framework */; };
 		3A6E433210A33AE400B0BDC3 /* PreferencesController2.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A6E433110A33AE400B0BDC3 /* PreferencesController2.m */; };
 		3A81883010B2FB8300AB1E07 /* LanguageTokenFieldDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A81882F10B2FB8300AB1E07 /* LanguageTokenFieldDelegate.m */; };
-		3A81883C10B3020A00AB1E07 /* iso-639.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A81883B10B3020A00AB1E07 /* iso-639.plist */; };
 		3A861D961084C97800ADE9B9 /* binaries.icns in Resources */ = {isa = PBXBuildFile; fileRef = 3A861D951084C97800ADE9B9 /* binaries.icns */; };
 		3A861DE71085153E00ADE9B9 /* applications-multimedia.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DD91085153E00ADE9B9 /* applications-multimedia.png */; };
 		3A861DE91085153E00ADE9B9 /* audio-input-microphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DDB1085153E00ADE9B9 /* audio-input-microphone.png */; };
 		3A861DED1085153E00ADE9B9 /* font-x-generic.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DDF1085153E00ADE9B9 /* font-x-generic.png */; };
 		3A861DF11085153E00ADE9B9 /* system-file-manager.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DE31085153E00ADE9B9 /* system-file-manager.png */; };
 		3A861DF31085153E00ADE9B9 /* video-x-generic.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DE51085153E00ADE9B9 /* video-x-generic.png */; };
+		3A95F00B10BB28D80098BB38 /* iso-639-3.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A95F00A10BB28D80098BB38 /* iso-639-3.plist */; };
 		3AB2120C0EABE74900ACA509 /* PlayerFullscreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB2120B0EABE74900ACA509 /* PlayerFullscreenWindow.m */; };
 		3ABF85420EBFA084001FE779 /* FullscreenControls.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABF85410EBFA084001FE779 /* FullscreenControls.m */; };
 		3ABF86580EBFAD06001FE779 /* FullscreenControlsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABF86570EBFAD06001FE779 /* FullscreenControlsView.m */; };
@@ -264,13 +264,13 @@
 		3A6E433110A33AE400B0BDC3 /* PreferencesController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesController2.m; path = Sources/Controllers/PreferencesController2.m; sourceTree = "<group>"; };
 		3A81882E10B2FB8300AB1E07 /* LanguageTokenFieldDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LanguageTokenFieldDelegate.h; path = Sources/Classes/LanguageTokenFieldDelegate.h; sourceTree = "<group>"; };
 		3A81882F10B2FB8300AB1E07 /* LanguageTokenFieldDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LanguageTokenFieldDelegate.m; path = Sources/Classes/LanguageTokenFieldDelegate.m; sourceTree = "<group>"; };
-		3A81883B10B3020A00AB1E07 /* iso-639.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; name = "iso-639.plist"; path = "Resources/iso-639.plist"; sourceTree = "<group>"; };
 		3A861D951084C97800ADE9B9 /* binaries.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = binaries.icns; path = Resources/Graphics/binaries.icns; sourceTree = "<group>"; };
 		3A861DD91085153E00ADE9B9 /* applications-multimedia.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "applications-multimedia.png"; sourceTree = "<group>"; };
 		3A861DDB1085153E00ADE9B9 /* audio-input-microphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "audio-input-microphone.png"; sourceTree = "<group>"; };
 		3A861DDF1085153E00ADE9B9 /* font-x-generic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "font-x-generic.png"; sourceTree = "<group>"; };
 		3A861DE31085153E00ADE9B9 /* system-file-manager.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "system-file-manager.png"; sourceTree = "<group>"; };
 		3A861DE51085153E00ADE9B9 /* video-x-generic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "video-x-generic.png"; sourceTree = "<group>"; };
+		3A95F00A10BB28D80098BB38 /* iso-639-3.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; name = "iso-639-3.plist"; path = "Resources/iso-639-3.plist"; sourceTree = "<group>"; };
 		3A96C9590E4E20B800B7B261 /* iso-639-3.tab */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "iso-639-3.tab"; path = "Resources/iso-639-3.tab"; sourceTree = "<group>"; };
 		3AB2120A0EABE74900ACA509 /* PlayerFullscreenWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerFullscreenWindow.h; path = Sources/Classes/PlayerFullscreenWindow.h; sourceTree = "<group>"; };
 		3AB2120B0EABE74900ACA509 /* PlayerFullscreenWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlayerFullscreenWindow.m; path = Sources/Classes/PlayerFullscreenWindow.m; sourceTree = "<group>"; };
@@ -409,6 +409,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				3A95F00A10BB28D80098BB38 /* iso-639-3.plist */,
 				3A63894E108B953F00E90936 /* MoveApplication */,
 				3A36660D0FE6E6A500CF05DC /* AppleRemote.m */,
 				3A36660E0FE6E6A500CF05DC /* AppleRemote.h */,
@@ -436,7 +437,6 @@
 				37DCF89708886A2800DBF422 /* ffwd_button_on.png */,
 				37DCF880088868B300DBF422 /* gotob_button_off.png */,
 				3A96C9590E4E20B800B7B261 /* iso-639-3.tab */,
-				3A81883B10B3020A00AB1E07 /* iso-639.plist */,
 				37DCF881088868B300DBF422 /* gotob_button_on.png */,
 				37DCF882088868B300DBF422 /* gotoe_button_off.png */,
 				3ABF86A70EBFAF4C001FE779 /* fc_background.png */,
@@ -730,9 +730,9 @@
 				3A861DF31085153E00ADE9B9 /* video-x-generic.png in Resources */,
 				3A638955108B95B000E90936 /* MoveApplication.strings in Resources */,
 				3A07C707108E44C10033FA47 /* Preferences.xib in Resources */,
-				3A81883C10B3020A00AB1E07 /* iso-639.plist in Resources */,
 				3AC489CE10B48DDC00054A0E /* dialog-warning.png in Resources */,
 				3AD50F8610B5E22500F17C6C /* Preferences.plist in Resources */,
+				3A95F00B10BB28D80098BB38 /* iso-639-3.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

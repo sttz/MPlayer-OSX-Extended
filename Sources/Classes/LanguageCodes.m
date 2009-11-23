@@ -45,7 +45,7 @@ static LanguageCodes *instance;
 		return self;
 	
 	// Try to load cached archive
-	NSString *archive_path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"iso-639.plist"];
+	NSString *archive_path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"iso-639-3.plist"];
 	
 	NSData *archive_data = [NSData dataWithContentsOfFile:archive_path];
 	if (archive_data) {
@@ -63,6 +63,7 @@ static LanguageCodes *instance;
 		} else {
 			codes_2 = [[archive objectForKey:@"codes_2"] retain];
 			codes_3 = [[archive objectForKey:@"codes_3"] retain];
+			codes_3b = [[archive objectForKey:@"codes_3b"] retain];
 			codes_2_to_3 = [[archive objectForKey:@"codes_2_to_3"] retain];
 			return self;
 		}
@@ -81,6 +82,7 @@ static LanguageCodes *instance;
 	// Parse file
 	NSMutableDictionary *m_codes_2 = [[NSMutableDictionary dictionary] retain];
 	NSMutableDictionary *m_codes_3 = [[NSMutableDictionary dictionary] retain];
+	NSMutableDictionary *m_codes_3b = [[NSMutableDictionary dictionary] retain];
 	NSMutableDictionary *m_codes_2_to_3 = [[NSMutableDictionary dictionary] retain];
 	NSArray  *lines = [content componentsSeparatedByString:@"\n"];
 	NSEnumerator *theEnum = [lines objectEnumerator];
@@ -101,10 +103,10 @@ static LanguageCodes *instance;
 			// Add 639-3 code
 			[m_codes_3 setObject:[values objectAtIndex:6] forKey:[values objectAtIndex:0]];
 			
-			// Add 639-2/B bibliographic code (differs from 639-3)
+			// Add 639-2/B bibliographic code (if it differs from 639-3)
 			if (![[values objectAtIndex:1] isEqualToString:@""] 
 					&& ![[values objectAtIndex:0] isEqualToString:[values objectAtIndex:1]])
-				[m_codes_3 setObject:[values objectAtIndex:6] forKey:[values objectAtIndex:1]];
+				[m_codes_3b setObject:[values objectAtIndex:6] forKey:[values objectAtIndex:1]];
 			
 			if ([[values objectAtIndex:3] isEqualToString:@""])
 				continue;
@@ -119,7 +121,8 @@ static LanguageCodes *instance;
 	
 	// Try to cache as archive
 	NSDictionary *codes = [NSDictionary dictionaryWithObjectsAndKeys:
-							m_codes_2, @"codes_2", m_codes_3, @"codes_3", m_codes_2_to_3, @"codes_2_to_3", nil];
+							m_codes_2, @"codes_2", m_codes_3, @"codes_3", 
+						    m_codes_3b, @"codes_3b", m_codes_2_to_3, @"codes_2_to_3", nil];
 	NSString *error;
 	NSData *data =		  [NSPropertyListSerialization dataFromPropertyList:codes
 							format:NSPropertyListBinaryFormat_v1_0 errorDescription:&error];
@@ -133,6 +136,7 @@ static LanguageCodes *instance;
 	
 	codes_2 = m_codes_2;
 	codes_3 = m_codes_3;
+	codes_3b = m_codes_3b;
 	codes_2_to_3 = m_codes_2_to_3;
 	return self;
 	
@@ -153,8 +157,11 @@ static LanguageCodes *instance;
 	// Try to find code
 	if ([code length] == 2)
 		name = [codes_2 objectForKey:code];
-	else
+	else {
 		name = [codes_3 objectForKey:code];
+		if (!name)
+			name = [codes_3b objectForKey:code];
+	}
 	
 	if (name == nil)
 		return [NSString stringWithFormat:@"Unknown (%@)", code];
@@ -172,8 +179,11 @@ static LanguageCodes *instance;
 	NSString *code = [token lowercaseString];
 	
 	// Look for three-letter code
-	if ([code length] == 3 && [codes_3	objectForKey:code])
+	if ([code length] == 3 && [codes_3 objectForKey:code])
 		return code;
+	// Look for three-letter b code
+	if ([code length] == 3 && [codes_3b objectForKey:code])
+		return [[codes_3 allKeysForObject:[codes_3b objectForKey:code]] objectAtIndex:0];
 	// Look for two-letter code
 	if ([code length] == 2 && [codes_2_to_3 objectForKey:code])
 		return [codes_2_to_3 objectForKey:code];
@@ -192,8 +202,11 @@ static LanguageCodes *instance;
 		return nil;
 	
 	// Three-letter code
-	if ([code length] == 3)
+	if ([code length] == 3 && [codes_3 objectForKey:code])
 		return [codes_3 objectForKey:code];
+	// Three-letter b code
+	if ([code length] == 3 && [codes_3b objectForKey:code])
+		return [codes_3b objectForKey:code];
 	// Two-letter code
 	if ([code length] == 2)
 		return [codes_2 objectForKey:code];
@@ -207,14 +220,22 @@ static LanguageCodes *instance;
 		return nil;
 	
 	NSMutableArray *expanded = [[codes mutableCopy] autorelease];
-	NSArray *twoLetterCodes;
+	NSArray *twoLetterCodes, *threeBCodes;
 	
-	// add two-letter fro three-letter codes in array
+	// add two-letter for three-letter codes in array
 	for (NSString* code in codes) {
 		
 		if ([code length] != 3)
 			continue;
 		
+		// Use name to look for B codes
+		threeBCodes = [codes_3b allKeysForObject:[codes_3 objectForKey:code]];
+		
+		if ([threeBCodes count] > 0)
+			[expanded insertObject:[threeBCodes objectAtIndex:0] 
+						   atIndex:[expanded indexOfObject:code]]; 
+		
+		// Use mapping to look for two-letter codes
 		twoLetterCodes = [codes_2_to_3 allKeysForObject:code];
 		
 		if ([twoLetterCodes count] > 0)
@@ -229,6 +250,7 @@ static LanguageCodes *instance;
 {
 	[codes_2 release];
 	[codes_3 release];
+	[codes_3b release];
 	[codes_2_to_3 release];
 	
 	[super dealloc];

@@ -30,6 +30,7 @@
 	
 	NSDictionary *codes_2;
 	NSDictionary *codes_3;
+	NSDictionary *codes_3b;
 	NSDictionary *codes_2_to_3;
 }
 
