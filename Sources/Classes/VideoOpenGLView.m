@@ -33,6 +33,12 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	buffer_name = [[NSString stringWithFormat:@"mplayerosx-%i", [[NSProcessInfo processInfo] processIdentifier]] retain];
 	
 	[NSThread detachNewThreadSelector:@selector(threadMain:) toTarget:self withObject:[NSArray arrayWithObjects:port1, port2, nil]];
+	
+	// Watch for aspect ratio changes
+	[PREFS addObserver:self
+			forKeyPath:MPEAspectRatio
+			   options:0
+			   context:nil];
 }
 
 - (void) dealloc
@@ -357,6 +363,8 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	}
 }
 
+
+
 /*
 	Update method, called in main thread and forwareded to render thread
  */
@@ -389,13 +397,12 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 */
 - (void) startOpenGLView
 {
-	//Bring window to front
-	//[[self window] makeKeyAndOrderFront:nil];
+	// Aspect ratio
+	[self setAspectRatioFromPreferences];
 	
     if(isFullscreen)
 	{
 		[fullscreenWindow makeKeyAndOrderFront:nil];
-		//[[self window] orderOut:nil];
 		
 		isFullscreen = YES;
 	} else {
@@ -404,7 +411,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	}
     
 	//Play in fullscreen
-	if ([playerController startInFullscreen])
+	if ([PREFS integerForKey:MPEStartPlaybackDisplayType] == MPEStartPlaybackDisplayTypeFullscreen)
 		[threadProto toggleFullscreen];
 }
 
@@ -605,8 +612,8 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 }
 
 /*
- Resize OpenGL view to fit movie
- */
+	Resize OpenGL view to fit movie
+*/
 - (void) resizeView
 {
 	if (image_width == 0 || image_height == 0)
@@ -648,6 +655,15 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	[[NSNotificationCenter defaultCenter] removeObserver:self
 		name: @"MIFullscreenSwitchDone"
 		object: self];
+}
+
+/*
+	Reshape and then resize View
+*/
+- (void) reshapeAndResize
+{
+	[self reshape];
+	[self resizeView];
 }
 
 /*
@@ -803,7 +819,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 			else
 				[KeepAspectMenuItem setState:NSOffState];
 				
-			[self reshape];
+			[self reshapeAndResize];
 		}
 			
 		if(sender == PanScanMenuItem)
@@ -815,13 +831,13 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 			else
 				[PanScanMenuItem setState:NSOffState];
 				
-			[self reshape];
+			[self reshapeAndResize];
 		}
 			
 		if(sender == OriginalAspectMenuItem)
 		{
 			image_aspect = org_image_aspect;
-			[self reshape];
+			[self reshapeAndResize];
 		}
 	}
 }
@@ -829,7 +845,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 /*
 	Set aspect ratio by parsing the menu item title
 */
-- (IBAction)setAspectRatio:(NSMenuItem *)sender
+- (IBAction)setAspectRatioFromMenu:(NSMenuItem *)sender
 {
 	float aspectValue = [PreferencesController2 parseAspectRatio:[sender title]];
 	
@@ -838,10 +854,49 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 		return;
 	}
 	
-	image_aspect = aspectValue;
-	[self reshape];
+	[self setAspectRatio:aspectValue];
 }
 
+/*
+	Set aspect ratio by parsing the menu item title
+*/
+- (void)setAspectRatioFromPreferences
+{
+	if ([PREFS objectForKey:MPEAspectRatio]) {
+		float aspectValue;
+		
+		if (![[PREFS stringForKey:MPEAspectRatio] isEqualToString:@"Custom"])
+			aspectValue = [PreferencesController2 parseAspectRatio:[PREFS stringForKey:MPEAspectRatio]];
+		else
+			aspectValue = [[[PREFS objectForKey:MPECustomAspectRatio] objectForKey:MPECustomAspectRatioValueKey] floatValue];
+		
+		if (aspectValue <= 0)
+			[Debug log:ASL_LEVEL_ERR withMessage:@"Couldn't parse aspect ratio from preferences: %@ %@",
+			 [PREFS stringForKey:MPEAspectRatio],[PREFS stringForKey:MPECustomAspectRatio]];
+		else
+			[self setAspectRatio:aspectValue];
+	} else
+		[self setAspectRatio:org_image_aspect];
+}
+
+/*
+	Watch for preferences changes
+*/
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if ([keyPath isEqualToString:MPEAspectRatio])
+		[self setAspectRatioFromPreferences];
+}
+
+/*
+	Set aspect ratio
+*/
+- (void)setAspectRatio:(float)aspect
+{
+	image_aspect = aspect;
+	[self reshapeAndResize];
+}
+		 
 /*
 	Mouse down handler for fullscreen and dragging
 */

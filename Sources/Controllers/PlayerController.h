@@ -150,7 +150,6 @@
 - (BOOL) changesRequireRestart;
 - (BOOL) movieIsSeekable;
 - (void) applyChangesWithRestart:(BOOL)restart;
-- (BOOL) startInFullscreen;
 - (int) fullscreenDeviceId;
 - (NSWindow *) playerWindow;
 

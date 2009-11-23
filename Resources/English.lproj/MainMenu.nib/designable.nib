@@ -11,6 +11,7 @@
 			<string key="NS.object.0">732</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
+			<integer value="943"/>
 			<integer value="1582"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
@@ -2514,7 +2515,7 @@
 				</object>
 				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<object class="NSView" key="NSWindowView" id="782087522">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSPopUpButton" id="550814593">
@@ -3200,6 +3201,7 @@
 						</object>
 					</array>
 					<string key="NSFrameSize">{450, 300}</string>
+					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
@@ -4345,13 +4347,6 @@
 				<string key="NSClassName">SUUpdater</string>
 			</object>
 			<object class="NSUserDefaultsController" id="299649667">
-				<array class="NSMutableArray" key="NSDeclaredKeys">
-					<string>MPECustomAspectRatio</string>
-					<object class="NSMutableString">
-						<characters key="NS.bytes">value</characters>
-					</object>
-					<string>MPECustomAspectRatio.MPECustomAspectRatioString</string>
-				</array>
 				<bool key="NSSharedInstance">YES</bool>
 			</object>
 			<object class="NSCustomView" id="179464155">
@@ -6894,68 +6889,68 @@
 					<int key="connectionID">19140</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">setAspectRatio:</string>
-						<reference key="source" ref="566134870"/>
-						<reference key="destination" ref="103271458"/>
-					</object>
-					<int key="connectionID">19141</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">setAspectRatio:</string>
-						<reference key="source" ref="566134870"/>
-						<reference key="destination" ref="260083644"/>
-					</object>
-					<int key="connectionID">19142</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">setAspectRatio:</string>
-						<reference key="source" ref="566134870"/>
-						<reference key="destination" ref="762544581"/>
-					</object>
-					<int key="connectionID">19143</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">setAspectRatio:</string>
-						<reference key="source" ref="566134870"/>
-						<reference key="destination" ref="375942366"/>
-					</object>
-					<int key="connectionID">19144</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">setAspectRatio:</string>
-						<reference key="source" ref="566134870"/>
-						<reference key="destination" ref="122275591"/>
-					</object>
-					<int key="connectionID">19145</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">setAspectRatio:</string>
-						<reference key="source" ref="566134870"/>
-						<reference key="destination" ref="870466676"/>
-					</object>
-					<int key="connectionID">19146</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">setAspectRatio:</string>
-						<reference key="source" ref="566134870"/>
-						<reference key="destination" ref="810084006"/>
-					</object>
-					<int key="connectionID">19147</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">customAspectMenuItem</string>
 						<reference key="source" ref="700428315"/>
 						<reference key="destination" ref="810084006"/>
 					</object>
 					<int key="connectionID">19148</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">setAspectRatioFromMenu:</string>
+						<reference key="source" ref="566134870"/>
+						<reference key="destination" ref="103271458"/>
+					</object>
+					<int key="connectionID">19149</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">setAspectRatioFromMenu:</string>
+						<reference key="source" ref="566134870"/>
+						<reference key="destination" ref="260083644"/>
+					</object>
+					<int key="connectionID">19150</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">setAspectRatioFromMenu:</string>
+						<reference key="source" ref="566134870"/>
+						<reference key="destination" ref="762544581"/>
+					</object>
+					<int key="connectionID">19151</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">setAspectRatioFromMenu:</string>
+						<reference key="source" ref="566134870"/>
+						<reference key="destination" ref="375942366"/>
+					</object>
+					<int key="connectionID">19152</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">setAspectRatioFromMenu:</string>
+						<reference key="source" ref="566134870"/>
+						<reference key="destination" ref="122275591"/>
+					</object>
+					<int key="connectionID">19153</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">setAspectRatioFromMenu:</string>
+						<reference key="source" ref="566134870"/>
+						<reference key="destination" ref="870466676"/>
+					</object>
+					<int key="connectionID">19154</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">setAspectRatioFromMenu:</string>
+						<reference key="source" ref="566134870"/>
+						<reference key="destination" ref="810084006"/>
+					</object>
+					<int key="connectionID">19155</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -11294,7 +11289,7 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">19148</int>
+			<int key="maxID">19155</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -11307,7 +11302,7 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 						<string key="applyVIDEO_TSLocation:">id</string>
 						<string key="cancelLocation:">id</string>
 						<string key="cancelVIDEO_TSLocation:">id</string>
-						<string key="chooseCustomAspectRatio:">id</string>
+						<string key="chooseCustomAspectRatio:">NSButton</string>
 						<string key="closeWindow:">id</string>
 						<string key="displayLogWindow:">id</string>
 						<string key="displayPlayList:">id</string>
@@ -11763,7 +11758,7 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 					<string key="superclassName">NSOpenGLView</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="MovieMenuAction:">id</string>
-						<string key="setAspectRatio:">NSMenuItem</string>
+						<string key="setAspectRatioFromMenu:">NSMenuItem</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="Aspect16to9MenuItem">id</string>

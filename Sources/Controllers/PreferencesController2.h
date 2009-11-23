@@ -82,7 +82,9 @@
 }
 @end
 
-@interface AspectRatioFormatter : NSFormatter {
+@interface AspectRatioTransformer : NSValueTransformer { }
+@end
 
-}
+
+@interface AspectRatioFormatter : NSFormatter { }
 @end

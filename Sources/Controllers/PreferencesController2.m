@@ -448,3 +448,42 @@ decimal values (1.33) or fractions (4:3).";
 	return YES;
 }
 @end
+
+
+@implementation AspectRatioTransformer
+
++ (Class)transformedValueClass
+{
+	return [NSString class];
+}
+
++ (BOOL)allowsReverseTransformation
+{
+	return YES;
+}
+
+- (id)transformedValue:(id)value
+{
+	NSString *menuTitle = value;
+	
+	if (!menuTitle || ![value isKindOfClass:[NSString class]])
+		return @"Original";
+	else if ([menuTitle isEqualToString:@"Custom"])
+		return @"Custom:";
+	else
+		return menuTitle;
+}
+
+- (id)reverseTransformedValue:(id)value
+{
+	NSString *menuTitle = value;
+	
+	if ([menuTitle isEqualToString:@"Original"])
+		return nil;
+	else if ([menuTitle isEqualToString:@"Custom:"])
+		return @"Custom";
+	else
+		return menuTitle;
+}
+
+@end

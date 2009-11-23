@@ -1009,11 +1009,6 @@
 	[videoOpenGLView toggleFullscreen];
 }
 /************************************************************************************/
-- (BOOL) startInFullscreen {
-	
-	return ([PREFS integerForKey:MPEStartPlaybackDisplayType] == MPEStartPlaybackDisplayTypeFullscreen);
-}
-/************************************************************************************/
 - (int) fullscreenDeviceId {
 	
 	// Default value from preferences

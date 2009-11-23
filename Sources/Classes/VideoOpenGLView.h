@@ -153,16 +153,19 @@
 - (void) unblackScreens;
 - (void) reshape;
 - (void) resizeView;
+- (void) reshapeAndResize;
 - (void) close;
 - (void) finishClosing;
 - (void) setWindowSizeMode:(int)mode withValue:(float)val;
 - (void) ontop;
 - (void) setOntop:(BOOL)ontop;
 - (void) updateOntop;
+- (void) setAspectRatio:(float)aspect;
+- (void) setAspectRatioFromPreferences;
 
 //Action
 - (IBAction)MovieMenuAction:(id)sender;
-- (IBAction)setAspectRatio:(NSMenuItem *)sender;
+- (IBAction)setAspectRatioFromMenu:(NSMenuItem *)sender;
 //Event
 - (void) mouseDown: (NSEvent *) theEvent;
 
