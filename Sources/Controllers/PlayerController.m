@@ -630,7 +630,6 @@
 	[self applyVolume:volume];
 	
 	[myPlayer setVolume:[[NSNumber numberWithDouble:volume] intValue]];
-	[myPlayer applySettingsWithRestart:NO];
 }
 
 - (double)volume

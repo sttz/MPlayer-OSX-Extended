@@ -874,8 +874,7 @@ static NSArray* parseRunLoopModes;
 	if (myVolume != percents) {
 		myVolume = percents;
 		if (myState == kPlaying || myState == kPaused || myState == kSeeking)
-			[myCommandsBuffer addObject:[NSString stringWithFormat:
-					@"volume %d 1",myVolume]];
+			[self sendCommand:[NSString stringWithFormat:@"volume %d 1",myVolume]];
 	}
 }
 /************************************************************************************/
