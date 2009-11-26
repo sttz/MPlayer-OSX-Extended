@@ -77,6 +77,15 @@
 		<key>MPEBS2BFilter</key>
 		<false/>
 		<key>MPEKaraokeFilter</key>
+		<true/>
+		<key>MPESelectedBinary</key>
+		<string>ch.sttz.mplayerosx.extended.binaries.officialsvn</string>
+		<key>MPEUpdateBinaries</key>
+		<array>
+			<string>ch.sttz.mplayerosx.extended.binaries.officialsvn</string>
+			<string>ch.sttz.mplayerosx.extended.binaries.officialsvnwithmt</string>
+		</array>
+		<key>MPEUse32bitBinaryon64bit</key>
 		<false/>
 		<key>MPEAdvancedOptions</key>
 		<array/>
@@ -111,6 +120,8 @@
 		<string>MPEHRTFFilter</string>
 		<string>MPEBS2BFilter</string>
 		<string>MPEKaraokeFilter</string>
+		<string>MPESelectedBinary</string>
+		<string>MPEUse32bitBinaryon64bit</string>
 		<string>MPEAdvancedOptions</string>
 	</array>
 </dict>

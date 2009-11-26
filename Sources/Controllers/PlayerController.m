@@ -12,6 +12,7 @@
 // other controllers
 #import "AppController.h"
 #import "PlayListController.h"
+#import "PreferencesController2.h"
 
 #import "Preferences.h"
 
@@ -59,10 +60,10 @@
     myPlayer = [[MplayerInterface alloc] initWithPathToPlayer: playerPath];
 	myPreflightPlayer = [[MplayerInterface alloc] initWithPathToPlayer: preflightPlayerPath];
 	
-	// register for FFmpeg-MT fail
+	// register for MPlayer crash
 	[[NSNotificationCenter defaultCenter] addObserver: self
-			selector: @selector(disableFFmpegMTForCurrentFile)
-			name: @"MIRestartWithoutFFmpegMT"
+			selector: @selector(mplayerCrashed:)
+			name: @"MIMplayerExitedAbnormally"
 			object: myPlayer];
 	
 	// register for mplayer playback start
@@ -300,23 +301,28 @@
 /************************************************************************************
  INTERFACE
  ************************************************************************************/
-- (void) chooseMPlayerBinary
+- (void) mplayerCrashed:(NSNotification *)notification
 {
-	if ((![myPlayingItem objectForKey:@"UseFFmpegMT"]
-		 && [[[AppController sharedController] preferences] boolForKey:@"UseFFmpegMT"])
-		||
-		([myPlayingItem objectForKey:@"UseFFmpegMT"]
-		 && [[myPlayingItem objectForKey:@"UseFFmpegMT"] boolValue]))
-		[myPlayer setPlayerPath:mplayerMTPath];
-	else
-		[myPlayer setPlayerPath:mplayerPath];
-}
-/************************************************************************************/
-- (void) disableFFmpegMTForCurrentFile
-{
-	if (myPlayingItem) {
-		// Disable FFmpegt-MT
-		[myPlayingItem setObject:[NSNumber numberWithBool:NO] forKey:@"UseFFmpegMT"];
+	NSAlert *alert = [NSAlert alertWithMessageText:@"Playback Error"
+									 defaultButton:@"Abort"
+								   alternateButton:@"Restart"
+									   otherButton:@"Open Log" 
+						 informativeTextWithFormat:@"Abnormal playback termination. Check log file for more information."];
+	[alert setAccessoryView:[[[AppController sharedController] preferencesController] binarySelectionView]];
+	
+	NSInteger answer = [alert runModal];
+	
+	// Open Log file
+	if (answer == NSAlertOtherReturn) {
+		[[NSWorkspace sharedWorkspace] openFile:
+		 [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Logs/MPlayerOSX.log"]]; 
+	
+	// Restart playback
+	} else if (answer == NSAlertAlternateReturn) {
+		
+		NSString *binary = [[[AppController sharedController] preferencesController] identifierFromSelectionInView];
+		if (binary)
+			[myPlayingItem setObject:binary forKey:MPESelectedBinary];
 		// Restart playback
 		[self playItem:myPlayingItem];
 	}
@@ -372,9 +378,8 @@
 			[myPlayer setSubtitlesFile:aPath];
 		// set encoding from open dialog drop-down
 		[myPlayingItem setObject:[anItem objectForKey:MPETextEncoding] forKey:MPETextEncoding];
-		[self setSubtitlesEncoding];
 		// restart playback if encoding has changed
-		if ([myPlayer changesNeedRestart])
+		if ([myPlayer localChangesNeedRestart:myPlayingItem])
 			[self applyChangesWithRestart:YES];
    		return;
 	}
@@ -393,9 +398,6 @@
 	
 	// apply item settings
 	[self applySettings];
-	
-	// chose binary to use
-	[self chooseMPlayerBinary];
 
 	// set video size for case it is set to fit screen so we have to compare
 	// screen size with movie size
@@ -416,12 +418,9 @@
 	else
 		loadInfo = YES;
 	[myPlayer loadInfoBeforePlayback:loadInfo];
-
+	
 	// start playback
-	if (loadInfo)
-		[myPlayer play];
-	else
-		[myPlayer playWithInfo:[myPlayingItem objectForKey:@"MovieInfo"]];
+	[myPlayer playItem:myPlayingItem];
 	
 	// its enough to load info only once so disable it
 	if (loadInfo)
@@ -523,9 +522,6 @@
 	}
 	else
 		[myPlayer setRebuildIndex:NO];
-
-	// set subtitles encoding only if not default
-	[self setSubtitlesEncoding];
 }
 /************************************************************************************/
 - (BOOL) changesRequireRestart
@@ -544,9 +540,7 @@
 /************************************************************************************/
 - (void) applyChangesWithRestart:(BOOL)restart
 {
-	[self chooseMPlayerBinary];
-	
-	[myPlayer applySettingsWithRestart:restart];
+	[myPlayer applySettingsWithRestart:restart localChanges:myPlayingItem];
 	
 	// set streams
 	if (videoStreamId >= 0)
@@ -557,7 +551,6 @@
 		[myPlayer sendCommand:[NSString stringWithFormat:@"set_property sub_demux %i",subtitleDemuxStreamId]];
 	if (subtitleFileStreamId >= 0)
 		[myPlayer sendCommand:[NSString stringWithFormat:@"set_property sub_file %i",subtitleFileStreamId]];
-	
 }
 
 /************************************************************************************
@@ -583,11 +576,6 @@
 	
 	} else
 		[videoOpenGLView setWindowSizeMode:WSM_SCALE withValue:1];
-}
-/************************************************************************************/
-- (void) setSubtitlesEncoding
-{
-	// TODO: Fix custom encoding!
 }
 /************************************************************************************/
 - (void) setVideoEqualizer

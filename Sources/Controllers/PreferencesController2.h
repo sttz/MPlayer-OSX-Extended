@@ -1,5 +1,5 @@
 /*  
- *  LanguageCodes.m
+ *  PreferencesController2.h
  *  MPlayerOSX Extended
  *  
  *  Created on 05.11.2009
@@ -24,7 +24,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-#define MPE
+@class SUUpdater;
 
 @interface PreferencesController2 : NSWindowController {
 	
@@ -55,13 +55,37 @@
 	IBOutlet NSProgressIndicator *cacheStatusIndicator;
 	
 	IBOutlet NSWindow *customAspectRatioChooser;
+	
+	NSMutableDictionary *binaryBundles;
+	NSMutableDictionary *binaryInfo;
+	NSMutableDictionary *binaryUpdaters;
+	IBOutlet NSTableView *binariesTable;
+	IBOutlet NSButton *binaryUpdateCheckbox;
+	IBOutlet NSDictionaryController *binariesController;
+	
+	IBOutlet NSView *binaryInstallOptions;
+	IBOutlet NSButton *binaryInstallUpdatesCheckbox;
+	IBOutlet NSButton *binaryInstallDefaultCheckbox;
+	
+	IBOutlet NSView *binarySelectionView;
+	IBOutlet NSPopUpButton *binarySelectionPopUp;
 }
 
 @property (retain) NSMutableDictionary *fonts;
+@property (retain) NSMutableDictionary *binaryInfo;
 @property (readonly) NSWindow *customAspectRatioChooser;
+@property (readonly) NSDictionaryController *binariesController;
 
 - (IBAction) switchView:(NSToolbarItem*)sender;
 - (void) loadView:(NSString*)viewName;
+
+- (void) scanBinaries;
+- (void) loadBinariesFromDirectory:(NSString *)path;
+- (SUUpdater *)createUpdaterForBundle:(NSBundle *)bundle whichUpdatesAutomatically:(BOOL)autoupdate;
+- (BOOL) binaryHasRequiredMinVersion:(NSDictionary *)bundle;
+- (void) installBinary:(NSString *)path;
+- (NSString *) identifierForBinaryName:(NSString *)name;
+- (NSString *) pathForBinaryWithIdentifier:(NSString *)identifier;
 
 - (IBAction) requireRestart:(id)sender;
 - (IBAction) restartPlayback:(id)sender;
@@ -74,6 +98,14 @@
 + (float) parseAspectRatio:(NSString *)aspectString;
 + (NSColor *) unarchiveColor:(NSData *)data;
 
+- (NSView *) binarySelectionView;
+- (NSString *) identifierFromSelectionInView;
+
+- (IBAction) selectBinary:(id)sender;
+- (IBAction) visitBinaryHomepage:(id)sender;
+- (IBAction) setChecksForUpdates:(NSButton *)sender;
+- (IBAction) checkForUpdates:(id)sender;
+
 @end
 
 
@@ -85,6 +117,14 @@
 @interface AspectRatioTransformer : NSValueTransformer { }
 @end
 
+@interface IsSelectedBinaryTransformer : NSValueTransformer { }
+@end
+
+@interface IsNotSelectedBinaryTransformer : IsSelectedBinaryTransformer { }
+@end
+
+@interface OnlyValidBinariesTransformer : NSValueTransformer { }
+@end
 
 @interface AspectRatioFormatter : NSFormatter { }
 @end

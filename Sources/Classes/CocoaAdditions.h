@@ -1,11 +1,11 @@
 /*  
- *  FullscreenControlsScrubbingBar.m
+ *  CocoaAdditions.h
  *  MPlayerOSX Extended
  *  
- *  Created on 04.11.2008
+ *  Created on 26.11.2009
  *  
  *  Description:
- *	Custom scrubbing bar for the fullscreen controls.
+ *	Additions to Cocoa classes
  *  
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -22,23 +22,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#import "FullscreenControlsScrubbingBar.h"
+#import <Cocoa/Cocoa.h>
 
-
-@implementation FullscreenControlsScrubbingBar
-- (void) loadImages
-{	
-	// These will be release in [super dealloc]
-	scrubBarEnds = [[NSImage imageNamed:@"fc_scrub_ends"] retain];
-	scrubBarRun = [[NSImage imageNamed:@"fc_scrub_run"] retain];
-	scrubBarBadge = [[NSImage imageNamed:@"fc_scrub_badge"] retain];
-	scrubBarAnimFrame = [[NSImage imageNamed:@"fc_scrub_anim"] retain];
-	
-	yBadgeOffset = 1;
-	xBadgeOffset = 6.5;
-	rightClip = 1;
-	[self setFrameSize:NSMakeSize([self frame].size.width,[scrubBarEnds size].height)];
-	
-	
-}
+@interface NSView (MPEAdditions)
+- (void) resizeAndArrangeSubviewsVerticallyWithPadding:(float)padding;
 @end

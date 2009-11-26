@@ -62,11 +62,14 @@ NSString* const MPEOverrideVideoCodecs                = @"MPEOverrideVideoCodecs
 NSString* const MPEPostprocessingFilter               = @"MPEPostprocessingFilter";
 NSString* const MPERenderSubtitlesFirst               = @"MPERenderSubtitlesFirst";
 NSString* const MPEScreenshotSaveLocation             = @"MPEScreenshotSaveLocation";
+NSString* const MPESelectedBinary                     = @"MPESelectedBinary";
 NSString* const MPEStartPlaybackDisplayType           = @"MPEStartPlaybackDisplayType";
 NSString* const MPESubtitleBorderColor                = @"MPESubtitleBorderColor";
 NSString* const MPESubtitleScale                      = @"MPESubtitleScale";
 NSString* const MPESubtitleTextColor                  = @"MPESubtitleTextColor";
 NSString* const MPETextEncoding                       = @"MPETextEncoding";
+NSString* const MPEUpdateBinaries                     = @"MPEUpdateBinaries";
+NSString* const MPEUse32bitBinaryon64bit              = @"MPEUse32bitBinaryon64bit";
 NSString* const MPEWindowOnTopMode                    = @"MPEWindowOnTopMode";
 
 NSString* const MPECustomAspectRatioStringKey         = @"MPECustomAspectRatioString";

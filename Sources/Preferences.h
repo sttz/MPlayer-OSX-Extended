@@ -62,11 +62,14 @@ extern NSString* const MPEOverrideVideoCodecs;
 extern NSString* const MPEPostprocessingFilter;
 extern NSString* const MPERenderSubtitlesFirst;
 extern NSString* const MPEScreenshotSaveLocation;
+extern NSString* const MPESelectedBinary;
 extern NSString* const MPEStartPlaybackDisplayType;
 extern NSString* const MPESubtitleBorderColor;
 extern NSString* const MPESubtitleScale;
 extern NSString* const MPESubtitleTextColor;
 extern NSString* const MPETextEncoding;
+extern NSString* const MPEUpdateBinaries;
+extern NSString* const MPEUse32bitBinaryon64bit;
 extern NSString* const MPEWindowOnTopMode;
 
 extern NSString* const MPECustomAspectRatioStringKey;

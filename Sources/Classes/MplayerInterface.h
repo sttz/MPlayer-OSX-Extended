@@ -87,6 +87,7 @@
 	NSString *myAudioExportFile;
 	NSString *myFontFile;
 	
+	NSDictionary *playingItem;
 	NSDictionary *prefs;
 	
 	NSString *buffer_name;
@@ -161,7 +162,7 @@
 - (void) setPlayerPath:(NSString *)path;
 
 // playback controls (take effect imediately)
-- (void) playWithInfo:(MovieInfo *)mf;				// play item from saved time
+- (void) playItem:(NSMutableDictionary *)item;				// play item from saved time
 - (void) play;
 - (void) stop;										// stops playback
 - (void) pause;										// pause / unpause playback
@@ -190,7 +191,7 @@
 - (void) setVolume:(unsigned int)percents;			// set audio volume
 
 // other methods
-- (void) applySettingsWithRestart:(BOOL)restartIt;	// applyes settings that require restart
+- (void) applySettingsWithRestart:(BOOL)restartIt localChanges:(NSDictionary *)item;	// applyes settings that require restart
 - (void) waitUntilExit;
 - (void) takeScreenshot;
 
@@ -201,6 +202,7 @@
 - (int) status;
 - (float) seconds;									// returns number of seconds, elapsed
 - (BOOL) changesNeedRestart;						// retuns YES if changes needs restart
+- (BOOL) localChangesNeedRestart:(NSDictionary *)item;
 
 - (BOOL) isRunning;
 - (BOOL) isPlaying;

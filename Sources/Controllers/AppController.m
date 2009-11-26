@@ -13,14 +13,17 @@
 // other controllers
 #import "PlayerController.h"
 #import "PlayListController.h"
-
-#import "Preferences.h"
-#import "AppleRemote.h"
-#import "PFMoveApplication.h"
 #import "PreferencesController2.h"
 
+#import "Preferences.h"
+
+#import "CocoaAdditions.h"
+
+#import "AppleRemote.h"
+#import "PFMoveApplication.h"
+
 @implementation AppController
-@synthesize playerController, aspectMenu;
+@synthesize playerController, preferencesController, aspectMenu;
 
 static AppController *instance = nil;
 
@@ -134,7 +137,10 @@ static AppController *instance = nil;
 		// if any file, create new item and play it
 		NSMutableDictionary *theItem = [NSMutableDictionary
 				dictionaryWithObject:theFile forKey:@"MovieFile"];
-		[theItem setObject:[NSNumber numberWithInt:[openMultithreading state]] forKey:@"UseFFmpegMT"];
+		// apply selection from binary selection popup
+		NSString *binary = [preferencesController identifierFromSelectionInView];
+		if (binary)
+			[theItem setObject:binary forKey:MPESelectedBinary];
 		[playerController playItem:theItem];
 	}
 }
@@ -222,7 +228,8 @@ static AppController *instance = nil;
 	if (theFile) {
 		NSMutableDictionary *theItem = [NSMutableDictionary
 				dictionaryWithObject:theFile forKey:@"SubtitlesFile"];
-		[theItem setObject:[openSubtitleEncoding titleOfSelectedItem] forKey:MPETextEncoding];
+		if ([openSubtitleEncoding selectedTag] > -1)
+			[theItem setObject:[openSubtitleEncoding titleOfSelectedItem] forKey:MPETextEncoding];
 		[playerController playItem:theItem];
 	}
 }
@@ -398,9 +405,11 @@ static AppController *instance = nil;
 	
 	// show additional options based on type
 	if (type == MP_DIALOG_MEDIA || type == MP_DIALOG_VIDEO) { 
-		// add multithreading box and load state from preferences
-		[openPanel setAccessoryView:openFileSettings];
-		[openMultithreading setState:[[self preferences] boolForKey:@"UseFFmpegMT"]];
+		NSView *options = [[[NSView alloc] initWithFrame:NSZeroRect] autorelease];
+		[options addSubview:openFileSettings];
+		[options addSubview:[preferencesController binarySelectionView]];
+		[options resizeAndArrangeSubviewsVerticallyWithPadding:5];
+		[openPanel setAccessoryView:options];
 	} else if (type == MP_DIALOG_SUBTITLES) {
 		// beta: add encoding dropdown and load state from preferences
 		[openPanel setAccessoryView:openSubtitleSettings];
@@ -530,8 +539,10 @@ static AppController *instance = nil;
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
 {
 	if (filename) {
+		if ([[filename pathExtension] isEqualToString:@"mpBinaries"])
+			[preferencesController installBinary:filename];
 		// create an item from it and play it
-		if ([self isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]) {
+		else if ([self isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]) {
 			NSMutableDictionary *myItem = [NSMutableDictionary
 										   dictionaryWithObject:filename forKey:@"MovieFile"];
 			[playerController playItem:myItem];

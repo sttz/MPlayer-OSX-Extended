@@ -1,5 +1,5 @@
 /*  
- *  LanguageCodes.m
+ *  FullscreenControlsScrubbingBar.h
  *  MPlayerOSX Extended
  *  
  *  Created on 04.11.2008

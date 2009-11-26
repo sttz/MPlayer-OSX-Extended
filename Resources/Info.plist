@@ -5,13 +5,13 @@
 	<key>CFBundleName</key>
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleShortVersionString</key>
-	<string>rev12</string>
+	<string>rev13-test1</string>
 	<key>CFBundleVersion</key>
-	<string>1210</string>
+	<string>1301</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIdentifier</key>
-	<string>hu.mplayerhq.mplayerosx.extended</string>
+	<string>ch.sttz.mplayerosx.extended</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleURLTypes</key>
@@ -222,5 +222,7 @@
 	<string>dsa_pub.pem</string>
 	<key>CFBundleHomepage</key>
 	<string>http://mplayerosx.sttz.ch/</string>
+	<key>MPEBinaryMinRevision</key>
+	<string>29777</string>
 </dict>
 </plist>

@@ -1,5 +1,5 @@
 /*  
- *  LanguageCodes.m
+ *  PreferencesController2.m
  *  MPlayerOSX Extended
  *  
  *  Created on 05.11.2009
@@ -32,15 +32,27 @@
 
 #import <fontconfig/fontconfig.h>
 #import "RegexKitLite.h"
+#import <Sparkle/Sparkle.h>
 
 // regex for parsing aspect ratio
 #define ASPECT_REGEX	@"^(\\d+\\.?\\d*|\\.\\d+)(?:\\:(\\d+\\.?\\d*|\\.\\d+))?$"
 
+static NSDictionary const *architectures;
+
 @implementation PreferencesController2
-@synthesize fonts, customAspectRatioChooser;
+@synthesize fonts, customAspectRatioChooser, binaryInfo, binariesController;
 
 - (void) awakeFromNib
 {
+	if (!architectures) {
+		architectures = [[NSDictionary alloc] initWithObjectsAndKeys:
+						 @"ppc",   [NSNumber numberWithInt:NSBundleExecutableArchitecturePPC],
+						 @"ppc64", [NSNumber numberWithInt:NSBundleExecutableArchitecturePPC64],
+						 @"i386",  [NSNumber numberWithInt:NSBundleExecutableArchitectureI386],
+						 @"x86_64",[NSNumber numberWithInt:NSBundleExecutableArchitectureX86_64],
+						 nil];
+	}
+	
 	views = [[NSDictionary alloc] initWithObjectsAndKeys:
 			 generalView,	@"General",
 			 displayView,	@"Display",
@@ -56,6 +68,9 @@
 	else
 		[self loadView:@"General"];
 	
+	// Set autosave name here to avoid window loading the frame with an unitialized view
+	[self setWindowFrameAutosaveName:@"MPEPreferencesWindow"];
+	
 	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES]; 
 	
 	screenshotSavePathLastSelection = [PREFS integerForKey:MPECustomScreenshotsSavePath];
@@ -64,12 +79,33 @@
 											 selector:@selector(loadFonts)
 												 name:NSApplicationDidFinishLaunchingNotification
 											   object:NSApp];
+	
+	[binariesController addObserver:self
+						 forKeyPath:@"selection"
+							options:NSKeyValueObservingOptionInitial
+							context:nil];
+	
+	[binariesTable setTarget:self];
+	[binariesTable setDoubleAction:@selector(selectBinary:)];
+	
+	[self scanBinaries];
+	
+	// reset selected binary if it can't be found or is not compatible
+	NSDictionary *selectedBinary = [binaryInfo objectForKey:[PREFS objectForKey:MPESelectedBinary]];
+	if (!selectedBinary || ![self binaryHasRequiredMinVersion:selectedBinary]) {
+		[Debug log:ASL_LEVEL_WARNING withMessage:@"Reset to default binary (selected binary either not found or not compatible)."];
+		[PREFS removeObjectForKey:MPESelectedBinary];
+	}
 }
 
 - (void) dealloc
 {
 	[views release];
 	[currentViewName release];
+	[fonts release];
+	[binaryBundles release];
+	[binaryInfo release];
+	[binaryUpdaters release];
 	
 	[super dealloc];
 }
@@ -131,15 +167,26 @@
 	return idents;
 }
 
+- (IBAction) checkForUpdates:(id)sender
+{
+	NSDictionary *info = [[[binariesController selectedObjects] objectAtIndex:0] value];
+	SUUpdater *updater = [binaryUpdaters objectForKey:[info objectForKey:@"CFBundleIdentifier"]];
+	
+	if (!updater)
+		updater = [self createUpdaterForBundle:[binaryBundles objectForKey:[info objectForKey:@"CFBundleIdentifier"]]
+					 whichUpdatesAutomatically:NO];
+	
+	[updater checkForUpdates:sender];
+}
+
 - (IBAction) requireRestart:(id)sender
 {
 	BOOL restart = [[[AppController sharedController] playerController] changesRequireRestart];
-	NSLog(@"require restart? %d",restart);
 	
 	if (restart	&& !restartIsRequired) {
 		[[[self window] contentView] addSubview:restartView];
 		[self loadView:currentViewName];
-	
+		
 	} else if (!restart && restartIsRequired) {
 		[restartView removeFromSuperview];
 		[self loadView:currentViewName];
@@ -155,6 +202,263 @@
 	
 	[[[AppController sharedController] playerController] applyChangesWithRestart:YES];
 	restartIsRequired = NO;
+}
+
+- (void) scanBinaries
+{
+	if (!binaryBundles) {
+		binaryBundles  = [NSMutableDictionary new];
+		binaryInfo     = [NSMutableDictionary new]; 
+		binaryUpdaters = [NSMutableDictionary new];
+	}
+	
+	NSString *binPath;
+	
+	NSArray *results = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,
+														   NSUserDomainMask, YES);
+	
+	if ([results count] > 0) {
+		binPath = [[results objectAtIndex:0] stringByAppendingPathComponent:@"MPlayer OSX Extended/Binaries"];
+		if ([[NSFileManager defaultManager] fileExistsAtPath:binPath])
+			[self loadBinariesFromDirectory:binPath];
+	}
+	
+	binPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Binaries"];
+	[self loadBinariesFromDirectory:binPath];
+	
+	[self setBinaryInfo:binaryInfo];
+}
+
+- (void) loadBinariesFromDirectory:(NSString *)path
+{
+	NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:NULL];
+	
+	if (!files || [files count] == 0) {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to load binaries from path: %@",path];
+		return;
+	}
+	
+	for (NSString *file in files) {
+		if ([[file pathExtension] isEqualToString:@"mpBinaries"]) {
+			
+			NSString *bundlePath = [path stringByAppendingPathComponent:file];
+			NSBundle *binary = [[[NSBundle alloc] initWithPath:bundlePath] autorelease];
+			
+			if (!binary) {
+				[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to load bundle at path: %@",path];
+				return;
+			}
+			
+			NSString *bundleIdentifier = [binary bundleIdentifier];
+			
+			if ([binaryBundles objectForKey:bundleIdentifier])
+				return;
+			
+			NSMutableDictionary *info = [[[binary infoDictionary] mutableCopy] autorelease];
+			NSMutableArray *archs = [[[binary executableArchitectures] mutableCopy] autorelease];
+			
+			NSUInteger i;
+			for (i=0; i < [archs count]; i++) {
+				if ([architectures objectForKey:[archs objectAtIndex:i]])
+					[archs replaceObjectAtIndex:i withObject:[architectures objectForKey:[archs objectAtIndex:i]]];
+			}
+			
+			[info setObject:archs forKey:@"MPEBinaryArchs"];
+			[info setObject:[archs componentsJoinedByString:@", "] forKey:@"MPEBinaryArchsString"];
+			
+			BOOL isCompatible = [self binaryHasRequiredMinVersion:info];
+			[info setObject:[NSNumber numberWithBool:isCompatible] forKey:@"MPEBinaryIsCompatible"];
+			if (!isCompatible) {
+				[info setObject:[NSString stringWithFormat:@"Version not compatible: %@",
+								 [info objectForKey:@"CFBundleShortVersionString"]]
+						 forKey:@"CFBundleShortVersionString"];
+				[info setObject:[NSColor redColor] forKey:@"MPEVersionStringTextColor"];
+			}
+			
+			if ([PREFS boolForKey:@"SUEnableAutomaticChecks"] && [info objectForKey:@"SUFeedURL"]
+				&& [[PREFS arrayForKey:MPEUpdateBinaries] containsObject:bundleIdentifier])
+				[self createUpdaterForBundle:binary whichUpdatesAutomatically:YES];
+			
+			[Debug log:ASL_LEVEL_INFO withMessage:@"Found binary %@ in %@",
+			 file,[[path stringByDeletingLastPathComponent] lastPathComponent]];
+			[binaryBundles setValue:binary forKey:bundleIdentifier];
+			[binaryInfo setValue:info forKey:bundleIdentifier];
+		}
+	}
+}
+
+- (BOOL) binaryHasRequiredMinVersion:(NSDictionary *)info
+{
+	int minRev = [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"MPEBinaryMinRevision"] intValue];
+	int bundleRev = [[info objectForKey:@"MPEBinarySVNRevisionEquivalent"] intValue];
+	return (bundleRev >= minRev);
+}
+
+- (void) installBinary:(NSString *)path
+{
+	NSBundle *binary = [[[NSBundle alloc] initWithPath:path] autorelease];
+	
+	if (!binary || ![[binary infoDictionary] objectForKey:@"MPEBinarySVNRevisionEquivalent"]) {
+		NSRunAlertPanel(@"Binary Installation Error", 
+						[NSString stringWithFormat:@"The MPlayer binary '%@' couldn't be recognized.",
+							[path lastPathComponent]], 
+						 @"OK", nil, nil);
+		return;
+	}
+	
+	NSDictionary *info = [binary infoDictionary];
+	NSString *identifier = [info objectForKey:@"CFBundleIdentifier"];
+	
+	if (![self binaryHasRequiredMinVersion:info]) {
+		NSRunAlertPanel(@"Binary Installation Error", 
+						[NSString stringWithFormat:@"The MPlayer binary '%@' is not compatible with this %@ version (at least r%d required).",
+						 [path lastPathComponent],
+						 [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
+						 [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"MPEBinaryMinRevision"] intValue]], 
+						@"OK", nil, nil);
+		return;
+	}
+	
+	if ([binaryBundles objectForKey:identifier]) {
+		
+		NSString *installedVersion = [[binaryInfo objectForKey:identifier] objectForKey:@"CFBundleVersion"];
+		NSString *newVersion = [info objectForKey:@"CFBundleVersion"];
+		NSComparisonResult result = [installedVersion compare:newVersion options:NSNumericSearch];
+		
+		if (result == NSOrderedSame) {
+			
+			if (NSRunAlertPanel(@"Binary Already Installed", 
+				[NSString stringWithFormat:
+				 @"The MPlayer binary '%@' is already installed (version %@). Do you want to install it again?",
+				 [info objectForKey:@"CFBundleName"],
+				 [info objectForKey:@"CFBundleShortVersionString"]],
+				 @"Cancel", @"Reinstall", nil) == NSAlertDefaultReturn) return;
+			
+		} else if (result == NSOrderedAscending) {
+			
+			if (NSRunAlertPanel(@"Upgrade Binary", 
+				[NSString stringWithFormat:
+				 @"Do you want to upgrade the MPlayer binary '%@' from version %@ to %@?",
+				 [info objectForKey:@"CFBundleName"],
+				 [[binaryInfo objectForKey:identifier] objectForKey:@"CFBundleShortVersionString"],
+				 [info objectForKey:@"CFBundleShortVersionString"]],
+				 @"Upgrade", @"Cancel", nil) == NSAlertAlternateReturn) return;
+			
+		} else {
+			
+			if (NSRunAlertPanel(@"Downgrade Binary", 
+				[NSString stringWithFormat:
+				 @"A newer version of the MPlayer binary '%@' is already installed. Do you want to downgrade from version %@ to %@?",
+				 [info objectForKey:@"CFBundleName"],
+				 [[binaryInfo objectForKey:identifier] objectForKey:@"CFBundleShortVersionString"],
+				 [info objectForKey:@"CFBundleShortVersionString"]],
+				 @"Cancel", @"Downgrade", nil) == NSAlertDefaultReturn) return;
+			
+		}
+		
+	} else {
+		
+		NSAlert *alert = [NSAlert alertWithMessageText:@"Install Binary"
+										 defaultButton:@"Install"
+									   alternateButton:@"Cancel"
+										   otherButton:nil
+							 informativeTextWithFormat:@"Do you want to install the MPlayer binary '%@'?",
+														[info objectForKey:@"CFBundleName"]];
+		[alert setAccessoryView:binaryInstallOptions];
+		[binaryInstallUpdatesCheckbox setHidden:(![info objectForKey:@"SUFeedURL"])];
+		
+		[binaryInstallUpdatesCheckbox setState:NSOnState];
+		[binaryInstallDefaultCheckbox setState:NSOnState];
+		
+		if ([alert runModal] != NSAlertDefaultReturn)
+			return;
+	}
+	
+	NSArray *results = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,
+														   NSUserDomainMask,
+														   YES);
+	
+	NSFileManager *fm = [NSFileManager defaultManager];
+	NSString *installPath = [[results objectAtIndex:0] 
+							 stringByAppendingPathComponent:@"MPlayer OSX Extended/Binaries"];
+	
+	if (![fm fileExistsAtPath:installPath]) {
+		NSError *error;
+		if (![fm createDirectoryAtPath:installPath
+		   withIntermediateDirectories:YES 
+							attributes:nil 
+								 error:&error]) {
+			[Debug log:ASL_LEVEL_ERR withMessage:@"Couldn't create directory at path: %@, Error: %@",installPath,[error localizedDescription]];
+			return;
+		}
+	}
+	
+	installPath = [installPath stringByAppendingPathComponent:[path lastPathComponent]];
+	
+	NSError *error;
+	if (![fm moveItemAtPath:path toPath:installPath error:&error]) {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Couldn't move binary to '%@', Error: %@",installPath,[error localizedDescription]];
+		return;
+	}
+	
+	if (![binaryInstallDefaultCheckbox isHidden]) {
+		NSMutableArray *updates = [[[PREFS arrayForKey:MPEUpdateBinaries] mutableCopy] autorelease];
+		if ([updates containsObject:identifier] && [binaryInstallUpdatesCheckbox state] == NSOffState)
+			[updates removeObject:identifier];
+		else if (![updates containsObject:identifier] && [binaryInstallUpdatesCheckbox state] == NSOnState)
+			[updates addObject:identifier];
+		[PREFS setObject:updates forKey:MPEUpdateBinaries];
+	}
+	
+	if ([binaryInstallDefaultCheckbox state] == NSOnState)
+		[PREFS setObject:identifier forKey:MPESelectedBinary];
+	
+	[self scanBinaries];
+	
+	[[self window] makeKeyAndOrderFront:nil];
+	[self loadView:@"MPlayer"];
+}
+
+- (NSString *) identifierForBinaryName:(NSString *)name
+{
+	for (NSString *key in binaryInfo) {
+		if ([name isEqualToString:[[binaryInfo objectForKey:key] objectForKey:@"CFBundleName"]])
+			return key;
+	}
+	return nil;
+}
+
+- (NSString *) pathForBinaryWithIdentifier:(NSString *)identifier
+{
+	if (![binaryBundles objectForKey:identifier]) {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Binary not found for identifier: %@",identifier];
+		return nil;
+	}
+	
+	return [[binaryBundles objectForKey:identifier] executablePath];
+}
+
+- (SUUpdater *)createUpdaterForBundle:(NSBundle *)bundle whichUpdatesAutomatically:(BOOL)autoupdate
+{
+	SUUpdater *updater = [SUUpdater updaterForBundle:bundle];
+	
+	[updater setAutomaticallyChecksForUpdates:autoupdate];
+	[updater setNeedsRelaunchAfterInstall:NO];
+	[updater setDelegate:self];
+	
+	[binaryUpdaters setObject:updater forKey:[bundle bundleIdentifier]];
+	
+	return updater;
+}
+
+- (void)updater:(SUUpdater *)updater hasFinishedInstallforUdpate:(SUAppcastItem *)update
+{
+	NSString *identifier = [[binaryUpdaters allKeysForObject:updater] objectAtIndex:0];
+	
+	[binaryInfo removeObjectForKey:identifier];
+	[binaryBundles removeObjectForKey:identifier];
+	
+	[self scanBinaries];
 }
 
 - (IBAction) selectNewScreenshotPath:(NSPopUpButton *)sender
@@ -295,6 +599,80 @@
 	[[NSUserDefaults standardUserDefaults] setObject:[sender titleOfSelectedItem] forKey:MPEFont];
 	
 	[self requireRestart:sender];
+}
+
+- (IBAction) selectBinary:(id)sender
+{
+	if (sender == binariesTable && [binariesTable clickedRow] < 0)
+		return;
+	
+	NSDictionary *info = [[[binariesController selectedObjects] objectAtIndex:0] value];
+	
+	if (![[PREFS stringForKey:MPESelectedBinary] 
+		  isEqualToString:[info objectForKey:@"CFBundleIdentifier"]]
+		&& [self binaryHasRequiredMinVersion:info]) {
+		
+		[PREFS setObject:[info objectForKey:@"CFBundleIdentifier"] forKey:MPESelectedBinary];
+		
+		[self setBinaryInfo:binaryInfo];
+		
+		[self requireRestart:sender];
+	}
+}
+
+- (IBAction) visitBinaryHomepage:(id)sender
+{
+	NSDictionary *info = [[[binariesController selectedObjects] objectAtIndex:0] value];
+	
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[info objectForKey:@"MPEBinaryHomepage"]]];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if ([keyPath isEqualToString:@"selection"]) {
+		NSArray *selection = [binariesController selectedObjects];
+		BOOL state;
+		if ([selection count] > 0) {
+			NSDictionary *info = [[selection objectAtIndex:0] value];
+			NSString *identifier = [info objectForKey:@"CFBundleIdentifier"];
+			state = [[PREFS arrayForKey:MPEUpdateBinaries] containsObject:identifier];
+		}
+		[binaryUpdateCheckbox setState:state];
+	}
+}
+
+- (IBAction) setChecksForUpdates:(NSButton *)sender
+{
+	NSDictionary *info = [[[binariesController selectedObjects] objectAtIndex:0] value];
+	NSString *identifier = [info objectForKey:@"CFBundleIdentifier"];
+	
+	NSArray *updates = [PREFS arrayForKey:MPEUpdateBinaries];
+	NSMutableArray *newUpdates;
+	
+	if ([sender state] == NSOnState && ![updates containsObject:identifier]) {
+		newUpdates = [[updates mutableCopy] autorelease];
+		[newUpdates addObject:identifier];
+	} else if ([sender state] == NSOffState && [updates containsObject:identifier]) {
+		newUpdates = [[updates mutableCopy] autorelease];
+		[newUpdates removeObject:identifier];
+	}
+	
+	if (newUpdates)
+		[PREFS setObject:newUpdates forKey:MPEUpdateBinaries];
+}
+
+- (NSView *) binarySelectionView
+{
+	[binarySelectionPopUp selectItemWithTag:-1];
+	return binarySelectionView;
+}
+
+- (NSString *) identifierFromSelectionInView
+{
+	if ([binarySelectionPopUp selectedTag] > -1)
+		return [self identifierForBinaryName:[[binarySelectionPopUp selectedItem] title]];
+	else
+		return nil;
 }
 
 + (float) parseAspectRatio:(NSString *)aspectString
@@ -484,6 +862,73 @@ decimal values (1.33) or fractions (4:3).";
 		return @"Custom";
 	else
 		return menuTitle;
+}
+
+@end
+
+@implementation IsSelectedBinaryTransformer
+
++ (Class)transformedValueClass
+{
+	return [NSString class];
+}
+
+- (id)transformedValue:(id)value
+{
+	if (![value isKindOfClass:[NSString class]])
+		return nil;
+	
+	return [NSNumber numberWithBool:[value isEqualToString:[PREFS objectForKey:MPESelectedBinary]]];
+}
+
+@end
+
+
+@implementation IsNotSelectedBinaryTransformer
+
++ (Class)transformedValueClass
+{
+	return [NSString class];
+}
+
+- (id)transformedValue:(id)value
+{
+	NSNumber *tv = [super transformedValue:value];
+	
+	if (!tv)
+		return nil;
+	
+	return [NSNumber numberWithBool:![tv boolValue]];
+}
+
+@end
+
+
+@implementation OnlyValidBinariesTransformer
+
++ (Class)transformedValueClass
+{
+	return [NSString class];
+}
+
+- (id)transformedValue:(id)value
+{
+	if (![value isKindOfClass:[NSArray class]])
+		return nil;
+	
+	NSMutableArray *validBinaries = [NSMutableArray array];
+	PreferencesController2 *preferencesController = [[AppController sharedController] preferencesController];
+	
+	for (NSString *name in value) {
+		NSString *identifier = [preferencesController identifierForBinaryName:name];
+		if (identifier) {
+			NSDictionary *info = [[preferencesController binaryInfo] objectForKey:identifier];
+			if ([[info objectForKey:@"MPEBinaryIsCompatible"] boolValue])
+				[validBinaries addObject:name];
+		}
+	}
+	
+	return validBinaries;
 }
 
 @end

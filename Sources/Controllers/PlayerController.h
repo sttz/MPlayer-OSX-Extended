@@ -158,12 +158,10 @@
 
 // misc
 - (void) setMovieSize;
-- (void) setSubtitlesEncoding;
 - (void) setVideoEqualizer;
 - (NSNumber *) gammaValue:(NSNumber *)input;
 - (MplayerInterface *)playerInterface;
 - (MplayerInterface *)preflightInterface;
-- (void) chooseMPlayerBinary;
 
 // player control actions
 - (IBAction)playPause:(id)sender;
@@ -228,7 +226,7 @@
 - (void) updatePlayerWindow;
 - (void) updatePlaylistWindow;
 - (void) updateFullscreenControls;
-- (void) disableFFmpegMTForCurrentFile;
+- (void) mplayerCrashed:(NSNotification *)notification;
 
 // window delegate methods
 - (BOOL)windowShouldZoom:(NSWindow *)sender toFrame:(NSRect)newFrame;

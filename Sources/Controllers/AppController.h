@@ -41,7 +41,6 @@
 	IBOutlet NSMenuItem *customAspectMenuItem;
 	
 	IBOutlet NSView *openFileSettings;
-	IBOutlet id openMultithreading;
 	
 	IBOutlet NSView *openSubtitleSettings;
 	IBOutlet NSPopUpButton *openSubtitleEncoding;
@@ -61,6 +60,7 @@
 }
 
 @property (readonly) PlayerController *playerController;
+@property (readonly) PreferencesController2 *preferencesController;
 @property (readonly) NSMenu *aspectMenu;
 
 + (AppController *) sharedController;
