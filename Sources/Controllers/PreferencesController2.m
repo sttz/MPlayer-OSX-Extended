@@ -426,6 +426,17 @@ static NSDictionary const *architectures;
 	NSString *installPath = [[results objectAtIndex:0] 
 							 stringByAppendingPathComponent:@"MPlayer OSX Extended/Binaries"];
 	
+	// Remove old binary if it's in the application support folder
+	if ([binaryBundles objectForKey:identifier]) {
+		NSString *bundlePath = [[binaryBundles objectForKey:identifier] bundlePath];
+		if ([bundlePath rangeOfString:installPath].location != NSNotFound)
+			FSPathMoveObjectToTrashSync([bundlePath UTF8String],NULL,0);
+		// Unload bundle
+		[binaryBundles  removeObjectForKey:identifier];
+		[binaryInfo     removeObjectForKey:identifier];
+		[binaryUpdaters removeObjectForKey:identifier];
+	}
+	
 	// Copy binary to user's application suppor directory
 	if (![fm fileExistsAtPath:installPath]) {
 		NSError *error;
