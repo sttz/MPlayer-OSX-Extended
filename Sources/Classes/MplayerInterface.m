@@ -55,6 +55,12 @@ static NSArray* parseRunLoopModes;
 	if (parseRunLoopModes == nil)
 		parseRunLoopModes = [[NSArray arrayWithObjects:NSDefaultRunLoopMode, NSEventTrackingRunLoopMode, nil] retain];
 	
+	// detect 64bit host
+	int is64bit;
+	size_t len = sizeof(is64bit);
+	if (!sysctlbyname("hw.optional.x86_64",&is64bit,&len,NULL,0))
+		is64bitHost = (BOOL)is64bit;
+	
 	myPathToPlayer = [aPath retain];
 	buffer_name = @"mplayerosx";
 	
@@ -936,7 +942,12 @@ static NSArray* parseRunLoopModes;
 	
 	// run mplayer for identify
 	if (myMovieFile)
-		[self runMplayerWithParams:[NSArray arrayWithObjects:myMovieFile, @"-msglevel", @"identify=4:demux=6", @"-frames",@"0", @"-ao", @"null", @"-vo", @"null", nil]];
+		[self runMplayerWithParams:[NSMutableArray arrayWithObjects:
+									myMovieFile, @"-msglevel", 
+									@"identify=4:demux=6", @"-frames",
+									@"0", @"-ao", @"null", 
+									@"-vo", @"null", 
+									nil]];
 }
 /************************************************************************************/
 - (MovieInfo *) info
@@ -1110,7 +1121,7 @@ static NSArray* parseRunLoopModes;
 	[self sendCommand:@"screenshot 0"];
 }
 /************************************************************************************/
-- (void)runMplayerWithParams:(NSArray *)aParams
+- (void)runMplayerWithParams:(NSMutableArray *)aParams
 {
 	NSMutableDictionary *env;
 
@@ -1157,9 +1168,14 @@ static NSArray* parseRunLoopModes;
 		[myMplayerTask setCurrentDirectoryPath:screenshotPath];
 	
 	// set launch path and params
-	[myMplayerTask setLaunchPath:myPathToPlayer];
-	// set launch arguments
+	if (is64bitHost && [[prefs objectForKey:MPEUse32bitBinaryon64bit] boolValue]) {
+		[myMplayerTask setLaunchPath:@"/usr/bin/arch"];
+		[aParams insertObject:@"-i386" atIndex:0];
+		[aParams insertObject:myPathToPlayer atIndex:1];
+	} else
+		[myMplayerTask setLaunchPath:myPathToPlayer];
 	
+	// set launch arguments
 	[myMplayerTask setArguments:aParams];
 	
 	// get current environment and make appropriate changes

@@ -151,6 +151,7 @@
 	BOOL isOntop;
 	int subtitleFileId;				// since sub file identify output is not numberede, we need to cache the id
 	NSDictionary *lastMissedSeek;	// last seek that couldn't be processed
+	BOOL is64bitHost;
 	
 	MovieInfo *info;
 }
@@ -220,7 +221,7 @@
 - (void)sendCommand:(NSString *)aCommand;
 - (void)sendCommands:(NSArray *)aCommands withType:(uint)type;
 - (void)sendCommands:(NSArray *)aCommands;
-- (void)runMplayerWithParams:(NSArray *)aParams;
+- (void)runMplayerWithParams:(NSMutableArray *)aParams;
 - (void)sendToMplayersInput:(NSString *)aCommand;
 - (void)terminateMplayer;
 
