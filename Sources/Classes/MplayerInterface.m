@@ -184,6 +184,15 @@ static NSArray* parseRunLoopModes;
 	if (numberOfThreads > MI_LAVC_MAX_THREADS)
 		numberOfThreads = MI_LAVC_MAX_THREADS;
 	
+	// force using 32bit arch of binary
+	force32bitBinary = NO;
+	if (is64bitHost && [[prefs objectForKey:MPEUse32bitBinaryon64bit] boolValue]) {
+		NSDictionary *binaryInfo = [[[AppController sharedController] preferencesController] binaryInfo];
+		NSDictionary *thisInfo = [binaryInfo objectForKey:[cPrefs objectForKey:MPESelectedBinary]];
+		if ([[thisInfo objectForKey:@"MPEBinaryArchs"] containsObject:@"i386"])
+			force32bitBinary = YES;
+	}
+	
 	// *** FILES
 	
 	// add movie file
@@ -1168,7 +1177,7 @@ static NSArray* parseRunLoopModes;
 		[myMplayerTask setCurrentDirectoryPath:screenshotPath];
 	
 	// set launch path and params
-	if (is64bitHost && [[prefs objectForKey:MPEUse32bitBinaryon64bit] boolValue]) {
+	if (force32bitBinary) {
 		[myMplayerTask setLaunchPath:@"/usr/bin/arch"];
 		[aParams insertObject:@"-i386" atIndex:0];
 		[aParams insertObject:myPathToPlayer atIndex:1];

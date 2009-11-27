@@ -152,6 +152,7 @@
 	int subtitleFileId;				// since sub file identify output is not numberede, we need to cache the id
 	NSDictionary *lastMissedSeek;	// last seek that couldn't be processed
 	BOOL is64bitHost;
+	BOOL force32bitBinary;
 	
 	MovieInfo *info;
 }
