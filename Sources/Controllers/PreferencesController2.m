@@ -500,7 +500,6 @@ static NSDictionary const *architectures;
 	FcPattern *pat;
 	FcFontSet *set;
 	FcObjectSet *os;
-	NSModalSession modal = NULL;
 	
 	// Initialize fontconfig with own config directory
 	setenv("FONTCONFIG_PATH", [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"fonts"] UTF8String], 1);
@@ -520,10 +519,13 @@ static NSDictionary const *architectures;
 	
 	// Display rebuilding dialog while Fontconfig is working
 	if (!cachesAreValid) {
-		[cacheStatusWindow makeKeyAndOrderFront:self];
 		[cacheStatusIndicator setUsesThreadedAnimation:YES];
 		[cacheStatusIndicator startAnimation:self];
-		modal = [NSApp beginModalSessionForWindow:cacheStatusWindow];
+		[NSApp beginSheet:cacheStatusWindow
+		   modalForWindow:[[[AppController sharedController] playerController] playerWindow] 
+			modalDelegate:nil 
+		   didEndSelector:nil 
+			  contextInfo:nil];
 	}
 	
 	if (!FcConfigBuildFonts(config)) {
@@ -531,9 +533,9 @@ static NSDictionary const *architectures;
 		return [Debug log:ASL_LEVEL_ERR withMessage:@"Failed to build Fontconfig cache."];
 	}
 	
-	if (modal) {
-		[NSApp endModalSession:modal];
-		[cacheStatusWindow close];
+	if (!cachesAreValid) {
+		[NSApp endSheet:cacheStatusWindow];
+		[cacheStatusWindow orderOut:self];
 	}
 	
 	// Create pattern for all fonts and include family and style information
