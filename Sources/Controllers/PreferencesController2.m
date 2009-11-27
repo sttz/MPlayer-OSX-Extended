@@ -277,13 +277,13 @@ static NSDictionary const *architectures;
 				return;
 			}
 			
+			NSMutableDictionary *info = [[[binary infoDictionary] mutableCopy] autorelease];
 			NSString *bundleIdentifier = [binary bundleIdentifier];
 			
 			// Consider binaries with the same identifier as same
 			if ([binaryBundles objectForKey:bundleIdentifier])
 				return;
 			
-			NSMutableDictionary *info = [[[binary infoDictionary] mutableCopy] autorelease];
 			NSMutableArray *archs = [[[binary executableArchitectures] mutableCopy] autorelease];
 			
 			// Convert architecture constants to strings
@@ -326,6 +326,12 @@ static NSDictionary const *architectures;
 	int minRev = [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"MPEBinaryMinRevision"] intValue];
 	int bundleRev = [[info objectForKey:@"MPEBinarySVNRevisionEquivalent"] intValue];
 	return (bundleRev >= minRev);
+}
+
+- (NSComparisonResult) compareBinaryVersion:(NSDictionary *)b1 toBinary:(NSDictionary*)b2
+{
+	return [[b1 objectForKey:@"CFBundleVersion"] compare:[b2 objectForKey:@"CFBundleVersion"]
+												 options:NSNumericSearch];
 }
 
 /** Install a new binary from the Finder.
@@ -372,7 +378,7 @@ static NSDictionary const *architectures;
 				 @"The MPlayer binary '%@' is already installed (version %@). Do you want to install it again?",
 				 [info objectForKey:@"CFBundleName"],
 				 [info objectForKey:@"CFBundleShortVersionString"]],
-				 @"Cancel", @"Reinstall", nil) == NSAlertDefaultReturn) return;
+				 @"Cancel", @"Reinstall and Restart", nil) == NSAlertDefaultReturn) return;
 		
 		// The binary we're installing is newer -> Upgrade?
 		} else if (result == NSOrderedAscending) {
@@ -383,7 +389,7 @@ static NSDictionary const *architectures;
 				 [info objectForKey:@"CFBundleName"],
 				 [[binaryInfo objectForKey:identifier] objectForKey:@"CFBundleShortVersionString"],
 				 [info objectForKey:@"CFBundleShortVersionString"]],
-				 @"Upgrade", @"Cancel", nil) == NSAlertAlternateReturn) return;
+				 @"Upgrade and Restart", @"Cancel", nil) == NSAlertAlternateReturn) return;
 		
 		// The binary we're installing is older -> Downgrade?
 		} else {
@@ -394,7 +400,7 @@ static NSDictionary const *architectures;
 				 [info objectForKey:@"CFBundleName"],
 				 [[binaryInfo objectForKey:identifier] objectForKey:@"CFBundleShortVersionString"],
 				 [info objectForKey:@"CFBundleShortVersionString"]],
-				 @"Cancel", @"Downgrade", nil) == NSAlertDefaultReturn) return;
+				 @"Cancel and Restart", @"Downgrade", nil) == NSAlertDefaultReturn) return;
 			
 		}
 		
@@ -431,10 +437,6 @@ static NSDictionary const *architectures;
 		NSString *bundlePath = [[binaryBundles objectForKey:identifier] bundlePath];
 		if ([bundlePath rangeOfString:installPath].location != NSNotFound)
 			FSPathMoveObjectToTrashSync([bundlePath UTF8String],NULL,0);
-		// Unload bundle
-		[binaryBundles  removeObjectForKey:identifier];
-		[binaryInfo     removeObjectForKey:identifier];
-		[binaryUpdaters removeObjectForKey:identifier];
 	}
 	
 	// Copy binary to user's application suppor directory
@@ -470,6 +472,12 @@ static NSDictionary const *architectures;
 	// Make binary the default if the user wished it
 	if ([binaryInstallDefaultCheckbox state] == NSOnState)
 		[PREFS setObject:identifier forKey:MPESelectedBinary];
+	
+	// Updating an existing binary requires a restart to reset the NSBundle cache
+	if ([binaryBundles objectForKey:identifier]) {
+		[[AppController sharedController] restart];
+		return;
+	}
 	
 	// Rescan binaries to load it
 	[self scanBinaries];

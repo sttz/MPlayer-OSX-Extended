@@ -118,9 +118,20 @@ static AppController *instance = nil;
 	[[sender window] orderOut:self];
 }
 /************************************************************************************/
-- (void)quitApp
+- (void) restart
 {
-	[theApp terminate:self];
+	NSString *restartScript = @"while ps -p $1 > /dev/null; do sleep 0.1; done; open \"$2\"";
+	NSLog(@"1");
+	NSArray *arguments = [NSArray arrayWithObjects:
+						  @"-c", restartScript,
+						  @"",
+						  [NSString stringWithFormat:@"%d",[[NSProcessInfo processInfo] processIdentifier]],
+						  [[NSBundle mainBundle] bundlePath],
+						  nil];
+	NSLog(@"2");
+	[NSTask launchedTaskWithLaunchPath:@"/bin/sh" arguments:arguments];
+	NSLog(@"3");
+	[NSApp terminate:self];
 }
 
 /************************************************************************************

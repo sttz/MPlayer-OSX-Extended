@@ -72,7 +72,7 @@
 - (IBAction) openCustomAspectRatioChooser:(id)sender;
 - (IBAction) chooseCustomAspectRatio:(NSButton *)sender;
 
-- (void) quitApp;
+- (void) restart;
 	
 // actions
 - (IBAction) openFile:(id)sender;

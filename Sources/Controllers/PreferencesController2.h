@@ -82,6 +82,7 @@
 - (void) scanBinaries;
 - (void) loadBinariesFromDirectory:(NSString *)path;
 - (SUUpdater *)createUpdaterForBundle:(NSBundle *)bundle whichUpdatesAutomatically:(BOOL)autoupdate;
+- (NSComparisonResult) compareBinaryVersion:(NSDictionary *)b1 toBinary:(NSDictionary*)b2;
 - (BOOL) binaryHasRequiredMinVersion:(NSDictionary *)bundle;
 - (void) installBinary:(NSString *)path;
 - (NSString *) identifierForBinaryName:(NSString *)name;
