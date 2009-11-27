@@ -63,6 +63,7 @@ extern NSString* const MPEPostprocessingFilter;
 extern NSString* const MPERenderSubtitlesFirst;
 extern NSString* const MPEScreenshotSaveLocation;
 extern NSString* const MPESelectedBinary;
+extern NSString* const MPESelectedPreferencesSection;
 extern NSString* const MPEStartPlaybackDisplayType;
 extern NSString* const MPESubtitleBorderColor;
 extern NSString* const MPESubtitleScale;

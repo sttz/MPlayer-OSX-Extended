@@ -63,6 +63,7 @@ NSString* const MPEPostprocessingFilter               = @"MPEPostprocessingFilte
 NSString* const MPERenderSubtitlesFirst               = @"MPERenderSubtitlesFirst";
 NSString* const MPEScreenshotSaveLocation             = @"MPEScreenshotSaveLocation";
 NSString* const MPESelectedBinary                     = @"MPESelectedBinary";
+NSString* const MPESelectedPreferencesSection         = @"MPESelectedPreferencesSection";
 NSString* const MPEStartPlaybackDisplayType           = @"MPEStartPlaybackDisplayType";
 NSString* const MPESubtitleBorderColor                = @"MPESubtitleBorderColor";
 NSString* const MPESubtitleScale                      = @"MPESubtitleScale";

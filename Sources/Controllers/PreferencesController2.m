@@ -44,6 +44,7 @@ static NSDictionary const *architectures;
 
 - (void) awakeFromNib
 {
+	// Initialize static architecture enum to string mapping
 	if (!architectures) {
 		architectures = [[NSDictionary alloc] initWithObjectsAndKeys:
 						 @"ppc",   [NSNumber numberWithInt:NSBundleExecutableArchitecturePPC],
@@ -53,6 +54,7 @@ static NSDictionary const *architectures;
 						 nil];
 	}
 	
+	// Dictionary with all preference pane views
 	views = [[NSDictionary alloc] initWithObjectsAndKeys:
 			 generalView,	@"General",
 			 displayView,	@"Display",
@@ -63,28 +65,35 @@ static NSDictionary const *architectures;
 			 advancedView,	@"Advanced",
 			 nil];
 	
-	if ([PREFS objectForKey:@"MPESelectedPreferencesSection"])
-		[self loadView:[PREFS stringForKey:@"MPESelectedPreferencesSection"]];
+	// Restore selected view from preferences or default to first one
+	if ([PREFS objectForKey:MPESelectedPreferencesSection])
+		[self loadView:[PREFS stringForKey:MPESelectedPreferencesSection]];
 	else
 		[self loadView:@"General"];
 	
 	// Set autosave name here to avoid window loading the frame with an unitialized view
 	[self setWindowFrameAutosaveName:@"MPEPreferencesWindow"];
 	
+	// For subtitle colors we want to be able to select alpha
 	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES]; 
 	
+	// If the user cancels out the screenshot path selection, 
+	// we need this to properly reset the menu
 	screenshotSavePathLastSelection = [PREFS integerForKey:MPECustomScreenshotsSavePath];
 	
+	// Load fonts when all nibs are loaded (we want to attach to the player window)
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(loadFonts)
 												 name:NSApplicationDidFinishLaunchingNotification
 											   object:NSApp];
 	
+	// Add observer for binary selection to update autoupdate checkbox
 	[binariesController addObserver:self
 						 forKeyPath:@"selection"
 							options:NSKeyValueObservingOptionInitial
 							context:nil];
 	
+	// Register for double-clicks on the binary table
 	[binariesTable setTarget:self];
 	[binariesTable setDoubleAction:@selector(selectBinary:)];
 	
@@ -115,6 +124,9 @@ static NSDictionary const *architectures;
 	[self loadView:[sender itemIdentifier]];
 }
 
+/** Switch prefences section.
+ *  Load a new view corresponding to a preferences section using its name.
+ */
 - (void) loadView:(NSString*)viewName
 {
 	NSView *newView = [views objectForKey:viewName];
@@ -132,6 +144,7 @@ static NSDictionary const *architectures;
 	
 	NSRect contentFrame = [newView frame];
 	
+	// calculate the position of the view if the restart view is visible
 	if ([restartView superview])
 		contentFrame.size.height += [restartView frame].size.height;
 	
@@ -142,6 +155,7 @@ static NSDictionary const *architectures;
 		viewFrame.origin.y = 0;
 	[newView setFrame:viewFrame];
 	
+	// expand the window from the top, adjust the frame accordingly
 	NSRect newWindowFrame = [[self window] frameRectForContentRect:contentFrame];
     newWindowFrame.origin = [[self window] frame].origin;
     newWindowFrame.origin.y -= newWindowFrame.size.height - [[self window] frame].size.height;
@@ -152,11 +166,12 @@ static NSDictionary const *architectures;
 	
 	[[[self window] contentView] addSubview:newView];
 	
-	[[NSUserDefaults standardUserDefaults] setObject:viewName forKey:@"MPESelectedPreferencesSection"];
+	[PREFS setObject:viewName forKey:MPESelectedPreferencesSection];
 }
 
 - (NSArray *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar
 {
+	// Return all identifiers, they're always selectable
 	NSArray *items = [toolbar items];
 	NSMutableArray *idents = [NSMutableArray arrayWithCapacity:[items count]];
 	
@@ -167,6 +182,8 @@ static NSDictionary const *architectures;
 	return idents;
 }
 
+/** Manually trigger update check for a binary.
+ */
 - (IBAction) checkForUpdates:(id)sender
 {
 	NSDictionary *info = [[[binariesController selectedObjects] objectAtIndex:0] value];
@@ -179,6 +196,9 @@ static NSDictionary const *architectures;
 	[updater checkForUpdates:sender];
 }
 
+/** Action sent by controls that require a restart.
+ *  Actually checks with the PlayerController to see if a restart is really required.
+ */
 - (IBAction) requireRestart:(id)sender
 {
 	BOOL restart = [[[AppController sharedController] playerController] changesRequireRestart];
@@ -204,6 +224,9 @@ static NSDictionary const *architectures;
 	restartIsRequired = NO;
 }
 
+/** Scan for binaries.
+ *  Scan the application and the user's library for binaries and add new found ones.
+ */
 - (void) scanBinaries
 {
 	if (!binaryBundles) {
@@ -214,6 +237,7 @@ static NSDictionary const *architectures;
 	
 	NSString *binPath;
 	
+	// First scan the users' application support directory
 	NSArray *results = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,
 														   NSUserDomainMask, YES);
 	
@@ -223,12 +247,16 @@ static NSDictionary const *architectures;
 			[self loadBinariesFromDirectory:binPath];
 	}
 	
+	// Scan the application's resource directory
 	binPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Binaries"];
 	[self loadBinariesFromDirectory:binPath];
 	
+	// Force an update of the GUI
 	[self setBinaryInfo:binaryInfo];
 }
 
+/** Scan a given directory for binary bundles.
+ */
 - (void) loadBinariesFromDirectory:(NSString *)path
 {
 	NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:NULL];
@@ -251,30 +279,36 @@ static NSDictionary const *architectures;
 			
 			NSString *bundleIdentifier = [binary bundleIdentifier];
 			
+			// Consider binaries with the same identifier as same
 			if ([binaryBundles objectForKey:bundleIdentifier])
 				return;
 			
 			NSMutableDictionary *info = [[[binary infoDictionary] mutableCopy] autorelease];
 			NSMutableArray *archs = [[[binary executableArchitectures] mutableCopy] autorelease];
 			
+			// Convert architecture constants to strings
 			NSUInteger i;
 			for (i=0; i < [archs count]; i++) {
 				if ([architectures objectForKey:[archs objectAtIndex:i]])
 					[archs replaceObjectAtIndex:i withObject:[architectures objectForKey:[archs objectAtIndex:i]]];
 			}
 			
+			// Join the architectures array for displaying in the GUI
 			[info setObject:archs forKey:@"MPEBinaryArchs"];
 			[info setObject:[archs componentsJoinedByString:@", "] forKey:@"MPEBinaryArchsString"];
 			
+			// Save if binary has required minimum SVN-equivalent version
 			BOOL isCompatible = [self binaryHasRequiredMinVersion:info];
 			[info setObject:[NSNumber numberWithBool:isCompatible] forKey:@"MPEBinaryIsCompatible"];
 			if (!isCompatible) {
+				// Set a string a color for the GUI
 				[info setObject:[NSString stringWithFormat:@"Version not compatible: %@",
 								 [info objectForKey:@"CFBundleShortVersionString"]]
 						 forKey:@"CFBundleShortVersionString"];
 				[info setObject:[NSColor redColor] forKey:@"MPEVersionStringTextColor"];
 			}
 			
+			// Instantiate updater object if updates are enabled
 			if ([PREFS boolForKey:@"SUEnableAutomaticChecks"] && [info objectForKey:@"SUFeedURL"]
 				&& [[PREFS arrayForKey:MPEUpdateBinaries] containsObject:bundleIdentifier])
 				[self createUpdaterForBundle:binary whichUpdatesAutomatically:YES];
@@ -294,10 +328,13 @@ static NSDictionary const *architectures;
 	return (bundleRev >= minRev);
 }
 
+/** Install a new binary from the Finder.
+ */
 - (void) installBinary:(NSString *)path
 {
 	NSBundle *binary = [[[NSBundle alloc] initWithPath:path] autorelease];
 	
+	// Check if given path is a bundle and is a valid binary bundle
 	if (!binary || ![[binary infoDictionary] objectForKey:@"MPEBinarySVNRevisionEquivalent"]) {
 		NSRunAlertPanel(@"Binary Installation Error", 
 						[NSString stringWithFormat:@"The MPlayer binary '%@' couldn't be recognized.",
@@ -309,6 +346,7 @@ static NSDictionary const *architectures;
 	NSDictionary *info = [binary infoDictionary];
 	NSString *identifier = [info objectForKey:@"CFBundleIdentifier"];
 	
+	// Check if the binary has minimum required version
 	if (![self binaryHasRequiredMinVersion:info]) {
 		NSRunAlertPanel(@"Binary Installation Error", 
 						[NSString stringWithFormat:@"The MPlayer binary '%@' is not compatible with this %@ version (at least r%d required).",
@@ -319,12 +357,14 @@ static NSDictionary const *architectures;
 		return;
 	}
 	
+	// A bundle with this identifier is already loaded: compare versions
 	if ([binaryBundles objectForKey:identifier]) {
 		
 		NSString *installedVersion = [[binaryInfo objectForKey:identifier] objectForKey:@"CFBundleVersion"];
 		NSString *newVersion = [info objectForKey:@"CFBundleVersion"];
 		NSComparisonResult result = [installedVersion compare:newVersion options:NSNumericSearch];
 		
+		// The versions are the same -> Reinstall?
 		if (result == NSOrderedSame) {
 			
 			if (NSRunAlertPanel(@"Binary Already Installed", 
@@ -333,7 +373,8 @@ static NSDictionary const *architectures;
 				 [info objectForKey:@"CFBundleName"],
 				 [info objectForKey:@"CFBundleShortVersionString"]],
 				 @"Cancel", @"Reinstall", nil) == NSAlertDefaultReturn) return;
-			
+		
+		// The binary we're installing is newer -> Upgrade?
 		} else if (result == NSOrderedAscending) {
 			
 			if (NSRunAlertPanel(@"Upgrade Binary", 
@@ -343,7 +384,8 @@ static NSDictionary const *architectures;
 				 [[binaryInfo objectForKey:identifier] objectForKey:@"CFBundleShortVersionString"],
 				 [info objectForKey:@"CFBundleShortVersionString"]],
 				 @"Upgrade", @"Cancel", nil) == NSAlertAlternateReturn) return;
-			
+		
+		// The binary we're installing is older -> Downgrade?
 		} else {
 			
 			if (NSRunAlertPanel(@"Downgrade Binary", 
@@ -358,6 +400,7 @@ static NSDictionary const *architectures;
 		
 	} else {
 		
+		// Install a new binary, ask if it should be autoupdated and made default
 		NSAlert *alert = [NSAlert alertWithMessageText:@"Install Binary"
 										 defaultButton:@"Install"
 									   alternateButton:@"Cancel"
@@ -374,6 +417,7 @@ static NSDictionary const *architectures;
 			return;
 	}
 	
+	
 	NSArray *results = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,
 														   NSUserDomainMask,
 														   YES);
@@ -382,6 +426,7 @@ static NSDictionary const *architectures;
 	NSString *installPath = [[results objectAtIndex:0] 
 							 stringByAppendingPathComponent:@"MPlayer OSX Extended/Binaries"];
 	
+	// Copy binary to user's application suppor directory
 	if (![fm fileExistsAtPath:installPath]) {
 		NSError *error;
 		if (![fm createDirectoryAtPath:installPath
@@ -401,7 +446,8 @@ static NSDictionary const *architectures;
 		return;
 	}
 	
-	if (![binaryInstallDefaultCheckbox isHidden]) {
+	// Enable/Disable automatic updates for this binary
+	if (![binaryInstallUpdatesCheckbox isHidden]) {
 		NSMutableArray *updates = [[[PREFS arrayForKey:MPEUpdateBinaries] mutableCopy] autorelease];
 		if ([updates containsObject:identifier] && [binaryInstallUpdatesCheckbox state] == NSOffState)
 			[updates removeObject:identifier];
@@ -410,11 +456,14 @@ static NSDictionary const *architectures;
 		[PREFS setObject:updates forKey:MPEUpdateBinaries];
 	}
 	
+	// Make binary the default if the user wished it
 	if ([binaryInstallDefaultCheckbox state] == NSOnState)
 		[PREFS setObject:identifier forKey:MPESelectedBinary];
 	
+	// Rescan binaries to load it
 	[self scanBinaries];
 	
+	// Open the MPlayer preferences section
 	[[self window] makeKeyAndOrderFront:nil];
 	[self loadView:@"MPlayer"];
 }
@@ -451,6 +500,8 @@ static NSDictionary const *architectures;
 	return updater;
 }
 
+/** Callback from sparkle when the installation is complete to reload the binary
+ */
 - (void)updater:(SUUpdater *)updater hasFinishedInstallforUdpate:(SUAppcastItem *)update
 {
 	NSString *identifier = [[binaryUpdaters allKeysForObject:updater] objectAtIndex:0];
@@ -463,6 +514,7 @@ static NSDictionary const *architectures;
 
 - (IBAction) selectNewScreenshotPath:(NSPopUpButton *)sender
 {
+	// Keep track of the last selection to reset the menu
 	if ([sender selectedTag] != -1) {
 		screenshotSavePathLastSelection = [sender selectedTag];
 		return;
@@ -481,12 +533,15 @@ static NSDictionary const *architectures;
 				  forKey:MPECustomScreenshotsSavePath];
 		[sender selectItemWithTag:MPEScreenshotSaveLocationCustom];
     } else {
+		// User cancel: Reset the menu to the last selection
 		[sender selectItemWithTag:screenshotSavePathLastSelection];
 	}
 	
 	[self requireRestart:sender];
 }
 
+/** Auto-select the fullscreen option when the user changes the screen number
+ */
 - (BOOL)control:(NSControl *)control textShouldBeginEditing:(NSText *)fieldEditor
 {
 	[fullscreenSelectionMatrix selectCellWithTag:1];
@@ -494,6 +549,8 @@ static NSDictionary const *architectures;
 	return YES;
 }
 
+/** Use FontConfig to generate list of installed fonts.
+ */
 - (void)loadFonts
 {
 	FcConfig *config;
@@ -605,6 +662,7 @@ static NSDictionary const *architectures;
 
 - (IBAction) selectBinary:(id)sender
 {
+	// Ignore double-clicks outside of the table rows
 	if (sender == binariesTable && [binariesTable clickedRow] < 0)
 		return;
 	
@@ -616,6 +674,7 @@ static NSDictionary const *architectures;
 		
 		[PREFS setObject:[info objectForKey:@"CFBundleIdentifier"] forKey:MPESelectedBinary];
 		
+		// Force update of the GUI
 		[self setBinaryInfo:binaryInfo];
 		
 		[self requireRestart:sender];
@@ -629,6 +688,8 @@ static NSDictionary const *architectures;
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[info objectForKey:@"MPEBinaryHomepage"]]];
 }
 
+/** Load state of the autoupdate check box when the selection changes.
+ */
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
 	if ([keyPath isEqualToString:@"selection"]) {
@@ -663,12 +724,16 @@ static NSDictionary const *architectures;
 		[PREFS setObject:newUpdates forKey:MPEUpdateBinaries];
 }
 
+/** Initialize and return view for slecting a binary.
+ */
 - (NSView *) binarySelectionView
 {
 	[binarySelectionPopUp selectItemWithTag:-1];
 	return binarySelectionView;
 }
 
+/** Return the identifier for the binary the user selected in the -binarySelectionView.
+ */
 - (NSString *) identifierFromSelectionInView
 {
 	if ([binarySelectionPopUp selectedTag] > -1)
@@ -716,6 +781,8 @@ static NSDictionary const *architectures;
 @end
 
 
+/** Convert between ENCA two-letter codes and the display language
+ */
 @implementation ENCACodeTransformer
 
 + (Class)transformedValueClass
@@ -781,6 +848,8 @@ static NSDictionary const *architectures;
 @end
 
 
+/** Validate the custom aspect ratio and cache a parsed value
+ */
 @implementation AspectRatioFormatter
 
 - (NSString *)stringForObjectValue:(id)anObject
@@ -830,6 +899,8 @@ decimal values (1.33) or fractions (4:3).";
 @end
 
 
+/** Use the aspect ratio menu titles to save them and convert the special cases (Original/Custom)
+ */
 @implementation AspectRatioTransformer
 
 + (Class)transformedValueClass
@@ -868,6 +939,8 @@ decimal values (1.33) or fractions (4:3).";
 
 @end
 
+/** Transformer used to make the selected binary bold in the table
+ */
 @implementation IsSelectedBinaryTransformer
 
 + (Class)transformedValueClass
@@ -906,6 +979,8 @@ decimal values (1.33) or fractions (4:3).";
 @end
 
 
+/** Transformer used to only display valid binaries in selection menus
+ */
 @implementation OnlyValidBinariesTransformer
 
 + (Class)transformedValueClass
