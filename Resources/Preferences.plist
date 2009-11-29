@@ -34,6 +34,13 @@
 		<integer>1</integer>
 		<key>MPECustomSizeInPx</key>
 		<integer>1280</integer>
+		<key>MPECustomAspectRatio</key>
+		<dict>
+			<key>MPECustomAspectRatioString</key>
+			<string>16:10</string>
+			<key>MPECustomAspectRatioValue</key>
+			<real>1.6</real>
+		</dict>
 		<key>MPEFont</key>
 		<string>Myriad Pro</string>
 		<key>MPEFontStyle</key>
@@ -49,9 +56,9 @@
 		<key>MPESubtitleScale</key>
 		<real>1.25</real>
 		<key>MPESubtitleTextColor</key>
-		<data>BAtzdHJlYW10eXBlZIHoA4QBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARmZmZmAQEBAYY=</data>
+		<data>BAtzdHJlYW10eXBlZIHoA4QBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARmZmZmAQEBg5qZWT+G</data>
 		<key>MPESubtitleBorderColor</key>
-		<data>BAtzdHJlYW10eXBlZIHoA4QBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARmZmZmAAAAAYY=</data>
+		<data>BAtzdHJlYW10eXBlZIHoA4QBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARmZmZmAAAAg83MTD+G</data>
 		<key>MPEOSDLevel</key>
 		<integer>1</integer>
 		<key>MPEOSDScale</key>
@@ -77,9 +84,9 @@
 		<key>MPEBS2BFilter</key>
 		<false/>
 		<key>MPEKaraokeFilter</key>
-		<true/>
+		<false/>
 		<key>MPESelectedBinary</key>
-		<string>ch.sttz.mplayerosx.extended.binaries.officialsvn</string>
+		<string>ch.sttz.mplayerosx.extended.binaries.officialsvnwithmt</string>
 		<key>MPEUpdateBinaries</key>
 		<array>
 			<string>ch.sttz.mplayerosx.extended.binaries.officialsvn</string>
@@ -88,7 +95,9 @@
 		<key>MPEUse32bitBinaryon64bit</key>
 		<false/>
 		<key>MPEAdvancedOptions</key>
-		<array/>
+		<array>
+			<dict/>
+		</array>
 	</dict>
 	<key>RequiresRestart</key>
 	<array>
