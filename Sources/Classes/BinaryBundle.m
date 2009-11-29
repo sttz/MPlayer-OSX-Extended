@@ -91,18 +91,19 @@ static void swap_header(uint8_t *bytes, ssize_t length) {
 - (NSArray *) executableArchitectureStrings
 {
 	NSString *path = [self executablePath];
+	NSMutableArray *foundArches = [NSMutableArray array];
 	
 	int fd = open([path UTF8String], O_RDONLY, 0777);
 	uint8_t bytes[512];
 	ssize_t length;
 	
 	if (fd < 0)
-		return nil;
+		return foundArches;
 	
 	length = read(fd, bytes, 512); close(fd);
 	
 	if (length < sizeof(struct mach_header_64))
-		return nil;
+		return foundArches;
 	
 	uint32_t magic = 0, num_fat = 0, max_fat = 0;
 	struct fat_arch one_fat = {0}, *fat = NULL;
@@ -133,11 +134,10 @@ static void swap_header(uint8_t *bytes, ssize_t length) {
 	
 	// Check if the header appears to be valid
 	if (fat && num_fat < 0)
-		return nil;
+		return foundArches;
 	
 	// Check for a given set of arches
 	const NXArchInfo *arch;
-	NSMutableArray *foundArches = [NSMutableArray array];
 	
 	for (NSString *hasArch in [checkForArches componentsSeparatedByString:@","]) {
 		arch = NXGetArchInfoFromName([hasArch UTF8String]);

@@ -159,8 +159,6 @@
 	[[[self window] contentView] addSubview:newView];
 	
 	[PREFS setObject:viewName forKey:MPESelectedPreferencesSection];
-	
-	[self scanBinaries];
 }
 
 - (NSArray *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar
@@ -276,12 +274,13 @@
 			
 			// Consider binaries with the same identifier as same
 			if ([binaryBundles objectForKey:bundleIdentifier]) {
-				if ([self compareBinaryVersion:info toBinary:[binaryInfo objectForKey:bundleIdentifier]] == NSOrderedDescending) {
-					// Unload older bundle to load new one
-					[Debug log:ASL_LEVEL_ERR withMessage:@"Ignoring older version of a bundle found at '%@'.",[path stringByAppendingPathComponent:file]];
+				// Unload older or incompatible bundle to load new one
+				if (![[binaryInfo objectForKey:@"MPEBinaryIsCompatible"] boolValue]
+					|| [self compareBinaryVersion:info toBinary:[binaryInfo objectForKey:bundleIdentifier]] == NSOrderedDescending) {
+					[Debug log:ASL_LEVEL_ERR withMessage:@"Ignoring older or incompatible version of a bundle found at '%@'.",[path stringByAppendingPathComponent:file]];
 					[self unloadBinary:bundleIdentifier withUpdater:YES];
+				// A newer one is aleady loaded, skip
 				} else
-					// A newer one is aleady loaded, skip
 					continue;
 			}
 			
@@ -289,7 +288,10 @@
 			
 			// Join the architectures array for displaying in the GUI
 			[info setObject:archs forKey:@"MPEBinaryArchs"];
-			[info setObject:[archs componentsJoinedByString:@", "] forKey:@"MPEBinaryArchsString"];
+			if ([archs count] > 0)
+				[info setObject:[archs componentsJoinedByString:@", "] forKey:@"MPEBinaryArchsString"];
+			else
+				[info setObject:@"???" forKey:@"MPEBinaryArchsString"];
 			
 			// Check binary architecture
 			BOOL archIsCompatible = [self binaryHasCompatibleArch:binary];
@@ -354,6 +356,10 @@
 		return YES;
 	
 	NSArray *binaryArches = [bundle executableArchitectureStrings];
+	
+	// Probably not a valid binary
+	if ([binaryArches count] == 0)
+		return NO;
 	
 	// extra 64bit check since CPU_TYPE_X86_64 doesn't seem to be very reliable
 	int is64bitCapable;
@@ -573,7 +579,7 @@
 	SUUpdater *updater = [SUUpdater updaterForBundle:bundle];
 	
 	[updater setAutomaticallyChecksForUpdates:autoupdate];
-	[updater setNeedsRelaunchAfterInstall:NO];
+	//[updater setNeedsRelaunchAfterInstall:NO];
 	[updater setDelegate:self];
 	
 	[binaryUpdaters setObject:updater forKey:[bundle bundleIdentifier]];
