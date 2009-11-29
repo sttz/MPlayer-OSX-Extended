@@ -87,6 +87,7 @@
 		3A5879C80EED42BD003408E8 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A5879C70EED42BD003408E8 /* Sparkle.framework */; };
 		3A5879D30EED42CB003408E8 /* Sparkle.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 3A5879C70EED42BD003408E8 /* Sparkle.framework */; };
 		3A5879E00EED4507003408E8 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 3A5879DF0EED4507003408E8 /* dsa_pub.pem */; };
+		3A5F3FBD10C17AFA00C5B912 /* BinaryBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A5F3FBC10C17AFA00C5B912 /* BinaryBundle.m */; };
 		3A638951108B953F00E90936 /* PFMoveApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A638950108B953F00E90936 /* PFMoveApplication.m */; };
 		3A638955108B95B000E90936 /* MoveApplication.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A638953108B95B000E90936 /* MoveApplication.strings */; };
 		3A638959108B95D300E90936 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A638958108B95D300E90936 /* Security.framework */; };
@@ -256,6 +257,8 @@
 		3A38D3C40E50E45A00C1E468 /* Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Debug.m; path = Sources/Classes/Debug.m; sourceTree = "<group>"; };
 		3A5879C70EED42BD003408E8 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		3A5879DF0EED4507003408E8 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dsa_pub.pem; path = Resources/dsa_pub.pem; sourceTree = "<group>"; };
+		3A5F3FBB10C17AFA00C5B912 /* BinaryBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BinaryBundle.h; path = Sources/Classes/BinaryBundle.h; sourceTree = "<group>"; };
+		3A5F3FBC10C17AFA00C5B912 /* BinaryBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BinaryBundle.m; path = Sources/Classes/BinaryBundle.m; sourceTree = "<group>"; };
 		3A63894F108B953F00E90936 /* PFMoveApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFMoveApplication.h; sourceTree = "<group>"; };
 		3A638950108B953F00E90936 /* PFMoveApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFMoveApplication.m; sourceTree = "<group>"; };
 		3A638954108B95B000E90936 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/MoveApplication.strings; sourceTree = "<group>"; };
@@ -356,6 +359,8 @@
 			isa = PBXGroup;
 			children = (
 				3A0E8A4C0EBF9F91003A2F66 /* Interface */,
+				3A71C9FE10BEBB7800C810F4 /* CocoaAdditions.h */,
+				3A71C9FF10BEBB7800C810F4 /* CocoaAdditions.m */,
 				377E0369085E480E00D64A26 /* MplayerInterface.h */,
 				377E036A085E480E00D64A26 /* MplayerInterface.m */,
 				3A0943270E44F8E300E6753F /* MovieInfo.h */,
@@ -364,6 +369,8 @@
 				3A09436B0E45043000E6753F /* LanguageCodes.m */,
 				3A38D3C30E50E45A00C1E468 /* Debug.h */,
 				3A38D3C40E50E45A00C1E468 /* Debug.m */,
+				3A5F3FBB10C17AFA00C5B912 /* BinaryBundle.h */,
+				3A5F3FBC10C17AFA00C5B912 /* BinaryBundle.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -573,8 +580,6 @@
 				3AFE25300EC0FA29009FFEC5 /* FullscreenControlsScrubbingBar.m */,
 				3A81882E10B2FB8300AB1E07 /* LanguageTokenFieldDelegate.h */,
 				3A81882F10B2FB8300AB1E07 /* LanguageTokenFieldDelegate.m */,
-				3A71C9FE10BEBB7800C810F4 /* CocoaAdditions.h */,
-				3A71C9FF10BEBB7800C810F4 /* CocoaAdditions.m */,
 			);
 			name = Interface;
 			sourceTree = "<group>";
@@ -804,6 +809,7 @@
 				3A81883010B2FB8300AB1E07 /* LanguageTokenFieldDelegate.m in Sources */,
 				3A02CDCB10B6E76700ECF073 /* Preferences.m in Sources */,
 				3A71CA0010BEBB7800C810F4 /* CocoaAdditions.m in Sources */,
+				3A5F3FBD10C17AFA00C5B912 /* BinaryBundle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

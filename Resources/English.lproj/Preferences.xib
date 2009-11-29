@@ -2,17 +2,17 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">10C540</string>
+		<string key="IBDocument.SystemVersion">10B504</string>
 		<string key="IBDocument.InterfaceBuilderVersion">732</string>
-		<string key="IBDocument.AppKitVersion">1038.25</string>
-		<string key="IBDocument.HIToolboxVersion">458.00</string>
+		<string key="IBDocument.AppKitVersion">1038.2</string>
+		<string key="IBDocument.HIToolboxVersion">437.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			<string key="NS.object.0">732</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="1333"/>
 			<integer value="390"/>
+			<integer value="1333"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -5987,6 +5987,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					<object class="NSMutableString">
 						<characters key="NS.bytes">SUEnableAutomaticChecks</characters>
 					</object>
+					<string>value.MPEArchStringTextColor</string>
 				</array>
 				<bool key="NSEditable">YES</bool>
 				<bool key="NSAvoidsEmptySelection">YES</bool>
@@ -7944,7 +7945,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<string key="label">hidden: selection.value.SUFeedURL</string>
 						<reference key="source" ref="672927207"/>
 						<reference key="destination" ref="554553232"/>
-						<object class="NSNibBindingConnector" key="connector" id="2323">
+						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="672927207"/>
 							<reference key="NSDestination" ref="554553232"/>
 							<string key="NSLabel">hidden: selection.value.SUFeedURL</string>
@@ -8131,30 +8132,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">hidden2: values.SUEnableAutomaticChecks</string>
-						<reference key="source" ref="672927207"/>
-						<reference key="destination" ref="510309140"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="672927207"/>
-							<reference key="NSDestination" ref="510309140"/>
-							<string key="NSLabel">hidden2: values.SUEnableAutomaticChecks</string>
-							<string key="NSBinding">hidden2</string>
-							<string key="NSKeyPath">values.SUEnableAutomaticChecks</string>
-							<dictionary key="NSOptions">
-								<integer value="-1" key="NSMultipleValuesPlaceholder"/>
-								<integer value="0" key="NSNoSelectionPlaceholder"/>
-								<integer value="-1" key="NSNotApplicablePlaceholder"/>
-								<integer value="-1" key="NSNullPlaceholder"/>
-								<string key="NSValueTransformerName">NSNegateBoolean</string>
-							</dictionary>
-							<reference key="NSPreviousConnector" ref="2323"/>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">1284</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
 						<string key="label">contentValues: arrangedObjects.value.CFBundleName</string>
 						<reference key="source" ref="645230447"/>
 						<reference key="destination" ref="554553232"/>
@@ -8196,6 +8173,54 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<reference key="destination" ref="58420702"/>
 					</object>
 					<int key="connectionID">1358</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">textColor: selection.value.MPEVersionStringTextColor</string>
+						<reference key="source" ref="215047344"/>
+						<reference key="destination" ref="554553232"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="215047344"/>
+							<reference key="NSDestination" ref="554553232"/>
+							<string key="NSLabel">textColor: selection.value.MPEVersionStringTextColor</string>
+							<string key="NSBinding">textColor</string>
+							<string key="NSKeyPath">selection.value.MPEVersionStringTextColor</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">1360</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">textColor: selection.value.MPEArchStringTextColor</string>
+						<reference key="source" ref="875064132"/>
+						<reference key="destination" ref="554553232"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="875064132"/>
+							<reference key="NSDestination" ref="554553232"/>
+							<string key="NSLabel">textColor: selection.value.MPEArchStringTextColor</string>
+							<string key="NSBinding">textColor</string>
+							<string key="NSKeyPath">selection.value.MPEArchStringTextColor</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">1362</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">textColor: selection.value.MPEArchStringTextColor</string>
+						<reference key="source" ref="198362872"/>
+						<reference key="destination" ref="554553232"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="198362872"/>
+							<reference key="NSDestination" ref="554553232"/>
+							<string key="NSLabel">textColor: selection.value.MPEArchStringTextColor</string>
+							<string key="NSBinding">textColor</string>
+							<string key="NSKeyPath">selection.value.MPEArchStringTextColor</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">1364</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -11812,7 +11837,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1358</int>
+			<int key="maxID">1364</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">

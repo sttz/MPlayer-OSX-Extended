@@ -22,6 +22,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include <mach-o/arch.h>
+
 #import "PreferencesController2.h"
 
 #import "AppController.h"
@@ -29,6 +31,7 @@
 
 #import "Debug.h"
 #import "Preferences.h"
+#import "BinaryBundle.h"
 
 #import <fontconfig/fontconfig.h>
 #import "RegexKitLite.h"
@@ -37,23 +40,11 @@
 // regex for parsing aspect ratio
 #define ASPECT_REGEX	@"^(\\d+\\.?\\d*|\\.\\d+)(?:\\:(\\d+\\.?\\d*|\\.\\d+))?$"
 
-static NSDictionary const *architectures;
-
 @implementation PreferencesController2
 @synthesize fonts, customAspectRatioChooser, binaryInfo, binariesController;
 
 - (void) awakeFromNib
 {
-	// Initialize static architecture enum to string mapping
-	if (!architectures) {
-		architectures = [[NSDictionary alloc] initWithObjectsAndKeys:
-						 @"ppc",   [NSNumber numberWithInt:NSBundleExecutableArchitecturePPC],
-						 @"ppc64", [NSNumber numberWithInt:NSBundleExecutableArchitecturePPC64],
-						 @"i386",  [NSNumber numberWithInt:NSBundleExecutableArchitectureI386],
-						 @"x86_64",[NSNumber numberWithInt:NSBundleExecutableArchitectureX86_64],
-						 nil];
-	}
-	
 	// Dictionary with all preference pane views
 	views = [[NSDictionary alloc] initWithObjectsAndKeys:
 			 generalView,	@"General",
@@ -100,8 +91,9 @@ static NSDictionary const *architectures;
 	[self scanBinaries];
 	
 	// reset selected binary if it can't be found or is not compatible
-	NSDictionary *selectedBinary = [binaryInfo objectForKey:[PREFS objectForKey:MPESelectedBinary]];
-	if (!selectedBinary || ![self binaryHasRequiredMinVersion:selectedBinary]) {
+	NSString *identifier = [PREFS objectForKey:MPESelectedBinary];
+	if (!identifier || ![self binaryHasRequiredMinVersion:[binaryInfo objectForKey:identifier]]
+		|| ![self binaryHasCompatibleArch:[binaryBundles objectForKey:identifier]]) {
 		[Debug log:ASL_LEVEL_WARNING withMessage:@"Reset to default binary (selected binary either not found or not compatible)."];
 		[PREFS removeObjectForKey:MPESelectedBinary];
 	}
@@ -167,6 +159,8 @@ static NSDictionary const *architectures;
 	[[[self window] contentView] addSubview:newView];
 	
 	[PREFS setObject:viewName forKey:MPESelectedPreferencesSection];
+	
+	[self scanBinaries];
 }
 
 - (NSArray *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar
@@ -270,43 +264,55 @@ static NSDictionary const *architectures;
 		if ([[file pathExtension] isEqualToString:@"mpBinaries"]) {
 			
 			NSString *bundlePath = [path stringByAppendingPathComponent:file];
-			NSBundle *binary = [[[NSBundle alloc] initWithPath:bundlePath] autorelease];
+			BinaryBundle *binary = [[[BinaryBundle alloc] initWithPath:bundlePath] autorelease];
 			
 			if (!binary) {
 				[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to load bundle at path: %@",path];
-				return;
+				continue;
 			}
 			
 			NSMutableDictionary *info = [[[binary infoDictionary] mutableCopy] autorelease];
 			NSString *bundleIdentifier = [binary bundleIdentifier];
 			
 			// Consider binaries with the same identifier as same
-			if ([binaryBundles objectForKey:bundleIdentifier])
-				return;
-			
-			NSMutableArray *archs = [[[binary executableArchitectures] mutableCopy] autorelease];
-			
-			// Convert architecture constants to strings
-			NSUInteger i;
-			for (i=0; i < [archs count]; i++) {
-				if ([architectures objectForKey:[archs objectAtIndex:i]])
-					[archs replaceObjectAtIndex:i withObject:[architectures objectForKey:[archs objectAtIndex:i]]];
+			if ([binaryBundles objectForKey:bundleIdentifier]) {
+				if ([self compareBinaryVersion:info toBinary:[binaryInfo objectForKey:bundleIdentifier]] == NSOrderedDescending) {
+					// Unload older bundle to load new one
+					[Debug log:ASL_LEVEL_ERR withMessage:@"Ignoring older version of a bundle found at '%@'.",[path stringByAppendingPathComponent:file]];
+					[self unloadBinary:bundleIdentifier withUpdater:YES];
+				} else
+					// A newer one is aleady loaded, skip
+					continue;
 			}
+			
+			NSArray *archs = [binary executableArchitectureStrings];
 			
 			// Join the architectures array for displaying in the GUI
 			[info setObject:archs forKey:@"MPEBinaryArchs"];
 			[info setObject:[archs componentsJoinedByString:@", "] forKey:@"MPEBinaryArchsString"];
 			
-			// Save if binary has required minimum SVN-equivalent version
-			BOOL isCompatible = [self binaryHasRequiredMinVersion:info];
-			[info setObject:[NSNumber numberWithBool:isCompatible] forKey:@"MPEBinaryIsCompatible"];
-			if (!isCompatible) {
+			// Check binary architecture
+			BOOL archIsCompatible = [self binaryHasCompatibleArch:binary];
+			if (!archIsCompatible) {
 				// Set a string a color for the GUI
-				[info setObject:[NSString stringWithFormat:@"Version not compatible: %@",
+				[info setObject:[NSString stringWithFormat:@"Not compatible: %@",
+								 [info objectForKey:@"MPEBinaryArchsString"]]
+						 forKey:@"MPEBinaryArchsString"];
+				[info setObject:[NSColor redColor] forKey:@"MPEArchStringTextColor"];
+			}
+			
+			// Save if binary has required minimum SVN-equivalent version
+			BOOL versionIsCompatible = [self binaryHasRequiredMinVersion:info];
+			if (!versionIsCompatible) {
+				// Set a string a color for the GUI
+				[info setObject:[NSString stringWithFormat:@"Not compatible: %@",
 								 [info objectForKey:@"CFBundleShortVersionString"]]
 						 forKey:@"CFBundleShortVersionString"];
 				[info setObject:[NSColor redColor] forKey:@"MPEVersionStringTextColor"];
 			}
+			
+			[info setObject:[NSNumber numberWithBool:(versionIsCompatible && archIsCompatible)] 
+					 forKey:@"MPEBinaryIsCompatible"];
 			
 			// Instantiate updater object if updates are enabled
 			if ([PREFS boolForKey:@"SUEnableAutomaticChecks"] && [info objectForKey:@"SUFeedURL"]
@@ -321,11 +327,58 @@ static NSDictionary const *architectures;
 	}
 }
 
+- (void) unloadBinary:(NSString *)identifier withUpdater:(BOOL)updater
+{
+	// Invalid bundle object
+	[[binaryBundles objectForKey:identifier] invalidateBinaryBundle];
+	// Remove bundle objects
+	[binaryBundles removeObjectForKey:identifier];
+	[binaryInfo    removeObjectForKey:identifier];
+	if (updater)
+		[binaryUpdaters removeObjectForKey:identifier];
+}
+
 - (BOOL) binaryHasRequiredMinVersion:(NSDictionary *)info
 {
 	int minRev = [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"MPEBinaryMinRevision"] intValue];
 	int bundleRev = [[info objectForKey:@"MPEBinarySVNRevisionEquivalent"] intValue];
 	return (bundleRev >= minRev);
+}
+
+- (BOOL) binaryHasCompatibleArch:(BinaryBundle *)bundle
+{
+	const NXArchInfo *current_arch = NXGetLocalArchInfo();
+	
+	// Allow all arches if we fail to determine ours
+	if (!current_arch)
+		return YES;
+	
+	NSArray *binaryArches = [bundle executableArchitectureStrings];
+	
+	// extra 64bit check since CPU_TYPE_X86_64 doesn't seem to be very reliable
+	int is64bitCapable;
+	size_t len = sizeof(is64bitCapable);
+	if (sysctlbyname("hw.optional.x86_64",&is64bitCapable,&len,NULL,0))
+		is64bitCapable = NO;
+	
+	// x86_64 is able to run all (i386 and pcc through Rosetta)
+	if (current_arch->cputype == CPU_TYPE_X86_64
+		|| (current_arch->cputype == CPU_TYPE_I386 && is64bitCapable))
+		return YES;
+	// i386 is able to run i386 and ppc trough Rosetta
+	else if (current_arch->cputype == CPU_TYPE_I386 && ([binaryArches containsObject:@"i386"] 
+													   || [binaryArches containsObject:@"ppc64"]
+													   || [binaryArches containsObject:@"ppc"]))
+		return YES;
+	// ppc64 is able to run ppc
+	else if (current_arch->cputype == CPU_TYPE_POWERPC64 && ([binaryArches containsObject:@"ppc64"]
+															|| [binaryArches containsObject:@"ppc"]))
+		return YES;
+	// ppc
+	else if (current_arch->cputype == CPU_TYPE_POWERPC && [binaryArches containsObject:@"ppc"])
+		return YES;
+	
+	return NO;
 }
 
 - (NSComparisonResult) compareBinaryVersion:(NSDictionary *)b1 toBinary:(NSDictionary*)b2
@@ -338,7 +391,7 @@ static NSDictionary const *architectures;
  */
 - (void) installBinary:(NSString *)path
 {
-	NSBundle *binary = [[[NSBundle alloc] initWithPath:path] autorelease];
+	BinaryBundle *binary = [[[BinaryBundle alloc] initWithPath:path] autorelease];
 	
 	// Check if given path is a bundle and is a valid binary bundle
 	if (!binary || ![[binary infoDictionary] objectForKey:@"MPEBinarySVNRevisionEquivalent"]) {
@@ -363,8 +416,12 @@ static NSDictionary const *architectures;
 		return;
 	}
 	
+	BOOL isNewBinary;
+	
 	// A bundle with this identifier is already loaded: compare versions
 	if ([binaryBundles objectForKey:identifier]) {
+		
+		isNewBinary = NO;
 		
 		NSString *installedVersion = [[binaryInfo objectForKey:identifier] objectForKey:@"CFBundleVersion"];
 		NSString *newVersion = [info objectForKey:@"CFBundleVersion"];
@@ -378,7 +435,7 @@ static NSDictionary const *architectures;
 				 @"The MPlayer binary '%@' is already installed (version %@). Do you want to install it again?",
 				 [info objectForKey:@"CFBundleName"],
 				 [info objectForKey:@"CFBundleShortVersionString"]],
-				 @"Cancel", @"Reinstall and Restart", nil) == NSAlertDefaultReturn) return;
+				 @"Cancel", @"Reinstall", nil) == NSAlertDefaultReturn) return;
 		
 		// The binary we're installing is newer -> Upgrade?
 		} else if (result == NSOrderedAscending) {
@@ -389,7 +446,7 @@ static NSDictionary const *architectures;
 				 [info objectForKey:@"CFBundleName"],
 				 [[binaryInfo objectForKey:identifier] objectForKey:@"CFBundleShortVersionString"],
 				 [info objectForKey:@"CFBundleShortVersionString"]],
-				 @"Upgrade and Restart", @"Cancel", nil) == NSAlertAlternateReturn) return;
+				 @"Upgrade", @"Cancel", nil) == NSAlertAlternateReturn) return;
 		
 		// The binary we're installing is older -> Downgrade?
 		} else {
@@ -400,13 +457,15 @@ static NSDictionary const *architectures;
 				 [info objectForKey:@"CFBundleName"],
 				 [[binaryInfo objectForKey:identifier] objectForKey:@"CFBundleShortVersionString"],
 				 [info objectForKey:@"CFBundleShortVersionString"]],
-				 @"Cancel and Restart", @"Downgrade", nil) == NSAlertDefaultReturn) return;
+				 @"Cancel", @"Downgrade", nil) == NSAlertDefaultReturn) return;
 			
 		}
 		
 	} else {
 		
 		// Install a new binary, ask if it should be autoupdated and made default
+		isNewBinary = YES;
+		
 		NSAlert *alert = [NSAlert alertWithMessageText:@"Install Binary"
 										 defaultButton:@"Install"
 									   alternateButton:@"Cancel"
@@ -437,9 +496,12 @@ static NSDictionary const *architectures;
 		NSString *bundlePath = [[binaryBundles objectForKey:identifier] bundlePath];
 		if ([bundlePath rangeOfString:installPath].location != NSNotFound)
 			FSPathMoveObjectToTrashSync([bundlePath UTF8String],NULL,0);
+		
+		// Invalidate bundle and remove binary references so it can be reloaded
+		[self unloadBinary:identifier withUpdater:YES];
 	}
 	
-	// Copy binary to user's application suppor directory
+	// Copy binary to user's application support directory
 	if (![fm fileExistsAtPath:installPath]) {
 		NSError *error;
 		if (![fm createDirectoryAtPath:installPath
@@ -459,24 +521,24 @@ static NSDictionary const *architectures;
 		return;
 	}
 	
-	// Enable/Disable automatic updates for this binary
-	if (![binaryInstallUpdatesCheckbox isHidden]) {
-		NSMutableArray *updates = [[[PREFS arrayForKey:MPEUpdateBinaries] mutableCopy] autorelease];
-		if ([updates containsObject:identifier] && [binaryInstallUpdatesCheckbox state] == NSOffState)
-			[updates removeObject:identifier];
-		else if (![updates containsObject:identifier] && [binaryInstallUpdatesCheckbox state] == NSOnState)
-			[updates addObject:identifier];
-		[PREFS setObject:updates forKey:MPEUpdateBinaries];
-	}
-	
-	// Make binary the default if the user wished it
-	if ([binaryInstallDefaultCheckbox state] == NSOnState)
-		[PREFS setObject:identifier forKey:MPESelectedBinary];
-	
-	// Updating an existing binary requires a restart to reset the NSBundle cache
-	if ([binaryBundles objectForKey:identifier]) {
-		[[AppController sharedController] restart];
-		return;
+	// Apply install options
+	if (isNewBinary) {
+		
+		// Enable/Disable automatic updates for this binary
+		if (![binaryInstallUpdatesCheckbox isHidden]) {
+			NSMutableArray *updates = [[[PREFS arrayForKey:MPEUpdateBinaries] mutableCopy] autorelease];
+			if ([updates containsObject:identifier] && [binaryInstallUpdatesCheckbox state] == NSOffState)
+				[updates removeObject:identifier];
+			else if (![updates containsObject:identifier] && [binaryInstallUpdatesCheckbox state] == NSOnState)
+				[updates addObject:identifier];
+			[PREFS setObject:updates forKey:MPEUpdateBinaries];
+		}
+		
+		// Make binary the default if the user wished it
+		if ([binaryInstallDefaultCheckbox state] == NSOnState) {
+			NSLog(@"make binary new default: %@",identifier);
+			[PREFS setObject:identifier forKey:MPESelectedBinary];
+		}
 	}
 	
 	// Rescan binaries to load it
@@ -525,8 +587,7 @@ static NSDictionary const *architectures;
 {
 	NSString *identifier = [[binaryUpdaters allKeysForObject:updater] objectAtIndex:0];
 	
-	[binaryInfo removeObjectForKey:identifier];
-	[binaryBundles removeObjectForKey:identifier];
+	[self unloadBinary:identifier withUpdater:NO];
 	
 	[self scanBinaries];
 }

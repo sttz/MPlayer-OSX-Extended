@@ -24,7 +24,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class SUUpdater;
+@class SUUpdater, BinaryBundle;
 
 @interface PreferencesController2 : NSWindowController {
 	
@@ -81,9 +81,11 @@
 
 - (void) scanBinaries;
 - (void) loadBinariesFromDirectory:(NSString *)path;
+- (void) unloadBinary:(NSString *)identifier withUpdater:(BOOL)updater;
 - (SUUpdater *)createUpdaterForBundle:(NSBundle *)bundle whichUpdatesAutomatically:(BOOL)autoupdate;
 - (NSComparisonResult) compareBinaryVersion:(NSDictionary *)b1 toBinary:(NSDictionary*)b2;
 - (BOOL) binaryHasRequiredMinVersion:(NSDictionary *)bundle;
+- (BOOL) binaryHasCompatibleArch:(BinaryBundle *)bundle;
 - (void) installBinary:(NSString *)path;
 - (NSString *) identifierForBinaryName:(NSString *)name;
 - (NSString *) pathForBinaryWithIdentifier:(NSString *)identifier;
