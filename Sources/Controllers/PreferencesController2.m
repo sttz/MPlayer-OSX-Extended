@@ -70,7 +70,7 @@
 	
 	// If the user cancels out the screenshot path selection, 
 	// we need this to properly reset the menu
-	screenshotSavePathLastSelection = [PREFS integerForKey:MPECustomScreenshotsSavePath];
+	screenshotSavePathLastSelection = [PREFS integerForKey:MPEScreenshotSaveLocation];
 	
 	// Load fonts when all nibs are loaded (we want to attach to the player window)
 	[[NSNotificationCenter defaultCenter] addObserver:self
@@ -617,10 +617,12 @@
 	if ([panel runModalForDirectory:oldPath file:nil types:nil] == NSOKButton) {
 		[prefs setObject:[[panel filenames] objectAtIndex:0] 
 				  forKey:MPECustomScreenshotsSavePath];
-		[sender selectItemWithTag:MPEScreenshotSaveLocationCustom];
+		[PREFS setObject:[NSNumber numberWithInt:MPEScreenshotSaveLocationCustom] 
+				  forKey:MPEScreenshotSaveLocation];
     } else {
 		// User cancel: Reset the menu to the last selection
-		[sender selectItemWithTag:screenshotSavePathLastSelection];
+		[PREFS setObject:[NSNumber numberWithInt:screenshotSavePathLastSelection] 
+				  forKey:MPEScreenshotSaveLocation];
 	}
 	
 	[self requireRestart:sender];
