@@ -113,6 +113,12 @@ static NSArray* parseRunLoopModes;
 			   options:NSKeyValueObservingOptionNew
 			   context:nil];
 	
+	// Watch for osd level changes
+	[PREFS addObserver:self
+			forKeyPath:MPEOSDLevel
+			   options:NSKeyValueObservingOptionNew
+			   context:nil];
+	
 	return self;
 }
 
@@ -709,9 +715,16 @@ static NSArray* parseRunLoopModes;
 /************************************************************************************/
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-	if ([keyPath isEqualToString:MPEDropFrames] && [self isRunning]) {
+	if (![self isRunning])
+		return;
+	
+	if ([keyPath isEqualToString:MPEDropFrames]) {
 		int framedrop = [[change objectForKey:NSKeyValueChangeNewKey] intValue];
 		[self sendCommand:[NSString stringWithFormat:@"set_property framedropping %d",framedrop]];
+		
+	} else if ([keyPath isEqualToString:MPEOSDLevel]) {
+		osdLevel = [[change objectForKey:NSKeyValueChangeNewKey] intValue];
+		[self sendCommand:[NSString stringWithFormat:@"set_property osdlevel %d",(osdLevel < 2 ? osdLevel : osdLevel - 1)]];
 	}
 }
 /************************************************************************************
@@ -851,14 +864,6 @@ static NSArray* parseRunLoopModes;
 /************************************************************************************
  DISPLAY
  ************************************************************************************/
-- (void) setOsdLevel:(int)anInt
-{
-	if (osdLevel != anInt) {
-		osdLevel = anInt;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
 // audio equalizer enabled
 - (void) setEqualizerEnabled:(BOOL)aBool
 {
@@ -904,7 +909,7 @@ static NSArray* parseRunLoopModes;
 	if (myVolume != percents) {
 		myVolume = percents;
 		if (myState == kPlaying || myState == kPaused || myState == kSeeking)
-			[self sendCommand:[NSString stringWithFormat:@"volume %d 1",myVolume]];
+			[self sendCommand:[NSString stringWithFormat:@"volume %d 1",myVolume] withType:MI_CMD_SHOW_COND];
 	}
 }
 /************************************************************************************/
