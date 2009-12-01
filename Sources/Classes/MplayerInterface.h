@@ -104,12 +104,6 @@
 	// text
 	int osdLevel;
 	
-	// advanced
-	BOOL equalizerEnabled;
-	NSArray *equalizerValues;
-	BOOL videoEqualizerEnabled;
-	NSArray *videoEqualizerValues;
-	
 	// properties
 	BOOL myRebuildIndex;
 	BOOL isPreflight;
@@ -179,11 +173,7 @@
 //beta
 - (void) setAudioExportFile:(NSString *)aFile;
 
-// advanced
-- (void) setEqualizerEnabled:(BOOL)aBool;
-- (void) setEqualizer:(NSArray *)freqs;
-- (void) setVideoEqualizerEnabled:(BOOL)aBool;
-- (void) setVideoEqualizer:(NSArray *)values;
+- (void) applyVideoEqualizer;
 
 //- (void) setVIDEO_TS:(BOOL)aBool;					// dvd folder
 

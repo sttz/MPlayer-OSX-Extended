@@ -19,7 +19,7 @@
 #define MP_DIALOG_VIDEO		2
 #define MP_DIALOG_SUBTITLES 3
 
-@class AppleRemote, PlayerController, PreferencesController2;
+@class AppleRemote, PlayerController, PreferencesController2, EqualizerController;
 
 @interface AppController : NSObject
 {
@@ -57,6 +57,9 @@
 	// Preferences
 	IBOutlet PreferencesController2 *preferencesController;
 	NSDictionary *preferencesSpecs;
+	
+	// Equalizers
+	IBOutlet EqualizerController *equalizerController;
 }
 
 @property (readonly) PlayerController *playerController;
@@ -71,6 +74,7 @@
 - (IBAction) openPreferences:(id)sender;
 - (IBAction) openCustomAspectRatioChooser:(id)sender;
 - (IBAction) chooseCustomAspectRatio:(NSButton *)sender;
+- (IBAction) openVideoEqualizer:(id)sender;
 
 - (void) restart;
 	

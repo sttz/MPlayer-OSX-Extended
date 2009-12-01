@@ -14,6 +14,7 @@
 #import "PlayerController.h"
 #import "PlayListController.h"
 #import "PreferencesController2.h"
+#import "EqualizerController.h"
 
 #import "Preferences.h"
 
@@ -132,6 +133,13 @@ static AppController *instance = nil;
 	[NSTask launchedTaskWithLaunchPath:@"/bin/sh" arguments:arguments];
 	
 	[NSApp terminate:self];
+}
+/************************************************************************************/
+- (IBAction) openVideoEqualizer:(id)sender
+{
+	if (!equalizerController)
+		[NSBundle loadNibNamed:@"Equalizers" owner:self];
+	[equalizerController openVideoEqualizer];
 }
 
 /************************************************************************************

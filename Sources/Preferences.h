@@ -27,6 +27,7 @@
 extern NSString* const MPEAdvancedOptions;
 extern NSString* const MPEAnimateInterfaceTransitions;
 extern NSString* const MPEAspectRatio;
+extern NSString* const MPEAudioEqualizerEnabled;
 extern NSString* const MPEBS2BFilter;
 extern NSString* const MPEBlackOutOtherScreensInFullscreen;
 extern NSString* const MPECacheSizeInMB;
@@ -71,6 +72,8 @@ extern NSString* const MPESubtitleTextColor;
 extern NSString* const MPETextEncoding;
 extern NSString* const MPEUpdateBinaries;
 extern NSString* const MPEUse32bitBinaryon64bit;
+extern NSString* const MPEVideoEqualizerValues;
+extern NSString* const MPEVideoEqualizerEnabled;
 extern NSString* const MPEWindowOnTopMode;
 
 extern NSString* const MPECustomAspectRatioStringKey;
@@ -118,3 +121,9 @@ extern int const MPEPostprocessingFilterOff;
 extern int const MPEPostprocessingFilterDefault;
 extern int const MPEPostprocessingFilterFast;
 extern int const MPEPostprocessingFilterHighQuality;
+
+extern NSString* const MPEVideoEqualizerBrightness;
+extern NSString* const MPEVideoEqualizerContrast;
+extern NSString* const MPEVideoEqualizerGamma;
+extern NSString* const MPEVideoEqualizerHue;
+extern NSString* const MPEVideoEqualizerSaturation;

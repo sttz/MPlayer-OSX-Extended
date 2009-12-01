@@ -11,8 +11,7 @@
 			<string key="NS.object.0">732</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="19156"/>
-			<integer value="15867"/>
+			<integer value="24"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -854,7 +853,38 @@
 									<reference key="NSOnImage" ref="118746331"/>
 									<reference key="NSMixedImage" ref="280660191"/>
 								</object>
+								<object class="NSMenuItem" id="86609878">
+									<reference key="NSMenu" ref="520000377"/>
+									<bool key="NSIsDisabled">YES</bool>
+									<bool key="NSIsSeparator">YES</bool>
+									<string key="NSTitle"/>
+									<string key="NSKeyEquiv"/>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="118746331"/>
+									<reference key="NSMixedImage" ref="280660191"/>
+								</object>
 								<object class="NSMenuItem" id="653841605">
+									<reference key="NSMenu" ref="520000377"/>
+									<string key="NSTitle">Video Equalizer</string>
+									<string key="NSKeyEquiv">v</string>
+									<int key="NSKeyEquivModMask">1572864</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="118746331"/>
+									<reference key="NSMixedImage" ref="280660191"/>
+								</object>
+								<object class="NSMenuItem" id="338894191">
+									<reference key="NSMenu" ref="520000377"/>
+									<bool key="NSIsDisabled">YES</bool>
+									<bool key="NSIsSeparator">YES</bool>
+									<string key="NSTitle"/>
+									<string key="NSKeyEquiv"/>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="118746331"/>
+									<reference key="NSMixedImage" ref="280660191"/>
+								</object>
+								<object class="NSMenuItem" id="224156957">
 									<reference key="NSMenu" ref="520000377"/>
 									<string key="NSTitle">Show Statistics</string>
 									<string key="NSKeyEquiv">s</string>
@@ -4349,7 +4379,7 @@
 				<bool key="NSSharedInstance">YES</bool>
 			</object>
 			<object class="NSCustomView" id="452508252">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="NSTextField" id="995827480">
@@ -4974,11 +5004,10 @@
 					</object>
 				</array>
 				<string key="NSFrameSize">{373, 39}</string>
-				<reference key="NSSuperview"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 			<object class="NSCustomView" id="543008117">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="NSPopUpButton" id="399217320">
@@ -5074,7 +5103,6 @@
 					</object>
 				</array>
 				<string key="NSFrameSize">{373, 24}</string>
-				<reference key="NSSuperview"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 		</array>
@@ -5799,14 +5827,6 @@
 						<reference key="destination" ref="462648460"/>
 					</object>
 					<int key="connectionID">1982</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">displayStats:</string>
-						<reference key="source" ref="688940419"/>
-						<reference key="destination" ref="653841605"/>
-					</object>
-					<int key="connectionID">1985</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -6921,6 +6941,22 @@
 					</object>
 					<int key="connectionID">19178</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">displayStats:</string>
+						<reference key="source" ref="688940419"/>
+						<reference key="destination" ref="224156957"/>
+					</object>
+					<int key="connectionID">19182</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">openVideoEqualizer:</string>
+						<reference key="source" ref="700428315"/>
+						<reference key="destination" ref="653841605"/>
+					</object>
+					<int key="connectionID">19183</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -6978,12 +7014,15 @@
 							<reference ref="675719724"/>
 							<reference ref="848767822"/>
 							<reference ref="677273733"/>
-							<reference ref="653841605"/>
 							<reference ref="186844302"/>
 							<reference ref="191946484"/>
 							<reference ref="935798517"/>
 							<reference ref="911655233"/>
 							<reference ref="645100421"/>
+							<reference ref="86609878"/>
+							<reference ref="338894191"/>
+							<reference ref="224156957"/>
+							<reference ref="653841605"/>
 						</array>
 						<reference key="parent" ref="304889339"/>
 					</object>
@@ -10136,6 +10175,21 @@
 						<reference key="object" ref="830164345"/>
 						<reference key="parent" ref="261974170"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">19179</int>
+						<reference key="object" ref="86609878"/>
+						<reference key="parent" ref="520000377"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">19180</int>
+						<reference key="object" ref="338894191"/>
+						<reference key="parent" ref="520000377"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">19181</int>
+						<reference key="object" ref="224156957"/>
+						<reference key="parent" ref="520000377"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -10562,6 +10616,7 @@
 				<string key="164.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="164.ImportedFromIB2"/>
 				<boolean value="YES" key="1670.ImportedFromIB2"/>
+				<string key="169.IBEditorWindowLastContentRect">{{460, 847}, {151, 163}}</string>
 				<string key="169.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="169.ImportedFromIB2"/>
 				<string key="171.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -10704,6 +10759,12 @@
 				<boolean value="YES" key="19164.ImportedFromIB2"/>
 				<string key="19165.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="19165.ImportedFromIB2"/>
+				<string key="19179.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<boolean value="YES" key="19179.ImportedFromIB2"/>
+				<string key="19180.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<boolean value="YES" key="19180.ImportedFromIB2"/>
+				<string key="19181.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<boolean value="YES" key="19181.ImportedFromIB2"/>
 				<string key="1983.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="1983.ImportedFromIB2"/>
 				<string key="1984.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -10826,6 +10887,7 @@
 				<boolean value="YES" key="2231.ImportedFromIB2"/>
 				<string key="23.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="23.ImportedFromIB2"/>
+				<string key="24.IBEditorWindowLastContentRect">{{639, 807}, {221, 203}}</string>
 				<string key="24.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="24.ImportedFromIB2"/>
 				<string key="29.IBEditorWindowLastContentRect">{{226, 1010}, {545, 20}}</string>
@@ -11007,6 +11069,7 @@
 				<boolean value="YES" key="800.ImportedFromIB2"/>
 				<string key="802.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="802.ImportedFromIB2"/>
+				<string key="81.IBEditorWindowLastContentRect">{{418, 867}, {211, 143}}</string>
 				<string key="81.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="81.ImportedFromIB2"/>
 				<string key="810.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -11245,7 +11308,7 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">19178</int>
+			<int key="maxID">19183</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -11270,12 +11333,14 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 						<string key="openPreferences:">id</string>
 						<string key="openSubtitle:">id</string>
 						<string key="openVIDEO_TS:">id</string>
+						<string key="openVideoEqualizer:">id</string>
 						<string key="showFilesChanged:">NSPopUpButton</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="aspectMenu">NSMenu</string>
 						<string key="closeMenuItem">id</string>
 						<string key="customAspectMenuItem">NSMenuItem</string>
+						<string key="equalizerController">EqualizerController</string>
 						<string key="locationBox">id</string>
 						<string key="locationPanel">id</string>
 						<string key="openFileSettings">NSView</string>
@@ -11301,6 +11366,18 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBUserSource</string>
 						<string key="minorKey"/>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">EqualizerController</string>
+					<string key="superclassName">NSObject</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">videoEqualizerWindow</string>
+						<string key="NS.object.0">NSWindow</string>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Sources/Controllers/EqualizerController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

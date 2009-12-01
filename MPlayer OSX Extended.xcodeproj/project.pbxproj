@@ -136,6 +136,8 @@
 		3AE612610EC088E7009F2F12 /* fc_aslider_knob_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AE612580EC088E7009F2F12 /* fc_aslider_knob_on.png */; };
 		3AE612620EC088E7009F2F12 /* fc_audio_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AE612590EC088E7009F2F12 /* fc_audio_on.png */; };
 		3AE612660EC08C2D009F2F12 /* FullscreenControlsVolumeSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE612650EC08C2D009F2F12 /* FullscreenControlsVolumeSlider.m */; };
+		3AF0A9AC10C41C9B00A2D10E /* Equalizers.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AF0A9AA10C41C9B00A2D10E /* Equalizers.xib */; };
+		3AF0A9B110C4202D00A2D10E /* EqualizerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AF0A9B010C4202D00A2D10E /* EqualizerController.m */; };
 		3AF152260F97B3F700409534 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AF152240F97B3F700409534 /* RegexKitLite.m */; };
 		3AFE25310EC0FA29009FFEC5 /* FullscreenControlsScrubbingBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AFE25300EC0FA29009FFEC5 /* FullscreenControlsScrubbingBar.m */; };
 		3AFE25360EC0FEBB009FFEC5 /* fc_scrub_anim.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AFE25330EC0FEBB009FFEC5 /* fc_scrub_anim.png */; };
@@ -317,6 +319,9 @@
 		3AE612590EC088E7009F2F12 /* fc_audio_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fc_audio_on.png; path = Resources/Graphics/fc_audio_on.png; sourceTree = "<group>"; };
 		3AE612640EC08C2D009F2F12 /* FullscreenControlsVolumeSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FullscreenControlsVolumeSlider.h; path = Sources/Classes/FullscreenControlsVolumeSlider.h; sourceTree = "<group>"; };
 		3AE612650EC08C2D009F2F12 /* FullscreenControlsVolumeSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullscreenControlsVolumeSlider.m; path = Sources/Classes/FullscreenControlsVolumeSlider.m; sourceTree = "<group>"; };
+		3AF0A9AB10C41C9B00A2D10E /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Resources/English.lproj/Equalizers.xib; sourceTree = "<group>"; };
+		3AF0A9AF10C4202D00A2D10E /* EqualizerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EqualizerController.h; path = Sources/Controllers/EqualizerController.h; sourceTree = "<group>"; };
+		3AF0A9B010C4202D00A2D10E /* EqualizerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EqualizerController.m; path = Sources/Controllers/EqualizerController.m; sourceTree = "<group>"; };
 		3AF152240F97B3F700409534 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegexKitLite.m; path = Sources/External/RegexKitLite/RegexKitLite.m; sourceTree = "<group>"; };
 		3AF152250F97B3F700409534 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegexKitLite.h; path = Sources/External/RegexKitLite/RegexKitLite.h; sourceTree = "<group>"; };
 		3AFE252F0EC0FA29009FFEC5 /* FullscreenControlsScrubbingBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FullscreenControlsScrubbingBar.h; path = Sources/Classes/FullscreenControlsScrubbingBar.h; sourceTree = "<group>"; };
@@ -515,6 +520,7 @@
 				3A07C705108E44C10033FA47 /* Preferences.xib */,
 				377E032D085E3ED500D64A26 /* volume3.png */,
 				8D1107310486CEB800E47090 /* Info.plist */,
+				3AF0A9AA10C41C9B00A2D10E /* Equalizers.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -551,6 +557,8 @@
 				377E037C085E482B00D64A26 /* SettingsController.m */,
 				3A6E433010A33AE400B0BDC3 /* PreferencesController2.h */,
 				3A6E433110A33AE400B0BDC3 /* PreferencesController2.m */,
+				3AF0A9AF10C4202D00A2D10E /* EqualizerController.h */,
+				3AF0A9B010C4202D00A2D10E /* EqualizerController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -743,6 +751,7 @@
 				3AC489CE10B48DDC00054A0E /* dialog-warning.png in Resources */,
 				3AD50F8610B5E22500F17C6C /* Preferences.plist in Resources */,
 				3A95F00B10BB28D80098BB38 /* iso-639-3.plist in Resources */,
+				3AF0A9AC10C41C9B00A2D10E /* Equalizers.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -773,7 +782,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "set -o errexit\n\n[ $BUILD_STYLE = Release ] || { echo Distribution target requires \"'Release'\" build style; false; }\n\nVERSION=$(defaults read \"$BUILT_PRODUCTS_DIR/$PROJECT_NAME.app/Contents/Info\" CFBundleShortVersionString)\nBUILD_ID=$(defaults read \"$BUILT_PRODUCTS_DIR/$PROJECT_NAME.app/Contents/Info\" CFBundleVersion)\nDOWNLOAD_BASE_URL=\"http://mplayerosx.sttz.ch/downloads\"\nRELEASENOTES_URL=\"http://mplayerosx.sttz.ch/changes/$VERSION.html\"\n\nRELEASE_DIR=\"$SRCROOT/releases/\"\n\nARCHIVE_FILENAME=\"MPlayer-OSX-Extended_$VERSION.zip\"\nDOWNLOAD_URL=\"$DOWNLOAD_BASE_URL/$ARCHIVE_FILENAME\"\nKEYCHAIN_PRIVKEY_NAME=\"MPlayerOSX Sparkle Private Key\"\n\nWD=$PWD\nrm -f \"$RELEASE_DIR/$ARCHIVE_FILENAME\"\n\ncd \"$BUILT_PRODUCTS_DIR\"\nzip -ry \"$RELEASE_DIR/$ARCHIVE_FILENAME\" \"$PROJECT_NAME.app\"\ncd \"$WD\"\n\nSIZE=$(stat -f %z \"$RELEASE_DIR/$ARCHIVE_FILENAME\")\nPUBDATE=$(date +\"%a, %d %b %G %T %z\")\nSIGNATURE=$(\n\topenssl dgst -sha1 -binary < \"$RELEASE_DIR/$ARCHIVE_FILENAME\" \\\n\t| openssl dgst -dss1 -sign <(security find-generic-password -g -s \"$KEYCHAIN_PRIVKEY_NAME\" 2>&1 1>/dev/null | perl -pe '($_) = /\"(.+)\"/; s/\\\\012/\\n/g') \\\n\t| openssl enc -base64\n)\n\n[ $SIGNATURE ] || { echo Unable to load signing private key with name \"'$KEYCHAIN_PRIVKEY_NAME'\" from keychain; false; }\n\ncat <<EOF\n\t<item>\n\t\t<title>revision $VERSION</title>\n\t\t<sparkle:releaseNotesLink>$RELEASENOTES_URL</sparkle:releaseNotesLink>\n\t\t<pubDate>$PUBDATE</pubDate>\n\t\t<enclosure\n\t\t\turl=\"$DOWNLOAD_URL\"\n\t\t\tsparkle:version=\"$BUILD_ID\"\n\t\t\tsparkle:shortVersionString=\"$VERSION\"\n\t\t\ttype=\"application/octet-stream\"\n\t\t\tlength=\"$SIZE\"\n\t\t\tsparkle:dsaSignature=\"$SIGNATURE\"\n\t\t/>\n\t</item>\nEOF\n\necho scp \"'$HOME/svn/my-cool-app/build/Release/$ARCHIVE_FILENAME'\" www.example.com:download/\necho scp \"'$WD/appcast.xml'\" www.example.com:web/software/my-cool-app/appcast.xml\n\nosascript -e '\ntell application \"Xcode\"\n\ttell project \"MPlayer OSX Extended\"\n\t\tset active target to target \"MPlayer OSX Extended\"\n\tend tell\nend tell'";
+			shellScript = "set -o errexit\n\n[ $BUILD_STYLE = Release ] || { echo Distribution target requires \"'Release'\" build style; false; }\n\nVERSION=$(defaults read \"$BUILT_PRODUCTS_DIR/$PROJECT_NAME.app/Contents/Info\" CFBundleShortVersionString)\nBUILD_ID=$(defaults read \"$BUILT_PRODUCTS_DIR/$PROJECT_NAME.app/Contents/Info\" CFBundleVersion)\nDOWNLOAD_BASE_URL=\"http://mplayerosx.sttz.ch/downloads\"\nRELEASENOTES_URL=\"http://mplayerosx.sttz.ch/changes/$VERSION.html\"\n\nRELEASE_DIR=\"$SRCROOT/../releases/\"\n\nARCHIVE_FILENAME=\"MPlayer-OSX-Extended_$VERSION.zip\"\nDOWNLOAD_URL=\"$DOWNLOAD_BASE_URL/$ARCHIVE_FILENAME\"\nKEYCHAIN_PRIVKEY_NAME=\"MPlayerOSX Sparkle Private Key\"\n\nWD=$PWD\nrm -f \"$RELEASE_DIR/$ARCHIVE_FILENAME\"\n\ncd \"$BUILT_PRODUCTS_DIR\"\nzip -ry \"$RELEASE_DIR/$ARCHIVE_FILENAME\" \"$PROJECT_NAME.app\"\ncd \"$WD\"\n\nSIZE=$(stat -f %z \"$RELEASE_DIR/$ARCHIVE_FILENAME\")\nPUBDATE=$(date +\"%a, %d %b %G %T %z\")\nSIGNATURE=$(\n\topenssl dgst -sha1 -binary < \"$RELEASE_DIR/$ARCHIVE_FILENAME\" \\\n\t| openssl dgst -dss1 -sign <(security find-generic-password -g -s \"$KEYCHAIN_PRIVKEY_NAME\" 2>&1 1>/dev/null | perl -pe '($_) = /\"(.+)\"/; s/\\\\012/\\n/g') \\\n\t| openssl enc -base64\n)\n\n[ $SIGNATURE ] || { echo Unable to load signing private key with name \"'$KEYCHAIN_PRIVKEY_NAME'\" from keychain; false; }\n\ncat <<EOF\n\t<item>\n\t\t<title>revision $VERSION</title>\n\t\t<sparkle:releaseNotesLink>$RELEASENOTES_URL</sparkle:releaseNotesLink>\n\t\t<pubDate>$PUBDATE</pubDate>\n\t\t<enclosure\n\t\t\turl=\"$DOWNLOAD_URL\"\n\t\t\tsparkle:version=\"$BUILD_ID\"\n\t\t\tsparkle:shortVersionString=\"$VERSION\"\n\t\t\ttype=\"application/octet-stream\"\n\t\t\tlength=\"$SIZE\"\n\t\t\tsparkle:dsaSignature=\"$SIGNATURE\"\n\t\t/>\n\t</item>\nEOF\n\necho scp \"'$HOME/svn/my-cool-app/build/Release/$ARCHIVE_FILENAME'\" www.example.com:download/\necho scp \"'$WD/appcast.xml'\" www.example.com:web/software/my-cool-app/appcast.xml\n\nosascript -e '\ntell application \"Xcode\"\n\ttell project \"MPlayer OSX Extended\"\n\t\tset active target to target \"MPlayer OSX Extended\"\n\tend tell\nend tell'";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -810,6 +819,7 @@
 				3A02CDCB10B6E76700ECF073 /* Preferences.m in Sources */,
 				3A71CA0010BEBB7800C810F4 /* CocoaAdditions.m in Sources */,
 				3A5F3FBD10C17AFA00C5B912 /* BinaryBundle.m in Sources */,
+				3AF0A9B110C4202D00A2D10E /* EqualizerController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -854,6 +864,14 @@
 				3A638954108B95B000E90936 /* English */,
 			);
 			name = MoveApplication.strings;
+			sourceTree = "<group>";
+		};
+		3AF0A9AA10C41C9B00A2D10E /* Equalizers.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3AF0A9AB10C41C9B00A2D10E /* English */,
+			);
+			name = Equalizers.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

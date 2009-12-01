@@ -27,6 +27,7 @@
 NSString* const MPEAdvancedOptions                    = @"MPEAdvancedOptions";
 NSString* const MPEAnimateInterfaceTransitions        = @"MPEAnimateInterfaceTransitions";
 NSString* const MPEAspectRatio                        = @"MPEAspectRatio";
+NSString* const MPEAudioEqualizerEnabled              = @"MPEAudioEqualizerEnabled";
 NSString* const MPEBS2BFilter                         = @"MPEBS2BFilter";
 NSString* const MPEBlackOutOtherScreensInFullscreen   = @"MPEBlackOutOtherScreensInFullscreen";
 NSString* const MPECacheSizeInMB                      = @"MPECacheSizeInMB";
@@ -71,6 +72,8 @@ NSString* const MPESubtitleTextColor                  = @"MPESubtitleTextColor";
 NSString* const MPETextEncoding                       = @"MPETextEncoding";
 NSString* const MPEUpdateBinaries                     = @"MPEUpdateBinaries";
 NSString* const MPEUse32bitBinaryon64bit              = @"MPEUse32bitBinaryon64bit";
+NSString* const MPEVideoEqualizerValues               = @"MPEVideoEqualizerValues";
+NSString* const MPEVideoEqualizerEnabled              = @"MPEVideoEqualizerEnabled";
 NSString* const MPEWindowOnTopMode                    = @"MPEWindowOnTopMode";
 
 NSString* const MPECustomAspectRatioStringKey         = @"MPECustomAspectRatioString";
@@ -119,5 +122,9 @@ int const MPEPostprocessingFilterDefault              = 1;
 int const MPEPostprocessingFilterFast                 = 2;
 int const MPEPostprocessingFilterHighQuality          = 3;
 
-
+NSString* const MPEVideoEqualizerBrightness           = @"MPEVideoEqualizerBrightness";
+NSString* const MPEVideoEqualizerContrast             = @"MPEVideoEqualizerContrast";
+NSString* const MPEVideoEqualizerGamma                = @"MPEVideoEqualizerGamma";
+NSString* const MPEVideoEqualizerHue                  = @"MPEVideoEqualizerHue";
+NSString* const MPEVideoEqualizerSaturation           = @"MPEVideoEqualizerSaturation";
 

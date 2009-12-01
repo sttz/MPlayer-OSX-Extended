@@ -13,6 +13,7 @@
 
 #import "AppController.h"
 #import "PreferencesController2.h"
+#import "EqualizerController.h"
 #import "Preferences.h"
 
 // directly parsed mplayer output strings
@@ -37,6 +38,9 @@
 // run loop modes in which we parse MPlayer's output
 static NSArray* parseRunLoopModes;
 
+// video equalizer keys to command mapping
+static NSDictionary *videoEqualizerCommands;
+
 @implementation MplayerInterface
 /************************************************************************************
  INIT & UNINIT
@@ -52,8 +56,17 @@ static NSArray* parseRunLoopModes;
 	if (![super init])
 		return  nil;
 	
-	if (parseRunLoopModes == nil)
+	if (!parseRunLoopModes)
 		parseRunLoopModes = [[NSArray arrayWithObjects:NSDefaultRunLoopMode, NSEventTrackingRunLoopMode, nil] retain];
+	
+	if (!videoEqualizerCommands)
+		videoEqualizerCommands = [[NSDictionary dictionaryWithObjectsAndKeys:
+								   @"brightness", MPEVideoEqualizerBrightness,
+								   @"contrast", MPEVideoEqualizerContrast,
+								   @"gamma", MPEVideoEqualizerGamma,
+								   @"hue", MPEVideoEqualizerHue,
+								   @"saturation", MPEVideoEqualizerSaturation,
+								   nil] retain];
 	
 	// detect 64bit host
 	int is64bit;
@@ -79,10 +92,6 @@ static NSArray* parseRunLoopModes;
 	
 	// *** text
 	osdLevel = 1;
-	
-	// *** advanced
-	equalizerEnabled = NO;
-	videoEqualizerEnabled = NO;
 	
 	// properties
 	myRebuildIndex = NO;
@@ -119,6 +128,12 @@ static NSArray* parseRunLoopModes;
 			   options:NSKeyValueObservingOptionNew
 			   context:nil];
 	
+	// Watch for video equalizer changes
+	[PREFS addObserver:self
+			forKeyPath:MPEVideoEqualizerValues
+			   options:NSKeyValueObservingOptionNew
+			   context:nil];
+	
 	return self;
 }
 
@@ -135,7 +150,6 @@ static NSArray* parseRunLoopModes;
 	[myFontFile release];
 	[myCommandsBuffer release];
 	[info release];
-	[equalizerValues release];
 	[lastUnparsedLine release];
 	[lastUnparsedErrorLine release];
 	[buffer_name release];
@@ -482,15 +496,6 @@ static NSArray* parseRunLoopModes;
 	
 	// *** ADVANCED
 	
-	// aduio equalizer filter
-	if (equalizerEnabled && equalizerValues && [equalizerValues count] == 10) {
-		[audioFilters addObject:[@"equalizer=" stringByAppendingString: [equalizerValues componentsJoinedByString:@":"]]];
-	}
-	// video equalizer
-	if (videoEqualizerEnabled && videoEqualizerValues && [videoEqualizerValues count] == 8) {
-		[videoFilters addObject:[@"eq2=" stringByAppendingString: [videoEqualizerValues componentsJoinedByString:@":"]]];
-	}
-	
 	// *** Video filters
 	// add screenshot filter
 	if ([cPrefs objectForKey:MPEScreenshotSaveLocation]) {
@@ -521,6 +526,13 @@ static NSArray* parseRunLoopModes;
 			
 			[screenshotPath retain];
 		}
+	}
+	
+	// video equalizer
+	if ([[cPrefs objectForKey:MPEVideoEqualizerEnabled] boolValue]) {
+		[videoFilters addObject:[NSString stringWithFormat:@"eq2=%@",[EqualizerController eq2FilterValues]]];
+		[videoFilters addObject:[NSString stringWithFormat:@"hue=%@",[EqualizerController hueFilterValue]]];
+		[videoFilters addObject:@"scale"];
 	}
 	
 	// add filter chain
@@ -601,6 +613,10 @@ static NSArray* parseRunLoopModes;
 					   pathForBinaryWithIdentifier:[cPrefs objectForKey:MPESelectedBinary]] retain];
 	
 	[self runMplayerWithParams:params];
+	
+	// apply initial video equalizer values
+	if ([[cPrefs objectForKey:MPEVideoEqualizerEnabled] boolValue])
+		[self applyVideoEqualizer];
 }
 /************************************************************************************/
 - (void) play
@@ -725,6 +741,9 @@ static NSArray* parseRunLoopModes;
 	} else if ([keyPath isEqualToString:MPEOSDLevel]) {
 		osdLevel = [[change objectForKey:NSKeyValueChangeNewKey] intValue];
 		[self sendCommand:[NSString stringWithFormat:@"set_property osdlevel %d",(osdLevel < 2 ? osdLevel : osdLevel - 1)]];
+	
+	} else if ([keyPath isEqualToString:MPEVideoEqualizerValues]) {
+		[self applyVideoEqualizer];
 	}
 }
 /************************************************************************************
@@ -808,81 +827,6 @@ static NSArray* parseRunLoopModes;
 		myAudioFile = nil;
 	}
 }
-/************************************************************************************
- VIDEO
- ************************************************************************************/
-- (void) setVideoEqualizer:(NSArray *)values;
-{
-	if (videoEqualizerValues && values && ![videoEqualizerValues isEqualTo:values]) {
-		[videoEqualizerValues release];
-		videoEqualizerValues = [[NSArray arrayWithArray:values] retain];
-		settingsChanged = YES;
-		return;
-	}
-	if (videoEqualizerValues == nil && values) {
-		videoEqualizerValues = [[NSArray arrayWithArray:values] retain];
-		settingsChanged = YES;
-		return;
-	}
-	if (videoEqualizerValues && values == nil) {
-		[videoEqualizerValues release];
-		videoEqualizerValues = nil;
-		settingsChanged = YES;
-		return;
-	}
-}
-/************************************************************************************
- AUDIO
- ************************************************************************************/
-- (void) setEqualizer:(NSArray *)freqs
-{
-	int i;
-	for (i=0; i < [freqs count]; i++) {
-		if (![[freqs objectAtIndex:i] isKindOfClass: [NSNumber class]] 
-				|| [[freqs objectAtIndex:i] floatValue] < -12.0 || [[freqs objectAtIndex:i] floatValue] > 12)
-			[freqs setValue:[NSNumber numberWithFloat:0] forKey: [[NSNumber numberWithInt:i] stringValue]];
-	}
-	
-	if (equalizerValues && freqs && ![equalizerValues isEqualTo:freqs]) {
-		[equalizerValues release];
-		equalizerValues = [[NSArray arrayWithArray:freqs] retain];
-		settingsChanged = YES;
-		return;
-	}
-	if (equalizerValues == nil && freqs) {
-		equalizerValues = [[NSArray arrayWithArray:freqs] retain];
-		settingsChanged = YES;
-		return;
-	}
-	if (equalizerValues && freqs == nil) {
-		[equalizerValues release];
-		equalizerValues = nil;
-		settingsChanged = YES;
-		return;
-	}
-}
-/************************************************************************************
- DISPLAY
- ************************************************************************************/
-// audio equalizer enabled
-- (void) setEqualizerEnabled:(BOOL)aBool
-{
-	if (equalizerEnabled != aBool) {
-		equalizerEnabled = aBool;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-// video equalizer enabled
-- (void) setVideoEqualizerEnabled:(BOOL)aBool
-{
-	if (videoEqualizerEnabled != aBool) {
-		videoEqualizerEnabled = aBool;
-		settingsChanged = YES;
-	}
-}
-/************************************************************************************/
-
 /************************************************************************************/
 - (void) setRebuildIndex:(BOOL)aBool
 {
@@ -892,17 +836,20 @@ static NSArray* parseRunLoopModes;
 	}
 }
 /************************************************************************************/
-////NEW BETA CODE
-////VIDEO_TS
-/*
-- (void) setVIDEO_TS:(BOOL)aBool
+- (void) applyVideoEqualizer
 {
-	if (myVIDEO_TS != aBool) {
-		myVIDEO_TS = aBool;
-		settingsChanged = YES;
+	NSDictionary *values = [PREFS objectForKey:MPEVideoEqualizerValues];
+	int value;
+	
+	for (NSString *key in videoEqualizerCommands) {
+		if ([values objectForKey:key])
+			value = [[values objectForKey:key] intValue];
+		else
+			value = 0;
+		[self sendCommand:[NSString stringWithFormat:@"set_property %@ %d",
+						   [videoEqualizerCommands objectForKey:key], value]];
 	}
 }
-*/
 /************************************************************************************/
 - (void) setVolume:(unsigned int)percents
 {
