@@ -27,3 +27,26 @@
 @interface NSView (MPEAdditions)
 - (void) resizeAndArrangeSubviewsVerticallyWithPadding:(float)padding;
 @end
+
+@interface NSDictionary (MPEAdditions)
+- (BOOL)boolForKey:(NSString *)defaultName;
+- (NSInteger)integerForKey:(NSString *)defaultName;
+- (float)floatForKey:(NSString *)defaultName;
+- (double)doubleForKey:(NSString *)defaultName;
+
+- (NSNumber *)numberForKey:(NSString *)defaultName;
+- (NSString *)stringForKey:(NSString *)defaultName;
+- (NSData *)dataForKey:(NSString *)defaultName;
+- (NSArray *)arrayForKey:(NSString *)defaultName;
+- (NSDictionary *)dictionaryForKey:(NSString *)defaultName;
+- (NSColor *)colorForKey:(NSString *)defaultName;
+@end
+
+@interface NSMutableDictionary (MPEAdditions)
+- (void)setBool:(BOOL)value forKey:(NSString *)defaultName;
+- (void)setInteger:(NSInteger)value forKey:(NSString *)defaultName;
+- (void)setFloat:(float)value forKey:(NSString *)defaultName;
+- (void)setDouble:(double)value forKey:(NSString *)defaultName;
+
+- (void)archiveAndSetColor:(NSColor *)color forKey:(NSString *)defaultName;
+@end

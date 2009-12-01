@@ -53,3 +53,111 @@
 }
 
 @end
+
+
+@implementation NSDictionary (MPEAdditions)
+
+- (BOOL)boolForKey:(NSString *)defaultName
+{
+	NSNumber *num = [self numberForKey:defaultName];
+	if (!num) return NO;
+	return [num boolValue];
+}
+
+- (NSInteger)integerForKey:(NSString *)defaultName
+{
+	NSNumber *num = [self numberForKey:defaultName];
+	if (!num) return 0;
+	return [num integerValue];
+}
+
+- (float)floatForKey:(NSString *)defaultName
+{
+	NSNumber *num = [self numberForKey:defaultName];
+	if (!num) return 0.0f;
+	return [num floatValue];
+}
+
+- (double)doubleForKey:(NSString *)defaultName
+{
+	NSNumber *num = [self numberForKey:defaultName];
+	if (!num) return 0.0;
+	return [num doubleValue];
+}
+
+
+- (NSObject *)objectOfType:(Class)type forKey:(NSString *)defaultName
+{
+	NSObject *obj = [self objectForKey:defaultName];
+	if (!obj || ![obj isKindOfClass:type])
+		return nil;
+	return obj;
+}
+
+- (NSNumber *)numberForKey:(NSString *)defaultName
+{
+	return (NSNumber *)[self objectOfType:[NSNumber class] forKey:defaultName];
+}
+
+- (NSString *)stringForKey:(NSString *)defaultName
+{
+	return (NSString *)[self objectOfType:[NSString class] forKey:defaultName];
+}
+
+- (NSData *)dataForKey:(NSString *)defaultName
+{
+	return (NSData *)[self objectOfType:[NSData class] forKey:defaultName];
+}
+
+- (NSArray *)arrayForKey:(NSString *)defaultName
+{
+	return (NSArray *)[self objectOfType:[NSArray class] forKey:defaultName];
+}
+
+- (NSDictionary *)dictionaryForKey:(NSString *)defaultName
+{
+	return (NSDictionary *)[self objectOfType:[NSDictionary class] forKey:defaultName];
+}
+
+- (NSColor *)colorForKey:(NSString *)defaultName
+{
+	NSColor *color = (NSColor *)[self objectOfType:[NSColor class] forKey:defaultName];
+	if (color) return color;
+	NSData *data = [self dataForKey:defaultName];
+	if (data)
+		color = (NSColor *)[NSUnarchiver unarchiveObjectWithData:data];
+	return color;
+}
+
+@end
+
+
+@implementation NSMutableDictionary (MPEAdditions)
+
+- (void)setBool:(BOOL)value forKey:(NSString *)defaultName
+{
+	[self setObject:[NSNumber numberWithBool:value] forKey:defaultName];
+}
+
+- (void)setInteger:(NSInteger)value forKey:(NSString *)defaultName
+{
+	[self setObject:[NSNumber numberWithInteger:value] forKey:defaultName];
+}
+
+- (void)setFloat:(float)value forKey:(NSString *)defaultName
+{
+	[self setObject:[NSNumber numberWithFloat:value] forKey:defaultName];
+}
+
+- (void)setDouble:(double)value forKey:(NSString *)defaultName
+{
+	[self setObject:[NSNumber numberWithDouble:value] forKey:defaultName];
+}
+
+- (void)archiveAndSetColor:(NSColor *)color forKey:(NSString *)defaultName
+{
+	[self setObject:[NSArchiver archivedDataWithRootObject:color] forKey:defaultName];
+}
+
+@end
+
