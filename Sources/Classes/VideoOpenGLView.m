@@ -616,6 +616,9 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 */
 - (void) resizeView
 {
+	if (isFullscreen)
+		return;
+	
 	if (image_width == 0 || image_height == 0)
 		return;
 	
