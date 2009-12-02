@@ -158,7 +158,6 @@
 
 // misc
 - (void) setMovieSize;
-- (void) setVideoEqualizer;
 - (NSNumber *) gammaValue:(NSNumber *)input;
 - (MplayerInterface *)playerInterface;
 - (MplayerInterface *)preflightInterface;

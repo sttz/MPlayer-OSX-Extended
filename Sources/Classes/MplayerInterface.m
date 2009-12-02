@@ -541,6 +541,11 @@ static NSDictionary *videoEqualizerCommands;
 		[params addObject:[videoFilters componentsJoinedByString:@","]];
 	}
 	
+	// audio equalizer
+	if ([[cPrefs objectForKey:MPEAudioEqualizerEnabled] boolValue]) {
+		[audioFilters addObject:[NSString stringWithFormat:@"equalizer=%@",[EqualizerController equalizerFilterValues]]];
+	}
+	
 	// *** Audio Filters
 	if ([audioFilters count] > 0) {
 		[params addObject:@"-af-add"];

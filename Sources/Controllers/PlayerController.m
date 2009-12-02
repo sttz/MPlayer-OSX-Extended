@@ -578,27 +578,6 @@
 		[videoOpenGLView setWindowSizeMode:WSM_SCALE withValue:1];
 }
 /************************************************************************************/
-- (void) setVideoEqualizer
-{
-	NSUserDefaults *preferences = [[AppController sharedController] preferences];
-	if ([preferences objectForKey:@"VideoEqualizer"]) {
-		NSArray *values = [NSArray arrayWithArray:[preferences arrayForKey:@"VideoEqualizer"]];
-		
-		// Adjust gamma values
-		[myPlayer setVideoEqualizer: [NSArray arrayWithObjects: 
-			[self gammaValue:[values objectAtIndex:0]],
-			[values objectAtIndex:1],
-			[values objectAtIndex:2],
-			[values objectAtIndex:3],
-			[self gammaValue:[values objectAtIndex:4]],
-			[self gammaValue:[values objectAtIndex:5]],
-			[self gammaValue:[values objectAtIndex:6]],
-			[values objectAtIndex:7],
-			nil
-			]];
-	}
-}
-/************************************************************************************/
 - (NSNumber *) gammaValue:(NSNumber *)input
 {
 	if ([input floatValue] <= 10)

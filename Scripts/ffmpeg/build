@@ -196,7 +196,7 @@ config_opts="$config_opts --prefix=${BUILD_ROOT} --enable-gpl"
 # Build shared libraries
 config_opts="$config_opts --enable-shared --disable-static"
 # Disable unneeded tools
-config_opts="$config_opts --disable-ffmpeg --disable-ffplay --disable-ffserver"
+config_opts="$config_opts --disable-ffmpeg --disable-ffserver"
 # Enable threads
 config_opts="$config_opts --enable-pthreads"
 # Disable unneeded stuff
@@ -205,6 +205,8 @@ config_opts="$config_opts --disable-devices --disable-encoders --disable-muxers 
 config_opts="$config_opts --enable-postproc"
 # Enable PNG encoder for screenshot filter in MPlayer
 config_opts="$config_opts --enable-encoder=png"
+# Disable the X11-accelerated MPEG decoder (creates linking errors - 20091018)
+config_opts="$config_opts --disable-decoder=mpeg_xvmc"
 # Enable runtime cpu detection
 #config_opts="$config_opts --enable-runtime-cpudetect"
 # Enable LLVM

@@ -141,7 +141,12 @@ static AppController *instance = nil;
 		[NSBundle loadNibNamed:@"Equalizers" owner:self];
 	[equalizerController openVideoEqualizer];
 }
-
+- (IBAction) openAudioEqualizer:(id)sender
+{
+	if (!equalizerController)
+		[NSBundle loadNibNamed:@"Equalizers" owner:self];
+	[equalizerController openAudioEqualizer];
+}
 /************************************************************************************
  ACTIONS
  ************************************************************************************/

@@ -2,10 +2,10 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">10B504</string>
+		<string key="IBDocument.SystemVersion">10C540</string>
 		<string key="IBDocument.InterfaceBuilderVersion">732</string>
-		<string key="IBDocument.AppKitVersion">1038.2</string>
-		<string key="IBDocument.HIToolboxVersion">437.00</string>
+		<string key="IBDocument.AppKitVersion">1038.25</string>
+		<string key="IBDocument.HIToolboxVersion">458.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			<string key="NS.object.0">732</string>
@@ -868,6 +868,15 @@
 									<reference key="NSMenu" ref="520000377"/>
 									<string key="NSTitle">Video Equalizer</string>
 									<string key="NSKeyEquiv">v</string>
+									<int key="NSKeyEquivModMask">1572864</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="118746331"/>
+									<reference key="NSMixedImage" ref="280660191"/>
+								</object>
+								<object class="NSMenuItem" id="291038551">
+									<reference key="NSMenu" ref="520000377"/>
+									<string key="NSTitle">Audio Equalizer</string>
+									<string key="NSKeyEquiv">a</string>
 									<int key="NSKeyEquivModMask">1572864</int>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="118746331"/>
@@ -6957,6 +6966,14 @@
 					</object>
 					<int key="connectionID">19183</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">openAudioEqualizer:</string>
+						<reference key="source" ref="700428315"/>
+						<reference key="destination" ref="291038551"/>
+					</object>
+					<int key="connectionID">19186</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -7023,6 +7040,7 @@
 							<reference ref="338894191"/>
 							<reference ref="224156957"/>
 							<reference ref="653841605"/>
+							<reference ref="291038551"/>
 						</array>
 						<reference key="parent" ref="304889339"/>
 					</object>
@@ -10190,6 +10208,11 @@
 						<reference key="object" ref="224156957"/>
 						<reference key="parent" ref="520000377"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">19184</int>
+						<reference key="object" ref="291038551"/>
+						<reference key="parent" ref="520000377"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -10765,6 +10788,8 @@
 				<boolean value="YES" key="19180.ImportedFromIB2"/>
 				<string key="19181.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="19181.ImportedFromIB2"/>
+				<string key="19184.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<boolean value="YES" key="19184.ImportedFromIB2"/>
 				<string key="1983.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="1983.ImportedFromIB2"/>
 				<string key="1984.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -10887,7 +10912,7 @@
 				<boolean value="YES" key="2231.ImportedFromIB2"/>
 				<string key="23.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="23.ImportedFromIB2"/>
-				<string key="24.IBEditorWindowLastContentRect">{{639, 807}, {221, 203}}</string>
+				<string key="24.IBEditorWindowLastContentRect">{{639, 787}, {221, 223}}</string>
 				<string key="24.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="24.ImportedFromIB2"/>
 				<string key="29.IBEditorWindowLastContentRect">{{226, 1010}, {545, 20}}</string>
@@ -11308,7 +11333,7 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">19183</int>
+			<int key="maxID">19186</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -11325,6 +11350,7 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 						<string key="closeWindow:">id</string>
 						<string key="displayLogWindow:">id</string>
 						<string key="displayPlayList:">id</string>
+						<string key="openAudioEqualizer:">id</string>
 						<string key="openCustomAspectRatioChooser:">id</string>
 						<string key="openFile:">id</string>
 						<string key="openHomepage:">id</string>
@@ -11371,10 +11397,14 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 				<object class="IBPartialClassDescription">
 					<string key="className">EqualizerController</string>
 					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">videoEqualizerWindow</string>
-						<string key="NS.object.0">NSWindow</string>
-					</object>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="resetAudioEqualizer:">id</string>
+						<string key="resetVideoEqualizer:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="audioEqualizerWindow">NSWindow</string>
+						<string key="videoEqualizerWindow">NSWindow</string>
+					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Sources/Controllers/EqualizerController.h</string>

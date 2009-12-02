@@ -25,14 +25,31 @@
 @interface EqualizerController : NSObject {
 	
 	IBOutlet NSWindow *videoEqualizerWindow;
+	IBOutlet NSWindow *audioEqualizerWindow;
+	
+	IBOutlet NSPopUpButton *presetSelectionPopUp;
+	IBOutlet NSButton *audioApplyButton;
+	
+	IBOutlet NSView *presetNameView;
+	IBOutlet NSTextField *presetNameField;
 }
 
-- (void) applyWithRestart;
+- (IBAction) applyWithRestart:(id)sender;
 
 - (void) openVideoEqualizer;
 - (IBAction) resetVideoEqualizer:(id)sender;
 
+- (void) openAudioEqualizer;
+- (IBAction) resetAudioEqualizer:(id)sender;
+- (IBAction) changePreset:(NSPopUpButton *)sender;
+- (IBAction) changeAudioValue:(NSSlider *)sender;
+- (IBAction) addAudioPreset:(NSButton *)sender;
+- (IBAction) removeAudioPreset:(NSButton *)sender;
+- (void) setAudioEqualizerDirty;
+
 + (NSString *)eq2FilterValues;
 + (NSString *)hueFilterValue;
+
++ (NSString *)equalizerFilterValues;
 
 @end

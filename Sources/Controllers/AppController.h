@@ -75,6 +75,7 @@
 - (IBAction) openCustomAspectRatioChooser:(id)sender;
 - (IBAction) chooseCustomAspectRatio:(NSButton *)sender;
 - (IBAction) openVideoEqualizer:(id)sender;
+- (IBAction) openAudioEqualizer:(id)sender;
 
 - (void) restart;
 	
