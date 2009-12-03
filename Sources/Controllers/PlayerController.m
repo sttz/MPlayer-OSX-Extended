@@ -15,6 +15,7 @@
 #import "PreferencesController2.h"
 
 #import "Preferences.h"
+#import "CocoaAdditions.h"
 
 // custom classes
 #import "VideoOpenGLView.h"
@@ -377,11 +378,13 @@
 		aPath = [anItem objectForKey:@"SubtitlesFile"];
 		if (aPath)
 			[myPlayer setSubtitlesFile:aPath];
-		// set encoding from open dialog drop-down
-		[myPlayingItem setObject:[anItem objectForKey:MPETextEncoding] forKey:MPETextEncoding];
-		// restart playback if encoding has changed
-		if ([myPlayer localChangesNeedRestart:myPlayingItem])
-			[self applyChangesWithRestart:YES];
+		if ([anItem objectForKey:MPETextEncoding]) {
+			// set encoding from open dialog drop-down
+			[myPlayingItem setObject:[anItem objectForKey:MPETextEncoding] forKey:MPETextEncoding];
+			// restart playback if encoding has changed
+			if ([myPlayer localChangesNeedRestart])
+				[self applyChangesWithRestart:YES];
+		}
    		return;
 	}
 	
@@ -535,7 +538,7 @@
 /************************************************************************************/
 - (void) applyChangesWithRestart:(BOOL)restart
 {
-	[myPlayer applySettingsWithRestart:restart localChanges:myPlayingItem];
+	[myPlayer applySettingsWithRestart];
 	
 	// set streams
 	if (videoStreamId >= 0)
@@ -704,6 +707,27 @@
 - (IBAction)stepFrame:(id)sender
 {
 	[myPlayer sendCommand:@"frame_step"];
+}
+
+/************************************************************************************/
+- (void) setLoopMovie:(BOOL)loop
+{
+	[myPlayingItem setBool:loop forKey:MPELoopMovie];
+}
+
+- (IBAction)toggleLoop:(id)sender
+{
+	if (myPlayingItem)
+		[self setLoopMovie:(![myPlayingItem boolForKey:MPELoopMovie])];
+	[self updateLoopStatus];
+}
+
+- (void) updateLoopStatus
+{
+	if (myPlayingItem && [myPlayingItem boolForKey:MPELoopMovie])
+		[loopMenuItem setState:NSOnState];
+	else
+		[loopMenuItem setState:NSOffState];
 }
 
 /************************************************************************************/
@@ -1674,6 +1698,7 @@
 			[playMenuItem setTitle:@"Pause"];
 			[fullscreenButton setEnabled:YES];
 			[self updateWindowOnTop];
+			[self updateLoopStatus];
 			break;
 		case kPaused :
 		case kStopped :
@@ -1687,6 +1712,8 @@
 			[playMenuItem setTitle:@"Play"];
 			[fullscreenButton setEnabled:NO];
 			[self updateWindowOnTop];
+			[self setLoopMovie:NO];
+			[self updateLoopStatus];
 			break;
 		}
 		

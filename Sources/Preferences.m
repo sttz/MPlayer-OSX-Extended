@@ -59,6 +59,7 @@ NSString* const MPEHardwareAC3Passthrough             = @"MPEHardwareAC3Passthro
 NSString* const MPEHardwareDTSPassthrough             = @"MPEHardwareDTSPassthrough";
 NSString* const MPEKaraokeFilter                      = @"MPEKaraokeFilter";
 NSString* const MPELoadEmbeddedFonts                  = @"MPELoadEmbeddedFonts";
+NSString* const MPELoopMovie                          = @"MPELoopMovie";
 NSString* const MPEOSDLevel                           = @"MPEOSDLevel";
 NSString* const MPEOSDScale                           = @"MPEOSDScale";
 NSString* const MPEOverrideAudioCodecs                = @"MPEOverrideAudioCodecs";

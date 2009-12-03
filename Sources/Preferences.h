@@ -59,6 +59,7 @@ extern NSString* const MPEHardwareAC3Passthrough;
 extern NSString* const MPEHardwareDTSPassthrough;
 extern NSString* const MPEKaraokeFilter;
 extern NSString* const MPELoadEmbeddedFonts;
+extern NSString* const MPELoopMovie;
 extern NSString* const MPEOSDLevel;
 extern NSString* const MPEOSDScale;
 extern NSString* const MPEOverrideAudioCodecs;

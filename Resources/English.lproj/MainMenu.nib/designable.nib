@@ -11,7 +11,7 @@
 			<string key="NS.object.0">732</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="1565"/>
+			<integer value="19219"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -379,6 +379,14 @@
 									<reference key="NSMenu" ref="21549871"/>
 									<string key="NSTitle">Stop</string>
 									<string type="base64-UTF8" key="NSKeyEquiv">Gw</string>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="118746331"/>
+									<reference key="NSMixedImage" ref="280660191"/>
+								</object>
+								<object class="NSMenuItem" id="986973415">
+									<reference key="NSMenu" ref="21549871"/>
+									<string key="NSTitle">Loop</string>
+									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="118746331"/>
 									<reference key="NSMixedImage" ref="280660191"/>
@@ -7543,6 +7551,38 @@
 					</object>
 					<int key="connectionID">19341</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: player.playing</string>
+						<reference key="source" ref="986973415"/>
+						<reference key="destination" ref="688940419"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="986973415"/>
+							<reference key="NSDestination" ref="688940419"/>
+							<string key="NSLabel">enabled: player.playing</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">player.playing</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19344</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">toggleLoop:</string>
+						<reference key="source" ref="688940419"/>
+						<reference key="destination" ref="986973415"/>
+					</object>
+					<int key="connectionID">19345</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">loopMenuItem</string>
+						<reference key="source" ref="688940419"/>
+						<reference key="destination" ref="986973415"/>
+					</object>
+					<int key="connectionID">19346</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -10704,6 +10744,7 @@
 							<reference ref="748694322"/>
 							<reference ref="1015279709"/>
 							<reference ref="207953085"/>
+							<reference ref="986973415"/>
 						</array>
 						<reference key="parent" ref="369106797"/>
 					</object>
@@ -10873,6 +10914,11 @@
 						<int key="objectID">19264</int>
 						<reference key="object" ref="305917431"/>
 						<reference key="parent" ref="825449482"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">19342</int>
+						<reference key="object" ref="986973415"/>
+						<reference key="parent" ref="21549871"/>
 					</object>
 				</array>
 			</object>
@@ -11451,7 +11497,7 @@
 				<boolean value="YES" key="19181.ImportedFromIB2"/>
 				<string key="19184.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="19184.ImportedFromIB2"/>
-				<string key="19219.IBEditorWindowLastContentRect">{{447, 756}, {212, 293}}</string>
+				<string key="19219.IBEditorWindowLastContentRect">{{447, 736}, {212, 313}}</string>
 				<string key="19219.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="19219.ImportedFromIB2"/>
 				<string key="19220.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -11502,6 +11548,7 @@
 				<string key="19263.IBEditorWindowLastContentRect">{{702, 1027}, {81, 23}}</string>
 				<string key="19263.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="19264.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="19342.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1983.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="1983.ImportedFromIB2"/>
 				<string key="1984.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -12013,7 +12060,7 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">19341</int>
+			<int key="maxID">19346</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -12281,6 +12328,7 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 						<string key="subtitleMenuAction:">id</string>
 						<string key="switchFullscreen:">id</string>
 						<string key="takeScreenshot:">id</string>
+						<string key="toggleLoop:">id</string>
 						<string key="toggleMute:">id</string>
 						<string key="videoMenuAction:">id</string>
 					</dictionary>
@@ -12301,6 +12349,7 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 						<string key="fullscreenButton">id</string>
 						<string key="fullscreenMenu">id</string>
 						<string key="fullscreenWindowMenu">id</string>
+						<string key="loopMenuItem">NSMenuItem</string>
 						<string key="playButton">NSButton</string>
 						<string key="playButtonToolbar">NSButton</string>
 						<string key="playListButton">id</string>

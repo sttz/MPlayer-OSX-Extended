@@ -82,6 +82,7 @@
 	IBOutlet id stopMenuItem;
 	IBOutlet id skipEndMenuItem;
 	IBOutlet id skipBeginningMenuItem;
+	IBOutlet NSMenuItem *loopMenuItem;
 	
 	// properties
 	MplayerInterface *myPlayer;
@@ -184,9 +185,12 @@
 - (double)volume;
 - (void) applyVolume:(double)volume;
 - (IBAction)toggleMute:(id)sender;
+- (void) setLoopMovie:(BOOL)loop;
+- (void) updateLoopStatus;
 - (IBAction)changeVolume:(id)sender;
 - (IBAction)increaseVolume:(id)sender;
 - (IBAction)decreaseVolume:(id)sender;
+- (IBAction)toggleLoop:(id)sender;
 - (void)sendKeyEvent:(int)event;
 
 - (void)goToChapter:(unsigned int)chapter;

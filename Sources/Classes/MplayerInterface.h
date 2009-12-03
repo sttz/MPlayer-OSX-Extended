@@ -94,6 +94,8 @@
 	NSString *myFontFile;
 	
 	NSDictionary *playingItem;
+	
+	NSDictionary *localPrefs;
 	NSDictionary *prefs;
 	
 	NSString *buffer_name;
@@ -167,6 +169,9 @@
 - (void) setBufferName:(NSString *)name;
 - (void) setPlayerPath:(NSString *)path;
 
+- (void) registerPlayingItem:(NSDictionary *)item;
+- (void) unregisterPlayingItem;
+
 // playback controls (take effect imediately)
 - (void) playItem:(NSMutableDictionary *)item;				// play item from saved time
 - (void) play;
@@ -193,7 +198,7 @@
 - (void) setVolume:(unsigned int)percents;			// set audio volume
 
 // other methods
-- (void) applySettingsWithRestart:(BOOL)restartIt localChanges:(NSDictionary *)item;	// applyes settings that require restart
+- (void) applySettingsWithRestart;	// applyes settings that require restart
 - (void) waitUntilExit;
 - (void) takeScreenshot;
 
@@ -204,7 +209,7 @@
 - (int) status;
 - (float) seconds;									// returns number of seconds, elapsed
 - (BOOL) changesNeedRestart;						// retuns YES if changes needs restart
-- (BOOL) localChangesNeedRestart:(NSDictionary *)item;
+- (BOOL) localChangesNeedRestart;
 
 - (void) setState:(int)newState;
 - (BOOL) isRunning;

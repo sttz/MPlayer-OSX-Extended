@@ -15,6 +15,7 @@
 #import "PreferencesController2.h"
 #import "EqualizerController.h"
 #import "Preferences.h"
+#import "CocoaAdditions.h"
 
 // directly parsed mplayer output strings
 // strings that are used to get certain data from output are not included
@@ -156,6 +157,7 @@ static NSDictionary *videoEqualizerCommands;
 	[buffer_name release];
 	[prefs release];
 	[screenshotPath release];
+	[localPrefs release];
 	[playingItem release];
 	
 	[super dealloc];
@@ -172,6 +174,28 @@ static NSDictionary *videoEqualizerCommands;
 	[myPathToPlayer release];
 	myPathToPlayer = [path retain];
 }
+/************************************************************************************/
+- (void)registerPlayingItem:(NSDictionary *)item
+{
+	if (playingItem && playingItem != item)
+		[self unregisterPlayingItem];
+	NSLog(@"register!");
+	playingItem = [item retain];
+	
+	[playingItem addObserver:self
+				  forKeyPath:MPELoopMovie
+					 options:0
+					 context:nil];
+}
+
+- (void)unregisterPlayingItem
+{
+	NSLog(@"unregister!");
+	[playingItem removeObserver:self forKeyPath:MPELoopMovie];
+	
+	[playingItem release];
+	playingItem = nil;
+}
 
 /************************************************************************************
  PLAYBACK CONTROL
@@ -183,20 +207,28 @@ static NSDictionary *videoEqualizerCommands;
 	NSMutableArray *audioFilters = [NSMutableArray array];
 	NSMutableArray *audioCodecsArr = [NSMutableArray array];
 	
+	// register/unregister observers for local values
+	if (item) {
+		if (playingItem && playingItem != item)
+			[self unregisterPlayingItem];
+		if (!playingItem)
+			[self registerPlayingItem:item];
+	}
+	
 	// copy preferences to keep track of changes
 	[prefs release];
 	prefs = [[PREFS dictionaryRepresentation] copy];
 	
 	// copy local preferences
 	if (item) {
-		[playingItem release];
-		playingItem = [item copy];
+		[localPrefs release];
+		localPrefs = [item copy];
 	}
 	
 	// combine global and local preferences
 	NSMutableDictionary *cPrefs = [NSMutableDictionary new];
 	[cPrefs addEntriesFromDictionary:prefs];
-	[cPrefs addEntriesFromDictionary:playingItem];
+	[cPrefs addEntriesFromDictionary:localPrefs];
 	
 	// Detect number of cores/cpus
 	size_t len = sizeof(numberOfThreads);
@@ -599,7 +631,7 @@ static NSDictionary *videoEqualizerCommands;
 		[params addObject:@"-noar"];
 	
 	// MovieInfo
-	MovieInfo *mf = [playingItem objectForKey:@"MovieInfo"];
+	MovieInfo *mf = [localPrefs objectForKey:@"MovieInfo"];
 	if (mf == nil && (info == nil || ![myMovieFile isEqualToString:[info filename]])) {
 		[info release];
 		info = [[MovieInfo alloc] init];		// prepare it for getting new values
@@ -745,6 +777,9 @@ static NSDictionary *videoEqualizerCommands;
 	
 	} else if ([keyPath isEqualToString:MPEVideoEqualizerValues]) {
 		[self applyVideoEqualizer];
+	
+	} else if ([keyPath isEqualToString:MPELoopMovie]) {
+		[self sendCommand:[NSString stringWithFormat:@"set_property loop %d",((int)[playingItem boolForKey:MPELoopMovie] - 1)]];
 	}
 }
 /************************************************************************************
@@ -864,12 +899,10 @@ static NSDictionary *videoEqualizerCommands;
 /************************************************************************************/
 
 /************************************************************************************/
-- (void) applySettingsWithRestart:(BOOL)restartIt localChanges:(NSDictionary *)item
+- (void) applySettingsWithRestart
 {
-	if (item) {
-		[playingItem release];
-		playingItem = [item copy];
-	}
+	[localPrefs release];
+	localPrefs = [playingItem copy];
 	
 	if ([self isRunning]) {
 		restartingPlayer = YES;		// set it not to send termination notification
@@ -945,7 +978,7 @@ static NSDictionary *videoEqualizerCommands;
 	BOOL different = NO;
 	for (NSString *option in requiresRestart) {
 		// ignore options overriden locally
-		if ([playingItem objectForKey:option])
+		if ([localPrefs objectForKey:option])
 			continue;
 		// check if option has changed
 		id op1 = [prefs objectForKey:option];
@@ -961,15 +994,15 @@ static NSDictionary *videoEqualizerCommands;
 	return different;
 }
 /************************************************************************************/
-- (BOOL) localChangesNeedRestart:(NSDictionary *)item
+- (BOOL) localChangesNeedRestart
 {
 	NSArray *requiresRestart = [[AppController sharedController] preferencesRequiringRestart];
 	
 	BOOL different = NO;
 	for (NSString *option in requiresRestart) {
 		// check if option has changed
-		id op1 = [playingItem objectForKey:option];
-		id op2 = [item objectForKey:option];
+		id op1 = [localPrefs objectForKey:option];
+		id op2 = [playingItem objectForKey:option];
 		if (op1 == nil && op2 == nil)
 			continue;
 		if (!op1 || ![op1 isEqual:op2]) {
