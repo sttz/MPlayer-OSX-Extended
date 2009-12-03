@@ -926,8 +926,6 @@ static NSDictionary *videoEqualizerCommands;
 {
 	BOOL newIsPlaying = (newState == kPlaying || newState == kSeeking || newState == kPaused);
 	
-	NSLog(@"setState:%d (%d == %d)",newState,[self isPlaying],newIsPlaying);
-	
 	if ([self isPlaying] != newIsPlaying)
 		[self setPlaying:newIsPlaying];
 	

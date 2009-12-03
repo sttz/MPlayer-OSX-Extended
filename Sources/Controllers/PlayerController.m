@@ -177,11 +177,6 @@
 			selector:@selector(screensDidChange)
 			name:NSApplicationDidChangeScreenParametersNotification
 			object:NSApp];
-	
-	[self addObserver:self 
-		   forKeyPath:@"player.testplaying" 
-			  options:0 
-			  context:nil];
 }
 
 - (void) dealloc
@@ -1648,9 +1643,6 @@
 {
 	if ([keyPath isEqualToString:MPEWindowOnTopMode])
 		[self updateWindowOnTop];
-	
-	if ([keyPath isEqualToString:@"player.testplaying"])
-		NSLog(@"************ playing: %d",[self.player isPlaying]);
 }
 /************************************************************************************/
 - (void) statusUpdate:(NSNotification *)notification
@@ -1680,9 +1672,6 @@
 			[fcPlayButton setImage:fcPauseImageOff];
 			[fcPlayButton setAlternateImage:fcPauseImageOn];
 			[playMenuItem setTitle:@"Pause"];
-			[stopMenuItem setEnabled:YES];
-			[skipBeginningMenuItem setEnabled:YES];
-			[skipEndMenuItem setEnabled:YES];
 			[fullscreenButton setEnabled:YES];
 			[self updateWindowOnTop];
 			break;
@@ -1696,9 +1685,6 @@
 			[fcPlayButton setImage:fcPlayImageOff];
 			[fcPlayButton setAlternateImage:fcPlayImageOn];
 			[playMenuItem setTitle:@"Play"];
-			[stopMenuItem setEnabled:NO];
-			[skipBeginningMenuItem setEnabled:NO];
-			[skipEndMenuItem setEnabled:NO];
 			[fullscreenButton setEnabled:NO];
 			[self updateWindowOnTop];
 			break;
