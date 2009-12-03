@@ -69,7 +69,7 @@ if [ ! -f "$dir/mplayer.i386" -o ! -f "$dir/mplayer.ppc" -o ! -f "$dir/mplayer.x
 	exit 1
 fi
 
-if [ ! -d "$mplayerosx_path/External_Binaries" ]; then
+if [ ! -d "$mplayerosx_path/Binaries" ]; then
 	echo "Invalid mplayerosx path."
 	exit 1
 fi
@@ -92,26 +92,26 @@ if [ $shared -eq 0 ]; then
 	
 	echo "Clean install destination..."
 	
-	rm -rf "$mplayerosx_path/External_Binaries/mplayer.app/Contents/MacOS/"*
-	rm -rf "$mplayerosx_path/External_Binaries/mplayer-mt.app/Contents/MacOS/"*
+	rm -rf "$mplayerosx_path/Binaries/mpextended.mpBinaries/Contents/MacOS/"*
+	rm -rf "$mplayerosx_path/Binaries/mpextended-mt.mpBinaries/Contents/MacOS/"*
 	
 	echo "Searching $dir for binaries..."
 	
-	# Copy universal binary (mplayer.ub) to mplayer.app
+	# Copy universal binary (mplayer.ub) to mpextended.mpBinaries
 	if [ -f "$dir/mplayer.ub" ]; then
-		cp "$dir/mplayer.ub" "$mplayerosx_path/External_Binaries/mplayer.app/Contents/MacOS/mplayer"
-		echo "mplayer.ub copied to mplayer.app/Contents/MacOS/mplayer"
+		cp "$dir/mplayer.ub" "$mplayerosx_path/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer"
+		echo "mplayer.ub copied to mpextended.mpBinaries/Contents/MacOS/mplayer"
 	fi
 	
-	# Copy ffmpeg-mt version (mplayer-mt.ub) to mplayer-mt.app
+	# Copy ffmpeg-mt version (mplayer-mt.ub) to mpextended-mt.mpBinaries
 	if [ -f "$dir/mplayer-mt.i386" -a -f "$dir/mplayer-mt.ppc" ]; then
 		lipo -create "$dir/mplayer.x86_64" "$dir/mplayer-mt.i386" "$dir/mplayer-mt.ppc" -output "$dir/mplayer-mt.ub"
-		cp "$dir/mplayer-mt.ub" "$mplayerosx_path/External_Binaries/mplayer-mt.app/Contents/MacOS/mplayer"
-		echo "mplayer-mt.ub copied to mplayer-mt.app/Contents/MacOS/mplayer"
+		cp "$dir/mplayer-mt.ub" "$mplayerosx_path/Binaries/mpextended-mt.mpBinaries/Contents/MacOS/mplayer"
+		echo "mplayer-mt.ub copied to mpextended-mt.mpBinaries/Contents/MacOS/mplayer"
 	fi
 	
 	# Touch the folder to make XCode copy the new binaries
-	touch "$mplayerosx_path/External_Binaries"
+	touch "$mplayerosx_path/Binaries"
 	
 	echo "Finished."
 	exit 0
@@ -122,8 +122,8 @@ fi
 
 echo "Clean install destination..."
 
-rm -rf "$mplayerosx_path/External_Binaries/mplayer.app/Contents/MacOS/"*
-rm -rf "$mplayerosx_path/External_Binaries/mplayer-mt.app/Contents/MacOS/"*
+rm -rf "$mplayerosx_path/Binaries/mpextended.mpBinaries/Contents/MacOS/"*
+rm -rf "$mplayerosx_path/Binaries/mpextended-mt.mpBinaries/Contents/MacOS/"*
 
 # **************************************************** #
 # *** GATHER LIBRARIES
@@ -246,26 +246,26 @@ fi
 echo "installing..."
 
 # copy mplayer binary
-cp "$dir/mplayer.ub" "$mplayerosx_path/External_Binaries/mplayer.app/Contents/MacOS/mplayer"
+cp "$dir/mplayer.ub" "$mplayerosx_path/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer"
 # copy libraries
-cp -R "$dir/lib" "$mplayerosx_path/External_Binaries/mplayer.app/Contents/MacOS/"
+cp -R "$dir/lib" "$mplayerosx_path/Binaries/mpextended.mpBinaries/Contents/MacOS/"
 
-echo "... copied mplayer.ub and lib to mplayer.app"
+echo "... copied mplayer.ub and lib to mpextended.mpBinaries"
 
 if [ -d "$dir/lib-mt" ]; then
 	
 	# clean direcotry: remove mplayer and librariy links
-	mkdir "$mplayerosx_path/External_Binaries/mplayer-mt.app/Contents/MacOS/lib"
+	mkdir "$mplayerosx_path/Binaries/mpextended-mt.mpBinaries/Contents/MacOS/lib"
 	
 	# change to direcotry to create relative links
 	olddir=`pwd`
-	cd "$mplayerosx_path/External_Binaries/mplayer-mt.app/Contents/MacOS"
+	cd "$mplayerosx_path/Binaries/mpextended-mt.mpBinaries/Contents/MacOS"
 	
 	# link mplayer binary
-	ln -s "../../../mplayer.app/Contents/MacOS/mplayer" "mplayer"
+	ln -s "../../../mpextended.mpBinaries/Contents/MacOS/mplayer" "mplayer"
 	# link all libraries in lib
 	cd lib
-	ln -s "../../../../mplayer.app/Contents/MacOS/lib/"* "."
+	ln -s "../../../../mpextended.mpBinaries/Contents/MacOS/lib/"* "."
 	
 	# change back to original directory
 	cd ..
@@ -276,15 +276,41 @@ if [ -d "$dir/lib-mt" ]; then
 		
 		libname=`basename $mtlib`
 		# remove links first so they are not followed
-		rm "$mplayerosx_path/External_Binaries/mplayer-mt.app/Contents/MacOS/lib/$libname"
-		cp "$dir/lib-mt/$libname" "$mplayerosx_path/External_Binaries/mplayer-mt.app/Contents/MacOS/lib"
+		rm "$mplayerosx_path/Binaries/mpextended-mt.mpBinaries/Contents/MacOS/lib/$libname"
+		cp "$dir/lib-mt/$libname" "$mplayerosx_path/Binaries/mpextended-mt.mpBinaries/Contents/MacOS/lib"
 	
 	done
 	
-	echo "... copied lib-mt to mplayer-mt.app and created links back to mplayer.app"
+	echo "... copied lib-mt to mpextended-mt.mpBinaries and created links back to mpextended.mpBinaries"
+fi
+
+# Try to find SVN revision
+revision=""
+if "$dir/mplayer.ub" |grep "MPlayer SVN-r" > /dev/null; then
+	line=`$dir/mplayer.ub |grep "MPlayer SVN-r"`
+	if [[ "$line" =~ SVN\-r([0-9]+) ]]; then
+		revision="${BASH_REMATCH[1]}"
+	fi
+fi
+
+if [ "$revision" = "" ]; then
+	echo "Couldn't get SVN revision from binary!"
+else
+	echo "Setting SVN revision $revision ..."
+	
+	defaults write "$mplayerosx_path/Binaries/mpextended.mpBinaries/Contents/Info" "MPEBinarySVNRevisionEquivalent" "$revision"
+	defaults write "$mplayerosx_path/Binaries/mpextended.mpBinaries/Contents/Info" "CFBundleVersion" "$revision"
+	defaults write "$mplayerosx_path/Binaries/mpextended.mpBinaries/Contents/Info" "CFBundleShortVersionString" "r$revision"
+	echo "... Updated mpextended.mpBinaries"
+	
+	if [ -d "$dir/lib-mt" ]; then
+		defaults write "$mplayerosx_path/Binaries/mpextended-mt.mpBinaries/Contents/Info" "MPEBinarySVNRevisionEquivalent" "$revision"
+		defaults write "$mplayerosx_path/Binaries/mpextended-mt.mpBinaries/Contents/Info" "CFBundleVersion" "$revision"
+		echo "... Updated mpextended-mt.mpBinaries"
+	fi
 fi
 
 # Touch the folder to make XCode copy the new binaries
-touch "$mplayerosx_path/External_Binaries"
+touch "$mplayerosx_path/Binaries"
 
 echo "Done."
