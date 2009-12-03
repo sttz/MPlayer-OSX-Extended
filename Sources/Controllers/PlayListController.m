@@ -317,8 +317,8 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 		[playListCount setStringValue:[NSString stringWithFormat:@"%d items, %01d:%02d:%02d",[self itemCount],totalTime/3600,(totalTime%3600)/60,totalTime%60]];
 	
 	// update menu items
-	[playNextMenuItem setEnabled:[playerController isPlaying]];
-	[playPreviousMenuItem setEnabled:[playerController isPlaying]];
+	//[playNextMenuItem setEnabled:[playerController isPlaying]];
+	//[playPreviousMenuItem setEnabled:[playerController isPlaying]];
 }
 /************************************************************************************/
 - (void) applyPrefs;

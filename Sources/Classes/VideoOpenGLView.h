@@ -96,20 +96,20 @@
 	//struct shmid_ds shm_desc;
 	
 	//Movie menu outlets
-	IBOutlet id HalfSizeMenuItem;
-	IBOutlet id NormalSizeMenuItem;
-	IBOutlet id DoubleSizeMenuItem;
+	IBOutlet NSMenuItem* HalfSizeMenuItem;
+	IBOutlet NSMenuItem* NormalSizeMenuItem;
+	IBOutlet NSMenuItem* DoubleSizeMenuItem;
 	//IBOutlet id FullScreenMenuItem;
-	IBOutlet id KeepAspectMenuItem;
-	IBOutlet id PanScanMenuItem;
-	IBOutlet id OriginalAspectMenuItem;
-	IBOutlet id Aspect4to3MenuItem;
-	IBOutlet id Aspect3to2MenuItem;
-	IBOutlet id Aspect5to3MenuItem;
-	IBOutlet id Aspect16to9MenuItem;
-	IBOutlet id Aspect185to1MenuItem;
-	IBOutlet id Aspect239to1MenuItem;
-	IBOutlet id CustomAspectMenuItem;
+	IBOutlet NSMenuItem* KeepAspectMenuItem;
+	IBOutlet NSMenuItem* PanScanMenuItem;
+	IBOutlet NSMenuItem* OriginalAspectMenuItem;
+	IBOutlet NSMenuItem* Aspect4to3MenuItem;
+	IBOutlet NSMenuItem* Aspect3to2MenuItem;
+	IBOutlet NSMenuItem* Aspect5to3MenuItem;
+	IBOutlet NSMenuItem* Aspect16to9MenuItem;
+	IBOutlet NSMenuItem* Aspect185to1MenuItem;
+	IBOutlet NSMenuItem* Aspect239to1MenuItem;
+	IBOutlet NSMenuItem* CustomAspectMenuItem;
 	
 	// other controllers outlets
 	IBOutlet id	playListController;

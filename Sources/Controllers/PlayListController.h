@@ -24,7 +24,7 @@
 
 	// UI outlets
 	IBOutlet id playListWindow;
-	IBOutlet id playListButton;
+	IBOutlet NSButton* playListButton;
 	IBOutlet id playListTable;
 	IBOutlet id settingsButton;
 	IBOutlet id playModeButton;

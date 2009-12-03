@@ -76,6 +76,12 @@
 #define MI_CMD_SHOW_COND			2
 #define MI_CMD_SHOW_NEVER			0
 
+// pausing command modes
+#define MI_CMD_PAUSING_NONE			0
+#define MI_CMD_PAUSING_KEEP			1
+#define MI_CMD_PAUSING_TOGGLE		2
+#define MI_CMD_PAUSING_FORCE		3
+
 @interface MplayerInterface : NSObject
 {	
 	// Properties
@@ -111,6 +117,7 @@
 	// state variables
 	int	myState;				// player state
 	unsigned int myVolume;		// volume 0-100
+	BOOL playing;
 	
 	//beta
 	unsigned int myadvolume;
@@ -150,6 +157,9 @@
 	
 	MovieInfo *info;
 }
+
+@property (nonatomic,getter=isPlaying) BOOL playing;
+
 // interface
 // init and uninit
 - (id) init;										// init
@@ -196,8 +206,8 @@
 - (BOOL) changesNeedRestart;						// retuns YES if changes needs restart
 - (BOOL) localChangesNeedRestart:(NSDictionary *)item;
 
+- (void) setState:(int)newState;
 - (BOOL) isRunning;
-- (BOOL) isPlaying;
 
 // statistics
 - (void) setUpdateStatistics:(BOOL)aBool;			// sets whether to update stats
@@ -208,9 +218,9 @@
 - (int) postProcLevel;
 
 // advenced
-- (void)sendCommand:(NSString *)aCommand withType:(uint)type;
+- (void)sendCommand:(NSString *)aCommand withOSD:(uint)osdMode andPausing:(uint)pausing;
 - (void)sendCommand:(NSString *)aCommand;
-- (void)sendCommands:(NSArray *)aCommands withType:(uint)type;
+- (void)sendCommands:(NSArray *)aCommands withOSD:(uint)osdMode andPausing:(uint)pausing;
 - (void)sendCommands:(NSArray *)aCommands;
 - (void)runMplayerWithParams:(NSMutableArray *)aParams;
 - (void)sendToMplayersInput:(NSString *)aCommand;

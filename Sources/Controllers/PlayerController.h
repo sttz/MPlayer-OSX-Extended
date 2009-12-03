@@ -41,7 +41,7 @@
 	IBOutlet VideoOpenGLView *videoOpenGLView;
 	IBOutlet id audioWindowMenu;
 	IBOutlet id subtitleWindowMenu;
-	IBOutlet id toggleMuteMenu;
+	IBOutlet NSMenuItem* toggleMuteMenu;
 	IBOutlet id audioCycleButton;
 	IBOutlet id subtitleCycleButton;
 	IBOutlet id fullscreenButton;
@@ -97,7 +97,6 @@
 	BOOL saveTime;
 	int playerStatus;
 	unsigned movieSeconds;		// stores actual movie seconds for further use
-	BOOL  fullscreenStatus;
 	BOOL isOntop;
 	BOOL continuousPlayback;
 	BOOL playingFromPlaylist;
@@ -117,6 +116,7 @@
 	double lastVolumePoll;
 	
 	double lastChapterCheck;
+	double seekUpdateBlockUntil;
 	
 	// images
 	NSImage *playImageOff;
@@ -136,13 +136,15 @@
 	IOPMAssertionID sleepAssertionId;
 }
 
+@property (nonatomic,readonly) BOOL isFullscreen;
+@property (nonatomic,readonly,getter=player) MplayerInterface* myPlayer;
+
 // interface
 - (IBAction)displayWindow:(id)sender;
 - (void) preflightItem:(NSMutableDictionary *)anItem;
 - (void) playItem:(NSMutableDictionary *)anItem;
 - (NSMutableDictionary *) playingItem;
 - (BOOL) isRunning;
-- (BOOL) isPlaying;
 - (BOOL) isInternalVideoOutput;
 - (void) setOntop:(BOOL)aBool;
 - (BOOL) isOntop;
@@ -164,6 +166,7 @@
 
 // player control actions
 - (IBAction)playPause:(id)sender;
+- (IBAction)stepFrame:(id)sender;
 - (void) seek:(float)seconds mode:(int)aMode;
 - (BOOL) isSeeking;
 - (float)getSeekSeconds;
@@ -172,6 +175,7 @@
 - (IBAction)seekPrevious:(id)sender;
 - (IBAction)seekNext:(id)sender;
 - (IBAction)stop:(id)sender;
+- (IBAction)seekFromMenu:(NSMenuItem *)item;
 - (void)cleanUpAfterStop;
 - (IBAction)switchFullscreen:(id)sender;
 - (IBAction)displayStats:(id)sender;

@@ -27,8 +27,10 @@
 
 #define		MP_VOLUME_POLL_INTERVAL		10.0f
 #define		MP_CHAPTER_CHECK_INTERVAL	0.5f
+#define		MP_SEEK_UPDATE_BLOCK		0.5f
 
 @implementation PlayerController
+@synthesize myPlayer;
 
 /************************************************************************************/
 -(void)awakeFromNib
@@ -36,7 +38,6 @@
     NSString *playerPath;
 	NSString *preflightPlayerPath;
 	saveTime = YES;
-	fullscreenStatus = NO;	// by default we play in window
 	isOntop = NO;
 	lastVolumePoll = -MP_VOLUME_POLL_INTERVAL;
 	lastChapterCheck = -MP_CHAPTER_CHECK_INTERVAL;
@@ -176,6 +177,11 @@
 			selector:@selector(screensDidChange)
 			name:NSApplicationDidChangeScreenParametersNotification
 			object:NSApp];
+	
+	[self addObserver:self 
+		   forKeyPath:@"player.testplaying" 
+			  options:0 
+			  context:nil];
 }
 
 - (void) dealloc
@@ -468,12 +474,6 @@
 /************************************************************************************/
 - (BOOL) isRunning
 {	return [myPlayer isRunning];		}
-
-/************************************************************************************/
-- (BOOL) isPlaying
-{	
-	return [myPlayer isPlaying];
-}
 /************************************************************************************/
 - (BOOL) isInternalVideoOutput
 {
@@ -706,6 +706,12 @@
 }
 
 /************************************************************************************/
+- (IBAction)stepFrame:(id)sender
+{
+	[myPlayer sendCommand:@"frame_step"];
+}
+
+/************************************************************************************/
 - (void) seek:(float)seconds mode:(int)aMode
 {
 	isSeeking = YES;
@@ -713,6 +719,12 @@
 	[myPlayer seek:seconds mode:aMode];
 	// Force recheck of chapters
 	lastChapterCheck = -MP_CHAPTER_CHECK_INTERVAL;
+	// Unblock for the next update
+	seekUpdateBlockUntil = 0;
+	// Optimist time update
+	[self statsUpdate:nil];
+	// Block time updates to not update with values before the seek
+	seekUpdateBlockUntil = [NSDate timeIntervalSinceReferenceDate] + MP_SEEK_UPDATE_BLOCK;
 }
 
 - (BOOL) isSeeking
@@ -761,6 +773,11 @@
 			[playListController selectItemAtIndex:([playListController itemCount]-1)];
 	}
 	[playListController updateView];
+}
+
+- (IBAction)seekFromMenu:(NSMenuItem *)item
+{
+	[self seek:[item tag] mode:MIRelativeSeekingMode];
 }
 
 /************************************************************************************/
@@ -819,7 +836,8 @@
 	if ([myPlayer isRunning]) {
 		
 		currentChapter = chapter;
-		[myPlayer sendCommand:[NSString stringWithFormat:@"set_property chapter %d 1", currentChapter] withType:MI_CMD_SHOW_COND];
+		[myPlayer sendCommand:[NSString stringWithFormat:@"set_property chapter %d 1", currentChapter] 
+					  withOSD:MI_CMD_SHOW_COND andPausing:MI_CMD_PAUSING_KEEP];
 		lastChapterCheck = -MP_CHAPTER_CHECK_INTERVAL; // force update of chapter menu
 	}
 }
@@ -963,7 +981,7 @@
 	else if ([PREFS integerForKey:MPEWindowOnTopMode] == MPEWindowOnTopModeAlways)
 		[self setOntop:YES];
 	else // [PREFS integerForKey:MPEWindowOnTopMode] == MPEWindowOnTopModeWhilePlaying
-		[self setOntop:[self isPlaying]];
+		[self setOntop:[myPlayer isPlaying]];
 }
 - (BOOL) isOntop
 {
@@ -1404,6 +1422,10 @@
 	currentChapter = 0;
 }
 /************************************************************************************/
+- (BOOL) isFullscreen {
+	return [videoOpenGLView isFullscreen];
+}
+/************************************************************************************/
 - (void)clearFullscreenMenu {
 	
 	[fullscreenMenu setEnabled:NO];
@@ -1626,6 +1648,9 @@
 {
 	if ([keyPath isEqualToString:MPEWindowOnTopMode])
 		[self updateWindowOnTop];
+	
+	if ([keyPath isEqualToString:@"player.testplaying"])
+		NSLog(@"************ playing: %d",[self.player isPlaying]);
 }
 /************************************************************************************/
 - (void) statusUpdate:(NSNotification *)notification
@@ -1887,13 +1912,15 @@
 	
 	if ([myPlayer status] == kPlaying || [myPlayer status] == kSeeking) {
 		if (myPlayingItem) {
-			// update windows
-			if ([playerWindow isVisible])
-				[self updatePlayerWindow];
-			if ([[scrubbingBar window] isVisible])
-				[self updatePlaylistWindow];
-			if ([fcWindow isVisible])
-				[self updateFullscreenControls];
+			// update time
+			if (seekUpdateBlockUntil < [NSDate timeIntervalSinceReferenceDate]) {
+				if ([playerWindow isVisible])
+					[self updatePlayerWindow];
+				if ([[scrubbingBar window] isVisible])
+					[self updatePlaylistWindow];
+				if ([fcWindow isVisible])
+					[self updateFullscreenControls];
+			}
 			
 			// stats window
 			if ([statsPanel isVisible]) {
