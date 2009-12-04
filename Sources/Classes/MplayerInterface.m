@@ -106,7 +106,6 @@ static NSDictionary *videoEqualizerCommands;
 	pausedOnRestart = NO;
 	isRunning = NO;
 	takeEffectImediately = NO;
-	useIdentifyForPlayback = NO;
 	myOutputReadMode = 0;
 	myUpdateStatistics = NO;
 	isPreflight = NO;
@@ -622,9 +621,7 @@ static NSDictionary *videoEqualizerCommands;
 	}
 	
 	[params addObject:@"-slave"];
-	
-	if (useIdentifyForPlayback)
-		[params addObject:@"-identify"];
+	[params addObject:@"-identify"];
 	
 	// Disable Apple Remote
 	if (disableAppleRemote)
@@ -922,11 +919,6 @@ static NSDictionary *videoEqualizerCommands;
 /************************************************************************************
  INFO
  ************************************************************************************/
-- (void) loadInfoBeforePlayback:(BOOL)aBool
-{
-	useIdentifyForPlayback = aBool;
-}
-/************************************************************************************/
 - (void) loadInfo
 {
 	// clear the class
@@ -1140,6 +1132,7 @@ static NSDictionary *videoEqualizerCommands;
 			pausedOnRestart = YES;
 		else
 			pausedOnRestart = NO;
+		NSLog(@"pausedOnRestart: %d",pausedOnRestart);
 		[self stop];
 		[myMplayerTask release];
 		myMplayerTask = nil;
@@ -1575,10 +1568,8 @@ static NSDictionary *videoEqualizerCommands;
 */		
 		//  =====  PAUSE  ===== test for paused state
 		if (strstr(stringPtr, MI_PAUSED_STRING) != NULL) {
-			if (myState != kPaused) {
-				[self setState:kPaused];
-				[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
-			}
+			[self setState:kPaused];
+			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
 			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 			
 			continue; 							// continue on next line
@@ -1975,8 +1966,10 @@ static NSDictionary *videoEqualizerCommands;
 	
 			// perform commands buffer
 			[self sendCommands:myCommandsBuffer withOSD:MI_CMD_SHOW_COND andPausing:MI_CMD_PAUSING_NONE];
-			if (pausedOnRestart)
+			if (pausedOnRestart) {
+				NSLog(@"pause after restart");
 				[self sendCommand:@"pause"];
+			}
 			[myCommandsBuffer removeAllObjects];
 	
 			// post status playback start

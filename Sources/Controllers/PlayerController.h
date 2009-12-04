@@ -90,6 +90,7 @@
 	int subtitleDemuxStreamId;
 	int subtitleFileStreamId;
 	BOOL isSeeking;
+	int lastPlayerStatus;
 	
 	// preferences
 	int fullscreenDeviceId;

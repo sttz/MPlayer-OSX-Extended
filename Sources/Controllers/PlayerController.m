@@ -380,7 +380,6 @@
 - (void)playItem:(NSMutableDictionary *)anItem
 {
 	NSString *aPath;
-	BOOL loadInfo;
 	
 	// re-open player window for internal video
 	if ([self isInternalVideoOutput] && ![videoOpenGLView isFullscreen] && ![playerWindow isVisible])
@@ -449,20 +448,9 @@
 		[myPlayer seek:0 mode:MIAbsoluteSeekingMode];
 	if (myPlayingItem)
 		[myPlayingItem removeObjectForKey:@"LastSeconds"];
-
-	// load info before playback only if it was not previously loaded
-	if ([myPlayingItem objectForKey:@"MovieInfo"])
-		loadInfo = NO;
-	else
-		loadInfo = YES;
-	[myPlayer loadInfoBeforePlayback:loadInfo];
 	
 	// start playback
 	[myPlayer playItem:myPlayingItem];
-	
-	// its enough to load info only once so disable it
-	if (loadInfo)
-		[myPlayer loadInfoBeforePlayback:NO];
 	
 	[playListController updateView];
 	
@@ -1694,12 +1682,15 @@
 */
 	
 	// status did change
-	if ([notification userInfo] && [[notification userInfo] objectForKey:@"PlayerStatus"]) {
+	if ([notification userInfo] && [[notification userInfo] objectForKey:@"PlayerStatus"]
+		&& [[notification userInfo] integerForKey:@"PlayerStatus"] != lastPlayerStatus) {
+		lastPlayerStatus = [[notification userInfo] integerForKey:@"PlayerStatus"];
+		
 		NSString *status = @"";
 		// status is changing
 		// switch Play menu item title and playbutton image
 		
-		switch ([[[notification userInfo] objectForKey:@"PlayerStatus"] intValue]) {
+		switch (lastPlayerStatus) {
 		case kOpening :
 		case kBuffering :
 		case kIndexing :
@@ -1734,7 +1725,7 @@
 			break;
 		}
 		
-		switch ([[[notification userInfo] objectForKey:@"PlayerStatus"] intValue]) {
+		switch (lastPlayerStatus) {
 		case kOpening :
 		{
 			

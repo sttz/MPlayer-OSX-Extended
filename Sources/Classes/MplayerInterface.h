@@ -143,7 +143,6 @@
 	BOOL restartingPlayer;			// set when player is teminated to be restarted
 	BOOL pausedOnRestart;			// set when paused during attemp to restart player
 	BOOL isRunning;					// set off after recieving termination notification
-	BOOL useIdentifyForPlayback;	// sets whether -identify is sent on starting playback
 	BOOL windowedVO;
 	int myOutputReadMode;				// defines playback output form 
 	NSMutableArray *myCommandsBuffer;	// store cmds that cannot be send immediatelly
@@ -203,7 +202,6 @@
 - (void) takeScreenshot;
 
 // info
-- (void) loadInfoBeforePlayback:(BOOL)aBool;		// enables using of -identify param for playback
 - (void) loadInfo;						// gets info returned by -identify (don't work during playback)
 - (MovieInfo *) info;							// returns the content of info dictionary 
 - (int) status;
