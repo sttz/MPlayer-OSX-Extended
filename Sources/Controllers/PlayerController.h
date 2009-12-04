@@ -19,24 +19,24 @@
 
 #define		volumeStep				10.0
 
+@class PlayListController, SettingsController, MenuController;
+
 @interface PlayerController : NSObject
 {
+	// Shorthand to menu controller
+	MenuController *menuController;
+	
 	// other controllers outlets
     IBOutlet PlayListController	*playListController;
-	IBOutlet id settingsController;
+	IBOutlet SettingsController *settingsController;
 	
 	//Player Window
 	IBOutlet NSWindow *playerWindow;
 	IBOutlet NSButton *playButton;
-	IBOutlet NSButton *playButtonToolbar;
     IBOutlet id volumeSlider;
-	IBOutlet id volumeSliderToolbar;
 	IBOutlet id volumeButton;
-	IBOutlet id volumeButtonToolbar;
 	IBOutlet id scrubbingBar;
-	IBOutlet id scrubbingBarToolbar;
 	IBOutlet id timeTextField;
-	IBOutlet id timeTextFieldToolbar;
 	IBOutlet id playListButton;
 	IBOutlet VideoOpenGLView *videoOpenGLView;
 	IBOutlet id audioWindowMenu;
@@ -45,6 +45,8 @@
 	IBOutlet id audioCycleButton;
 	IBOutlet id subtitleCycleButton;
 	IBOutlet id fullscreenButton;
+	IBOutlet id chapterWindowMenu;
+	IBOutlet id fullscreenWindowMenu;
 	
 	// Fullscreen controls
 	IBOutlet id fcWindow;
@@ -64,25 +66,6 @@
     IBOutlet id statsPostProcBox;
     IBOutlet id statsDroppedBox;
     IBOutlet id statsStatusBox;
-	
-	// stream menus
-	IBOutlet id videoStreamMenu;
-	IBOutlet id audioStreamMenu;
-	IBOutlet id subtitleStreamMenu;
-	
-	// chapter menu
-	IBOutlet id chapterMenu;
-	IBOutlet id chapterWindowMenu;
-	
-	IBOutlet id fullscreenMenu;
-	IBOutlet id fullscreenWindowMenu;
-	
-	// playback menu
-	IBOutlet id playMenuItem;
-	IBOutlet id stopMenuItem;
-	IBOutlet id skipEndMenuItem;
-	IBOutlet id skipBeginningMenuItem;
-	IBOutlet NSMenuItem *loopMenuItem;
 	
 	// properties
 	MplayerInterface *myPlayer;
@@ -137,8 +120,12 @@
 	IOPMAssertionID sleepAssertionId;
 }
 
+@property (nonatomic,readonly) PlayListController *playListController;
+@property (nonatomic,readonly) SettingsController *settingsController;
+
 @property (nonatomic,readonly) BOOL isFullscreen;
 @property (nonatomic,readonly,getter=player) MplayerInterface* myPlayer;
+@property (nonatomic,readonly) VideoOpenGLView* videoOpenGLView;
 
 // interface
 - (IBAction)displayWindow:(id)sender;

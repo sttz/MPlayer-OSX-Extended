@@ -10,6 +10,7 @@
 #import "PlayerController.h"
 
 // other controllers
+#import "MenuController.h"
 #import "AppController.h"
 #import "PlayListController.h"
 #import "PreferencesController2.h"
@@ -31,19 +32,23 @@
 #define		MP_SEEK_UPDATE_BLOCK		0.5f
 
 @implementation PlayerController
-@synthesize myPlayer;
+@synthesize myPlayer, playListController, settingsController, videoOpenGLView;
 
 /************************************************************************************/
 -(void)awakeFromNib
 {	
-    NSString *playerPath;
+    // Make sure we don't initialize twice
+	if (playListController)
+		return;
+	
+	NSString *playerPath;
 	NSString *preflightPlayerPath;
 	saveTime = YES;
 	isOntop = NO;
 	lastVolumePoll = -MP_VOLUME_POLL_INTERVAL;
 	lastChapterCheck = -MP_CHAPTER_CHECK_INTERVAL;
 	
-	//resize window
+	// resize window
 	[playerWindow setContentMinSize:NSMakeSize(450, 78)]; // Temp workaround for IB always forgetting the min-size
 	[playerWindow setContentSize:[playerWindow contentMinSize] ];
 	
@@ -89,10 +94,10 @@
 			selector: @selector(progresBarClicked:)
 			name: @"SBBarClickedNotification"
 			object:scrubbingBar];
-	[[NSNotificationCenter defaultCenter] addObserver: self
+	/*[[NSNotificationCenter defaultCenter] addObserver: self
 			selector: @selector(progresBarClicked:)
 			name: @"SBBarClickedNotification"
-			object:scrubbingBarToolbar];
+			object:scrubbingBarToolbar];*/
 	[[NSNotificationCenter defaultCenter] addObserver: self
 			selector: @selector(progresBarClicked:)
 			name: @"SBBarClickedNotification"
@@ -142,8 +147,8 @@
 	// set up prograss bar
 	[scrubbingBar setScrubStyle:NSScrubbingBarEmptyStyle];
 	[scrubbingBar setIndeterminate:NO];
-	[scrubbingBarToolbar setScrubStyle:NSScrubbingBarEmptyStyle];
-	[scrubbingBarToolbar setIndeterminate:NO];
+	//[scrubbingBarToolbar setScrubStyle:NSScrubbingBarEmptyStyle];
+	//[scrubbingBarToolbar setIndeterminate:NO];
 	[fcScrubbingBar setScrubStyle:NSScrubbingBarEmptyStyle];
 	[fcScrubbingBar setIndeterminate:NO];
 	
@@ -169,15 +174,44 @@
 	subtitleDemuxStreamId = -1;
 	subtitleFileStreamId = -1;
 	
-	// fill fullscreen device menu
-	[self fillFullscreenMenu];
-	[self selectFullscreenDevice];
-	
 	// request notification for changes to monitor configuration
 	[[NSNotificationCenter defaultCenter] addObserver:self
 			selector:@selector(screensDidChange)
 			name:NSApplicationDidChangeScreenParametersNotification
 			object:NSApp];
+	
+	// Load playlist controller
+	[NSBundle loadNibNamed:@"Playlist" owner:self];
+}
+
+- (void) appWillFinishLaunching
+{
+	// Pass buffer name to interface
+	[myPlayer setBufferName:[videoOpenGLView bufferName]];
+}
+
+- (void) appFinishedLaunching
+{
+	// Save reference to menu controller
+	menuController = [[AppController sharedController] menuController];
+	
+	NSUserDefaults *prefs = [[AppController sharedController] preferences];
+	
+	// play the last played movie if it is set to do so
+	if ([prefs objectForKey:@"PlaylistRemember"] && [prefs objectForKey:@"LastTrack"]
+		&& ![myPlayer isRunning]) {
+		if ([prefs boolForKey:@"PlaylistRemember"] && [prefs objectForKey:@"LastTrack"]) {
+			[self playItem:(NSMutableDictionary *)[playListController
+												   itemAtIndex:[[prefs objectForKey:@"LastTrack"] intValue]]];
+			[playListController
+			 selectItemAtIndex:[[prefs objectForKey:@"LastTrack"] intValue]];
+		}
+	}
+	[prefs removeObjectForKey:@"LastTrack"];	
+	
+	// fill fullscreen device menu
+	[self fillFullscreenMenu];
+	[self selectFullscreenDevice];
 }
 
 - (void) dealloc
@@ -628,11 +662,11 @@
 	
 	
 	[volumeSlider setDoubleValue:volume];
-	[volumeSliderToolbar setDoubleValue:volume];
+	//[volumeSliderToolbar setDoubleValue:volume];
 	[volumeButton setImage:volumeImage];
-	[volumeButtonToolbar setImage:volumeImage];
+	//[volumeButtonToolbar setImage:volumeImage];
 	[volumeButton setNeedsDisplay:YES];
-	[volumeButtonToolbar setNeedsDisplay:YES];
+	//[volumeButtonToolbar setNeedsDisplay:YES];
 	
 	[fcVolumeSlider setDoubleValue:volume];
 	
@@ -712,7 +746,8 @@
 /************************************************************************************/
 - (void) setLoopMovie:(BOOL)loop
 {
-	[myPlayingItem setBool:loop forKey:MPELoopMovie];
+	if (loop != [myPlayingItem boolForKey:MPELoopMovie])
+		[myPlayingItem setBool:loop forKey:MPELoopMovie];
 }
 
 - (IBAction)toggleLoop:(id)sender
@@ -725,9 +760,9 @@
 - (void) updateLoopStatus
 {
 	if (myPlayingItem && [myPlayingItem boolForKey:MPELoopMovie])
-		[loopMenuItem setState:NSOnState];
+		[menuController->loopMenuItem setState:NSOnState];
 	else
-		[loopMenuItem setState:NSOffState];
+		[menuController->loopMenuItem setState:NSOffState];
 }
 
 /************************************************************************************/
@@ -1055,6 +1090,7 @@
 /************************************************************************************/
 - (void)clearStreamMenus {
 	
+	NSMenuItem *parentMenu;
 	NSMenu *menu;
 	int j;
 	
@@ -1062,22 +1098,24 @@
 		
 		switch (j) {
 			case 0:
-				menu = [videoStreamMenu submenu];
-				[videoStreamMenu setEnabled:NO];
+				parentMenu = menuController->videoStreamMenu;
+				menu = [parentMenu submenu];
 				break;
 			case 1:
-				menu = [audioStreamMenu submenu];
-				[audioStreamMenu setEnabled:NO];
+				parentMenu = menuController->audioStreamMenu;
+				menu = [parentMenu submenu];
 				[audioCycleButton setEnabled:NO];
 				[fcAudioCycleButton setEnabled:NO];
 				break;
 			case 2:
-				menu = [subtitleStreamMenu submenu];
-				[subtitleStreamMenu setEnabled:NO];
+				parentMenu = menuController->subtitleStreamMenu;
+				menu = [parentMenu submenu];
 				[subtitleCycleButton setEnabled:NO];
 				[fcSubtitleCycleButton setEnabled:NO];
 				break;
 		}
+		
+		[parentMenu setEnabled:NO];
 		
 		while ([menu numberOfItems] > 0) {
 			[menu removeItemAtIndex:0];
@@ -1097,7 +1135,7 @@
 		// video stream menu
 		NSEnumerator *en = [movieInfo getVideoStreamsEnumerator];
 		NSNumber *key;
-		NSMenu *menu = [videoStreamMenu submenu];
+		NSMenu *menu = [menuController->videoStreamMenu submenu];
 		NSMenuItem* newItem;
 		BOOL hasItems = NO;
 		
@@ -1112,11 +1150,11 @@
 		}
 		
 		hasItems = ([menu numberOfItems] > 0);
-		[videoStreamMenu setEnabled:hasItems];
+		[menuController->videoStreamMenu setEnabled:hasItems];
 		
 		// audio stream menu
 		en = [movieInfo getAudioStreamsEnumerator];
-		menu = [audioStreamMenu submenu];
+		menu = [menuController->audioStreamMenu submenu];
 		
 		while ((key = [en nextObject])) {
 			newItem = [[NSMenuItem alloc]
@@ -1145,13 +1183,13 @@
 		}
 		
 		hasItems = ([menu numberOfItems] > 0);
-		[audioStreamMenu setEnabled:hasItems];
+		[menuController->audioStreamMenu setEnabled:hasItems];
 		[audioWindowMenu setEnabled:hasItems];
 		[audioCycleButton setEnabled:([menu numberOfItems] > 1)];
 		[fcAudioCycleButton setEnabled:([menu numberOfItems] > 1)];
 		
 		// subtitle stream menu
-		menu = [subtitleStreamMenu submenu];
+		menu = [menuController->subtitleStreamMenu submenu];
 		
 		// Add "disabled" item
 		newItem = [[NSMenuItem alloc]
@@ -1212,7 +1250,7 @@
 		}
 		
 		hasItems = ([menu numberOfItems] > 0);
-		[subtitleStreamMenu setEnabled:hasItems];
+		[menuController->subtitleStreamMenu setEnabled:hasItems];
 		[subtitleWindowMenu setEnabled:hasItems];
 		[subtitleCycleButton setEnabled:([menu numberOfItems] > 1)];
 		[fcSubtitleCycleButton setEnabled:([menu numberOfItems] > 1)];
@@ -1271,32 +1309,32 @@
 /************************************************************************************/
 - (void)newVideoStreamId:(int)streamId {
 	
-	[self disableMenuItemsInMenu:[videoStreamMenu submenu]];
+	[self disableMenuItemsInMenu:[menuController->videoStreamMenu submenu]];
 	videoStreamId = -1;
 	
 	if (streamId != -1) {
 		
 		videoStreamId = streamId;
-		int index = [[videoStreamMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:streamId]];
+		int index = [[menuController->videoStreamMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:streamId]];
 		
 		if (index != -1)
-			[[[videoStreamMenu submenu] itemAtIndex:index] setState:NSOnState];
+			[[[menuController->videoStreamMenu submenu] itemAtIndex:index] setState:NSOnState];
 	}
 }
 
 - (void)newAudioStreamId:(int)streamId {
 	
-	[self disableMenuItemsInMenu:[audioStreamMenu submenu]];
+	[self disableMenuItemsInMenu:[menuController->audioStreamMenu submenu]];
 	[self disableMenuItemsInMenu:[audioWindowMenu menu]];
 	audioStreamId = -1;
 	
 	if (streamId != -1) {
 		
 		audioStreamId = streamId;
-		int index = [[audioStreamMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:streamId]];
+		int index = [[menuController->audioStreamMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:streamId]];
 		
 		if (index != -1) {
-			[[[audioStreamMenu submenu] itemAtIndex:index] setState:NSOnState];
+			[[[menuController->audioStreamMenu submenu] itemAtIndex:index] setState:NSOnState];
 			[[[audioWindowMenu menu] itemAtIndex:(index+1)] setState:NSOnState];
 		}
 	}
@@ -1304,7 +1342,7 @@
 
 - (void)newSubtitleStreamId:(int)streamId forType:(SubtitleType)type {
 	
-	[self disableMenuItemsInMenu:[subtitleStreamMenu submenu]];
+	[self disableMenuItemsInMenu:[menuController->subtitleStreamMenu submenu]];
 	[self disableMenuItemsInMenu:[subtitleWindowMenu menu]];
 	subtitleDemuxStreamId = -1; subtitleFileStreamId = -1;
 	
@@ -1315,16 +1353,17 @@
 		else
 			subtitleDemuxStreamId = streamId;
 			
-		int index = [[subtitleStreamMenu submenu] indexOfItemWithRepresentedObject:[NSArray arrayWithObjects: [NSNumber numberWithInt:type], [NSNumber numberWithInt:streamId], nil]];
+		int index = [[menuController->subtitleStreamMenu submenu] indexOfItemWithRepresentedObject:
+					 [NSArray arrayWithObjects: [NSNumber numberWithInt:type], [NSNumber numberWithInt:streamId], nil]];
 		
 		if (index != -1) {
-			[[[subtitleStreamMenu submenu] itemAtIndex:index] setState:NSOnState];
+			[[[menuController->subtitleStreamMenu submenu] itemAtIndex:index] setState:NSOnState];
 			[[[subtitleWindowMenu menu] itemAtIndex:(index+1)] setState:NSOnState];
 		}
 	
 	} else {
 		
-		[[[subtitleStreamMenu submenu] itemAtIndex:0] setState:NSOnState];
+		[[[menuController->subtitleStreamMenu submenu] itemAtIndex:0] setState:NSOnState];
 		[[[subtitleWindowMenu menu] itemAtIndex:1] setState:NSOnState];
 	}
 }
@@ -1340,11 +1379,11 @@
 /************************************************************************************/
 - (void)clearChapterMenu {
 	
-	[chapterMenu setEnabled:NO];
+	[menuController->chapterMenu setEnabled:NO];
 	[chapterWindowMenu setEnabled:NO];
 	
-	while ([[chapterMenu submenu] numberOfItems] > 0) {
-		[[chapterMenu submenu] removeItemAtIndex:0];
+	while ([[menuController->chapterMenu submenu] numberOfItems] > 0) {
+		[[menuController->chapterMenu submenu] removeItemAtIndex:0];
 	}
 	while ([[chapterWindowMenu menu] numberOfItems] > 1) {
 		[[chapterWindowMenu menu] removeItemAtIndex:1];
@@ -1360,7 +1399,7 @@
 		// video stream menu
 		NSEnumerator *en = [movieInfo getChaptersEnumerator];
 		NSNumber *key;
-		NSMenu *menu = [chapterMenu submenu];
+		NSMenu *menu = [menuController->chapterMenu submenu];
 		NSMenuItem* newItem;
 		
 		while ((key = [en nextObject])) {
@@ -1389,7 +1428,7 @@
 		}
 		
 		[chapterWindowMenu setEnabled:([menu numberOfItems] > 1)];
-		[chapterMenu setEnabled:([menu numberOfItems] > 0)];
+		[menuController->chapterMenu setEnabled:([menu numberOfItems] > 0)];
 	}
 }
 /************************************************************************************/
@@ -1418,21 +1457,21 @@
 		
 		if (bestKey) {
 			
-			int index = [[chapterMenu submenu] indexOfItemWithRepresentedObject:bestKey];
+			int index = [[menuController->chapterMenu submenu] indexOfItemWithRepresentedObject:bestKey];
 			
-			if (index != -1 && [[[chapterMenu submenu] itemAtIndex:index] state] != NSOnState) {
+			if (index != -1 && [[[menuController->chapterMenu submenu] itemAtIndex:index] state] != NSOnState) {
 				
-				[self disableMenuItemsInMenu:[chapterMenu submenu]];
+				[self disableMenuItemsInMenu:[menuController->chapterMenu submenu]];
 				[self disableMenuItemsInMenu:[chapterWindowMenu menu]];
 				
-				[[[chapterMenu submenu] itemAtIndex:index] setState:NSOnState];
+				[[[menuController->chapterMenu submenu] itemAtIndex:index] setState:NSOnState];
 				[[[chapterWindowMenu menu] itemAtIndex:(index+1)] setState:NSOnState];
 				currentChapter = [bestKey intValue];
 			}
 			return;
 			
 		} else {
-			[self disableMenuItemsInMenu:[chapterMenu submenu]];
+			[self disableMenuItemsInMenu:[menuController->chapterMenu submenu]];
 			[self disableMenuItemsInMenu:[chapterWindowMenu menu]];
 		}
 		
@@ -1447,11 +1486,11 @@
 /************************************************************************************/
 - (void)clearFullscreenMenu {
 	
-	[fullscreenMenu setEnabled:NO];
+	[menuController->fullscreenMenu setEnabled:NO];
 	[fullscreenWindowMenu setEnabled:NO];
 	
-	while ([[fullscreenMenu submenu] numberOfItems] > 0) {
-		[[fullscreenMenu submenu] removeItemAtIndex:0];
+	while ([[menuController->fullscreenMenu submenu] numberOfItems] > 0) {
+		[[menuController->fullscreenMenu submenu] removeItemAtIndex:0];
 	}
 	while ([[fullscreenWindowMenu menu] numberOfItems] > 0) {
 		[[fullscreenWindowMenu menu] removeItemAtIndex:0];
@@ -1462,7 +1501,7 @@
 	
 	[self clearFullscreenMenu];
 	
-	NSMenu *menu = [fullscreenMenu submenu];
+	NSMenu *menu = [menuController->fullscreenMenu submenu];
 	[menu setDelegate:self];
 	NSMenuItem *newItem;
 	NSArray *screens = [NSScreen screens];
@@ -1519,7 +1558,7 @@
 		[fullscreenWindowMenu setMenu:other];
 	}
 	
-	[fullscreenMenu setEnabled:([menu numberOfItems] > 0)];
+	[menuController->fullscreenMenu setEnabled:([menu numberOfItems] > 0)];
 	[fullscreenWindowMenu setEnabled:([menu numberOfItems] > 0)];
 }
 /************************************************************************************/
@@ -1536,32 +1575,32 @@
 /************************************************************************************/
 - (void)selectFullscreenDevice {
 	
-	[self disableMenuItemsInMenu:[fullscreenMenu submenu]];
+	[self disableMenuItemsInMenu:[menuController->fullscreenMenu submenu]];
 	[self disableMenuItemsInMenu:[fullscreenWindowMenu menu]];
 	
 	// index of currently selected device
-	int index = [[fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:[self fullscreenDeviceId]]];
+	int index = [[menuController->fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:[self fullscreenDeviceId]]];
 	int state = (fullscreenDeviceId < 0) ? NSMixedState : NSOnState;
 	
 	if (index != -1) {
-		[[[fullscreenMenu submenu] itemAtIndex:index] setState:state];
+		[[[menuController->fullscreenMenu submenu] itemAtIndex:index] setState:state];
 		[[[fullscreenWindowMenu menu] itemAtIndex:(index+1)] setState:state];
 	}
 	
 	// select auto entry
 	if (fullscreenDeviceId == -2) {
 		
-		int index = [[fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-2]];
+		int index = [[menuController->fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-2]];
 		
-		[[[fullscreenMenu submenu] itemAtIndex:index] setState:NSOnState];
+		[[[menuController->fullscreenMenu submenu] itemAtIndex:index] setState:NSOnState];
 		[[[fullscreenWindowMenu menu] itemAtIndex:(index+1)] setState:NSOnState];
 	
 		// same entry implicit selection
 		if ([PREFS integerForKey:MPEGoToFullscreenOn] == MPEGoToFullscreenOnSameScreen) {
 			
-			int index = [[fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-1]];
+			int index = [[menuController->fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-1]];
 			
-			[[[fullscreenMenu submenu] itemAtIndex:index] setState:NSMixedState];
+			[[[menuController->fullscreenMenu submenu] itemAtIndex:index] setState:NSMixedState];
 			[[[fullscreenWindowMenu menu] itemAtIndex:(index+1)] setState:NSMixedState];
 		}
 	}
@@ -1569,9 +1608,9 @@
 	// select same entry
 	if (fullscreenDeviceId == -1) {
 		
-		int index = [[fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-1]];
+		int index = [[menuController->fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-1]];
 		
-		[[[fullscreenMenu submenu] itemAtIndex:index] setState:NSOnState];
+		[[[menuController->fullscreenMenu submenu] itemAtIndex:index] setState:NSOnState];
 		[[[fullscreenWindowMenu menu] itemAtIndex:(index+1)] setState:NSOnState];
 	}
 }
@@ -1593,30 +1632,6 @@
 /************************************************************************************
  NOTIFICATION OBSERVERS
  ************************************************************************************/
-- (void) appWillFinishLaunching
-{
-	// Pass buffer name to interface
-	[myPlayer setBufferName:[videoOpenGLView bufferName]];
-}
-/************************************************************************************/
-- (void) appFinishedLaunching
-{
-	NSUserDefaults *prefs = [[AppController sharedController] preferences];
-	
-	// play the last played movie if it is set to do so
-	if ([prefs objectForKey:@"PlaylistRemember"] && [prefs objectForKey:@"LastTrack"]
-			&& ![myPlayer isRunning]) {
-		if ([prefs boolForKey:@"PlaylistRemember"] && [prefs objectForKey:@"LastTrack"]) {
-			[self playItem:(NSMutableDictionary *)[playListController
-					itemAtIndex:[[prefs objectForKey:@"LastTrack"] intValue]]];
-			[playListController
-					selectItemAtIndex:[[prefs objectForKey:@"LastTrack"] intValue]];
-		}
-	}
-	[prefs removeObjectForKey:@"LastTrack"];	
-	
-}
-/************************************************************************************/
 - (void) appShouldTerminate
 {
 	// save values before all is saved to disk and released
@@ -1689,13 +1704,14 @@
 		case kBuffering :
 		case kIndexing :
 		case kPlaying :
+				NSLog(@"play");
 			[playButton setImage:pauseImageOff];
 			[playButton setAlternateImage:pauseImageOn];
-			[playButtonToolbar setImage:pauseImageOff];
-			[playButtonToolbar setAlternateImage:pauseImageOn];
+			//[playButtonToolbar setImage:pauseImageOff];
+			//[playButtonToolbar setAlternateImage:pauseImageOn];
 			[fcPlayButton setImage:fcPauseImageOff];
 			[fcPlayButton setAlternateImage:fcPauseImageOn];
-			[playMenuItem setTitle:@"Pause"];
+			[menuController->playMenuItem setTitle:@"Pause"];
 			[fullscreenButton setEnabled:YES];
 			[self updateWindowOnTop];
 			[self updateLoopStatus];
@@ -1703,13 +1719,14 @@
 		case kPaused :
 		case kStopped :
 		case kFinished :
+				NSLog(@"stop");
 			[playButton setImage:playImageOff];
 			[playButton setAlternateImage:playImageOn];
-			[playButtonToolbar setImage:playImageOff];
-			[playButtonToolbar setAlternateImage:playImageOn];
+			//[playButtonToolbar setImage:playImageOff];
+			//[playButtonToolbar setAlternateImage:playImageOn];
 			[fcPlayButton setImage:fcPlayImageOff];
 			[fcPlayButton setAlternateImage:fcPlayImageOn];
-			[playMenuItem setTitle:@"Play"];
+			[menuController->playMenuItem setTitle:@"Play"];
 			[fullscreenButton setEnabled:NO];
 			[self updateWindowOnTop];
 			[self setLoopMovie:NO];
@@ -1739,8 +1756,8 @@
 			// progress bars
 			[scrubbingBar setScrubStyle:NSScrubbingBarProgressStyle];
 			[scrubbingBar setIndeterminate:YES];
-			[scrubbingBarToolbar setScrubStyle:NSScrubbingBarProgressStyle];
-			[scrubbingBarToolbar setIndeterminate:YES];
+			//[scrubbingBarToolbar setScrubStyle:NSScrubbingBarProgressStyle];
+			//[scrubbingBarToolbar setIndeterminate:YES];
 			[fcScrubbingBar setScrubStyle:NSScrubbingBarProgressStyle];
 			[fcScrubbingBar setIndeterminate:YES];
 			break;
@@ -1750,8 +1767,8 @@
 			// progress bars
 			[scrubbingBar setScrubStyle:NSScrubbingBarProgressStyle];
 			[scrubbingBar setIndeterminate:YES];
-			[scrubbingBarToolbar setScrubStyle:NSScrubbingBarProgressStyle];
-			[scrubbingBarToolbar setIndeterminate:YES];
+			//[scrubbingBarToolbar setScrubStyle:NSScrubbingBarProgressStyle];
+			//[scrubbingBarToolbar setIndeterminate:YES];
 			[fcScrubbingBar setScrubStyle:NSScrubbingBarProgressStyle];
 			[fcScrubbingBar setIndeterminate:YES];
 			break;
@@ -1761,9 +1778,9 @@
 			[scrubbingBar setScrubStyle:NSScrubbingBarProgressStyle];
 			[scrubbingBar setMaxValue:100];
 			[scrubbingBar setIndeterminate:NO];
-			[scrubbingBarToolbar setScrubStyle:NSScrubbingBarProgressStyle];
-			[scrubbingBarToolbar setMaxValue:100];
-			[scrubbingBarToolbar setIndeterminate:NO];
+			//[scrubbingBarToolbar setScrubStyle:NSScrubbingBarProgressStyle];
+			//[scrubbingBarToolbar setMaxValue:100];
+			//[scrubbingBarToolbar setIndeterminate:NO];
 			[fcScrubbingBar setScrubStyle:NSScrubbingBarProgressStyle];
 			[fcScrubbingBar setMaxValue:100];
 			[fcScrubbingBar setIndeterminate:NO];
@@ -1779,9 +1796,9 @@
 			[scrubbingBar setIndeterminate:NO];
 			[scrubbingBar setMaxValue:100];
 			
-			[scrubbingBarToolbar setScrubStyle:NSScrubbingBarEmptyStyle];
-			[scrubbingBarToolbar setIndeterminate:NO];
-			[scrubbingBarToolbar setMaxValue:100];
+			//[scrubbingBarToolbar setScrubStyle:NSScrubbingBarEmptyStyle];
+			//[scrubbingBarToolbar setIndeterminate:NO];
+			//[scrubbingBarToolbar setMaxValue:100];
 			
 			[fcScrubbingBar setScrubStyle:NSScrubbingBarEmptyStyle];
 			[fcScrubbingBar setIndeterminate:NO];
@@ -1798,8 +1815,8 @@
 			if ([movieInfo length] > 0) {
 				[scrubbingBar setMaxValue: [movieInfo length]];
 				[scrubbingBar setScrubStyle:NSScrubbingBarPositionStyle];
-				[scrubbingBarToolbar setMaxValue: [movieInfo length]];
-				[scrubbingBarToolbar setScrubStyle:NSScrubbingBarPositionStyle];
+				//[scrubbingBarToolbar setMaxValue: [movieInfo length]];
+				//[scrubbingBarToolbar setScrubStyle:NSScrubbingBarPositionStyle];
 				[fcScrubbingBar setMaxValue: [movieInfo length]];
 				[fcScrubbingBar setScrubStyle:NSScrubbingBarPositionStyle];
 			}
@@ -1822,22 +1839,22 @@
 			// reset status box
 			status = @"";
 			[timeTextField setStringValue:@"00:00:00"];
-			[timeTextFieldToolbar setStringValue:@"00:00:00"];
+			//[timeTextFieldToolbar setStringValue:@"00:00:00"];
 			[fcTimeTextField setStringValue:@"00:00:00"];
 			// hide progress bars
 			[scrubbingBar setScrubStyle:NSScrubbingBarEmptyStyle];
 			[scrubbingBar setDoubleValue:0];
 			[scrubbingBar setIndeterminate:NO];
-			[scrubbingBarToolbar setScrubStyle:NSScrubbingBarEmptyStyle];
-			[scrubbingBarToolbar setDoubleValue:0];
-			[scrubbingBarToolbar setIndeterminate:NO];
+			//[scrubbingBarToolbar setScrubStyle:NSScrubbingBarEmptyStyle];
+			//[scrubbingBarToolbar setDoubleValue:0];
+			//[scrubbingBarToolbar setIndeterminate:NO];
 			[fcScrubbingBar setScrubStyle:NSScrubbingBarEmptyStyle];
 			[fcScrubbingBar setDoubleValue:0];
 			[fcScrubbingBar setIndeterminate:NO];
 			// disable stream menus
-			[videoStreamMenu setEnabled:NO];
-			[audioStreamMenu setEnabled:NO];
-			[subtitleStreamMenu setEnabled:NO];
+			[menuController->videoStreamMenu setEnabled:NO];
+			[menuController->audioStreamMenu setEnabled:NO];
+			[menuController->subtitleStreamMenu setEnabled:NO];
 			[audioWindowMenu setEnabled:NO];
 			[subtitleWindowMenu setEnabled:NO];
 			// release the retained playing item
@@ -1906,7 +1923,7 @@
 		break;
 	case kIndexing :
 		[scrubbingBar setDoubleValue:[myPlayer cacheUsage]];
-		[scrubbingBarToolbar setDoubleValue:[myPlayer cacheUsage]];
+		//[scrubbingBarToolbar setDoubleValue:[myPlayer cacheUsage]];
 		[fcScrubbingBar setDoubleValue:[myPlayer cacheUsage]];
 		break;
 	case kSeeking :
@@ -1978,14 +1995,14 @@
 
 - (void) updatePlaylistWindow
 {
-	int seconds = (int)[myPlayer seconds];
+	//int seconds = (int)[myPlayer seconds];
 	
-	if ([movieInfo length] > 0)
+	/*if ([movieInfo length] > 0)
 		[scrubbingBarToolbar setDoubleValue:seconds];
 	else
 		[scrubbingBarToolbar setDoubleValue:0];
 	
-	[timeTextFieldToolbar setStringValue:[NSString stringWithFormat:@"%02d:%02d:%02d", seconds/3600,(seconds%3600)/60,seconds%60]];
+	[timeTextFieldToolbar setStringValue:[NSString stringWithFormat:@"%02d:%02d:%02d", seconds/3600,(seconds%3600)/60,seconds%60]];*/
 }
 
 - (void) updateFullscreenControls

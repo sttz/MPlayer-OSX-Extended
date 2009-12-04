@@ -19,13 +19,15 @@
 #define MP_DIALOG_VIDEO		2
 #define MP_DIALOG_SUBTITLES 3
 
-@class AppleRemote, PlayerController, PreferencesController2, EqualizerController;
+@class AppleRemote, PlayerController, PreferencesController2, EqualizerController,
+PlayListController, SettingsController, MenuController;
 
 @interface AppController : NSObject
 {
     // controller outlets
+	IBOutlet MenuController *menuController;
 	IBOutlet PlayerController *playerController;
-	IBOutlet id playListController;
+	IBOutlet EqualizerController *equalizerController;
 		
 	// GUI outlets
 	IBOutlet id locationPanel;
@@ -57,13 +59,15 @@
 	// Preferences
 	IBOutlet PreferencesController2 *preferencesController;
 	NSDictionary *preferencesSpecs;
-	
-	// Equalizers
-	IBOutlet EqualizerController *equalizerController;
 }
 
-@property (readonly) PlayerController *playerController;
-@property (readonly) PreferencesController2 *preferencesController;
+@property (nonatomic,readonly) MenuController *menuController;
+@property (nonatomic,readonly) PlayerController *playerController;
+@property (nonatomic,readonly) PreferencesController2 *preferencesController;
+@property (nonatomic,readonly) PlayListController *playListController;
+@property (nonatomic,readonly) SettingsController *settingsController;
+@property (nonatomic,readonly) EqualizerController *equalizerController;
+
 @property (readonly) NSMenu *aspectMenu;
 
 + (AppController *) sharedController;

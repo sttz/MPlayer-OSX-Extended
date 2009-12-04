@@ -71,7 +71,6 @@
 		37DCF89908886A2800DBF422 /* ffwd_button_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 37DCF89708886A2800DBF422 /* ffwd_button_on.png */; };
 		37EA49C40861CCAB0026216A /* volume1.png in Resources */ = {isa = PBXBuildFile; fileRef = 37EA49C30861CCAB0026216A /* volume1.png */; };
 		37EA49FF0861CD840026216A /* MPlayer OSX Help in Resources */ = {isa = PBXBuildFile; fileRef = 37EA49EE0861CD840026216A /* MPlayer OSX Help */; };
-		37EA4A310861D0980026216A /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 37EA4A2F0861D0980026216A /* MainMenu.nib */; };
 		37EA4AB6086218D50026216A /* volumeKnobOff.png in Resources */ = {isa = PBXBuildFile; fileRef = 37EA4AB5086218D50026216A /* volumeKnobOff.png */; };
 		37EA4ABE086220530026216A /* volumeKnobOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 37EA4ABD086220520026216A /* volumeKnobOn.png */; };
 		37EA4B6C086256590026216A /* VolumeSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 37EA4AA4086214030026216A /* VolumeSlider.m */; };
@@ -105,6 +104,10 @@
 		3ABF86580EBFAD06001FE779 /* FullscreenControlsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABF86570EBFAD06001FE779 /* FullscreenControlsView.m */; };
 		3ABF86A80EBFAF4C001FE779 /* fc_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 3ABF86A70EBFAF4C001FE779 /* fc_background.png */; };
 		3AC489CE10B48DDC00054A0E /* dialog-warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AC489CD10B48DDC00054A0E /* dialog-warning.png */; };
+		3AC5E6C410C94543004ED0EC /* Player.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AC5E6C210C94543004ED0EC /* Player.xib */; };
+		3AC5E6C910C946C8004ED0EC /* Playlist.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AC5E6C710C946C8004ED0EC /* Playlist.xib */; };
+		3AC5E6CE10C947D9004ED0EC /* MenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC5E6CD10C947D9004ED0EC /* MenuController.m */; };
+		3AC5E6E610C94EB6004ED0EC /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AC5E6E410C94EB6004ED0EC /* MainMenu.xib */; };
 		3AD50F8610B5E22500F17C6C /* Preferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3AD50F8510B5E22500F17C6C /* Preferences.plist */; };
 		3ADA6F840FED749300F7AFB9 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADA6F830FED749300F7AFB9 /* IOKit.framework */; };
 		3ADA70970FED843800F7AFB9 /* libexpat.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADA70930FED843800F7AFB9 /* libexpat.1.dylib */; };
@@ -236,7 +239,6 @@
 		37DCF89708886A2800DBF422 /* ffwd_button_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ffwd_button_on.png; path = Resources/Graphics/ffwd_button_on.png; sourceTree = "<group>"; };
 		37EA49C30861CCAB0026216A /* volume1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = volume1.png; path = Resources/Graphics/volume1.png; sourceTree = "<group>"; };
 		37EA49EF0861CD840026216A /* English */ = {isa = PBXFileReference; lastKnownFileType = folder; name = English; path = "Resources/English.lproj/MPlayer OSX Help"; sourceTree = "<group>"; };
-		37EA4A300861D0980026216A /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		37EA4AA3086214020026216A /* VolumeSlider.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = VolumeSlider.h; path = Sources/Classes/VolumeSlider.h; sourceTree = "<group>"; };
 		37EA4AA4086214030026216A /* VolumeSlider.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = VolumeSlider.m; path = Sources/Classes/VolumeSlider.m; sourceTree = "<group>"; };
 		37EA4AB5086218D50026216A /* volumeKnobOff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = volumeKnobOff.png; path = Resources/Graphics/volumeKnobOff.png; sourceTree = "<group>"; };
@@ -285,6 +287,11 @@
 		3ABF86570EBFAD06001FE779 /* FullscreenControlsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FullscreenControlsView.m; path = Sources/Classes/FullscreenControlsView.m; sourceTree = "<group>"; };
 		3ABF86A70EBFAF4C001FE779 /* fc_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fc_background.png; path = Resources/Graphics/fc_background.png; sourceTree = "<group>"; };
 		3AC489CD10B48DDC00054A0E /* dialog-warning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dialog-warning.png"; sourceTree = "<group>"; };
+		3AC5E6C310C94543004ED0EC /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Resources/English.lproj/Player.xib; sourceTree = "<group>"; };
+		3AC5E6C810C946C8004ED0EC /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Resources/English.lproj/Playlist.xib; sourceTree = "<group>"; };
+		3AC5E6CC10C947D9004ED0EC /* MenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MenuController.h; path = Sources/Controllers/MenuController.h; sourceTree = "<group>"; };
+		3AC5E6CD10C947D9004ED0EC /* MenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MenuController.m; path = Sources/Controllers/MenuController.m; sourceTree = "<group>"; };
+		3AC5E6E510C94EB6004ED0EC /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Resources/English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		3AD50F8510B5E22500F17C6C /* Preferences.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Preferences.plist; path = Resources/Preferences.plist; sourceTree = "<group>"; };
 		3ADA6F830FED749300F7AFB9 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		3ADA70930FED843800F7AFB9 /* libexpat.1.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; name = libexpat.1.dylib; path = "build/Release/MPlayer OSX Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/lib/libexpat.1.dylib"; sourceTree = "<group>"; };
@@ -373,6 +380,7 @@
 				3A38D3C40E50E45A00C1E468 /* Debug.m */,
 				3A5F3FBB10C17AFA00C5B912 /* BinaryBundle.h */,
 				3A5F3FBC10C17AFA00C5B912 /* BinaryBundle.m */,
+				3AC5E6C210C94543004ED0EC /* Player.xib */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -414,6 +422,7 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				3AC5E6E410C94EB6004ED0EC /* MainMenu.xib */,
 			);
 			name = "MPlayer OSX";
 			sourceTree = "<group>";
@@ -495,7 +504,6 @@
 				377E0313085E3ED500D64A26 /* info.png */,
 				37EA4ABD086220520026216A /* volumeKnobOn.png */,
 				37EA4AB5086218D50026216A /* volumeKnobOff.png */,
-				37EA4A2F0861D0980026216A /* MainMenu.nib */,
 				37EA49EE0861CD840026216A /* MPlayer OSX Help */,
 				377E0311085E3ED500D64A26 /* audio.icns */,
 				377E0312085E3ED500D64A26 /* icon.icns */,
@@ -518,6 +526,7 @@
 				377E032D085E3ED500D64A26 /* volume3.png */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				3AF0A9AA10C41C9B00A2D10E /* Equalizers.xib */,
+				3AC5E6C710C946C8004ED0EC /* Playlist.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -554,6 +563,8 @@
 				3A6E433110A33AE400B0BDC3 /* PreferencesController2.m */,
 				3AF0A9AF10C4202D00A2D10E /* EqualizerController.h */,
 				3AF0A9B010C4202D00A2D10E /* EqualizerController.m */,
+				3AC5E6CC10C947D9004ED0EC /* MenuController.h */,
+				3AC5E6CD10C947D9004ED0EC /* MenuController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -684,7 +695,6 @@
 				377E034B085E3ED500D64A26 /* volume3.png in Resources */,
 				37EA49C40861CCAB0026216A /* volume1.png in Resources */,
 				37EA49FF0861CD840026216A /* MPlayer OSX Help in Resources */,
-				37EA4A310861D0980026216A /* MainMenu.nib in Resources */,
 				37EA4AB6086218D50026216A /* volumeKnobOff.png in Resources */,
 				37EA4ABE086220530026216A /* volumeKnobOn.png in Resources */,
 				37EA4BC2086271480026216A /* scrub_bar_anim.png in Resources */,
@@ -747,6 +757,9 @@
 				3AD50F8610B5E22500F17C6C /* Preferences.plist in Resources */,
 				3A95F00B10BB28D80098BB38 /* iso-639-3.plist in Resources */,
 				3AF0A9AC10C41C9B00A2D10E /* Equalizers.xib in Resources */,
+				3AC5E6C410C94543004ED0EC /* Player.xib in Resources */,
+				3AC5E6C910C946C8004ED0EC /* Playlist.xib in Resources */,
+				3AC5E6E610C94EB6004ED0EC /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -814,6 +827,7 @@
 				3A71CA0010BEBB7800C810F4 /* CocoaAdditions.m in Sources */,
 				3A5F3FBD10C17AFA00C5B912 /* BinaryBundle.m in Sources */,
 				3AF0A9B110C4202D00A2D10E /* EqualizerController.m in Sources */,
+				3AC5E6CE10C947D9004ED0EC /* MenuController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -836,14 +850,6 @@
 			name = "MPlayer OSX Help";
 			sourceTree = "<group>";
 		};
-		37EA4A2F0861D0980026216A /* MainMenu.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				37EA4A300861D0980026216A /* English */,
-			);
-			name = MainMenu.nib;
-			sourceTree = "<group>";
-		};
 		3A07C705108E44C10033FA47 /* Preferences.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -858,6 +864,30 @@
 				3A638954108B95B000E90936 /* English */,
 			);
 			name = MoveApplication.strings;
+			sourceTree = "<group>";
+		};
+		3AC5E6C210C94543004ED0EC /* Player.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3AC5E6C310C94543004ED0EC /* English */,
+			);
+			name = Player.xib;
+			sourceTree = "<group>";
+		};
+		3AC5E6C710C946C8004ED0EC /* Playlist.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3AC5E6C810C946C8004ED0EC /* English */,
+			);
+			name = Playlist.xib;
+			sourceTree = "<group>";
+		};
+		3AC5E6E410C94EB6004ED0EC /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3AC5E6E510C94EB6004ED0EC /* English */,
+			);
+			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
 		3AF0A9AA10C41C9B00A2D10E /* Equalizers.xib */ = {

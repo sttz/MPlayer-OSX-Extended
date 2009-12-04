@@ -11,6 +11,7 @@
 #import <Sparkle/Sparkle.h>
 
 // other controllers
+#import "MenuController.h"
 #import "PlayerController.h"
 #import "PlayListController.h"
 #import "PreferencesController2.h"
@@ -24,7 +25,7 @@
 #import "PFMoveApplication.h"
 
 @implementation AppController
-@synthesize playerController, preferencesController, aspectMenu;
+@synthesize playerController, preferencesController, equalizerController, menuController, aspectMenu;
 
 static AppController *instance = nil;
 
@@ -86,8 +87,20 @@ static AppController *instance = nil;
 	// pre-load language codes
 	[LanguageCodes sharedInstance];
 	
+	// Load player
+	[NSBundle loadNibNamed:@"Player" owner:self];
 	// load preferences nib to initialize fontconfig
 	[NSBundle loadNibNamed:@"Preferences" owner:self];
+}
+
+- (PlayListController *) playListController
+{
+	return [playerController playListController];
+}
+
+- (SettingsController *) settingsController
+{
+	return [playerController settingsController];
 }
 
 /************************************************************************************
@@ -229,7 +242,7 @@ static AppController *instance = nil;
 					setObject:[[[thePanel filenames] objectAtIndex:i]
 					stringByDeletingLastPathComponent]
 					forKey:MPEDefaultDirectory];
-			[playListController appendItem:theItem];
+			[[playerController playListController] appendItem:theItem];
 		}
     }
 }
@@ -323,7 +336,7 @@ static AppController *instance = nil;
 */
 - (IBAction) displayPlayList:(id)sender
 {
-	[playListController displayWindow:sender];
+	[[playerController playListController] displayWindow:sender];
 }
 
 /*
@@ -596,7 +609,7 @@ static AppController *instance = nil;
 	NSEnumerator *e = [filenames objectEnumerator];
 	NSString *filename;
 	
-	[playListController openWindow:YES];
+	[[playerController playListController] openWindow:YES];
 	
 	// add files to playlist
 	while (filename = [e nextObject]) {
@@ -604,7 +617,7 @@ static AppController *instance = nil;
 		if ([self isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]) {
 			NSMutableDictionary *myItem = [NSMutableDictionary
 										   dictionaryWithObject:filename forKey:@"MovieFile"];
-			[playListController appendItem:myItem];
+			[[playerController playListController] appendItem:myItem];
 		}
 	}
 	

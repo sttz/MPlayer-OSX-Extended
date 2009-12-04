@@ -1575,8 +1575,10 @@ static NSDictionary *videoEqualizerCommands;
 */		
 		//  =====  PAUSE  ===== test for paused state
 		if (strstr(stringPtr, MI_PAUSED_STRING) != NULL) {
-			[self setState:kPaused];
-			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
+			if (myState != kPaused) {
+				[self setState:kPaused];
+				[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
+			}
 			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 			
 			continue; 							// continue on next line
