@@ -26,6 +26,7 @@
 
 #import "PreferencesController2.h"
 
+#import "MenuController.h"
 #import "AppController.h"
 #import "PlayerController.h"
 
@@ -828,6 +829,16 @@
 		return [self identifierForBinaryName:[[binarySelectionPopUp selectedItem] title]];
 	else
 		return nil;
+}
+
+/** Action for the button in the custom aspect ratio chooser window.
+ */
+- (IBAction) chooseCustomAspectRatio:(NSButton *)sender
+{
+	// MenuController's setAspectFromMenu uses the custom aspect when it's nil
+	[[[AppController sharedController] menuController] setAspectFromMenu:nil];
+	
+	[[sender window] orderOut:self];
 }
 
 + (float) parseAspectRatio:(NSString *)aspectString

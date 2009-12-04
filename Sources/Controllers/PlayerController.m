@@ -350,8 +350,7 @@
 	
 	// Open Log file
 	if (answer == NSAlertOtherReturn) {
-		[[NSWorkspace sharedWorkspace] openFile:
-		 [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Logs/MPlayerOSX.log"]]; 
+		[[AppController sharedController] displayLogWindow:self];
 	
 	// Restart playback
 	} else if (answer == NSAlertAlternateReturn) {
@@ -1695,7 +1694,6 @@
 		case kBuffering :
 		case kIndexing :
 		case kPlaying :
-				NSLog(@"play");
 			[playButton setImage:pauseImageOff];
 			[playButton setAlternateImage:pauseImageOn];
 			//[playButtonToolbar setImage:pauseImageOff];
@@ -1710,7 +1708,6 @@
 		case kPaused :
 		case kStopped :
 		case kFinished :
-				NSLog(@"stop");
 			[playButton setImage:playImageOff];
 			[playButton setAlternateImage:playImageOn];
 			//[playButtonToolbar setImage:playImageOff];

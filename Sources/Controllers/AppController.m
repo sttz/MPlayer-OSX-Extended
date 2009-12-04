@@ -25,7 +25,7 @@
 #import "PFMoveApplication.h"
 
 @implementation AppController
-@synthesize playerController, preferencesController, equalizerController, menuController, aspectMenu;
+@synthesize playerController, preferencesController, menuController, aspectMenu;
 
 static AppController *instance = nil;
 
@@ -103,6 +103,13 @@ static AppController *instance = nil;
 	return [playerController settingsController];
 }
 
+- (EqualizerController *)equalizerController
+{
+	if (!equalizerController)
+		[NSBundle loadNibNamed:@"Equalizers" owner:self];
+	return equalizerController;
+}
+
 /************************************************************************************
  INTERFACE
  ************************************************************************************/
@@ -113,23 +120,6 @@ static AppController *instance = nil;
 - (NSArray *) preferencesRequiringRestart
 {
 	return [preferencesSpecs objectForKey:@"RequiresRestart"];
-}
-/************************************************************************************/
-- (IBAction) openPreferences:(id)sender
-{
-	[[preferencesController window] makeKeyAndOrderFront:self];
-}
-- (IBAction) openCustomAspectRatioChooser:(id)sender
-{
-	[[preferencesController customAspectRatioChooser] makeKeyAndOrderFront:self];
-}
-- (IBAction) chooseCustomAspectRatio:(NSButton *)sender
-{
-	// Trigger the custom aspect menu item's action to relay the aspect ratio
-	[[customAspectMenuItem target] performSelector:[customAspectMenuItem action] 
-										withObject:customAspectMenuItem];
-	
-	[[sender window] orderOut:self];
 }
 /************************************************************************************/
 - (void) restart
@@ -146,19 +136,6 @@ static AppController *instance = nil;
 	[NSTask launchedTaskWithLaunchPath:@"/bin/sh" arguments:arguments];
 	
 	[NSApp terminate:self];
-}
-/************************************************************************************/
-- (IBAction) openVideoEqualizer:(id)sender
-{
-	if (!equalizerController)
-		[NSBundle loadNibNamed:@"Equalizers" owner:self];
-	[equalizerController openVideoEqualizer];
-}
-- (IBAction) openAudioEqualizer:(id)sender
-{
-	if (!equalizerController)
-		[NSBundle loadNibNamed:@"Equalizers" owner:self];
-	[equalizerController openAudioEqualizer];
 }
 /************************************************************************************
  ACTIONS

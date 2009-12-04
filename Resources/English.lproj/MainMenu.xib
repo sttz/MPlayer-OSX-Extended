@@ -11,7 +11,7 @@
 			<string key="NS.object.0">732</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="1582"/>
+			<integer value="29"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1092,10 +1092,13 @@
 				</array>
 				<string key="NSName">_NSMainMenu</string>
 			</object>
-			<object class="NSCustomObject" id="206410793">
+			<object class="NSCustomObject" id="847214199">
 				<string key="NSClassName">MenuController</string>
 			</object>
 			<object class="NSUserDefaultsController" id="299649667">
+				<array class="NSMutableArray" key="NSDeclaredKeys">
+					<string>MPEUpdateBinaries</string>
+				</array>
 				<bool key="NSSharedInstance">YES</bool>
 			</object>
 			<object class="NSCustomObject" id="466167469">
@@ -2398,14 +2401,6 @@
 					<int key="connectionID">19039</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">openPreferences:</string>
-						<reference key="source" ref="700428315"/>
-						<reference key="destination" ref="783045726"/>
-					</object>
-					<int key="connectionID">19041</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">title: defaults.MPECustomAspectRatio.MPECustomAspectRatioString</string>
 						<reference key="source" ref="810084006"/>
@@ -2501,7 +2496,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">playPause:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="207953085"/>
 					</object>
 					<int key="connectionID">19354</int>
@@ -2509,7 +2504,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">stop:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="1015279709"/>
 					</object>
 					<int key="connectionID">19355</int>
@@ -2517,7 +2512,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">toggleLoop:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="986973415"/>
 					</object>
 					<int key="connectionID">19356</int>
@@ -2525,7 +2520,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">skipToNext:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="772633321"/>
 					</object>
 					<int key="connectionID">19357</int>
@@ -2533,7 +2528,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">skipToPrevious:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="748694322"/>
 					</object>
 					<int key="connectionID">19358</int>
@@ -2541,7 +2536,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">seekByTag:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="406833632"/>
 					</object>
 					<int key="connectionID">19359</int>
@@ -2549,7 +2544,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">seekByTag:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="638368239"/>
 					</object>
 					<int key="connectionID">19360</int>
@@ -2557,7 +2552,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">seekByTag:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="337623063"/>
 					</object>
 					<int key="connectionID">19361</int>
@@ -2565,7 +2560,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">seekByTag:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="377720310"/>
 					</object>
 					<int key="connectionID">19362</int>
@@ -2573,7 +2568,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">seekByTag:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="285625447"/>
 					</object>
 					<int key="connectionID">19363</int>
@@ -2581,7 +2576,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">seekByTag:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="683529277"/>
 					</object>
 					<int key="connectionID">19364</int>
@@ -2589,7 +2584,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">stepFrame:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="872878021"/>
 					</object>
 					<int key="connectionID">19365</int>
@@ -2597,7 +2592,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">playlistPrevious:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="101557970"/>
 					</object>
 					<int key="connectionID">19366</int>
@@ -2605,7 +2600,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">playlistNext:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="448624515"/>
 					</object>
 					<int key="connectionID">19367</int>
@@ -2613,7 +2608,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">increaseVolume:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="981587579"/>
 					</object>
 					<int key="connectionID">19368</int>
@@ -2621,7 +2616,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">decreaseVolume:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="352456035"/>
 					</object>
 					<int key="connectionID">19369</int>
@@ -2629,7 +2624,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">muteVolume:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="336999493"/>
 					</object>
 					<int key="connectionID">19370</int>
@@ -2637,7 +2632,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">fullScreen:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="190163487"/>
 					</object>
 					<int key="connectionID">19374</int>
@@ -2645,7 +2640,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">toggleKeepAspect:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="277199025"/>
 					</object>
 					<int key="connectionID">19375</int>
@@ -2653,7 +2648,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">togglePanScan:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="236617444"/>
 					</object>
 					<int key="connectionID">19376</int>
@@ -2661,7 +2656,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">originalAspect:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="1038818498"/>
 					</object>
 					<int key="connectionID">19377</int>
@@ -2669,7 +2664,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">setAspectFromMenu:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="103271458"/>
 					</object>
 					<int key="connectionID">19378</int>
@@ -2677,7 +2672,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">setAspectFromMenu:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="260083644"/>
 					</object>
 					<int key="connectionID">19379</int>
@@ -2685,7 +2680,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">setAspectFromMenu:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="762544581"/>
 					</object>
 					<int key="connectionID">19380</int>
@@ -2693,7 +2688,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">setAspectFromMenu:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="375942366"/>
 					</object>
 					<int key="connectionID">19381</int>
@@ -2701,7 +2696,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">setAspectFromMenu:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="122275591"/>
 					</object>
 					<int key="connectionID">19382</int>
@@ -2709,7 +2704,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">setAspectFromMenu:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="870466676"/>
 					</object>
 					<int key="connectionID">19383</int>
@@ -2717,7 +2712,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">setAspectFromMenu:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="810084006"/>
 					</object>
 					<int key="connectionID">19384</int>
@@ -2725,7 +2720,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">openCustomAspectChooser:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="371882796"/>
 					</object>
 					<int key="connectionID">19385</int>
@@ -2733,7 +2728,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">takeScreenshot:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="983516722"/>
 					</object>
 					<int key="connectionID">19386</int>
@@ -2741,7 +2736,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">openPlayerWindow:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="911655233"/>
 					</object>
 					<int key="connectionID">19387</int>
@@ -2749,7 +2744,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">togglePlaylistWindow:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="191946484"/>
 					</object>
 					<int key="connectionID">19388</int>
@@ -2757,7 +2752,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">openVideoEqualizer:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="653841605"/>
 					</object>
 					<int key="connectionID">19389</int>
@@ -2765,7 +2760,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">openAudioEqualizer:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="291038551"/>
 					</object>
 					<int key="connectionID">19390</int>
@@ -2773,7 +2768,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">openStatisticsWindow:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="224156957"/>
 					</object>
 					<int key="connectionID">19391</int>
@@ -2781,7 +2776,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">openInfoWindow:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="645100421"/>
 					</object>
 					<int key="connectionID">19392</int>
@@ -2789,7 +2784,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">audioStreamMenu</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="652808950"/>
 					</object>
 					<int key="connectionID">19393</int>
@@ -2797,7 +2792,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">subtitleStreamMenu</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="768535677"/>
 					</object>
 					<int key="connectionID">19394</int>
@@ -2805,7 +2800,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">videoStreamMenu</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="568549156"/>
 					</object>
 					<int key="connectionID">19395</int>
@@ -2813,7 +2808,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">chapterMenu</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="817094925"/>
 					</object>
 					<int key="connectionID">19396</int>
@@ -2821,7 +2816,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">fullscreenMenu</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="407072058"/>
 					</object>
 					<int key="connectionID">19397</int>
@@ -2829,7 +2824,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">loopMenuItem</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="986973415"/>
 					</object>
 					<int key="connectionID">19398</int>
@@ -2837,7 +2832,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">playMenuItem</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="207953085"/>
 					</object>
 					<int key="connectionID">19399</int>
@@ -2846,7 +2841,7 @@
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">menuController</string>
 						<reference key="source" ref="700428315"/>
-						<reference key="destination" ref="206410793"/>
+						<reference key="destination" ref="847214199"/>
 					</object>
 					<int key="connectionID">19400</int>
 				</object>
@@ -3239,7 +3234,7 @@
 						<string key="label">enabled: playerController.player.playing</string>
 						<reference key="source" ref="810084006"/>
 						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector" id="441822203">
+						<object class="NSNibBindingConnector" key="connector" id="572103647">
 							<reference key="NSSource" ref="810084006"/>
 							<reference key="NSDestination" ref="700428315"/>
 							<string key="NSLabel">enabled: playerController.player.playing</string>
@@ -3265,7 +3260,7 @@
 								<string key="NS.key.0">NSValueTransformerName</string>
 								<string key="NS.object.0">NSIsNil</string>
 							</object>
-							<reference key="NSPreviousConnector" ref="441822203"/>
+							<reference key="NSPreviousConnector" ref="572103647"/>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
@@ -3290,7 +3285,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">setSizeFromMenu:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="107923094"/>
 					</object>
 					<int key="connectionID">19459</int>
@@ -3298,7 +3293,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">setSizeFromMenu:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="434144637"/>
 					</object>
 					<int key="connectionID">19460</int>
@@ -3306,7 +3301,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">setSizeFromMenu:</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="993460538"/>
 					</object>
 					<int key="connectionID">19461</int>
@@ -3314,7 +3309,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">keepAspectMenuItem</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="277199025"/>
 					</object>
 					<int key="connectionID">19462</int>
@@ -3322,10 +3317,18 @@
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">panScanMenuItem</string>
-						<reference key="source" ref="206410793"/>
+						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="236617444"/>
 					</object>
 					<int key="connectionID">19463</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">openPreferences:</string>
+						<reference key="source" ref="847214199"/>
+						<reference key="destination" ref="783045726"/>
+					</object>
+					<int key="connectionID">19490</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -3601,26 +3604,6 @@
 							<reference ref="789615876"/>
 						</array>
 						<reference key="parent" ref="699325894"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">106</int>
-						<reference key="object" ref="789615876"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="64985916"/>
-							<reference ref="346451651"/>
-							<reference ref="908181601"/>
-						</array>
-						<reference key="parent" ref="590802544"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">111</int>
-						<reference key="object" ref="64985916"/>
-						<reference key="parent" ref="789615876"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">2228</int>
-						<reference key="object" ref="346451651"/>
-						<reference key="parent" ref="789615876"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">163</int>
@@ -4246,11 +4229,6 @@
 						<reference key="parent" ref="683779601"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">19037</int>
-						<reference key="object" ref="908181601"/>
-						<reference key="parent" ref="789615876"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">1565</int>
 						<reference key="object" ref="810610387"/>
 						<array class="NSMutableArray" key="children">
@@ -4732,9 +4710,34 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">19348</int>
-						<reference key="object" ref="206410793"/>
+						<reference key="object" ref="847214199"/>
 						<reference key="parent" ref="0"/>
 						<string key="objectName">Menu Controller</string>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">106</int>
+						<reference key="object" ref="789615876"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="908181601"/>
+							<reference ref="346451651"/>
+							<reference ref="64985916"/>
+						</array>
+						<reference key="parent" ref="590802544"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">19037</int>
+						<reference key="object" ref="908181601"/>
+						<reference key="parent" ref="789615876"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">2228</int>
+						<reference key="object" ref="346451651"/>
+						<reference key="parent" ref="789615876"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">111</int>
+						<reference key="object" ref="64985916"/>
+						<reference key="parent" ref="789615876"/>
 					</object>
 				</array>
 			</object>
@@ -4743,7 +4746,7 @@
 				<boolean value="YES" key="-3.ImportedFromIB2"/>
 				<string key="103.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="103.ImportedFromIB2"/>
-				<string key="106.IBEditorWindowLastContentRect">{{564, 1013}, {300, 63}}</string>
+				<string key="106.IBEditorWindowLastContentRect">{{660, 938}, {300, 63}}</string>
 				<string key="106.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="106.ImportedFromIB2"/>
 				<string key="111.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -5163,7 +5166,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">19463</int>
+			<int key="maxID">19490</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -5176,20 +5179,15 @@
 						<string key="applyVIDEO_TSLocation:">id</string>
 						<string key="cancelLocation:">id</string>
 						<string key="cancelVIDEO_TSLocation:">id</string>
-						<string key="chooseCustomAspectRatio:">NSButton</string>
 						<string key="closeWindow:">id</string>
 						<string key="displayLogWindow:">id</string>
 						<string key="displayPlayList:">id</string>
-						<string key="openAudioEqualizer:">id</string>
-						<string key="openCustomAspectRatioChooser:">id</string>
 						<string key="openFile:">id</string>
 						<string key="openHomepage:">id</string>
 						<string key="openLicenseAndCredits:">id</string>
 						<string key="openLocation:">id</string>
-						<string key="openPreferences:">id</string>
 						<string key="openSubtitle:">id</string>
 						<string key="openVIDEO_TS:">id</string>
-						<string key="openVideoEqualizer:">id</string>
 						<string key="showFilesChanged:">NSPopUpButton</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
@@ -5303,9 +5301,6 @@
 						<string key="playlistNext:">NSMenuItem</string>
 						<string key="playlistPrevious:">NSMenuItem</string>
 						<string key="seekByTag:">NSMenuItem</string>
-						<string key="selectAudioStreamFromMenu:">NSMenuItem</string>
-						<string key="selectSubtitleStreamFromMenu:">NSMenuItem</string>
-						<string key="selectVideoStreamFromMenu:">NSMenuItem</string>
 						<string key="setAspectFromMenu:">NSMenuItem</string>
 						<string key="setSizeFromMenu:">NSMenuItem</string>
 						<string key="skipToChapterFromMenu:">NSMenuItem</string>
@@ -5567,6 +5562,7 @@
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="changeFont:">NSPopUpButton</string>
 						<string key="checkForUpdates:">id</string>
+						<string key="chooseCustomAspectRatio:">NSButton</string>
 						<string key="requireRestart:">id</string>
 						<string key="restartPlayback:">id</string>
 						<string key="selectBinary:">id</string>

@@ -17,6 +17,9 @@
 
 #import "VideoOpenGLView.h"
 
+#import "Preferences.h"
+#import "CocoaAdditions.h"
+
 @interface MenuController (Private)
 - (void) referenceControllers;
 @end
@@ -31,7 +34,6 @@
 	playListController = [appController playListController];
 	preferencesController = [appController preferencesController];
 	settingsController = [appController settingsController];
-	equalizerController = [appController equalizerController];
 }
 
 @end
@@ -52,7 +54,7 @@
 
 - (IBAction) openPreferences:(NSMenuItem *)sender
 {
-	
+	[[preferencesController window] makeKeyAndOrderFront:self];
 }
 
 
@@ -165,7 +167,12 @@
 
 - (IBAction) setAspectFromMenu:(NSMenuItem *)sender
 {
-	float aspectValue = [PreferencesController2 parseAspectRatio:[sender title]];
+	float aspectValue;
+	
+	if (sender)
+		aspectValue = [PreferencesController2 parseAspectRatio:[sender title]];
+	else
+		aspectValue = [[PREFS objectForKey:MPECustomAspectRatio] floatForKey:MPECustomAspectRatioValueKey];
 	
 	if (aspectValue <= 0) {
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Couldn't parse aspect menu item with title '%@'",[sender title]];
@@ -177,23 +184,7 @@
 
 - (IBAction) openCustomAspectChooser:(NSMenuItem *)sender
 {
-	
-}
-
-
-- (IBAction) selectVideoStreamFromMenu:(NSMenuItem *)sender
-{
-	
-}
-
-- (IBAction) selectAudioStreamFromMenu:(NSMenuItem *)sender
-{
-	
-}
-
-- (IBAction) selectSubtitleStreamFromMenu:(NSMenuItem *)sender
-{
-	
+	[[preferencesController customAspectRatioChooser] makeKeyAndOrderFront:sender];
 }
 
 
@@ -207,39 +198,39 @@
 
 - (IBAction) openPlayerWindow:(NSMenuItem *)sender
 {
-	
+	[playerController displayWindow:sender];
 }
 
 - (IBAction) togglePlaylistWindow:(NSMenuItem *)sender
 {
-	
+	[[playerController playListController] displayWindow:sender];
 }
 
 
 - (IBAction) openVideoEqualizer:(NSMenuItem *)sender
 {
-	
+	[[appController equalizerController] openVideoEqualizer];
 }
 
 - (IBAction) openAudioEqualizer:(NSMenuItem *)sender
 {
-	
+	[[appController equalizerController] openAudioEqualizer];
 }
 
 
 - (IBAction) openStatisticsWindow:(NSMenuItem *)sender
 {
-	
+	[playerController displayStats:sender];
 }
 
 - (IBAction) openInfoWindow:(NSMenuItem *)sender
 {
-	
+	[playListController displayItemSettings:sender];
 }
 
 - (IBAction) openLog:(NSMenuItem *)sender
 {
-	
+	[appController displayLogWindow:sender];
 }
 
 

@@ -37,7 +37,6 @@ SettingsController, EqualizerController;
 	PlayListController *playListController;
 	PreferencesController2 *preferencesController;
 	SettingsController *settingsController;
-	EqualizerController *equalizerController;
 }
 
 // Application Menu
@@ -73,10 +72,6 @@ SettingsController, EqualizerController;
 - (IBAction) originalAspect:(NSMenuItem *)sender;
 - (IBAction) setAspectFromMenu:(NSMenuItem *)sender;
 - (IBAction) openCustomAspectChooser:(NSMenuItem *)sender;
-
-- (IBAction) selectVideoStreamFromMenu:(NSMenuItem *)sender;
-- (IBAction) selectAudioStreamFromMenu:(NSMenuItem *)sender;
-- (IBAction) selectSubtitleStreamFromMenu:(NSMenuItem *)sender;
 
 - (IBAction) takeScreenshot:(NSMenuItem *)sender;
 

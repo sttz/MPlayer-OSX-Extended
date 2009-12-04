@@ -66,7 +66,7 @@ PlayListController, SettingsController, MenuController;
 @property (nonatomic,readonly) PreferencesController2 *preferencesController;
 @property (nonatomic,readonly) PlayListController *playListController;
 @property (nonatomic,readonly) SettingsController *settingsController;
-@property (nonatomic,readonly) EqualizerController *equalizerController;
+- (EqualizerController *)equalizerController;
 
 @property (readonly) NSMenu *aspectMenu;
 
@@ -75,11 +75,6 @@ PlayListController, SettingsController, MenuController;
 // app's interface
 - (NSUserDefaults *) preferences;
 - (NSArray *) preferencesRequiringRestart;
-- (IBAction) openPreferences:(id)sender;
-- (IBAction) openCustomAspectRatioChooser:(id)sender;
-- (IBAction) chooseCustomAspectRatio:(NSButton *)sender;
-- (IBAction) openVideoEqualizer:(id)sender;
-- (IBAction) openAudioEqualizer:(id)sender;
 
 - (void) restart;
 	

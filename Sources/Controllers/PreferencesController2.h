@@ -98,6 +98,8 @@
 - (void) loadFonts;
 - (IBAction) changeFont:(NSPopUpButton *)sender;
 
+- (IBAction) chooseCustomAspectRatio:(NSButton *)sender;
+
 + (float) parseAspectRatio:(NSString *)aspectString;
 + (NSColor *) unarchiveColor:(NSData *)data;
 
