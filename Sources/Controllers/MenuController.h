@@ -23,6 +23,9 @@ SettingsController, EqualizerController;
 	// Movie Menu
 	IBOutlet NSMenuItem* fullscreenMenu;
 	
+	IBOutlet NSMenuItem* keepAspectMenuItem;
+	IBOutlet NSMenuItem* panScanMenuItem;
+	
 	IBOutlet NSMenuItem* videoStreamMenu;
 	IBOutlet NSMenuItem* audioStreamMenu;
 	IBOutlet NSMenuItem* subtitleStreamMenu;
@@ -62,9 +65,7 @@ SettingsController, EqualizerController;
 - (IBAction) muteVolume:(NSMenuItem *)sender;
 
 // Movie Menu
-- (IBAction) halfSize:(NSMenuItem *)sender;
-- (IBAction) normalSize:(NSMenuItem *)sender;
-- (IBAction) doubleSize:(NSMenuItem *)sender;
+- (IBAction) setSizeFromMenu:(NSMenuItem *)sender;
 - (IBAction) fullScreen:(NSMenuItem *)sender;
 
 - (IBAction) toggleKeepAspect:(NSMenuItem *)sender;

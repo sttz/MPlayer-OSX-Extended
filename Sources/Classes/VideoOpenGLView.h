@@ -162,10 +162,9 @@
 - (void) updateOntop;
 - (void) setAspectRatio:(float)aspect;
 - (void) setAspectRatioFromPreferences;
+- (void) toggleKeepAspect;
+- (void) togglePanScan;
 
-//Action
-- (IBAction)MovieMenuAction:(id)sender;
-- (IBAction)setAspectRatioFromMenu:(NSMenuItem *)sender;
 //Event
 - (void) mouseDown: (NSEvent *) theEvent;
 

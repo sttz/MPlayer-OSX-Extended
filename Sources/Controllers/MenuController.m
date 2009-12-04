@@ -137,45 +137,42 @@
 
 // -- Movie Menu --------------------------------
 
-- (IBAction) halfSize:(NSMenuItem *)sender
+- (IBAction) setSizeFromMenu:(NSMenuItem *)sender
 {
-	[[playerController videoOpenGLView] MovieMenuAction:sender];
-}
-
-- (IBAction) normalSize:(NSMenuItem *)sender
-{
-	[[playerController videoOpenGLView] MovieMenuAction:sender];
-}
-
-- (IBAction) doubleSize:(NSMenuItem *)sender
-{
-	[[playerController videoOpenGLView] MovieMenuAction:sender];
+	[[playerController videoOpenGLView] setWindowSizeMode:WSM_SCALE withValue:([sender tag]/100.0f)];
 }
 
 - (IBAction) fullScreen:(NSMenuItem *)sender
 {
-	[[playerController videoOpenGLView] MovieMenuAction:sender];
+	[playerController switchFullscreen:sender];
 }
 
 
 - (IBAction) toggleKeepAspect:(NSMenuItem *)sender
 {
-	[[playerController videoOpenGLView] MovieMenuAction:sender];
+	[[playerController videoOpenGLView] toggleKeepAspect];
 }
 
 - (IBAction) togglePanScan:(NSMenuItem *)sender
 {
-	[[playerController videoOpenGLView] MovieMenuAction:sender];
+	[[playerController videoOpenGLView] togglePanScan];
 }
 
 - (IBAction) originalAspect:(NSMenuItem *)sender
 {
-	[[playerController videoOpenGLView] MovieMenuAction:sender];
+	[[playerController videoOpenGLView] setAspectRatio:0];
 }
 
 - (IBAction) setAspectFromMenu:(NSMenuItem *)sender
 {
-	[[playerController videoOpenGLView] setAspectRatioFromMenu:sender];
+	float aspectValue = [PreferencesController2 parseAspectRatio:[sender title]];
+	
+	if (aspectValue <= 0) {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Couldn't parse aspect menu item with title '%@'",[sender title]];
+		return;
+	}
+	
+	[[playerController videoOpenGLView] setAspectRatio:aspectValue];
 }
 
 - (IBAction) openCustomAspectChooser:(NSMenuItem *)sender

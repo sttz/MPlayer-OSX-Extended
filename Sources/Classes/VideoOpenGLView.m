@@ -4,6 +4,7 @@
 // other controllers
 #import "AppController.h"
 #import "PlayListController.h"
+#import "MenuController.h"
 
 //Custom Class
 #import "VideoOpenGLView.h"
@@ -798,66 +799,27 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 }
 
 /*
-	Menu Actions
+	Toggle keep aspect state
 */
-- (IBAction)MovieMenuAction:(id)sender
+- (void) toggleKeepAspect
 {
-	if(isPlaying) 
-	{
-		//Zoom
-		if(sender == HalfSizeMenuItem)
-			[self setWindowSizeMode:WSM_SCALE withValue:0.5];
-		if(sender == NormalSizeMenuItem)
-			[self setWindowSizeMode:WSM_SCALE withValue:1];
-		if(sender == DoubleSizeMenuItem)
-			[self setWindowSizeMode:WSM_SCALE withValue:2];
-			
-		//Aspect
-		if(sender == KeepAspectMenuItem)
-		{
-			keepAspect = !keepAspect;
-			
-			if(keepAspect)
-				[KeepAspectMenuItem setState:NSOnState];
-			else
-				[KeepAspectMenuItem setState:NSOffState];
-				
-			[self reshapeAndResize];
-		}
-			
-		if(sender == PanScanMenuItem)
-		{
-			panScan = !panScan;
-			
-			if(panScan)
-				[PanScanMenuItem setState:NSOnState];
-			else
-				[PanScanMenuItem setState:NSOffState];
-				
-			[self reshapeAndResize];
-		}
-			
-		if(sender == OriginalAspectMenuItem)
-		{
-			image_aspect = org_image_aspect;
-			[self reshapeAndResize];
-		}
-	}
+	keepAspect = !keepAspect;
+	
+	[[[AppController sharedController] menuController]->keepAspectMenuItem setState:keepAspect];
+	
+	[self reshapeAndResize];
 }
 
 /*
-	Set aspect ratio by parsing the menu item title
+	Toggle panscan state
 */
-- (IBAction)setAspectRatioFromMenu:(NSMenuItem *)sender
+- (void) togglePanScan
 {
-	float aspectValue = [PreferencesController2 parseAspectRatio:[sender title]];
+	panScan = !panScan;
 	
-	if (aspectValue <= 0) {
-		[Debug log:ASL_LEVEL_ERR withMessage:@"Couldn't parse aspect menu item with title '%@'",[sender title]];
-		return;
-	}
+	[[[AppController sharedController] menuController]->panScanMenuItem setState:panScan];
 	
-	[self setAspectRatio:aspectValue];
+	[self reshapeAndResize];
 }
 
 /*
@@ -896,7 +858,11 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 */
 - (void)setAspectRatio:(float)aspect
 {
-	image_aspect = aspect;
+	if (aspect > 0)
+		image_aspect = aspect;
+	else
+		image_aspect = org_image_aspect;
+	
 	[self reshapeAndResize];
 }
 		 
