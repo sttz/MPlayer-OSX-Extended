@@ -11,7 +11,7 @@
 			<string key="NS.object.0">732</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="29"/>
+			<integer value="19219"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1096,9 +1096,6 @@
 				<string key="NSClassName">MenuController</string>
 			</object>
 			<object class="NSUserDefaultsController" id="299649667">
-				<array class="NSMutableArray" key="NSDeclaredKeys">
-					<string>MPEUpdateBinaries</string>
-				</array>
 				<bool key="NSSharedInstance">YES</bool>
 			</object>
 			<object class="NSCustomObject" id="466167469">
@@ -3330,6 +3327,14 @@
 					</object>
 					<int key="connectionID">19490</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">toggleMuteMenuItem</string>
+						<reference key="source" ref="847214199"/>
+						<reference key="destination" ref="336999493"/>
+					</object>
+					<int key="connectionID">19491</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -5055,7 +5060,6 @@
 				<string key="19244.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="19245.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="19342.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="19348.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1983.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="YES" key="1983.ImportedFromIB2"/>
 				<string key="1984.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -5166,7 +5170,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">19490</int>
+			<int key="maxID">19491</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -5181,7 +5185,6 @@
 						<string key="cancelVIDEO_TSLocation:">id</string>
 						<string key="closeWindow:">id</string>
 						<string key="displayLogWindow:">id</string>
-						<string key="displayPlayList:">id</string>
 						<string key="openFile:">id</string>
 						<string key="openHomepage:">id</string>
 						<string key="openLicenseAndCredits:">id</string>
@@ -5323,6 +5326,7 @@
 						<string key="panScanMenuItem">NSMenuItem</string>
 						<string key="playMenuItem">NSMenuItem</string>
 						<string key="subtitleStreamMenu">NSMenuItem</string>
+						<string key="toggleMuteMenuItem">NSMenuItem</string>
 						<string key="videoStreamMenu">NSMenuItem</string>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -5466,7 +5470,6 @@
 						<string key="subtitleCycleButton">id</string>
 						<string key="subtitleWindowMenu">id</string>
 						<string key="timeTextField">id</string>
-						<string key="toggleMuteMenu">NSMenuItem</string>
 						<string key="videoOpenGLView">VideoOpenGLView</string>
 						<string key="volumeButton">id</string>
 						<string key="volumeSlider">id</string>
