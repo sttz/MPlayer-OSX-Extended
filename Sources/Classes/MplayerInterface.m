@@ -238,7 +238,7 @@ static NSDictionary *videoEqualizerCommands;
 	
 	// force using 32bit arch of binary
 	force32bitBinary = NO;
-	if (is64bitHost && [[prefs objectForKey:MPEUse32bitBinaryon64bit] boolValue]) {
+	if (is64bitHost && [prefs boolForKey:MPEUse32bitBinaryon64bit]) {
 		NSDictionary *binaryInfo = [[[AppController sharedController] preferencesController] binaryInfo];
 		NSDictionary *thisInfo = [binaryInfo objectForKey:[cPrefs objectForKey:MPESelectedBinary]];
 		if ([[thisInfo objectForKey:@"MPEBinaryArchs"] containsObject:@"i386"])
@@ -289,7 +289,7 @@ static NSDictionary *videoEqualizerCommands;
 	
 	// audio languages
 	if ([cPrefs objectForKey:MPEDefaultAudioLanguages]) {
-		NSArray *audioLangs = [cPrefs objectForKey:MPEDefaultAudioLanguages];
+		NSArray *audioLangs = [cPrefs arrayForKey:MPEDefaultAudioLanguages];
 		if ([audioLangs count] > 0) {
 			[params addObject:@"-alang"];
 			[params addObject:[[LanguageCodes sharedInstance] mplayerArgumentFromArray:audioLangs]];
@@ -298,7 +298,7 @@ static NSDictionary *videoEqualizerCommands;
 	
 	// subtitle languages
 	if ([cPrefs objectForKey:MPEDefaultSubtitleLanguages]) {
-		NSArray *subtitleLangs = [cPrefs objectForKey:MPEDefaultSubtitleLanguages];
+		NSArray *subtitleLangs = [cPrefs arrayForKey:MPEDefaultSubtitleLanguages];
 		if ([subtitleLangs count] > 0) {
 			[params addObject:@"-slang"];
 			[params addObject:[[LanguageCodes sharedInstance] mplayerArgumentFromArray:subtitleLangs]];
@@ -309,14 +309,12 @@ static NSDictionary *videoEqualizerCommands;
 	// *** PLAYBACK
 	
 	// cache settings
-	if ([cPrefs objectForKey:MPECacheSizeInMB]) {
-		int cacheSize = [[cPrefs objectForKey:MPECacheSizeInMB] floatValue] * 1024;
-		if (cacheSize > 0) {
-			[params addObject:@"-cache"];
-			[params addObject:[NSString stringWithFormat:@"%d",cacheSize]];
-		} else
-			[params addObject:@"-nocache"];
-	}
+	if ([cPrefs floatForKey:MPECacheSizeInMB] > 0) {
+		[params addObject:@"-cache"];
+		[params addObject:[NSString stringWithFormat:@"%d",
+						   (int)([cPrefs floatForKey:MPECacheSizeInMB] * 1024)]];
+	} else
+		[params addObject:@"-nocache"];
 	
 	// number of threads
 	if (numberOfThreads > 0) {
@@ -325,23 +323,23 @@ static NSDictionary *videoEqualizerCommands;
 	}
 	
 	// rootwin
-	if ([[cPrefs objectForKey:MPEStartPlaybackDisplayType] intValue] == MPEStartPlaybackDisplayTypeDesktop) {
+	if ([cPrefs integerForKey:MPEStartPlaybackDisplayType] == MPEStartPlaybackDisplayTypeDesktop) {
 		[params addObject:@"-rootwin"];
 		[params addObject:@"-fs"];
 	}
 	
 	// flip vertical
-	if ([[cPrefs objectForKey:MPEFlipDisplayVertically] boolValue]) {
+	if ([cPrefs boolForKey:MPEFlipDisplayVertically]) {
 		[videoFilters addObject:@"flip"];
 	}
 	// flip horizontal
-	if ([[cPrefs objectForKey:MPEFlipDisplayHorizontally] boolValue]) {
+	if ([cPrefs boolForKey:MPEFlipDisplayHorizontally]) {
 		[videoFilters addObject:@"mirror"];
 	}
 	
 	// select video out (if video is enabled and not playing in rootwin)
-	if ([[cPrefs objectForKey:MPEStartPlaybackDisplayType] intValue] != MPEStartPlaybackDisplayTypeDesktop
-			&& [[cPrefs objectForKey:MPEEnableVideo] boolValue]) {
+	if ([cPrefs integerForKey:MPEStartPlaybackDisplayType] != MPEStartPlaybackDisplayTypeDesktop
+			&& [cPrefs boolForKey:MPEEnableVideo]) {
 		[params addObject:@"-vo"];
 		[params addObject:[NSString stringWithFormat:@"corevideo:buffer_name=%@",buffer_name]];
 	}
@@ -351,25 +349,25 @@ static NSDictionary *videoEqualizerCommands;
 	
 	// add font
 	if ([cPrefs objectForKey:MPEFont]) {
-		NSString *fcPattern = [cPrefs objectForKey:MPEFont];
-		if ([cPrefs objectForKey:MPEFontStyle])
-			fcPattern = [NSString stringWithFormat:@"%@:style=%@", fcPattern, [cPrefs objectForKey:MPEFontStyle]];
+		NSString *fcPattern = [cPrefs stringForKey:MPEFont];
+		if ([cPrefs stringForKey:MPEFontStyle])
+			fcPattern = [NSString stringWithFormat:@"%@:style=%@", fcPattern, [cPrefs stringForKey:MPEFontStyle]];
 		[params addObject:@"-font"];
 		[params addObject:fcPattern];
 	}
 	
 	// guess encoding with enca
 	if ([cPrefs objectForKey:MPEGuessTextEncoding] && 
-			![[cPrefs objectForKey:MPEGuessTextEncoding] isEqualToString:@"disabled"]) {
-		NSString *subEncoding = [cPrefs objectForKey:MPETextEncoding];
+			![[cPrefs stringForKey:MPEGuessTextEncoding] isEqualToString:@"disabled"]) {
+		NSString *subEncoding = [cPrefs stringForKey:MPETextEncoding];
 		if (!subEncoding)
 			subEncoding = @"none";
 		[params addObject:@"-subcp"];
 		[params addObject:[NSString stringWithFormat:@"enca:%@:%@", 
-						   [cPrefs objectForKey:MPEGuessTextEncoding], subEncoding]];
+						   [cPrefs stringForKey:MPEGuessTextEncoding], subEncoding]];
 	// fix encoding
 	} else if ([cPrefs objectForKey:MPETextEncoding]
-			   && ![[cPrefs objectForKey:MPETextEncoding] isEqualToString:@"None"]) {
+			   && ![[cPrefs stringForKey:MPETextEncoding] isEqualToString:@"None"]) {
 		[params addObject:@"-subcp"];
 		[params addObject:[cPrefs objectForKey:MPETextEncoding]];
 	}
@@ -380,76 +378,67 @@ static NSDictionary *videoEqualizerCommands;
 	[params addObject:@"-ass"];
 	
 	// subtitles scale
-	if ([cPrefs objectForKey:MPESubtitleScale]) {
-		float subtitleScale = [[cPrefs objectForKey:MPESubtitleScale] floatValue];
-		if (subtitleScale > 0) {
-			[params addObject:@"-ass-font-scale"];
-			[params addObject:[NSString stringWithFormat:@"%.3f",subtitleScale]];
-		}
+	if ([cPrefs floatForKey:MPESubtitleScale] > 0) {
+		[params addObject:@"-ass-font-scale"];
+		[params addObject:[NSString stringWithFormat:@"%.3f",[cPrefs floatForKey:MPESubtitleScale]]];
 	}
 	
 	// embedded fonts
-	if ([[cPrefs objectForKey:MPELoadEmbeddedFonts] boolValue]) {
+	if ([cPrefs boolForKey:MPELoadEmbeddedFonts]) {
 		[params addObject:@"-embeddedfonts"];
 	}
 	
 	// ass pre filter
-	if ([[cPrefs objectForKey:MPERenderSubtitlesFirst] boolValue]) {
+	if ([cPrefs boolForKey:MPERenderSubtitlesFirst]) {
 		[videoFilters insertObject:@"ass" atIndex:0];
 	}
 	
 	// subtitles color
-	if ([cPrefs objectForKey:MPESubtitleTextColor]) {
-		NSColor *textColor = [PreferencesController2 unarchiveColor:[cPrefs objectForKey:MPESubtitleTextColor]];
+	NSColor *textColor;
+	if (textColor = [cPrefs colorForKey:MPESubtitleTextColor]) {
 		CGFloat red, green, blue, alpha;
 		[textColor getRed:&red green:&green blue:&blue alpha:&alpha];
 		[params addObject:@"-ass-color"];
 		[params addObject:[NSString stringWithFormat:@"%02X%02X%02X%02X",(unsigned)(red*255),(unsigned)(green*255),(unsigned)(blue*255),(unsigned)((1-alpha)*255)]];
 	}
 	// subtitles color
-	if ([cPrefs objectForKey:MPESubtitleBorderColor]) {
-		NSColor *borderColor = [PreferencesController2 unarchiveColor:[cPrefs objectForKey:MPESubtitleBorderColor]];
+	NSColor *borderColor;
+	if (borderColor = [cPrefs colorForKey:MPESubtitleBorderColor]) {
 		CGFloat red, green, blue, alpha;
 		[borderColor getRed:&red green:&green blue:&blue alpha:&alpha];
 		[params addObject:@"-ass-border-color"];
 		[params addObject:[NSString stringWithFormat:@"%02X%02X%02X%02X",(unsigned)(red*255),(unsigned)(green*255),(unsigned)(blue*255),(unsigned)((1-alpha)*255)]];
 	}
 	
-	if ([cPrefs objectForKey:MPEOSDLevel]) {
-		osdLevel = [[cPrefs objectForKey:MPEOSDLevel] intValue];
-		if (osdLevel != 1 && osdLevel != 2) {
-			[params addObject:@"-osdlevel"];
-			[params addObject:[NSString stringWithFormat:@"%i",(osdLevel == 0 ? 0 : osdLevel - 1)]];
-		}
+	if (osdLevel = [cPrefs integerForKey:MPEOSDLevel] && osdLevel != 1 && osdLevel != 2) {
+		[params addObject:@"-osdlevel"];
+		[params addObject:[NSString stringWithFormat:@"%i",(osdLevel == 0 ? 0 : osdLevel - 1)]];
 	}
 	
 	// subtitles scale
-	if ([cPrefs objectForKey:MPEOSDScale]) {
-		float osdScale = [[cPrefs objectForKey:MPEOSDScale] floatValue];
-		if (osdScale > 0) {
-			[params addObject:@"-subfont-osd-scale"];
-			[params addObject:[NSString stringWithFormat:@"%.3f",osdScale*6.0]];
-		}
+	if ([cPrefs floatForKey:MPEOSDScale] > 0) {
+		[params addObject:@"-subfont-osd-scale"];
+		[params addObject:[NSString stringWithFormat:@"%.3f",[cPrefs floatForKey:MPEOSDScale]*6.0]];
 	}
 	
 	
 	// *** VIDEO
 	
 	// disable video
-	if (![[cPrefs objectForKey:MPEEnableVideo] boolValue]) {
+	if (![cPrefs boolForKey:MPEEnableVideo]) {
 		[params addObject:@"-vc"];
 		[params addObject:@"null"];
 		[params addObject:@"-vo"];
 		[params addObject:@"null"];
 	// video codecs
-	} else if ([cPrefs objectForKey:MPEOverrideVideoCodecs]) {
+	} else if ([cPrefs stringForKey:MPEOverrideVideoCodecs]) {
 		[params addObject:@"-vc"];
-		[params addObject:[cPrefs objectForKey:MPEOverrideVideoCodecs]];
+		[params addObject:[cPrefs stringForKey:MPEOverrideVideoCodecs]];
 	}
 	
 	// framedrop
 	if ([cPrefs objectForKey:MPEDropFrames]) {
-		int dropFrames = [[cPrefs objectForKey:MPEDropFrames] intValue];
+		int dropFrames = [cPrefs integerForKey:MPEDropFrames];
 		if (dropFrames == MPEDropFramesSoft)
 			[params addObject:@"-framedrop"];
 		else if (dropFrames == MPEDropFramesHard)
@@ -457,14 +446,14 @@ static NSDictionary *videoEqualizerCommands;
 	}
 	
 	// fast decoding
-	if ([[cPrefs objectForKey:MPEFastDecoding] boolValue]) {
+	if ([cPrefs boolForKey:MPEFastDecoding]) {
 		[params addObject:@"-lavdopts"];
 		[params addObject:@"fast:skiploopfilter=all"];
 	}
 	
 	// deinterlace
 	if ([cPrefs objectForKey:MPEDeinterlaceFilter]) {
-		int deinterlace = [[cPrefs objectForKey:MPEDeinterlaceFilter] intValue];
+		int deinterlace = [cPrefs integerForKey:MPEDeinterlaceFilter];
 		if (deinterlace == MPEDeinterlaceFilterYadif)
 			[videoFilters addObject:@"yadif=1"];
 		else if (deinterlace == MPEDeinterlaceFilterKernel)
@@ -479,7 +468,7 @@ static NSDictionary *videoEqualizerCommands;
 	
 	// postprocessing
 	if ([cPrefs objectForKey:MPEPostprocessingFilter]) {
-		int postprocessing = [[cPrefs objectForKey:MPEPostprocessingFilter] intValue];
+		int postprocessing = [cPrefs integerForKey:MPEPostprocessingFilter];
 		if (postprocessing == MPEPostprocessingFilterDefault)
 			[videoFilters addObject:@"pp=default"];
 		else if (postprocessing == MPEPostprocessingFilterFast)
@@ -492,32 +481,32 @@ static NSDictionary *videoEqualizerCommands;
 	// *** AUDIO
 	
 	// disable audio
-	if (![[cPrefs objectForKey:MPEEnableAudio] boolValue])
+	if (![cPrefs boolForKey:MPEEnableAudio])
 		[params addObject:@"-nosound"];
 	// audio codecs
-	else if ([cPrefs objectForKey:MPEOverrideAudioCodecs]) {
-		[audioCodecsArr addObject:[cPrefs objectForKey:MPEOverrideAudioCodecs]];
+	else if ([cPrefs stringForKey:MPEOverrideAudioCodecs]) {
+		[audioCodecsArr addObject:[cPrefs stringForKey:MPEOverrideAudioCodecs]];
 	}
 	
 	// ac3/dts passthrough
-	if ([[cPrefs objectForKey:MPEHardwareAC3Passthrough] boolValue]) {
+	if ([cPrefs boolForKey:MPEHardwareAC3Passthrough]) {
 		[audioCodecsArr insertObject:@"hwac3" atIndex:0];
 	}
-	if ([[cPrefs objectForKey:MPEHardwareDTSPassthrough] boolValue]) {
+	if ([cPrefs boolForKey:MPEHardwareDTSPassthrough]) {
 		[audioCodecsArr insertObject:@"hwdts" atIndex:0];
 	}
 	
 	// hrtf filter
-	if ([[cPrefs objectForKey:MPEHRTFFilter] boolValue]) {
+	if ([cPrefs boolForKey:MPEHRTFFilter]) {
 		[audioFilters addObject:@"resample=48000"];
 		[audioFilters addObject:@"hrtf"];
 	}
 	// bs2b filter
-	if ([[cPrefs objectForKey:MPEBS2BFilter] boolValue]) {
+	if ([cPrefs boolForKey:MPEBS2BFilter]) {
 		[audioFilters addObject:@"bs2b"];
 	}
 	// karaoke filter
-	if ([[cPrefs objectForKey:MPEKaraokeFilter] boolValue]) {
+	if ([cPrefs boolForKey:MPEKaraokeFilter]) {
 		[audioFilters addObject:@"karaoke"];
 	}
 	
@@ -531,7 +520,7 @@ static NSDictionary *videoEqualizerCommands;
 	// *** Video filters
 	// add screenshot filter
 	if ([cPrefs objectForKey:MPEScreenshotSaveLocation]) {
-		int screenshot = [[cPrefs objectForKey:MPEScreenshotSaveLocation] intValue];
+		int screenshot = [cPrefs integerForKey:MPEScreenshotSaveLocation];
 		
 		if (screenshot != MPEScreenshotsDisabled) {
 			[videoFilters addObject:@"screenshot"];
@@ -539,8 +528,8 @@ static NSDictionary *videoEqualizerCommands;
 			[screenshotPath release];
 			
 			if (screenshot == MPEScreenshotSaveLocationCustom
-					&& [cPrefs objectForKey:MPECustomScreenshotsSavePath])
-				screenshotPath = [cPrefs objectForKey:MPECustomScreenshotsSavePath];
+					&& [cPrefs stringForKey:MPECustomScreenshotsSavePath])
+				screenshotPath = [cPrefs stringForKey:MPECustomScreenshotsSavePath];
 			
 			else if (screenshot == MPEScreenshotSaveLocationHomeFolder)
 				screenshotPath = NSHomeDirectory();
@@ -561,7 +550,7 @@ static NSDictionary *videoEqualizerCommands;
 	}
 	
 	// video equalizer
-	if ([[cPrefs objectForKey:MPEVideoEqualizerEnabled] boolValue]) {
+	if ([cPrefs boolForKey:MPEVideoEqualizerEnabled]) {
 		[videoFilters addObject:[NSString stringWithFormat:@"eq2=%@",[EqualizerController eq2FilterValues]]];
 		[videoFilters addObject:[NSString stringWithFormat:@"hue=%@",[EqualizerController hueFilterValue]]];
 		[videoFilters addObject:@"scale"];
@@ -574,7 +563,7 @@ static NSDictionary *videoEqualizerCommands;
 	}
 	
 	// audio equalizer
-	if ([[cPrefs objectForKey:MPEAudioEqualizerEnabled] boolValue]) {
+	if ([cPrefs boolForKey:MPEAudioEqualizerEnabled]) {
 		[audioFilters addObject:[NSString stringWithFormat:@"equalizer=%@",[EqualizerController equalizerFilterValues]]];
 	}
 	
@@ -589,7 +578,7 @@ static NSDictionary *videoEqualizerCommands;
 		NSString *acstring = [audioCodecsArr componentsJoinedByString:@","];
 		// add trailing , if audioCodecs is empty
 		if (![cPrefs objectForKey:MPEOverrideAudioCodecs]
-				|| [(NSString*)[cPrefs objectForKey:MPEOverrideAudioCodecs] length] == 0)
+				|| [[cPrefs stringForKey:MPEOverrideAudioCodecs] length] == 0)
 			acstring = [acstring stringByAppendingString:@","];
 		
 		[params addObject:@"-ac"];
@@ -612,11 +601,11 @@ static NSDictionary *videoEqualizerCommands;
 	
 	// additional parameters
 	if ([cPrefs objectForKey:MPEAdvancedOptions]) {
-		NSArray *options = [cPrefs objectForKey:MPEAdvancedOptions];
+		NSArray *options = [cPrefs arrayForKey:MPEAdvancedOptions];
 		for (NSDictionary *option in options) {
-			if ([[option objectForKey:MPEAdvancedOptionsEnabledKey] boolValue])
+			if ([option boolForKey:MPEAdvancedOptionsEnabledKey])
 				[params addObjectsFromArray:
-					[[option objectForKey:MPEAdvancedOptionsStringKey] componentsSeparatedByString:@" "]];
+					[[option stringForKey:MPEAdvancedOptionsStringKey] componentsSeparatedByString:@" "]];
 		}
 	}
 	
@@ -650,7 +639,7 @@ static NSDictionary *videoEqualizerCommands;
 	[self runMplayerWithParams:params];
 	
 	// apply initial video equalizer values
-	if ([[cPrefs objectForKey:MPEVideoEqualizerEnabled] boolValue])
+	if ([cPrefs boolForKey:MPEVideoEqualizerEnabled])
 		[self applyVideoEqualizer];
 }
 /************************************************************************************/

@@ -101,7 +101,6 @@
 - (IBAction) chooseCustomAspectRatio:(NSButton *)sender;
 
 + (float) parseAspectRatio:(NSString *)aspectString;
-+ (NSColor *) unarchiveColor:(NSData *)data;
 
 - (NSView *) binarySelectionView;
 - (NSString *) identifierFromSelectionInView;

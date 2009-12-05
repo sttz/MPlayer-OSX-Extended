@@ -867,16 +867,6 @@
 	return 0;
 }
 
-+ (NSColor *) unarchiveColor:(NSData *)data
-{
-	NSColor *aColor = nil;
-	
-	if (data != nil)
-		aColor = (NSColor *)[NSUnarchiver unarchiveObjectWithData:data];
-	
-	return aColor;
-}
-
 @end
 
 
