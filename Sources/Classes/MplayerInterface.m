@@ -397,9 +397,12 @@ static NSDictionary *videoEqualizerCommands;
 		[params addObject:[NSString stringWithFormat:@"%02X%02X%02X%02X",(unsigned)(red*255),(unsigned)(green*255),(unsigned)(blue*255),(unsigned)((1-alpha)*255)]];
 	}
 	
-	if (osdLevel = [cPrefs integerForKey:MPEOSDLevel] && osdLevel != 1 && osdLevel != 2) {
-		[params addObject:@"-osdlevel"];
-		[params addObject:[NSString stringWithFormat:@"%i",(osdLevel == 0 ? 0 : osdLevel - 1)]];
+	if ([cPrefs objectForKey:MPEOSDLevel]) {
+		osdLevel = [cPrefs integerForKey:MPEOSDLevel];
+		if (osdLevel != 1 && osdLevel != 2) {
+			[params addObject:@"-osdlevel"];
+			[params addObject:[NSString stringWithFormat:@"%i",(osdLevel == 0 ? 0 : osdLevel - 1)]];
+		}
 	}
 	
 	// subtitles scale
