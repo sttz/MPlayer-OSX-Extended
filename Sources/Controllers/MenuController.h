@@ -33,12 +33,7 @@ SettingsController, EqualizerController;
 	IBOutlet NSMenuItem* subtitleStreamMenu;
 	
 @private
-	// Controller shorthands
-	AppController *appController;
-	PlayerController *playerController;
-	PlayListController *playListController;
-	PreferencesController2 *preferencesController;
-	SettingsController *settingsController;
+	IBOutlet AppController *appController;
 }
 
 // Application Menu

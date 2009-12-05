@@ -20,41 +20,14 @@
 #import "Preferences.h"
 #import "CocoaAdditions.h"
 
-@interface MenuController (Private)
-- (void) referenceControllers;
-@end
-
-
-@implementation MenuController (Private)
-
-- (void) referenceControllers
-{
-	appController = [AppController sharedController];
-	playerController = [appController playerController];
-	playListController = [appController playListController];
-	preferencesController = [appController preferencesController];
-	settingsController = [appController settingsController];
-}
-
-@end
-
 
 @implementation MenuController
-
-- (void) awakeFromNib
-{
-	// register for app launch finish
-	[[NSNotificationCenter defaultCenter] addObserver: self
-											 selector: @selector(referenceControllers)
-												 name: NSApplicationDidFinishLaunchingNotification
-											   object:NSApp];
-}
 
 // -- Application Menu --------------------------------
 
 - (IBAction) openPreferences:(NSMenuItem *)sender
 {
-	[[preferencesController window] makeKeyAndOrderFront:self];
+	[[[appController preferencesController] window] makeKeyAndOrderFront:self];
 }
 
 
@@ -70,28 +43,28 @@
 
 - (IBAction) playPause:(NSMenuItem *)sender
 {
-	[playerController playPause:sender];
+	[[appController playerController] playPause:sender];
 }
 
 - (IBAction) stop:(NSMenuItem *)sender
 {
-	[playerController stop:self];
+	[[appController playerController] stop:self];
 }
 
 - (IBAction) toggleLoop:(NSMenuItem *)sender
 {
-	[playerController toggleLoop:sender];
+	[[appController playerController] toggleLoop:sender];
 }
 
 
 - (IBAction) skipToNext:(NSMenuItem *)sender
 {
-	[playerController seekNext:sender];
+	[[appController playerController] seekNext:sender];
 }
 
 - (IBAction) skipToPrevious:(NSMenuItem *)sender
 {
-	[playerController seekPrevious:sender];
+	[[appController playerController] seekPrevious:sender];
 }
 
 - (IBAction) skipToChapterFromMenu:(NSMenuItem *)sender
@@ -101,12 +74,12 @@
 
 - (IBAction) seekByTag:(NSMenuItem *)sender
 {
-	[playerController seekFromMenu:sender];
+	[[appController playerController] seekFromMenu:sender];
 }
 
 - (IBAction) stepFrame:(NSMenuItem *)sender
 {
-	[playerController stepFrame:sender];
+	[[appController playerController] stepFrame:sender];
 }
 
 
@@ -123,17 +96,17 @@
 
 - (IBAction) increaseVolume:(NSMenuItem *)sender
 {
-	[playerController increaseVolume:sender];
+	[[appController playerController] increaseVolume:sender];
 }
 
 - (IBAction) decreaseVolume:(NSMenuItem *)sender
 {
-	[playerController decreaseVolume:sender];
+	[[appController playerController] decreaseVolume:sender];
 }
 
 - (IBAction) muteVolume:(NSMenuItem *)sender
 {
-	[playerController toggleMute:sender];
+	[[appController playerController] toggleMute:sender];
 }
 
 
@@ -141,28 +114,29 @@
 
 - (IBAction) setSizeFromMenu:(NSMenuItem *)sender
 {
-	[[playerController videoOpenGLView] setWindowSizeMode:WSM_SCALE withValue:([sender tag]/100.0f)];
+	[[[appController playerController] videoOpenGLView] setWindowSizeMode:WSM_SCALE 
+																withValue:([sender tag]/100.0f)];
 }
 
 - (IBAction) fullScreen:(NSMenuItem *)sender
 {
-	[playerController switchFullscreen:sender];
+	[[appController playerController] switchFullscreen:sender];
 }
 
 
 - (IBAction) toggleKeepAspect:(NSMenuItem *)sender
 {
-	[[playerController videoOpenGLView] toggleKeepAspect];
+	[[[appController playerController] videoOpenGLView] toggleKeepAspect];
 }
 
 - (IBAction) togglePanScan:(NSMenuItem *)sender
 {
-	[[playerController videoOpenGLView] togglePanScan];
+	[[[appController playerController] videoOpenGLView] togglePanScan];
 }
 
 - (IBAction) originalAspect:(NSMenuItem *)sender
 {
-	[[playerController videoOpenGLView] setAspectRatio:0];
+	[[[appController playerController] videoOpenGLView] setAspectRatio:0];
 }
 
 - (IBAction) setAspectFromMenu:(NSMenuItem *)sender
@@ -179,18 +153,18 @@
 		return;
 	}
 	
-	[[playerController videoOpenGLView] setAspectRatio:aspectValue];
+	[[[appController playerController] videoOpenGLView] setAspectRatio:aspectValue];
 }
 
 - (IBAction) openCustomAspectChooser:(NSMenuItem *)sender
 {
-	[[preferencesController customAspectRatioChooser] makeKeyAndOrderFront:sender];
+	[[[appController preferencesController] customAspectRatioChooser] makeKeyAndOrderFront:sender];
 }
 
 
 - (IBAction) takeScreenshot:(NSMenuItem *)sender
 {
-	[playerController takeScreenshot:sender];
+	[[appController playerController] takeScreenshot:sender];
 }
 
 
@@ -198,12 +172,12 @@
 
 - (IBAction) openPlayerWindow:(NSMenuItem *)sender
 {
-	[playerController displayWindow:sender];
+	[[appController playerController] displayWindow:sender];
 }
 
 - (IBAction) togglePlaylistWindow:(NSMenuItem *)sender
 {
-	[[playerController playListController] displayWindow:sender];
+	[[[appController playerController] playListController] displayWindow:sender];
 }
 
 
@@ -220,12 +194,12 @@
 
 - (IBAction) openStatisticsWindow:(NSMenuItem *)sender
 {
-	[playerController displayStats:sender];
+	[[appController playerController] displayStats:sender];
 }
 
 - (IBAction) openInfoWindow:(NSMenuItem *)sender
 {
-	[playListController displayItemSettings:sender];
+	[[[appController playerController] playListController] displayItemSettings:sender];
 }
 
 - (IBAction) openLog:(NSMenuItem *)sender

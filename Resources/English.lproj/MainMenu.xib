@@ -3335,6 +3335,14 @@
 					</object>
 					<int key="connectionID">19491</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">appController</string>
+						<reference key="source" ref="847214199"/>
+						<reference key="destination" ref="700428315"/>
+					</object>
+					<int key="connectionID">19493</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -5170,7 +5178,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">19491</int>
+			<int key="maxID">19493</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -5318,6 +5326,7 @@
 						<string key="togglePlaylistWindow:">NSMenuItem</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="appController">AppController</string>
 						<string key="audioStreamMenu">NSMenuItem</string>
 						<string key="chapterMenu">NSMenuItem</string>
 						<string key="fullscreenMenu">NSMenuItem</string>
