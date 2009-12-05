@@ -41,7 +41,6 @@
 	IBOutlet VideoOpenGLView *videoOpenGLView;
 	IBOutlet id audioWindowMenu;
 	IBOutlet id subtitleWindowMenu;
-	IBOutlet NSMenuItem* toggleMuteMenu;
 	IBOutlet id audioCycleButton;
 	IBOutlet id subtitleCycleButton;
 	IBOutlet id fullscreenButton;

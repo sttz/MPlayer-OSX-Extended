@@ -20,6 +20,8 @@ SettingsController, EqualizerController;
 	
 	IBOutlet NSMenuItem* chapterMenu;
 	
+	IBOutlet NSMenuItem* toggleMuteMenuItem;
+	
 	// Movie Menu
 	IBOutlet NSMenuItem* fullscreenMenu;
 	

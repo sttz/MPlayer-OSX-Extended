@@ -657,7 +657,7 @@
 	
 	[fcVolumeSlider setDoubleValue:volume];
 	
-	[toggleMuteMenu setState:(volume == 0)];
+	[menuController->toggleMuteMenuItem setState:(volume == 0)];
 	
 	[volumeImage release];
 }
