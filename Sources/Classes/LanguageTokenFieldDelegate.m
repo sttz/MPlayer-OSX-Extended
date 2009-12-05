@@ -48,7 +48,7 @@
 
 - (NSArray *)tokenField:(NSTokenField *)tokenField shouldAddObjects:(NSArray *)tokens atIndex:(NSUInteger)index
 {
-	NSMutableArray *validatedTokens = [NSMutableArray new];
+	NSMutableArray *validatedTokens = [NSMutableArray array];
 	
 	for (NSString *code in tokens) {
 		if ([code length] == 3 && [[LanguageCodes sharedInstance] nameForCode:code])

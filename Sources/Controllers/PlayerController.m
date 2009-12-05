@@ -644,7 +644,7 @@
 	else if (volume > 33 && volume < 67)
 		volumeImage = [[NSImage imageNamed:@"volume2"] retain];
 	
-	else if (volume > 0 && volume < 34)
+	else
 		volumeImage = [[NSImage imageNamed:@"volume1"] retain];
 	
 	

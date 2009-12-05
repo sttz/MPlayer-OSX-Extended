@@ -73,7 +73,7 @@
 + (NSString *)eq2FilterValues
 {
 	NSDictionary *eqValues = [PREFS objectForKey:MPEVideoEqualizerValues];
-	NSMutableArray *values = [NSMutableArray new];
+	NSMutableArray *values = [NSMutableArray array];
 	float value;
 	
 	value = [eqValues floatForKey:MPEVideoEqualizerGamma];

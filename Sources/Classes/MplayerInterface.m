@@ -225,7 +225,7 @@ static NSDictionary *videoEqualizerCommands;
 	}
 	
 	// combine global and local preferences
-	NSMutableDictionary *cPrefs = [NSMutableDictionary new];
+	NSMutableDictionary *cPrefs = [NSMutableDictionary dictionary];
 	[cPrefs addEntriesFromDictionary:prefs];
 	[cPrefs addEntriesFromDictionary:localPrefs];
 	

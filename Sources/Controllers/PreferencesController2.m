@@ -783,7 +783,7 @@
 {
 	if ([keyPath isEqualToString:@"selection"]) {
 		NSArray *selection = [binariesController selectedObjects];
-		BOOL state;
+		BOOL state = NO;
 		if ([selection count] > 0) {
 			NSDictionary *info = [[selection objectAtIndex:0] value];
 			NSString *identifier = [info objectForKey:@"CFBundleIdentifier"];
@@ -799,7 +799,7 @@
 	NSString *identifier = [info objectForKey:@"CFBundleIdentifier"];
 	
 	NSArray *updates = [PREFS arrayForKey:MPEUpdateBinaries];
-	NSMutableArray *newUpdates;
+	NSMutableArray *newUpdates = nil;
 	
 	if ([sender state] == NSOnState && ![updates containsObject:identifier]) {
 		newUpdates = [[updates mutableCopy] autorelease];
