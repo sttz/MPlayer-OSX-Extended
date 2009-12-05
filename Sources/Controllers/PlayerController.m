@@ -196,9 +196,6 @@
 	[myPlayer release];
 	[myPreflightPlayer release];
 	
-	[mplayerPath release];
-	[mplayerMTPath release];
-	
 	[myPlayingItem release];
 	[movieInfo release];
 	
@@ -358,7 +355,7 @@
 	NSString *aPath;
 	
 	// re-open player window for internal video
-	if ([self isInternalVideoOutput] && ![videoOpenGLView isFullscreen] && ![playerWindow isVisible])
+	if (![videoOpenGLView isFullscreen] && ![playerWindow isVisible])
 		[self displayWindow:self];
 	
 	// prepare player
@@ -471,14 +468,6 @@
 - (BOOL) isRunning
 {	return [myPlayer isRunning];		}
 /************************************************************************************/
-- (BOOL) isInternalVideoOutput
-{
-	if ([[[AppController sharedController] preferences] integerForKey:@"VideoDriver"] == 0)
-		return YES;
-	else
-		return NO;
-}
-/************************************************************************************/
 - (void) applySettings
 {
 	NSString *aPath;
@@ -527,13 +516,6 @@
 	return NO;
 }
 /************************************************************************************/
-- (BOOL) movieIsSeekable
-{
-	if ([myPlayer isRunning] && movieInfo)
-		return [movieInfo isSeekable];
-	return NO;
-}
-/************************************************************************************/
 - (void) applyChangesWithRestart:(BOOL)restart
 {
 	[myPlayer applySettingsWithRestart];
@@ -572,14 +554,6 @@
 	
 	} else
 		[videoOpenGLView setWindowSizeMode:WSM_SCALE withValue:1];
-}
-/************************************************************************************/
-- (NSNumber *) gammaValue:(NSNumber *)input
-{
-	if ([input floatValue] <= 10)
-		return [NSNumber numberWithFloat: ([input floatValue] / 10.0)];
-	else
-		return [NSNumber numberWithFloat: ([input floatValue] - 9.0)];
 }
 /************************************************************************************
  ACTIONS

@@ -70,16 +70,10 @@
 	MplayerInterface *myPlayer;
 	MplayerInterface *myPreflightPlayer;
 	
-	// paths to mplayer binaries
-	NSString *mplayerPath;
-	NSString *mplayerMTPath;
-	
 	// actual movie parametters
 	NSMutableDictionary *myPlayingItem;
 	MovieInfo *movieInfo;
 	BOOL saveTime;
-	int playerStatus;
-	unsigned movieSeconds;		// stores actual movie seconds for further use
 	BOOL isOntop;
 	BOOL continuousPlayback;
 	BOOL playingFromPlaylist;
@@ -111,9 +105,7 @@
 	NSImage *fcPlayImageOn;
 	NSImage *fcPauseImageOff;
 	NSImage *fcPauseImageOn;
-	
-	NSRect org_frame;
-	
+		
 	BOOL appleRemoteHolding;
 	uint remoteHoldIncrement;
 	
@@ -133,12 +125,10 @@
 - (void) playItem:(NSMutableDictionary *)anItem;
 - (NSMutableDictionary *) playingItem;
 - (BOOL) isRunning;
-- (BOOL) isInternalVideoOutput;
 - (void) setOntop:(BOOL)aBool;
 - (BOOL) isOntop;
 - (void) applySettings;
 - (BOOL) changesRequireRestart;
-- (BOOL) movieIsSeekable;
 - (void) applyChangesWithRestart:(BOOL)restart;
 - (int) fullscreenDeviceId;
 - (NSWindow *) playerWindow;
@@ -148,7 +138,6 @@
 
 // misc
 - (void) setMovieSize;
-- (NSNumber *) gammaValue:(NSNumber *)input;
 - (MplayerInterface *)playerInterface;
 - (MplayerInterface *)preflightInterface;
 
