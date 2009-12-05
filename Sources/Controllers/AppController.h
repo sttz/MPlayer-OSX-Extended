@@ -88,7 +88,6 @@ PlayListController, SettingsController, MenuController;
 - (IBAction) openVIDEO_TS:(id)sender;
 - (IBAction) cancelVIDEO_TSLocation:(id)sender;
 - (IBAction) applyVIDEO_TSLocation:(id)sender;
-- (IBAction) displayPlayList:(id)sender;
 - (IBAction) displayLogWindow:(id)sender;
 - (IBAction) applyLocation:(id)sender;
 - (IBAction) cancelLocation:(id)sender;

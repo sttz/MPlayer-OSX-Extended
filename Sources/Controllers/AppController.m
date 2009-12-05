@@ -309,14 +309,6 @@ static AppController *instance = nil;
 }
 
 /*
-	Display Playlist
-*/
-- (IBAction) displayPlayList:(id)sender
-{
-	[[playerController playListController] displayWindow:sender];
-}
-
-/*
 	Display Log
 */
 - (IBAction) displayLogWindow:(id)sender
