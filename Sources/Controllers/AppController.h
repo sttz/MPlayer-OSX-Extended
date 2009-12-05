@@ -116,7 +116,6 @@ PlayListController, SettingsController, MenuController;
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename;
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender;
 - (BOOL) validateMenuItem:(NSMenuItem *)aMenuItem;
-- (void) appFinishedLaunching;
 - (void)getUrl:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent;
 
 @end

@@ -73,12 +73,6 @@ static AppController *instance = nil;
 		setEventHandler:self andSelector:@selector(getUrl:withReplyEvent:) 
 		forEventClass:kInternetEventClass andEventID:kAEGetURL];
 	
-	// register for app launch finish
-	[[NSNotificationCenter defaultCenter] addObserver: self
-			selector: @selector(appFinishedLaunching)
-			name: NSApplicationDidFinishLaunchingNotification
-			object:NSApp];
-	
 	// enable apple remote support
 	appleRemote = [[AppleRemote alloc] init];
 	[appleRemote setClickCountEnabledButtons: kRemoteButtonPlay];
@@ -643,7 +637,7 @@ static AppController *instance = nil;
 	return YES;
 }
 /******************************************************************************/
-- (void) appFinishedLaunching
+- (void) applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	// Load player
 	[NSBundle loadNibNamed:@"Player" owner:self];
