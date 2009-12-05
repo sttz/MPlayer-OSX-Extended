@@ -35,22 +35,42 @@
 @synthesize myPlayer, playListController, settingsController, videoOpenGLView;
 
 /************************************************************************************/
--(void)awakeFromNib
-{	
-    // Make sure we don't initialize twice
-	if (playListController)
-		return;
+-(id)init
+{
+	if (!(self = [super init]))
+		return nil;
 	
+	// Initialize some variables
 	saveTime = YES;
 	isOntop = NO;
 	lastVolumePoll = -MP_VOLUME_POLL_INTERVAL;
 	lastChapterCheck = -MP_CHAPTER_CHECK_INTERVAL;
 	
-	// resize window
-	[playerWindow setContentMinSize:NSMakeSize(450, 78)]; // Temp workaround for IB always forgetting the min-size
-	[playerWindow setContentSize:[playerWindow contentMinSize] ];
+	// fullscreen device defaults to automatic
+	fullscreenDeviceId = -2;
 	
-    myPlayer = [MplayerInterface new];
+	// streams default to unselected
+	videoStreamId = -1;
+	audioStreamId = -1;
+	subtitleDemuxStreamId = -1;
+	subtitleFileStreamId = -1;
+	
+	// load images
+	playImageOn = [[NSImage imageNamed:@"play_button_on"] retain];
+	playImageOff = [[NSImage imageNamed:@"play_button_off"] retain];
+	pauseImageOn = [[NSImage imageNamed:@"pause_button_on"] retain];
+	pauseImageOff = [[NSImage imageNamed:@"pause_button_off"] retain];
+	
+	fcPlayImageOn = [[NSImage imageNamed:@"fc_play_on"] retain];
+	fcPlayImageOff = [[NSImage imageNamed:@"fc_play"] retain];
+	fcPauseImageOn = [[NSImage imageNamed:@"fc_pause_on"] retain];
+	fcPauseImageOff = [[NSImage imageNamed:@"fc_pause"] retain];	
+	
+	// Save reference to menu controller
+	menuController = [[AppController sharedController] menuController];
+	
+	// Load MPlayer interfaces
+	myPlayer = [MplayerInterface new];
 	myPreflightPlayer = [MplayerInterface new];
 	
 	// register for MPlayer crash
@@ -74,7 +94,45 @@
 			selector: @selector(statsUpdate:)
 			name: @"MIStatsUpdatedNotification"
 			object:myPlayer];
+	
+	// register for app pre termination notification
+	[[NSNotificationCenter defaultCenter] addObserver: self
+			selector: @selector(appShouldTerminate)
+			name: @"ApplicationShouldTerminateNotification"
+			object:NSApp];
+	
+	// register for app termination notification
+	[[NSNotificationCenter defaultCenter] addObserver: self
+			selector: @selector(appTerminating)
+			name: NSApplicationWillTerminateNotification
+			object:NSApp];
+	
+	// request notification for changes to monitor configuration
+	[[NSNotificationCenter defaultCenter] addObserver:self
+			selector:@selector(screensDidChange)
+			name:NSApplicationDidChangeScreenParametersNotification
+			object:NSApp];
+	
+	// register for ontop changes
+	[PREFS addObserver:self
+			forKeyPath:MPEWindowOnTopMode
+			   options:NSKeyValueObservingOptionInitial
+			   context:nil];
+	
+	return self;
+}
 
+-(void)awakeFromNib
+{	
+    // Make sure we don't initialize twice
+	if (playListController)
+		return;
+	
+	// resize window
+	[playerWindow setContentMinSize:NSMakeSize(450, 78)]; // Temp workaround for IB always forgetting the min-size
+	[playerWindow setContentSize:[playerWindow contentMinSize] ];
+	
+	
 	// register for notification on clicking progress bar
 	[[NSNotificationCenter defaultCenter] addObserver: self
 			selector: @selector(progresBarClicked:)
@@ -88,47 +146,6 @@
 			selector: @selector(progresBarClicked:)
 			name: @"SBBarClickedNotification"
 			object:fcScrubbingBar];
-			
-    // register for app launch finish
-	[[NSNotificationCenter defaultCenter] addObserver: self
-			selector: @selector(appFinishedLaunching)
-			name: NSApplicationDidFinishLaunchingNotification
-			object:NSApp];
-	
-	// register for pre-app launch finish
-	[[NSNotificationCenter defaultCenter] addObserver: self
-			selector: @selector(appWillFinishLaunching)
-			name: NSApplicationWillFinishLaunchingNotification
-			object:NSApp];
-	
-	// register for app termination notification
-	[[NSNotificationCenter defaultCenter] addObserver: self
-			selector: @selector(appTerminating)
-			name: NSApplicationWillTerminateNotification
-			object:NSApp];
-
-	// register for app pre termination notification
-	[[NSNotificationCenter defaultCenter] addObserver: self
-			selector: @selector(appShouldTerminate)
-			name: @"ApplicationShouldTerminateNotification"
-			object:NSApp];
-	
-	// register for ontop changes
-	[[NSUserDefaults standardUserDefaults] addObserver:self
-											forKeyPath:MPEWindowOnTopMode
-											   options:NSKeyValueObservingOptionInitial
-											   context:nil];
-	
-	// load images
-	playImageOn = [[NSImage imageNamed:@"play_button_on"] retain];
-	playImageOff = [[NSImage imageNamed:@"play_button_off"] retain];
-	pauseImageOn = [[NSImage imageNamed:@"pause_button_on"] retain];
-	pauseImageOff = [[NSImage imageNamed:@"pause_button_off"] retain];
-	
-	fcPlayImageOn = [[NSImage imageNamed:@"fc_play_on"] retain];
-	fcPlayImageOff = [[NSImage imageNamed:@"fc_play"] retain];
-	fcPauseImageOn = [[NSImage imageNamed:@"fc_pause_on"] retain];
-	fcPauseImageOff = [[NSImage imageNamed:@"fc_pause"] retain];
 	
 	// set up prograss bar
 	[scrubbingBar setScrubStyle:NSScrubbingBarEmptyStyle];
@@ -151,53 +168,27 @@
 	//setup drag & drop
 	[playerWindow registerForDraggedTypes:[NSArray arrayWithObjects: NSFilenamesPboardType, nil]];
 	
-	// fullscreen device defaults to automatic
-	fullscreenDeviceId = -2;
-	
-	// streams default to unselected
-	videoStreamId = -1;
-	audioStreamId = -1;
-	subtitleDemuxStreamId = -1;
-	subtitleFileStreamId = -1;
-	
-	// request notification for changes to monitor configuration
-	[[NSNotificationCenter defaultCenter] addObserver:self
-			selector:@selector(screensDidChange)
-			name:NSApplicationDidChangeScreenParametersNotification
-			object:NSApp];
-	
-	// Load playlist controller
-	[NSBundle loadNibNamed:@"Playlist" owner:self];
-}
-
-- (void) appWillFinishLaunching
-{
-	// Pass buffer name to interface
-	[myPlayer setBufferName:[videoOpenGLView bufferName]];
-}
-
-- (void) appFinishedLaunching
-{
-	// Save reference to menu controller
-	menuController = [[AppController sharedController] menuController];
-	
-	NSUserDefaults *prefs = [[AppController sharedController] preferences];
-	
-	// play the last played movie if it is set to do so
-	if ([prefs objectForKey:@"PlaylistRemember"] && [prefs objectForKey:@"LastTrack"]
-		&& ![myPlayer isRunning]) {
-		if ([prefs boolForKey:@"PlaylistRemember"] && [prefs objectForKey:@"LastTrack"]) {
-			[self playItem:(NSMutableDictionary *)[playListController
-												   itemAtIndex:[[prefs objectForKey:@"LastTrack"] intValue]]];
-			[playListController
-			 selectItemAtIndex:[[prefs objectForKey:@"LastTrack"] intValue]];
-		}
-	}
-	[prefs removeObjectForKey:@"LastTrack"];	
-	
 	// fill fullscreen device menu
 	[self fillFullscreenMenu];
 	[self selectFullscreenDevice];
+	
+	// Pass buffer name to interface
+	[myPlayer setBufferName:[videoOpenGLView bufferName]];
+	
+	// Load playlist controller
+	[NSBundle loadNibNamed:@"Playlist" owner:self];
+	
+	// play the last played movie if it is set to do so
+	if ([PREFS objectForKey:@"PlaylistRemember"] && [PREFS objectForKey:@"LastTrack"]
+		&& ![myPlayer isRunning]) {
+		if ([PREFS boolForKey:@"PlaylistRemember"] && [PREFS objectForKey:@"LastTrack"]) {
+			[self playItem:(NSMutableDictionary *)[playListController
+												   itemAtIndex:[[PREFS objectForKey:@"LastTrack"] intValue]]];
+			[playListController
+			 selectItemAtIndex:[[PREFS objectForKey:@"LastTrack"] intValue]];
+		}
+	}
+	[PREFS removeObjectForKey:@"LastTrack"];	
 }
 
 - (void) dealloc

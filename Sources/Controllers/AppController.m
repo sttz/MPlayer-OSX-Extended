@@ -86,11 +86,6 @@ static AppController *instance = nil;
 	
 	// pre-load language codes
 	[LanguageCodes sharedInstance];
-	
-	// Load player
-	[NSBundle loadNibNamed:@"Player" owner:self];
-	// load preferences nib to initialize fontconfig
-	[NSBundle loadNibNamed:@"Preferences" owner:self];
 }
 
 - (PlayListController *) playListController
@@ -650,6 +645,11 @@ static AppController *instance = nil;
 /******************************************************************************/
 - (void) appFinishedLaunching
 {
+	// Load player
+	[NSBundle loadNibNamed:@"Player" owner:self];
+	// load preferences nib to initialize fontconfig
+	[NSBundle loadNibNamed:@"Preferences" owner:self];
+	
 	// set sparkle feed url for prereleases
 	[self setSparkleFeed];
 	

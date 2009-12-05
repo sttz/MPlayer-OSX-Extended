@@ -208,8 +208,6 @@
 - (void)menuWillOpen:(NSMenu *)menu;
 
 // notification observers
-- (void) appWillFinishLaunching;
-- (void) appFinishedLaunching;
 - (void) appShouldTerminate;
 - (void) appTerminating;
 - (void) playbackStarted;

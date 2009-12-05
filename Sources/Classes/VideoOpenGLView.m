@@ -17,8 +17,11 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 
 @implementation VideoOpenGLView
 
-- (void) awakeFromNib
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
+	if (!(self = [super initWithCoder:aDecoder]))
+		return nil;
+	
 	isFullscreen = NO;
 	isOntop = NO;
 	keepAspect = YES;
@@ -33,13 +36,18 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	// Choose buffer name and pass it on the way to mplayer
 	buffer_name = [[NSString stringWithFormat:@"mplayerosx-%i", [[NSProcessInfo processInfo] processIdentifier]] retain];
 	
-	[NSThread detachNewThreadSelector:@selector(threadMain:) toTarget:self withObject:[NSArray arrayWithObjects:port1, port2, nil]];
-	
 	// Watch for aspect ratio changes
 	[PREFS addObserver:self
 			forKeyPath:MPEAspectRatio
 			   options:0
 			   context:nil];
+	
+	return self;
+}
+
+- (void) awakeFromNib
+{
+	[NSThread detachNewThreadSelector:@selector(threadMain:) toTarget:self withObject:[NSArray arrayWithObjects:port1, port2, nil]];
 }
 
 - (void) dealloc
