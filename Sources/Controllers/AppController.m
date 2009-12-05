@@ -642,6 +642,8 @@ static AppController *instance = nil;
 	// Load player
 	[NSBundle loadNibNamed:@"Player" owner:self];
 	// load preferences nib to initialize fontconfig
+	// (the preferences controller depends on the player conroller being loaded,
+	// hence it's loaded afterwards.)
 	[NSBundle loadNibNamed:@"Preferences" owner:self];
 	
 	// set sparkle feed url for prereleases

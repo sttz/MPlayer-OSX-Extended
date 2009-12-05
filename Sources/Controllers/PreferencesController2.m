@@ -73,11 +73,7 @@
 	// we need this to properly reset the menu
 	screenshotSavePathLastSelection = [PREFS integerForKey:MPEScreenshotSaveLocation];
 	
-	// Load fonts when all nibs are loaded (we want to attach to the player window)
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(loadFonts)
-												 name:NSApplicationDidFinishLaunchingNotification
-											   object:NSApp];
+	[self loadFonts];
 	
 	// Add observer for binary selection to update autoupdate checkbox
 	[binariesController addObserver:self
