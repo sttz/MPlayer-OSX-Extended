@@ -163,10 +163,7 @@
 
 // interface
 // init and uninit
-- (id) init;										// init
-- (id) initWithPathToPlayer:(NSString *)aPath;		// init with movie file path
 - (void) setBufferName:(NSString *)name;
-- (void) setPlayerPath:(NSString *)path;
 
 - (void) registerPlayingItem:(NSDictionary *)item;
 - (void) unregisterPlayingItem;

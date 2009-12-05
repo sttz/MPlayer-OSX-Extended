@@ -50,12 +50,6 @@ static NSDictionary *videoEqualizerCommands;
  ************************************************************************************/
 - (id)init;
 {
-	[self initWithPathToPlayer:@"/usr/local/bin/mplayer"];
-	return self;
-}
-/************************************************************************************/
-- (id)initWithPathToPlayer:(NSString *)aPath
-{
 	if (![super init])
 		return  nil;
 	
@@ -77,7 +71,6 @@ static NSDictionary *videoEqualizerCommands;
 	if (!sysctlbyname("hw.optional.x86_64",&is64bit,&len,NULL,0))
 		is64bitHost = (BOOL)is64bit;
 	
-	myPathToPlayer = [aPath retain];
 	buffer_name = @"mplayerosx";
 	
 	info = [[MovieInfo alloc] init];
@@ -166,12 +159,6 @@ static NSDictionary *videoEqualizerCommands;
 {
 	[buffer_name release];
 	buffer_name = [name retain];
-}
-/************************************************************************************/
-- (void) setPlayerPath:(NSString *)path
-{
-	[myPathToPlayer release];
-	myPathToPlayer = [path retain];
 }
 /************************************************************************************/
 - (void)registerPlayingItem:(NSDictionary *)item

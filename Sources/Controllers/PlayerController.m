@@ -41,8 +41,6 @@
 	if (playListController)
 		return;
 	
-	NSString *playerPath;
-	NSString *preflightPlayerPath;
 	saveTime = YES;
 	isOntop = NO;
 	lastVolumePoll = -MP_VOLUME_POLL_INTERVAL;
@@ -52,20 +50,8 @@
 	[playerWindow setContentMinSize:NSMakeSize(450, 78)]; // Temp workaround for IB always forgetting the min-size
 	[playerWindow setContentSize:[playerWindow contentMinSize] ];
 	
-	// set path to mplayer binary
-	mplayerPath = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: 
-						@"External_Binaries/mplayer.app/Contents/MacOS/mplayer"] retain];
-	
-	// Temporary: Separate binary for ffmpeg-mt
-	mplayerMTPath = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: 
-						@"External_Binaries/mplayer-mt.app/Contents/MacOS/mplayer"] retain];
-	
-	// init player
-    playerPath = mplayerPath;
-	preflightPlayerPath = mplayerPath;
-	
-    myPlayer = [[MplayerInterface alloc] initWithPathToPlayer: playerPath];
-	myPreflightPlayer = [[MplayerInterface alloc] initWithPathToPlayer: preflightPlayerPath];
+    myPlayer = [MplayerInterface new];
+	myPreflightPlayer = [MplayerInterface new];
 	
 	// register for MPlayer crash
 	[[NSNotificationCenter defaultCenter] addObserver: self
