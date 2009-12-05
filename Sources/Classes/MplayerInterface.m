@@ -637,10 +637,6 @@ static NSDictionary *videoEqualizerCommands;
 					   pathForBinaryWithIdentifier:[cPrefs objectForKey:MPESelectedBinary]] retain];
 	
 	[self runMplayerWithParams:params];
-	
-	// apply initial video equalizer values
-	if ([cPrefs boolForKey:MPEVideoEqualizerEnabled])
-		[self applyVideoEqualizer];
 }
 /************************************************************************************/
 - (void) play
