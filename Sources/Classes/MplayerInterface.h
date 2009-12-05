@@ -120,6 +120,7 @@
 	int	myState;				// player state
 	unsigned int myVolume;		// volume 0-100
 	BOOL playing;
+	BOOL movieOpen;
 	
 	//beta
 	unsigned int myadvolume;
@@ -160,6 +161,7 @@
 }
 
 @property (nonatomic,getter=isPlaying) BOOL playing;
+@property (nonatomic,getter=isMovieOpen) BOOL movieOpen;
 
 // interface
 // init and uninit

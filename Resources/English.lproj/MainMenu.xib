@@ -11,7 +11,7 @@
 			<string key="NS.object.0">732</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="19219"/>
+			<integer value="4298"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2843,443 +2843,6 @@
 					<int key="connectionID">19400</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="1015279709"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="1015279709"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19404</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="986973415"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="986973415"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19408</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="772633321"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="772633321"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19410</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="748694322"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="748694322"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19412</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="406833632"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="406833632"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19414</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="638368239"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="638368239"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19416</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="337623063"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="337623063"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19418</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="377720310"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="377720310"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19420</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="285625447"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="285625447"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19422</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="683529277"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="683529277"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19424</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="872878021"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="872878021"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19426</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="107923094"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="107923094"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19428</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="434144637"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="434144637"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19430</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="993460538"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="993460538"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19432</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="190163487"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="190163487"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19434</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="277199025"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="277199025"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19436</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="236617444"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="236617444"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19438</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="1038818498"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="1038818498"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19440</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="103271458"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="103271458"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19442</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="260083644"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="260083644"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19444</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="762544581"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="762544581"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19446</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="375942366"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="375942366"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19448</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="122275591"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="122275591"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19450</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="870466676"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="870466676"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19452</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="810084006"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector" id="572103647">
-							<reference key="NSSource" ref="810084006"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19455</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">hidden: values.MPECustomAspectRatio</string>
-						<reference key="source" ref="810084006"/>
-						<reference key="destination" ref="299649667"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="810084006"/>
-							<reference key="NSDestination" ref="299649667"/>
-							<string key="NSLabel">hidden: values.MPECustomAspectRatio</string>
-							<string key="NSBinding">hidden</string>
-							<string key="NSKeyPath">values.MPECustomAspectRatio</string>
-							<object class="NSDictionary" key="NSOptions">
-								<string key="NS.key.0">NSValueTransformerName</string>
-								<string key="NS.object.0">NSIsNil</string>
-							</object>
-							<reference key="NSPreviousConnector" ref="572103647"/>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19456</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.playing</string>
-						<reference key="source" ref="983516722"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="983516722"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.playing</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.playing</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19458</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">setSizeFromMenu:</string>
 						<reference key="source" ref="847214199"/>
@@ -3342,6 +2905,443 @@
 						<reference key="destination" ref="700428315"/>
 					</object>
 					<int key="connectionID">19493</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="1015279709"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1015279709"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19494</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="986973415"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="986973415"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19495</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="772633321"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="772633321"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19496</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="748694322"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="748694322"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19497</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="406833632"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="406833632"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19498</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="638368239"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="638368239"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19499</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="337623063"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="337623063"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19500</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="377720310"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="377720310"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19501</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="285625447"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="285625447"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19502</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="683529277"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="683529277"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19503</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="872878021"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="872878021"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19504</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="107923094"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="107923094"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19505</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="434144637"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="434144637"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19506</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="993460538"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="993460538"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19507</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="190163487"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="190163487"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19508</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="277199025"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="277199025"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19509</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="236617444"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="236617444"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19510</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="1038818498"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1038818498"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19511</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="103271458"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="103271458"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19512</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="260083644"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="260083644"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19513</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="762544581"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="762544581"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19514</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="375942366"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="375942366"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19515</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="122275591"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="122275591"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19516</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="870466676"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="870466676"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19517</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="810084006"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector" id="336474737">
+							<reference key="NSSource" ref="810084006"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19518</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: values.MPECustomAspectRatio</string>
+						<reference key="source" ref="810084006"/>
+						<reference key="destination" ref="299649667"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="810084006"/>
+							<reference key="NSDestination" ref="299649667"/>
+							<string key="NSLabel">hidden: values.MPECustomAspectRatio</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">values.MPECustomAspectRatio</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSIsNil</string>
+							</object>
+							<reference key="NSPreviousConnector" ref="336474737"/>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19519</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="983516722"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="983516722"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19520</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -5178,7 +5178,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">19493</int>
+			<int key="maxID">19520</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">

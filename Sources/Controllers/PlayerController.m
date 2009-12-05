@@ -42,7 +42,6 @@
 	
 	// Initialize some variables
 	saveTime = YES;
-	isOntop = NO;
 	lastVolumePoll = -MP_VOLUME_POLL_INTERVAL;
 	lastChapterCheck = -MP_CHAPTER_CHECK_INTERVAL;
 	
@@ -957,27 +956,22 @@
 	{
 		[playerWindow setLevel:NSModalPanelWindowLevel];
 		[videoOpenGLView setOntop:YES];
-		isOntop = YES;
 	}
 	else
 	{
 		[playerWindow setLevel:NSNormalWindowLevel];
 		[videoOpenGLView setOntop:NO];
-		isOntop = NO;
 	}
 }
 - (void)updateWindowOnTop
 {
+	NSLog(@"updateWindowOnTop");
 	if ([PREFS integerForKey:MPEWindowOnTopMode] == MPEWindowOnTopModeNever)
 		[self setOntop:NO];
 	else if ([PREFS integerForKey:MPEWindowOnTopMode] == MPEWindowOnTopModeAlways)
 		[self setOntop:YES];
 	else // [PREFS integerForKey:MPEWindowOnTopMode] == MPEWindowOnTopModeWhilePlaying
 		[self setOntop:[myPlayer isPlaying]];
-}
-- (BOOL) isOntop
-{
-	return isOntop;
 }
 /************************************************************************************/
 - (IBAction)switchFullscreen:(id)sender

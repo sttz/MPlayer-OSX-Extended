@@ -74,7 +74,6 @@
 	NSMutableDictionary *myPlayingItem;
 	MovieInfo *movieInfo;
 	BOOL saveTime;
-	BOOL isOntop;
 	BOOL continuousPlayback;
 	BOOL playingFromPlaylist;
 	int currentChapter;
@@ -126,7 +125,6 @@
 - (NSMutableDictionary *) playingItem;
 - (BOOL) isRunning;
 - (void) setOntop:(BOOL)aBool;
-- (BOOL) isOntop;
 - (void) applySettings;
 - (BOOL) changesRequireRestart;
 - (void) applyChangesWithRestart:(BOOL)restart;

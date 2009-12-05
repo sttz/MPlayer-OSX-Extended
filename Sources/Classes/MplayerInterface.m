@@ -43,7 +43,7 @@ static NSArray* parseRunLoopModes;
 static NSDictionary *videoEqualizerCommands;
 
 @implementation MplayerInterface
-@synthesize playing;
+@synthesize playing, movieOpen;
 
 /************************************************************************************
  INIT & UNINIT
@@ -924,8 +924,13 @@ static NSDictionary *videoEqualizerCommands;
 }
 - (void) setState:(int)newState
 {
-	BOOL newIsPlaying = (newState == kPlaying || newState == kSeeking || newState == kPaused);
+	// Update isMovieOpen
+	BOOL newIsMovieOpen = (newState == kPlaying || newState == kSeeking || newState == kPaused);
+	if ([self isMovieOpen] != newIsMovieOpen)
+		[self setMovieOpen:newIsMovieOpen];
 	
+	// Update isPlaying
+	BOOL newIsPlaying = (newState == kPlaying || newState == kSeeking);
 	if ([self isPlaying] != newIsPlaying)
 		[self setPlaying:newIsPlaying];
 	
