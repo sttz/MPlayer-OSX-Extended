@@ -89,9 +89,6 @@
 	NSString *myPathToPlayer;
 	NSString *myMovieFile;
 	NSMutableArray *mySubtitlesFiles;
-	NSString *myAudioFile;
-	NSString *myAudioExportFile;
-	NSString *myFontFile;
 	
 	NSDictionary *playingItem;
 	
@@ -113,7 +110,6 @@
 	int osdLevel;
 	
 	// properties
-	BOOL myRebuildIndex;
 	BOOL isPreflight;
 	
 	// state variables
@@ -123,7 +119,6 @@
 	BOOL movieOpen;
 	
 	//beta
-	unsigned int myadvolume;
 	float mySeconds;			// actual/saved seconds
 	BOOL isSeeking;
 	
@@ -138,20 +133,14 @@
 	// internal use
 	NSTask *myMplayerTask;
 	double myLastUpdate;			// date when last update notificationa was sent
-	BOOL settingsChanged;			// changed settings that requires player restart
-	BOOL videoOutChanged;
-	BOOL takeEffectImediately;		// changes have to take effect even in paused mode
 	BOOL restartingPlayer;			// set when player is teminated to be restarted
 	BOOL pausedOnRestart;			// set when paused during attemp to restart player
 	BOOL isRunning;					// set off after recieving termination notification
-	BOOL windowedVO;
 	int myOutputReadMode;				// defines playback output form 
 	NSMutableArray *myCommandsBuffer;	// store cmds that cannot be send immediatelly
 	NSString *lastUnparsedLine;
 	NSString *lastUnparsedErrorLine;
 	//NSMutableDictionary *myInfo;	// dict filled by -identify command
-	BOOL isFullscreen;				// currently playing fullscreen
-	BOOL isOntop;
 	int subtitleFileId;				// since sub file identify output is not numberede, we need to cache the id
 	NSDictionary *lastMissedSeek;	// last seek that couldn't be processed
 	BOOL is64bitHost;
@@ -182,22 +171,14 @@
 // setting files
 - (void) setMovieFile:(NSString *)aFile;
 - (void) setSubtitlesFile:(NSString *)aFile;
-- (void) setAudioFile:(NSString *)aFile;
-//beta
-- (void) setAudioExportFile:(NSString *)aFile;
 
 - (void) applyVideoEqualizer;
-
-//- (void) setVIDEO_TS:(BOOL)aBool;					// dvd folder
-
-- (void) setRebuildIndex:(BOOL)aBool;				// take effect after restarting playback
 
 // misc settings (don't work during playback)
 - (void) setVolume:(unsigned int)percents;			// set audio volume
 
 // other methods
 - (void) applySettingsWithRestart;	// applyes settings that require restart
-- (void) waitUntilExit;
 - (void) takeScreenshot;
 
 // info

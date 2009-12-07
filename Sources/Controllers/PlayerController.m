@@ -469,7 +469,7 @@
 /************************************************************************************/
 - (void) applySettings
 {
-	NSString *aPath;
+	/*NSString *aPath;
 	
 	// set audio file	
 	aPath = [myPlayingItem objectForKey:@"AudioFile"];
@@ -505,7 +505,7 @@
 			[myPlayer setRebuildIndex:NO];
 	}
 	else
-		[myPlayer setRebuildIndex:NO];
+		[myPlayer setRebuildIndex:NO];*/
 }
 /************************************************************************************/
 - (BOOL) changesRequireRestart
@@ -965,7 +965,6 @@
 }
 - (void)updateWindowOnTop
 {
-	NSLog(@"updateWindowOnTop");
 	if ([PREFS integerForKey:MPEWindowOnTopMode] == MPEWindowOnTopModeNever)
 		[self setOntop:NO];
 	else if ([PREFS integerForKey:MPEWindowOnTopMode] == MPEWindowOnTopModeAlways)

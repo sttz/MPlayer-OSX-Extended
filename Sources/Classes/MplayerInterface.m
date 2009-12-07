@@ -88,24 +88,15 @@ static NSDictionary *videoEqualizerCommands;
 	
 	// *** text
 	osdLevel = 1;
-	
-	// properties
-	myRebuildIndex = NO;
-//	myadvolume = 30;
 
 	myLastUpdate = [NSDate timeIntervalSinceReferenceDate];
-	settingsChanged = NO;
 	restartingPlayer = NO;
 	pausedOnRestart = NO;
 	isRunning = NO;
-	takeEffectImediately = NO;
 	myOutputReadMode = 0;
 	myUpdateStatistics = NO;
 	isPreflight = NO;
-	
-	windowedVO = NO;
-	isFullscreen = NO;
-	
+		
 	// Disable MPlayer AppleRemote code unconditionally, as it causing problems 
 	// when MPlayer runs in background only and we provide our own AR implementation.
 	disableAppleRemote = YES;
@@ -139,9 +130,6 @@ static NSDictionary *videoEqualizerCommands;
 	[myPathToPlayer release];
 	[myMovieFile release];
 	[mySubtitlesFiles release];
-	[myAudioExportFile release];
-	[myAudioFile release];
-	[myFontFile release];
 	[myCommandsBuffer release];
 	[info release];
 	[lastUnparsedLine release];
@@ -253,23 +241,6 @@ static NSDictionary *videoEqualizerCommands;
 	else {
 		//[params addObject:@"-noautosub"];
 	}
-	
-	// add audioexport file
-	if (myAudioExportFile) {
-		[params addObject:@"-ao"];
-		[params addObject:@"pcm"];
-		[params addObject:@"-aofile"];
-		[params addObject:myAudioExportFile];
-	}
-	
-	//add audio file
-	if (myAudioFile) {
-		[params addObject:@"-ao"];
-		[params addObject:@"pcm"];
-		[params addObject:@"-audiofile"];
-		[params addObject:myAudioFile];
-	}
-	
 	
 	
 	// *** PLAYBACK
@@ -578,10 +549,6 @@ static NSDictionary *videoEqualizerCommands;
 	
 	
 	// *** OPTIONS
-	
-	// rebuilding index
-	if (myRebuildIndex)
-		[params addObject:@"-forceidx"];
 
 	// position from which to play
 	if (mySeconds != 0) {
@@ -615,8 +582,6 @@ static NSDictionary *videoEqualizerCommands;
 		info = mf;
 	
 	[myCommandsBuffer removeAllObjects];	// empty buffer before launch
-	settingsChanged = NO;					// every startup settings has been made
-	videoOutChanged = NO;
 	
 	// Disable preflight mode
 	isPreflight = NO;
@@ -656,7 +621,7 @@ static NSDictionary *videoEqualizerCommands;
 			[myCommandsBuffer addObject:@"quit"];
 			break;
 		}
-		[self waitUntilExit];
+		[myMplayerTask waitUntilExit];
 	}
 }
 /************************************************************************************/
@@ -763,13 +728,11 @@ static NSDictionary *videoEqualizerCommands;
 		if (![aFile isEqualToString:myMovieFile]) {
 			[myMovieFile autorelease];
 			myMovieFile = [aFile retain];
-			settingsChanged = YES;
 		}
 	}
 	else {
 		if (myMovieFile) {
 			[myMovieFile release];
-			settingsChanged = YES;
 		}
 		myMovieFile = nil;
 	}
@@ -785,62 +748,12 @@ static NSDictionary *videoEqualizerCommands;
 				if (info)
 					[self performCommand: [NSString stringWithFormat:
 							@"sub_file %u", [info subtitleCountForType:SubtitleTypeFile]]];
-			} else
-				settingsChanged = YES;
+			}
 		}
 	}
 	else {
 		[mySubtitlesFiles release];
 		mySubtitlesFiles = [[NSMutableArray alloc] init];
-		settingsChanged = YES;
-	}
-}
-
-//beta
-/************************************************************************************/
-- (void) setAudioExportFile:(NSString *)aFile
-{
-	if (aFile) {
-		if (![aFile isEqualToString:myAudioExportFile]) {
-			[myAudioExportFile autorelease];
-			myAudioExportFile = [aFile retain];
-			settingsChanged = YES;
-		}
-	}
-	else {
-		if (myAudioExportFile) {
-			[myAudioExportFile release];
-			settingsChanged = YES;
-		}
-		myAudioExportFile = nil;
-	}
-}
-
-
-/************************************************************************************/
-- (void) setAudioFile:(NSString *)aFile
-{
-	if (aFile) {
-		if (![aFile isEqualToString:myAudioFile]) {
-			[myAudioFile autorelease];
-			myAudioFile = [aFile retain];
-			settingsChanged = YES;
-		}
-	}
-	else {
-		if (myAudioFile) {
-			[myAudioFile release];
-			settingsChanged = YES;
-		}
-		myAudioFile = nil;
-	}
-}
-/************************************************************************************/
-- (void) setRebuildIndex:(BOOL)aBool
-{
-	if (myRebuildIndex != aBool) {
-		myRebuildIndex = aBool;
-		settingsChanged = YES;
 	}
 }
 /************************************************************************************/
@@ -879,17 +792,8 @@ static NSDictionary *videoEqualizerCommands;
 	if ([self isRunning]) {
 		restartingPlayer = YES;		// set it not to send termination notification
 		[self play];				// restart playback if player is running
-		takeEffectImediately = NO;
 	}
 	
-}
-/************************************************************************************/
-- (void) waitUntilExit
-{
-	if (isRunning) {
-		[myMplayerTask waitUntilExit];
-//		[self mplayerTerminated];		// remove observers to not recieve notif.
-	}
 }
 /************************************************************************************
  INFO
@@ -1112,7 +1016,6 @@ static NSDictionary *videoEqualizerCommands;
 			pausedOnRestart = YES;
 		else
 			pausedOnRestart = NO;
-		NSLog(@"pausedOnRestart: %d",pausedOnRestart);
 		[self stop];
 		[myMplayerTask release];
 		myMplayerTask = nil;
