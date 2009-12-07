@@ -26,6 +26,9 @@
 
 
 @implementation MovieInfo
+@synthesize filename, fileFormat, seekable, length, filesize, fileModificationDate, fileCreationDate,
+videoFormat, videoCodec, videoBitrate, videoWidth, videoHeight, videoFPS, videoAspect,
+audioFormat, audioCodec, audioBitrate, audioSampleRate, audioChannels;
 
 // **************************************************** //
 
@@ -50,6 +53,11 @@
 	
 	length = 0;
 	
+	[self addObserver:self
+		   forKeyPath:@"filename" 
+			  options:NSKeyValueObservingOptionNew 
+			  context:nil];
+	
 	return [super init];
 }
 
@@ -72,135 +80,23 @@
 
 -(BOOL)isVideo {
 	
-	return (videoForamt != nil && videoForamt != @"");
+	return (videoFormat != nil && videoFormat != @"");
 }
 
 // **************************************************** //
 
--(void)setFilename:(NSString *)aString {
-	[filename release];
-	filename = [aString retain];
-	
-	// filesystem attributes
-	NSDictionary *attr = [[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES];
-	if (attr != nil) {
-		filesize = [attr objectForKey:NSFileSize];
-		fileModificationDate = [attr objectForKey:NSFileModificationDate];
-		fileCreationDate = [attr objectForKey:NSFileCreationDate];
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if ([keyPath isEqualToString:@"filename"]) {
+		NSString *newFile = [change objectForKey:NSKeyValueChangeNewKey];
+		// update filesystem attributes
+		NSDictionary *attr = [[NSFileManager defaultManager] fileAttributesAtPath:newFile traverseLink:YES];
+		if (attr != nil) {
+			[self setFilesize:[[attr objectForKey:NSFileSize] unsignedLongLongValue]];
+			[self setFileModificationDate:[attr objectForKey:NSFileModificationDate]];
+			[self setFileCreationDate:[attr objectForKey:NSFileCreationDate]];
+		}
 	}
-}
--(NSString *)filename {
-	return filename;
-}
-
--(void)setFileFormat:(NSString *)aString {
-	[fileFormat release];
-	fileFormat = [aString retain];
-}
--(NSString *)fileFormat {
-	return fileFormat;
-}
-
--(void)setIsSeekable:(BOOL)seek {
-	isSeekable = seek;
-}
--(BOOL)isSeekable {
-	return isSeekable;
-}
-
--(void)setVideoFormat:(NSString *)aString {
-	[videoForamt release];
-	videoForamt = [aString retain];
-}
--(NSString *)videoForamt {
-	return videoForamt;
-}
-
--(void)setVideoCodec:(NSString *)aString {
-	[videoCodec release];
-	videoCodec = [aString retain];
-}
--(NSString *)videoCodec {
-	return videoCodec;
-}
-
--(void)setVideoBitrate:(unsigned int)aUint {
-	videoBitrate = aUint;
-}
--(unsigned int)videoBitrate {
-	return videoBitrate;
-}
-
--(void)setVideoWidth:(unsigned int)aUint {
-	videoWidth = aUint;
-}
--(unsigned int)videoWidth {
-	return videoWidth;
-}
-
--(void)setVideoHeight:(unsigned int)aUint {
-	videoHeight = aUint;
-}
--(unsigned int)videoHeight {
-	return videoHeight;
-}
-
--(void)setVideoFps:(float)aFloat {
-	videoFPS = aFloat;
-}
--(float)videoFps {
-	return videoFPS;
-}
-
--(void)setVideoAspect:(float)aFloat {
-	videoAspect = aFloat;
-}
--(float)videoAspect {
-	return videoAspect;
-}
-
--(void)setAudioFormat:(NSString *)aString {
-	[audioFormat release];
-	audioFormat = [aString retain];
-}
--(NSString *)audioForamt {
-	return audioFormat;
-}
-
--(void)setAudioCodec:(NSString *)aString {
-	[audioCodec release];
-	audioCodec = [aString retain];
-}
--(NSString *)audioCodec {
-	return audioCodec;
-}
-
--(void)setAudioBitrate:(unsigned int)aUint {
-	audioBitrate = aUint;
-}
--(unsigned int)audioBitrate {
-	return audioBitrate;
-}
-
--(void)setAudioSampleRate:(float)aFloat {
-	audioSampleRate = aFloat;
-}
--(float)audioSampleRate {
-	return audioSampleRate;
-}
-
--(void)setAudioChannels:(unsigned int)aUint {
-	audioChannels = aUint;
-}
--(unsigned int)audioChannels {
-	return audioChannels;
-}
-
--(void)setLength:(unsigned int)aUint {
-	length = aUint;
-}
--(unsigned int)length {
-	return length;
 }
 
 // **************************************************** //

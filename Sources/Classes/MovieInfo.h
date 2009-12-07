@@ -51,16 +51,16 @@ typedef enum _SubtitleType {
 	// name
 	NSString *filename;
 	NSString *name;
-	NSString *filesize;
-	NSString *fileModificationDate;
-	NSString *fileCreationDate;
+	unsigned long long filesize;
+	NSDate *fileModificationDate;
+	NSDate *fileCreationDate;
 	
 	// formats
 	NSString *fileFormat;
-	BOOL isSeekable;
+	BOOL seekable;
 	
 	// video
-	NSString *videoForamt;
+	NSString *videoFormat;
 	NSString *videoCodec;
 	unsigned int videoBitrate;
 	unsigned int videoWidth;
@@ -91,41 +91,31 @@ typedef enum _SubtitleType {
 -(BOOL)isVideo;
 
 // basic info
--(void)setFilename:(NSString *)aString;
--(NSString *)filename;
--(void)setFileFormat:(NSString *)aString;
--(NSString *)fileFormat;
--(void)setIsSeekable:(BOOL)seek;
--(BOOL)isSeekable;
+@property (nonatomic,retain) NSString* filename;
+@property (nonatomic,retain) NSString* fileFormat;
+@property (nonatomic,getter=isSeekable) BOOL seekable;
+@property (nonatomic) unsigned int length;
 
--(void)setVideoFormat:(NSString *)aString;
--(NSString *)videoForamt;
--(void)setVideoCodec:(NSString *)aString;
--(NSString *)videoCodec;
--(void)setVideoBitrate:(unsigned int)aUint;
--(unsigned int)videoBitrate;
--(void)setVideoWidth:(unsigned int)aUint;
--(unsigned int)videoWidth;
--(void)setVideoHeight:(unsigned int)aUint;
--(unsigned int)videoHeight;
--(void)setVideoFps:(float)aFloat;
--(float)videoFps;
--(void)setVideoAspect:(float)aFloat;
--(float)videoAspect;
+// file attributes (set automatically with setFilename:)
+@property (nonatomic) unsigned long long filesize;
+@property (nonatomic,retain) NSDate *fileModificationDate;
+@property (nonatomic,retain) NSDate *fileCreationDate;
 
--(void)setAudioFormat:(NSString *)aString;
--(NSString *)audioForamt;
--(void)setAudioCodec:(NSString *)aString;
--(NSString *)audioCodec;
--(void)setAudioBitrate:(unsigned int)aUint;
--(unsigned int)audioBitrate;
--(void)setAudioSampleRate:(float)aFloat;
--(float)audioSampleRate;
--(void)setAudioChannels:(unsigned int)aUint;
--(unsigned int)audioChannels;
+// video properties
+@property (nonatomic,retain) NSString* videoFormat;
+@property (nonatomic,retain) NSString* videoCodec;
+@property (nonatomic) unsigned int videoBitrate;
+@property (nonatomic) unsigned int videoWidth;
+@property (nonatomic) unsigned int videoHeight;
+@property (nonatomic) float videoFPS;
+@property (nonatomic) float videoAspect;
 
--(void)setLength:(unsigned int)aUint;
--(unsigned int)length;
+// audio properties
+@property (nonatomic,retain) NSString* audioFormat;
+@property (nonatomic,retain) NSString* audioCodec;
+@property (nonatomic) unsigned int audioBitrate;
+@property (nonatomic) float audioSampleRate;
+@property (nonatomic) unsigned int audioChannels; 
   
 // Set and get info
 -(void)setInfo:(NSString *)value forKey:(NSString *)key;

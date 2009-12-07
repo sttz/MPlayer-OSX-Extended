@@ -1628,7 +1628,7 @@ static NSDictionary *videoEqualizerCommands;
 			
 			// seekability
 			if ([idName isEqualToString:@"SEEKABLE"]) {
-				[info setIsSeekable:(BOOL)[idValue intValue]];
+				[info setSeekable:(BOOL)[idValue intValue]];
 				continue;
 			}
 			
@@ -1668,7 +1668,7 @@ static NSDictionary *videoEqualizerCommands;
 			
 			// video fps
 			if ([idName isEqualToString:@"VIDEO_FPS"]) {
-				[info setVideoFps:[idValue floatValue]];
+				[info setVideoFPS:[idValue floatValue]];
 				continue;
 			}
 			

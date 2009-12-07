@@ -123,8 +123,8 @@
 	
 	// video format string
 	[theString setString:@""];
-	if ([info videoForamt]) {
-		[theString appendString:[info videoForamt]];
+	if ([info videoFormat]) {
+		[theString appendString:[info videoFormat]];
 		[theString appendString:@", "];
 	}
 	if ([info videoBitrate] > 0) {
@@ -139,10 +139,10 @@
 		[theString appendString:[NSString stringWithFormat:@"%i",[info videoHeight]]];
 		[theString appendString:@", "];
 	}
-	if ([info videoFps] > 0) {
+	if ([info videoFPS] > 0) {
 		[theString appendString:[NSString
 				stringWithFormat:@"%2.1f fps",
-					[info videoFps]]];
+					[info videoFPS]]];
 		[theString appendString:@", "];
 	}
 	if ([theString length] > 0)
