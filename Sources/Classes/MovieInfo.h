@@ -51,6 +51,9 @@ typedef enum _SubtitleType {
 	// External subtitle files
 	NSMutableArray *externalSubtitles;
 	
+	// Local settings
+	NSMutableDictionary *prefs;
+	
 	// name
 	NSString *filename;
 	NSString *name;
@@ -119,6 +122,9 @@ typedef enum _SubtitleType {
 @property (nonatomic) unsigned int audioBitrate;
 @property (nonatomic) float audioSampleRate;
 @property (nonatomic) unsigned int audioChannels; 
+
+// local preferences
+@property (nonatomic, readonly) NSMutableDictionary *prefs;
 
 // external subtitles
 - (void)addExternalSubtitle:(NSString *)path;

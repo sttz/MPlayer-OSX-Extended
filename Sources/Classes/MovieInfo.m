@@ -26,7 +26,7 @@
 
 
 @implementation MovieInfo
-@synthesize filename, fileFormat, seekable, length, filesize, fileModificationDate, fileCreationDate,
+@synthesize filename, prefs, fileFormat, seekable, length, filesize, fileModificationDate, fileCreationDate,
 videoFormat, videoCodec, videoBitrate, videoWidth, videoHeight, videoFPS, videoAspect,
 audioFormat, audioCodec, audioBitrate, audioSampleRate, audioChannels;
 
@@ -51,6 +51,8 @@ audioFormat, audioCodec, audioBitrate, audioSampleRate, audioChannels;
 	chapter = [[NSMutableDictionary alloc] initWithCapacity:5];
 	
 	externalSubtitles = [NSMutableArray new];
+	
+	prefs = [NSMutableArray new];
 	
 	videoHeight = 0;
 	videoWidth = 0;
@@ -85,6 +87,8 @@ audioFormat, audioCodec, audioBitrate, audioSampleRate, audioChannels;
 	[chapter release];
 	
 	[externalSubtitles release];
+	
+	[prefs release];
 	
 	[super dealloc];
 }
