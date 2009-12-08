@@ -32,12 +32,6 @@ audioFormat, audioCodec, audioBitrate, audioSampleRate, audioChannels;
 
 // **************************************************** //
 
-+(MovieInfo *)fromDictionary:(NSDictionary *)dict {
-	return [[[dict objectForKey:@"MovieInfo"] retain] autorelease];
-}
-
-// **************************************************** //
-
 - (id)init {
 	
 	if (!(self = [super init]))

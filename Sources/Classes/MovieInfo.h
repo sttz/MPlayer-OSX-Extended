@@ -83,9 +83,6 @@ typedef enum _SubtitleType {
 	
 }
 
-// extract MovieInfo from dictionary
-+(MovieInfo *)fromDictionary:(NSDictionary *)dict;
-
 // General methods
 -(id)init;
 -(id)initWithPathToFile:(NSString *)path;
