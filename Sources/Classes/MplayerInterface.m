@@ -73,7 +73,6 @@ static NSDictionary *videoEqualizerCommands;
 	
 	buffer_name = @"mplayerosx";
 	
-	info = [[MovieInfo alloc] init];
 	myCommandsBuffer = [[NSMutableArray array] retain];
 	mySeconds = 0;
 	myVolume = 100;
@@ -128,10 +127,8 @@ static NSDictionary *videoEqualizerCommands;
 {
 	[myMplayerTask release];
 	[myPathToPlayer release];
-	[myMovieFile release];
 	[mySubtitlesFiles release];
 	[myCommandsBuffer release];
-	[info release];
 	[lastUnparsedLine release];
 	[lastUnparsedErrorLine release];
 	[buffer_name release];
@@ -149,23 +146,22 @@ static NSDictionary *videoEqualizerCommands;
 	buffer_name = [name retain];
 }
 /************************************************************************************/
-- (void)registerPlayingItem:(NSDictionary *)item
+- (void)registerPlayingItem:(MovieInfo *)item
 {
 	if (playingItem && playingItem != item)
 		[self unregisterPlayingItem];
-	NSLog(@"register!");
+	
 	playingItem = [item retain];
 	
-	[playingItem addObserver:self
-				  forKeyPath:MPELoopMovie
-					 options:0
-					 context:nil];
+	[[playingItem prefs] addObserver:self
+						  forKeyPath:MPELoopMovie
+							 options:0
+							 context:nil];
 }
 
 - (void)unregisterPlayingItem
 {
-	NSLog(@"unregister!");
-	[playingItem removeObserver:self forKeyPath:MPELoopMovie];
+	[[playingItem prefs] removeObserver:self forKeyPath:MPELoopMovie];
 	
 	[playingItem release];
 	playingItem = nil;
@@ -174,7 +170,7 @@ static NSDictionary *videoEqualizerCommands;
 /************************************************************************************
  PLAYBACK CONTROL
  ************************************************************************************/
-- (void) playItem:(NSMutableDictionary *)item
+- (void) playItem:(MovieInfo *)item
 {
 	NSMutableArray *params = [NSMutableArray array];
 	NSMutableArray *videoFilters = [NSMutableArray array];
@@ -196,7 +192,7 @@ static NSDictionary *videoEqualizerCommands;
 	// copy local preferences
 	if (item) {
 		[localPrefs release];
-		localPrefs = [item copy];
+		localPrefs = [[item prefs] copy];
 	}
 	
 	// combine global and local preferences
@@ -223,15 +219,11 @@ static NSDictionary *videoEqualizerCommands;
 	// *** FILES
 	
 	// add movie file
-	if (myMovieFile) {
-		if ([[myMovieFile lastPathComponent] isEqualToString:@"VIDEO_TS"]) {
-			[params addObject:@"dvd://"];
-			[params addObject:@"-dvd-device"];
-		}
-		[params addObject:myMovieFile];
+	if ([[[item filename] lastPathComponent] isEqualToString:@"VIDEO_TS"]) {
+		[params addObject:@"dvd://"];
+		[params addObject:@"-dvd-device"];
 	}
-	else
-		return;
+	[params addObject:[item filename]];
 	
 	// add subtitles file
 	if ([mySubtitlesFiles count] > 0) {
@@ -573,14 +565,6 @@ static NSDictionary *videoEqualizerCommands;
 	if (disableAppleRemote)
 		[params addObject:@"-noar"];
 	
-	// MovieInfo
-	MovieInfo *mf = [localPrefs objectForKey:@"MovieInfo"];
-	if (mf == nil && (info == nil || ![myMovieFile isEqualToString:[info filename]])) {
-		[info release];
-		info = [[MovieInfo alloc] init];		// prepare it for getting new values
-	} else if (mf != nil)
-		info = mf;
-	
 	[myCommandsBuffer removeAllObjects];	// empty buffer before launch
 	
 	// Disable preflight mode
@@ -716,28 +700,12 @@ static NSDictionary *videoEqualizerCommands;
 		[self applyVideoEqualizer];
 	
 	} else if ([keyPath isEqualToString:MPELoopMovie]) {
-		[self sendCommand:[NSString stringWithFormat:@"set_property loop %d",((int)[playingItem boolForKey:MPELoopMovie] - 1)]];
+		[self sendCommand:[NSString stringWithFormat:@"set_property loop %d",((int)[[playingItem prefs] boolForKey:MPELoopMovie] - 1)]];
 	}
 }
 /************************************************************************************
  SETTINGS
  ************************************************************************************/
-- (void) setMovieFile:(NSString *)aFile
-{
-	if (aFile) {
-		if (![aFile isEqualToString:myMovieFile]) {
-			[myMovieFile autorelease];
-			myMovieFile = [aFile retain];
-		}
-	}
-	else {
-		if (myMovieFile) {
-			[myMovieFile release];
-		}
-		myMovieFile = nil;
-	}
-}
-/************************************************************************************/
 - (void) setSubtitlesFile:(NSString *)aFile
 {
 	if (aFile) {
@@ -745,9 +713,8 @@ static NSDictionary *videoEqualizerCommands;
 			[mySubtitlesFiles addObject:aFile];
 			if (isRunning) {
 				[self performCommand: [NSString stringWithFormat:@"sub_load '%@'", [aFile stringByReplacingOccurrencesOfString:@"'" withString:@"\\'"]]];
-				if (info)
-					[self performCommand: [NSString stringWithFormat:
-							@"sub_file %u", [info subtitleCountForType:SubtitleTypeFile]]];
+				[self performCommand: [NSString stringWithFormat:
+						@"sub_file %u", [playingItem subtitleCountForType:SubtitleTypeFile]]];
 			}
 		}
 	}
@@ -800,26 +767,21 @@ static NSDictionary *videoEqualizerCommands;
  ************************************************************************************/
 - (void) loadInfo
 {
-	// clear the class
-	[info release];
-	info = [[MovieInfo alloc] init];
-	
 	// Set preflight mode
 	isPreflight = YES;
 	
 	// run mplayer for identify
-	if (myMovieFile)
-		[self runMplayerWithParams:[NSMutableArray arrayWithObjects:
-									myMovieFile, @"-msglevel", 
-									@"identify=4:demux=6", @"-frames",
-									@"0", @"-ao", @"null", 
-									@"-vo", @"null", 
-									nil]];
+	[self runMplayerWithParams:[NSMutableArray arrayWithObjects:
+								[playingItem filename], @"-msglevel", 
+								@"identify=4:demux=6", @"-frames",
+								@"0", @"-ao", @"null", 
+								@"-vo", @"null", 
+								nil]];
 }
 /************************************************************************************/
 - (MovieInfo *) info
 {
-	return info;
+	return playingItem;
 }
 /************************************************************************************/
 - (int) status
@@ -878,7 +840,7 @@ static NSDictionary *videoEqualizerCommands;
 	for (NSString *option in requiresRestart) {
 		// check if option has changed
 		id op1 = [localPrefs objectForKey:option];
-		id op2 = [playingItem objectForKey:option];
+		id op2 = [[playingItem prefs] objectForKey:option];
 		if (op1 == nil && op2 == nil)
 			continue;
 		if (!op1 || ![op1 isEqual:op2]) {
@@ -1022,7 +984,7 @@ static NSDictionary *videoEqualizerCommands;
 	}
 	
 	// if no path or movie file specified the return
-	if (!myPathToPlayer || !myMovieFile)
+	if (!myPathToPlayer || !playingItem || ![playingItem fileIsValid])
 		return;
 	
 	// initialize  mplayer task object
@@ -1481,8 +1443,7 @@ static NSDictionary *videoEqualizerCommands;
 			
 			// post notification for finish of parsing
 			NSMutableDictionary *preflightInfo = [NSMutableDictionary dictionaryWithCapacity:2];
-			[preflightInfo setObject:myMovieFile forKey:@"MovieFile"];
-			[preflightInfo setObject:info forKey:@"MovieInfo"];
+			[preflightInfo setObject:playingItem forKey:@"MovieInfo"];
 			
 			[[NSNotificationCenter defaultCenter]
 				 postNotificationName:@"MIFinishedParsing"
@@ -1556,7 +1517,7 @@ static NSDictionary *videoEqualizerCommands;
 				
 				if ([streamInfoName isEqualToString:@"NAME"]) {
 					
-					[info setVideoStreamName:streamInfoValue forId:streamId];
+					[playingItem setVideoStreamName:streamInfoValue forId:streamId];
 					continue;
 				}
 			}
@@ -1566,13 +1527,13 @@ static NSDictionary *videoEqualizerCommands;
 				
 				if ([streamInfoName isEqualToString:@"NAME"]) {
 					
-					[info setAudioStreamName:streamInfoValue forId:streamId];
+					[playingItem setAudioStreamName:streamInfoValue forId:streamId];
 					continue;
 				}
 				
 				if ([streamInfoName isEqualToString:@"LANG"]) {
 					
-					[info setAudioStreamLanguage:streamInfoValue forId:streamId];
+					[playingItem setAudioStreamLanguage:streamInfoValue forId:streamId];
 					continue;
 				}
 			}
@@ -1582,13 +1543,13 @@ static NSDictionary *videoEqualizerCommands;
 				
 				if ([streamInfoName isEqualToString:@"NAME"]) {
 					
-					[info setSubtitleStreamName:streamInfoValue forId:streamId andType:SubtitleTypeDemux];
+					[playingItem setSubtitleStreamName:streamInfoValue forId:streamId andType:SubtitleTypeDemux];
 					continue;
 				}
 				
 				if ([streamInfoName isEqualToString:@"LANG"]) {
 					
-					[info setSubtitleStreamLanguage:streamInfoValue forId:streamId andType:SubtitleTypeDemux];
+					[playingItem setSubtitleStreamLanguage:streamInfoValue forId:streamId andType:SubtitleTypeDemux];
 					continue;
 				}
 			}
@@ -1597,12 +1558,12 @@ static NSDictionary *videoEqualizerCommands;
 			if ([streamType isEqualToString:@"CHAPTER"]) {
 				
 				if ([streamInfoName isEqualToString:@"NAME"]) {
-					[info setChapterName:streamInfoValue forId:streamId];
+					[playingItem setChapterName:streamInfoValue forId:streamId];
 					continue;
 				}
 				
 				if ([streamInfoName isEqualToString:@"START"]) {
-					[info setChapterStartTime:[NSNumber numberWithFloat:[streamInfoValue floatValue]/1000.] forId:streamId];
+					[playingItem setChapterStartTime:[NSNumber numberWithFloat:[streamInfoValue floatValue]/1000.] forId:streamId];
 					continue;
 				}
 			}
@@ -1622,136 +1583,136 @@ static NSDictionary *videoEqualizerCommands;
 			
 			// getting length
 			if ([idName isEqualToString:@"LENGTH"]) {
-				[info setLength:[idValue intValue]];
+				[playingItem setLength:[idValue intValue]];
 				continue;
 			}
 			
 			// seekability
 			if ([idName isEqualToString:@"SEEKABLE"]) {
-				[info setSeekable:(BOOL)[idValue intValue]];
+				[playingItem setSeekable:(BOOL)[idValue intValue]];
 				continue;
 			}
 			
 			// movie width and height
 			if ([idName isEqualToString:@"VIDEO_WIDTH"]) {
-				[info setVideoWidth:[idValue intValue]];
+				[playingItem setVideoWidth:[idValue intValue]];
 				continue;
 			}
 			if ([idName isEqualToString:@"VIDEO_HEIGHT"]) {
-				[info setVideoHeight:[idValue intValue]];
+				[playingItem setVideoHeight:[idValue intValue]];
 				continue;
 			}
 			
 			// filename
 			if ([idName isEqualToString:@"FILENAME"]) {
-				[info setFilename:idValue];
+				[playingItem setFilename:idValue];
 				continue;
 			}
 			
 			// video format
 			if ([idName isEqualToString:@"VIDEO_FORMAT"]) {
-				[info setVideoFormat:idValue];
+				[playingItem setVideoFormat:idValue];
 				continue;
 			}
 			
 			// video codec
 			if ([idName isEqualToString:@"VIDEO_CODEC"]) {
-				[info setVideoCodec:idValue];
+				[playingItem setVideoCodec:idValue];
 				continue;
 			}
 			
 			// video bitrate
 			if ([idName isEqualToString:@"VIDEO_BITRATE"]) {
-				[info setVideoBitrate:[idValue intValue]];
+				[playingItem setVideoBitrate:[idValue intValue]];
 				continue;
 			}
 			
 			// video fps
 			if ([idName isEqualToString:@"VIDEO_FPS"]) {
-				[info setVideoFPS:[idValue floatValue]];
+				[playingItem setVideoFPS:[idValue floatValue]];
 				continue;
 			}
 			
 			// video aspect
 			if ([idName isEqualToString:@"VIDEO_ASPECT"]) {
-				[info setVideoAspect:[idValue floatValue]];
+				[playingItem setVideoAspect:[idValue floatValue]];
 				continue;
 			}
 			
 			// audio format
 			if ([idName isEqualToString:@"AUDIO_FORMAT"]) {
-				[info setAudioFormat:idValue];
+				[playingItem setAudioFormat:idValue];
 				continue;
 			}
 			
 			// audio codec
 			if ([idName isEqualToString:@"AUDIO_CODEC"]) {
-				[info setAudioCodec:idValue];
+				[playingItem setAudioCodec:idValue];
 				continue;
 			}
 			
 			// audio bitrate
 			if ([idName isEqualToString:@"AUDIO_BITRATE"]) {
-				[info setAudioBitrate:[idValue intValue]];
+				[playingItem setAudioBitrate:[idValue intValue]];
 				continue;
 			}
 			
 			// audio sample rate
 			if ([idName isEqualToString:@"AUDIO_RATE"]) {
-				[info setAudioSampleRate:[idValue floatValue]];
+				[playingItem setAudioSampleRate:[idValue floatValue]];
 				continue;
 			}
 			
 			// audio channels
 			if ([idName isEqualToString:@"AUDIO_NCH"]) {
-				[info setAudioChannels:[idValue intValue]];
+				[playingItem setAudioChannels:[idValue intValue]];
 				continue;
 			}
 			
 			// video streams
 			if ([idName isEqualToString:@"VIDEO_ID"]) {
-				[info newVideoStream:[idValue intValue]];
+				[playingItem newVideoStream:[idValue intValue]];
 				[userInfo setObject:[NSNumber numberWithBool:YES] forKey:@"StreamsHaveChanged"];
 				continue;
 			}
 			
 			// audio streams
 			if ([idName isEqualToString:@"AUDIO_ID"]) {
-				[info newAudioStream:[idValue intValue]];
+				[playingItem newAudioStream:[idValue intValue]];
 				[userInfo setObject:[NSNumber numberWithBool:YES] forKey:@"StreamsHaveChanged"];
 				continue;
 			}
 			
 			// subtitle demux streams
 			if ([idName isEqualToString:@"SUBTITLE_ID"]) {
-				[info newSubtitleStream:[idValue intValue] forType:SubtitleTypeDemux];
+				[playingItem newSubtitleStream:[idValue intValue] forType:SubtitleTypeDemux];
 				[userInfo setObject:[NSNumber numberWithBool:YES] forKey:@"StreamsHaveChanged"];
 				continue;
 			}
 			
 			// subtitle file streams
 			if ([idName isEqualToString:@"FILE_SUB_ID"]) {
-				[info newSubtitleStream:[idValue intValue] forType:SubtitleTypeFile];
+				[playingItem newSubtitleStream:[idValue intValue] forType:SubtitleTypeFile];
 				[userInfo setObject:[NSNumber numberWithBool:YES] forKey:@"StreamsHaveChanged"];
 				subtitleFileId = [idValue intValue];
 				continue;
 			}
 			
 			if ([idName isEqualToString:@"FILE_SUB_FILENAME"]) {
-				[info setSubtitleStreamName:[idValue lastPathComponent] forId:subtitleFileId andType:SubtitleTypeFile];
+				[playingItem setSubtitleStreamName:[idValue lastPathComponent] forId:subtitleFileId andType:SubtitleTypeFile];
 				continue;
 			}
 			
 			// chapter
 			if ([idName isEqualToString:@"CHAPTER_ID"]) {
-				[info newChapter:[idValue intValue]];
+				[playingItem newChapter:[idValue intValue]];
 				[userInfo setObject:[NSNumber numberWithBool:YES] forKey:@"StreamsHaveChanged"];
 				continue;
 			}
 			
 			// Unmatched IDENTIFY lines
 			[Debug log:ASL_LEVEL_DEBUG withMessage:@"IDENTIFY not matched: %@ = %@", idName, idValue];
-			[info setInfo:idValue forKey:idName];
+			[playingItem setInfo:idValue forKey:idName];
 			continue;
 			
 		}
@@ -1797,14 +1758,14 @@ static NSDictionary *videoEqualizerCommands;
 		}
 		// get format of audio
 		if (strstr(stringPtr, MI_AUDIO_FILE_STRING) != NULL) {
-			[info setFileFormat:@"Audio"];
+			[playingItem setFileFormat:@"Audio"];
 			continue; 							// continue on next line	
 		}
 		// get format of movie
 		tempPtr = strstr(stringPtr, " file format detected.");
 		if (tempPtr != NULL) {
 			*(tempPtr) = '\0';
-			[info setFileFormat:[NSString stringWithUTF8String:stringPtr]];
+			[playingItem setFileFormat:[NSString stringWithUTF8String:stringPtr]];
 			continue; 							// continue on next line	
 		}
 		

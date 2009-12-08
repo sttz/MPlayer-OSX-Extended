@@ -71,7 +71,6 @@
 	MplayerInterface *myPreflightPlayer;
 	
 	// actual movie parametters
-	NSMutableDictionary *myPlayingItem;
 	MovieInfo *movieInfo;
 	BOOL saveTime;
 	BOOL continuousPlayback;
@@ -120,9 +119,10 @@
 
 // interface
 - (IBAction)displayWindow:(id)sender;
-- (void) preflightItem:(NSMutableDictionary *)anItem;
-- (void) playItem:(NSMutableDictionary *)anItem;
-- (NSMutableDictionary *) playingItem;
+- (void) preflightItem:(MovieInfo *)anItem;
+- (void) playItem:(MovieInfo *)anItem;
+- (MovieInfo *) playingItem;
+- (void) loadExternalSubtitleFile:(NSString *)path withEncoding:(NSString *)encoding;
 - (BOOL) isRunning;
 - (void) setOntop:(BOOL)aBool;
 - (void) applySettings;
@@ -131,7 +131,7 @@
 - (int) fullscreenDeviceId;
 - (NSWindow *) playerWindow;
 
-- (void) playFromPlaylist:(NSMutableDictionary *)anItem;
+- (void) playFromPlaylist:(MovieInfo *)anItem;
 - (void) stopFromPlaylist;
 
 // misc
@@ -197,7 +197,6 @@
 // notification observers
 - (void) appShouldTerminate;
 - (void) appTerminating;
-- (void) playbackStarted;
 - (void) statsClosed;
 - (void) statusUpdate:(NSNotification *)notification;
 - (void) statsUpdate:(NSNotification *)notification;

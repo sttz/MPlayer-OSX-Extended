@@ -92,6 +92,7 @@ typedef enum _SubtitleType {
 -(id)init;
 -(id)initWithPathToFile:(NSString *)path;
 -(BOOL)containsInfo;
+-(BOOL)fileIsValid;
 
 // format methods
 -(BOOL)isVideo;

@@ -87,10 +87,9 @@
 	// Properties
 	// file paths
 	NSString *myPathToPlayer;
-	NSString *myMovieFile;
 	NSMutableArray *mySubtitlesFiles;
 	
-	NSDictionary *playingItem;
+	MovieInfo *playingItem;
 	
 	NSDictionary *localPrefs;
 	NSDictionary *prefs;
@@ -145,8 +144,6 @@
 	NSDictionary *lastMissedSeek;	// last seek that couldn't be processed
 	BOOL is64bitHost;
 	BOOL force32bitBinary;
-	
-	MovieInfo *info;
 }
 
 @property (nonatomic,getter=isPlaying) BOOL playing;
@@ -156,11 +153,11 @@
 // init and uninit
 - (void) setBufferName:(NSString *)name;
 
-- (void) registerPlayingItem:(NSDictionary *)item;
+- (void) registerPlayingItem:(MovieInfo *)item;
 - (void) unregisterPlayingItem;
 
 // playback controls (take effect imediately)
-- (void) playItem:(NSMutableDictionary *)item;				// play item from saved time
+- (void) playItem:(MovieInfo *)item;				// play item from saved time
 - (void) play;
 - (void) stop;										// stops playback
 - (void) pause;										// pause / unpause playback
@@ -169,7 +166,6 @@
 
 // settings (take effect by using applySettingsWithRestart: message)
 // setting files
-- (void) setMovieFile:(NSString *)aFile;
 - (void) setSubtitlesFile:(NSString *)aFile;
 
 - (void) applyVideoEqualizer;

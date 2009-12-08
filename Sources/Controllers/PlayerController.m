@@ -77,12 +77,6 @@
 			selector: @selector(mplayerCrashed:)
 			name: @"MIMplayerExitedAbnormally"
 			object: myPlayer];
-	
-	// register for mplayer playback start
-	[[NSNotificationCenter defaultCenter] addObserver: self
-			selector: @selector(playbackStarted)
-			name: @"MIInfoReadyNotification"
-			object:myPlayer];
 
 	// register for mplayer status update
 	[[NSNotificationCenter defaultCenter] addObserver: self
@@ -175,19 +169,7 @@
 	[myPlayer setBufferName:[videoOpenGLView bufferName]];
 	
 	// Load playlist controller
-	[NSBundle loadNibNamed:@"Playlist" owner:self];
-	
-	// play the last played movie if it is set to do so
-	if ([PREFS objectForKey:@"PlaylistRemember"] && [PREFS objectForKey:@"LastTrack"]
-		&& ![myPlayer isRunning]) {
-		if ([PREFS boolForKey:@"PlaylistRemember"] && [PREFS objectForKey:@"LastTrack"]) {
-			[self playItem:(NSMutableDictionary *)[playListController
-												   itemAtIndex:[[PREFS objectForKey:@"LastTrack"] intValue]]];
-			[playListController
-			 selectItemAtIndex:[[PREFS objectForKey:@"LastTrack"] intValue]];
-		}
-	}
-	[PREFS removeObjectForKey:@"LastTrack"];	
+	[NSBundle loadNibNamed:@"Playlist" owner:self];	
 }
 
 - (void) dealloc
@@ -195,7 +177,6 @@
 	[myPlayer release];
 	[myPreflightPlayer release];
 	
-	[myPlayingItem release];
 	[movieInfo release];
 	
 	[playImageOn release];
@@ -276,7 +257,6 @@
 	NSPasteboard *pboard;
 	NSArray *fileArray;
 	NSString *filename;
-	NSMutableDictionary *myItem;
 
 	pboard = [sender draggingPasteboard];
 
@@ -294,8 +274,8 @@
 				if ([sender draggingSourceOperationMask] == NSDragOperationGeneric || 
 						[[AppController sharedController] isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]) {
 					// create an item from it and play it
-					myItem = [NSMutableDictionary dictionaryWithObject:filename forKey:@"MovieFile"];
-					[self playItem:myItem];
+					MovieInfo *item = [MovieInfo movieInfoWithPathToFile:filename];
+					[self playItem:item];
 				} else {
 					// load subtitles file
 					[myPlayer setSubtitlesFile:filename];
@@ -330,9 +310,9 @@
 		
 		NSString *binary = [[[AppController sharedController] preferencesController] identifierFromSelectionInView];
 		if (binary)
-			[myPlayingItem setObject:binary forKey:MPESelectedBinary];
+			[[movieInfo prefs] setObject:binary forKey:MPESelectedBinary];
 		// Restart playback
-		[self playItem:myPlayingItem];
+		[self playItem:movieInfo];
 	}
 }
 /************************************************************************************/
@@ -349,88 +329,48 @@
 	[myPreflightPlayer loadInfo];
 }
 /************************************************************************************/
-- (void)playItem:(NSMutableDictionary *)anItem
+- (void)playItem:(MovieInfo *)anItem
 {
-	NSString *aPath;
-	
 	// re-open player window for internal video
 	if (![videoOpenGLView isFullscreen] && ![playerWindow isVisible])
 		[self displayWindow:self];
 	
 	// prepare player
-	// set movie file
-	aPath = [anItem objectForKey:@"MovieFile"];
-	if (aPath) {
-		// stops mplayer if it is running
-		if ([myPlayer isRunning]) {
-			continuousPlayback = YES;	// don't close view
-			saveTime = NO;		// don't save time
-			[myPlayer stop];
-			[playListController updateView];
-		}
+	// stops mplayer if it is running
+	if ([myPlayer isRunning]) {
+		continuousPlayback = YES;	// don't close view
+		saveTime = NO;		// don't save time
+		[myPlayer stop];
+		[playListController updateView];
+	}
 
-		if ([[NSFileManager defaultManager] fileExistsAtPath:aPath] ||
-				[NSURL URLWithString:aPath]) // if the file exist or it is an URL
-			[myPlayer setMovieFile:aPath];
-		else {
-			NSRunAlertPanel(NSLocalizedString(@"Error",nil), [NSString stringWithFormat:
-					NSLocalizedString(@"File %@ could not be found.",nil), aPath],
-					NSLocalizedString(@"OK",nil),nil,nil);
-			return;
-		}
-	}
-	else {
-		aPath = [anItem objectForKey:@"SubtitlesFile"];
-		if (aPath)
-			[myPlayer setSubtitlesFile:aPath];
-		if ([anItem objectForKey:MPETextEncoding]) {
-			// set encoding from open dialog drop-down
-			[myPlayingItem setObject:[anItem objectForKey:MPETextEncoding] forKey:MPETextEncoding];
-			// restart playback if encoding has changed
-			if ([myPlayer localChangesNeedRestart])
-				[self applyChangesWithRestart:YES];
-		}
-   		return;
+	if (![anItem fileIsValid]) {
+		NSRunAlertPanel(NSLocalizedString(@"Error",nil), [NSString stringWithFormat:
+				NSLocalizedString(@"File or URL %@ could not be found.",nil), [anItem filename]],
+				NSLocalizedString(@"OK",nil),nil,nil);
+		return;
 	}
 	
-	if (myPlayingItem) {
-		[myPlayingItem autorelease];
-		myPlayingItem = nil;
-	}
-	if (movieInfo) {
+	if (movieInfo || movieInfo != anItem) {
 		[movieInfo autorelease];
-		movieInfo = nil;
+		movieInfo = [anItem retain];
 	}
-	
-	// backup item that is playing
-	myPlayingItem = [anItem retain];
-	
-	// apply item settings
-	[self applySettings];
 
 	// set video size for case it is set to fit screen so we have to compare
 	// screen size with movie size
 	[self setMovieSize];
-
-	// set the start of playback
-	if ([myPlayingItem objectForKey:@"LastSeconds"])
-		[myPlayer seek:[[myPlayingItem objectForKey:@"LastSeconds"] floatValue]
-				mode:MIAbsoluteSeekingMode];
-	else
-		[myPlayer seek:0 mode:MIAbsoluteSeekingMode];
-	if (myPlayingItem)
-		[myPlayingItem removeObjectForKey:@"LastSeconds"];
 	
 	// start playback
-	[myPlayer playItem:myPlayingItem];
+	[myPlayer playItem:movieInfo];
 	
 	[playListController updateView];
 	
+	// Prevent screensaver from starting
 	IOPMAssertionCreate(kIOPMAssertionTypeNoDisplaySleep, kIOPMAssertionLevelOn, &sleepAssertionId);
 }
 
 /************************************************************************************/
-- (void) playFromPlaylist:(NSMutableDictionary *)anItem
+- (void) playFromPlaylist:(MovieInfo *)anItem
 {
 	playingFromPlaylist = YES;
 	[self playItem:anItem];
@@ -445,6 +385,21 @@
 }
 
 /************************************************************************************/
+- (void) loadExternalSubtitleFile:(NSString *)path withEncoding:(NSString *)encoding
+{
+	if (movieInfo) {
+		
+		[movieInfo addExternalSubtitle:path];
+		
+		if (encoding)
+			[[movieInfo prefs] setObject:encoding forKey:MPETextEncoding];
+		
+		if ([myPlayer localChangesNeedRestart])
+			[self applyChangesWithRestart:YES];
+	}
+}
+
+/************************************************************************************/
 - (MplayerInterface *)playerInterface
 {
 	return myPlayer;
@@ -455,10 +410,10 @@
 	return myPreflightPlayer;
 }
 /************************************************************************************/
-- (NSMutableDictionary *) playingItem
+- (MovieInfo *) playingItem
 {
 	if ([myPlayer isRunning])
-		return [[myPlayingItem retain] autorelease]; // get it's own retention
+		return [[movieInfo retain] autorelease]; // get it's own retention
 	else
 		return nil;
 }
@@ -669,7 +624,7 @@
 			[playListController selectItemAtIndex:0];
 		
 		// play the items
-		[self playItem:(NSMutableDictionary *)[playListController selectedItem]];
+		[self playItem:(MovieInfo *)[playListController selectedItem]];
 	}
 	[playListController updateView];
 }
@@ -683,20 +638,20 @@
 /************************************************************************************/
 - (void) setLoopMovie:(BOOL)loop
 {
-	if (loop != [myPlayingItem boolForKey:MPELoopMovie])
-		[myPlayingItem setBool:loop forKey:MPELoopMovie];
+	if (loop != [[movieInfo prefs] boolForKey:MPELoopMovie])
+		[[movieInfo prefs] setBool:loop forKey:MPELoopMovie];
 }
 
 - (IBAction)toggleLoop:(id)sender
 {
-	if (myPlayingItem)
-		[self setLoopMovie:(![myPlayingItem boolForKey:MPELoopMovie])];
+	if (movieInfo)
+		[self setLoopMovie:(![[movieInfo prefs] boolForKey:MPELoopMovie])];
 	[self updateLoopStatus];
 }
 
 - (void) updateLoopStatus
 {
-	if (myPlayingItem && [myPlayingItem boolForKey:MPELoopMovie])
+	if (movieInfo && [[movieInfo prefs] boolForKey:MPELoopMovie])
 		[menuController->loopMenuItem setState:NSOnState];
 	else
 		[menuController->loopMenuItem setState:NSOffState];
@@ -780,7 +735,7 @@
 			[self skipToNextChapter];
 		else {
 			if (playingFromPlaylist)
-				[playListController finishedPlayingItem:myPlayingItem];
+				[playListController finishedPlayingItem:movieInfo];
 			else
 				[self stop:nil];
 			//[self seek:100 mode:MIPercentSeekingMode];
@@ -806,7 +761,7 @@
 		[self goToChapter:(currentChapter+1)];
 	else {
 		if (playingFromPlaylist)
-			[playListController finishedPlayingItem:myPlayingItem];
+			[playListController finishedPlayingItem:movieInfo];
 		else
 			[self stop:nil];
 		//[self seek:100 mode:MIPercentSeekingMode];
@@ -1568,13 +1523,13 @@
 	// save values before all is saved to disk and released
 	if ([myPlayer status] > 0 && [[[AppController sharedController] preferences] objectForKey:@"PlaylistRemember"])
 	{
-		if ([[[AppController sharedController] preferences] boolForKey:@"PlaylistRemember"])
+		/*if ([[[AppController sharedController] preferences] boolForKey:@"PlaylistRemember"])
 		{
 			//[[[AppController sharedController] preferences] setObject:[NSNumber numberWithInt:[playListController indexOfItem:myPlayingItem]] forKey:@"LastTrack"];
 			
 			if (myPlayingItem)
 				[myPlayingItem setObject:[NSNumber numberWithFloat:[myPlayer seconds]] forKey:@"LastSeconds"];			
-		}
+		}*/
 	}
 	
 	// stop mplayer
@@ -1589,17 +1544,6 @@
 			name: @"PlaybackStartNotification" object:myPlayer];
 	[[NSNotificationCenter defaultCenter] removeObserver:self
 			name: @"MIStateUpdatedNotification" object:myPlayer];
-}
-/************************************************************************************/
-- (void) playbackStarted
-{
-	// the info dictionary should now be ready to be imported
-	if ([myPlayer info] && myPlayingItem) {
-		[myPlayingItem setObject:[myPlayer info] forKey:@"MovieInfo"];
-		[movieInfo release];
-		movieInfo = [[myPlayer info] retain];
-	}
-	[playListController updateView];
 }
 /************************************************************************************/
 - (void) statsClosed
@@ -1669,22 +1613,9 @@
 		switch (lastPlayerStatus) {
 		case kOpening :
 		{
-			
-			NSMutableString *path = [[NSMutableString alloc] init];
-			[path appendString:@"MPlayer OSX Extended - "];
-			
-			if ([myPlayingItem objectForKey:@"ItemTitle"])
-			{
-				[path appendString:[myPlayingItem objectForKey:@"ItemTitle"]];
-			}
-			else 
-			{
-				[path appendString:[[myPlayingItem objectForKey:@"MovieFile"] lastPathComponent]];
-			}
-
-			[playerWindow setTitle:path];
-			[path release];
-			
+			[playerWindow setTitle:[NSString stringWithFormat:@"%@ - %@",
+									[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
+									[[movieInfo filename] lastPathComponent]]];
 			// progress bars
 			[scrubbingBar setScrubStyle:NSScrubbingBarProgressStyle];
 			[scrubbingBar setIndeterminate:YES];
@@ -1789,11 +1720,6 @@
 			[menuController->subtitleStreamMenu setEnabled:NO];
 			[audioWindowMenu setEnabled:NO];
 			[subtitleWindowMenu setEnabled:NO];
-			// release the retained playing item
-			/*[myPlayingItem autorelease];
-			myPlayingItem = nil;
-			[movieInfo autorelease];
-			movieInfo = nil;*/
 			// update state of playlist
 			[playListController updateView];
 			// Playlist mode
@@ -1801,7 +1727,7 @@
 				// if playback finished itself (not by user) let playListController know
 				if ([[[notification userInfo]
 						objectForKey:@"PlayerStatus"] intValue] == kFinished)
-					[playListController finishedPlayingItem:myPlayingItem];
+					[playListController finishedPlayingItem:movieInfo];
 				// close view otherwise
 				else if (!continuousPlayback)
 					[self stopFromPlaylist];
@@ -1873,7 +1799,7 @@
 - (void) statsUpdate:(NSNotification *)notification {
 	
 	if ([myPlayer status] == kPlaying || [myPlayer status] == kSeeking) {
-		if (myPlayingItem) {
+		if (movieInfo) {
 			// update time
 			if (seekUpdateBlockUntil < [NSDate timeIntervalSinceReferenceDate]) {
 				if ([playerWindow isVisible])

@@ -52,7 +52,7 @@ audioFormat, audioCodec, audioBitrate, audioSampleRate, audioChannels;
 	
 	externalSubtitles = [NSMutableArray new];
 	
-	prefs = [NSMutableArray new];
+	prefs = [NSMutableDictionary new];
 	
 	videoHeight = 0;
 	videoWidth = 0;
@@ -101,6 +101,12 @@ audioFormat, audioCodec, audioBitrate, audioSampleRate, audioChannels;
 -(BOOL)isVideo {
 	
 	return (videoFormat != nil && videoFormat != @"");
+}
+
+-(BOOL)fileIsValid {
+	
+	return ([[NSFileManager defaultManager] fileExistsAtPath:filename]
+			|| [NSURL URLWithString:filename]);
 }
 
 // **************************************************** //

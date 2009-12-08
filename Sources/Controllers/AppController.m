@@ -17,6 +17,7 @@
 #import "PreferencesController2.h"
 #import "EqualizerController.h"
 
+#import "MovieInfo.h"
 #import "Preferences.h"
 
 #import "CocoaAdditions.h"
@@ -138,13 +139,12 @@ static AppController *instance = nil;
 	
 	if (theFile) {
 		// if any file, create new item and play it
-		NSMutableDictionary *theItem = [NSMutableDictionary
-				dictionaryWithObject:theFile forKey:@"MovieFile"];
+		MovieInfo *item = [MovieInfo movieInfoWithPathToFile:theFile];
 		// apply selection from binary selection popup
 		NSString *binary = [preferencesController identifierFromSelectionInView];
 		if (binary)
-			[theItem setObject:binary forKey:MPESelectedBinary];
-		[playerController playItem:theItem];
+			[[item prefs] setObject:binary forKey:MPESelectedBinary];
+		[playerController playItem:item];
 	}
 }
 //BETA//////////////////////////////////////////////////////////////////////////////////
@@ -167,9 +167,8 @@ static AppController *instance = nil;
 				setObject:[theDir stringByDeletingLastPathComponent]
 				forKey:MPEDefaultDirectory];
 		if ([[theDir lastPathComponent] isEqualToString:@"VIDEO_TS"]) {
-			NSMutableDictionary *theItem = [NSMutableDictionary
-					dictionaryWithObject:theDir forKey:@"MovieFile"];
-			[playerController playItem:theItem];
+			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:theDir];
+			[playerController playItem:item];
 		}
 		else {
 			NSRunAlertPanel(NSLocalizedString(@"Error",nil),
@@ -201,14 +200,12 @@ static AppController *instance = nil;
         int i;
 		//  take care of multiple selection
 		for (i=0; i<[[thePanel filenames] count]; i++) {
-			NSMutableDictionary *theItem = [NSMutableDictionary
-					dictionaryWithObject:[[thePanel filenames] objectAtIndex:i]
-					forKey:@"MovieFile"];
+			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:[[thePanel filenames] objectAtIndex:i]];
 			[[self preferences]
 					setObject:[[[thePanel filenames] objectAtIndex:i]
 					stringByDeletingLastPathComponent]
 					forKey:MPEDefaultDirectory];
-			[[playerController playListController] appendItem:theItem];
+			[[playerController playListController] appendItem:item];
 		}
     }
 }
@@ -216,10 +213,8 @@ static AppController *instance = nil;
 - (IBAction) openLocation:(id)sender
 {
 	if ([NSApp runModalForWindow:locationPanel] == 1) {
-		NSMutableDictionary *theItem = [NSMutableDictionary
-				dictionaryWithObject:[locationBox stringValue]
-				forKey:@"MovieFile"];
-		[playerController playItem:theItem];
+		MovieInfo *item = [MovieInfo movieInfoWithPathToFile:[locationBox stringValue]];
+		[playerController playItem:item];
 	}
 }
 
@@ -229,11 +224,10 @@ static AppController *instance = nil;
 	// present open dialog
 	NSString *theFile = [self openDialogForType:MP_DIALOG_SUBTITLES];
 	if (theFile) {
-		NSMutableDictionary *theItem = [NSMutableDictionary
-				dictionaryWithObject:theFile forKey:@"SubtitlesFile"];
+		NSString *encoding = nil;
 		if ([openSubtitleEncoding selectedTag] > -1)
-			[theItem setObject:[openSubtitleEncoding titleOfSelectedItem] forKey:MPETextEncoding];
-		[playerController playItem:theItem];
+			encoding = [openSubtitleEncoding titleOfSelectedItem];
+		[playerController loadExternalSubtitleFile:theFile withEncoding:encoding];
 	}
 }
 
@@ -242,10 +236,8 @@ static AppController *instance = nil;
 - (IBAction) openVIDEO_TSLocation:(id)sender
 {
 	if ([NSApp runModalForWindow:video_tsPanel] == 1) {
-		NSMutableDictionary *theItem = [NSMutableDictionary
-				dictionaryWithObject:[video_tsBox stringValue]
-				forKey:@"MovieFile"];
-		[playerController playItem:theItem];
+		MovieInfo *item = [MovieInfo movieInfoWithPathToFile:[video_tsBox stringValue]];
+		[playerController playItem:item];
 	}
 }
 
@@ -538,15 +530,12 @@ static AppController *instance = nil;
 			[preferencesController installBinary:filename];
 		// create an item from it and play it
 		else if ([self isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]) {
-			NSMutableDictionary *myItem = [NSMutableDictionary
-										   dictionaryWithObject:filename forKey:@"MovieFile"];
-			[playerController playItem:myItem];
+			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:filename];
+			[playerController playItem:item];
 		// load subtitles while playing
 		} else if ([playerController isRunning]
 				   && [self isExtension:[filename pathExtension] ofType:MP_DIALOG_SUBTITLES]) {
-			NSMutableDictionary *myItem = [NSMutableDictionary
-										   dictionaryWithObject:filename forKey:@"SubtitlesFile"];
-			[playerController playItem:myItem];
+			[playerController loadExternalSubtitleFile:filename withEncoding:nil];
 		}
 		return YES;
 	}
@@ -573,9 +562,8 @@ static AppController *instance = nil;
 	while (filename = [e nextObject]) {
 		// Only add movie files
 		if ([self isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]) {
-			NSMutableDictionary *myItem = [NSMutableDictionary
-										   dictionaryWithObject:filename forKey:@"MovieFile"];
-			[[playerController playListController] appendItem:myItem];
+			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:filename];
+			[[playerController playListController] appendItem:item];
 		}
 	}
 	
@@ -586,9 +574,8 @@ static AppController *instance = nil;
 {
 	NSString *url = [[event paramDescriptorForKeyword:keyDirectObject] stringValue];
 	
-	NSMutableDictionary *myItem = [NSMutableDictionary
-								   dictionaryWithObject:url forKey:@"MovieFile"];
-	[playerController playItem:myItem];
+	MovieInfo *item = [MovieInfo movieInfoWithPathToFile:url];
+	[playerController playItem:item];
 }
 /************************************************************************************/
 - (void) applicationDidBecomeActive:(NSNotification *)aNotification
