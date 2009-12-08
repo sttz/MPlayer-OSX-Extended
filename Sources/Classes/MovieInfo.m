@@ -48,6 +48,8 @@ audioFormat, audioCodec, audioBitrate, audioSampleRate, audioChannels;
 	subfile = [[NSMutableDictionary alloc] initWithCapacity:1];
 	chapter = [[NSMutableDictionary alloc] initWithCapacity:5];
 	
+	externalSubtitles = [NSMutableArray new];
+	
 	videoHeight = 0;
 	videoWidth = 0;
 	
@@ -69,6 +71,8 @@ audioFormat, audioCodec, audioBitrate, audioSampleRate, audioChannels;
 	[subtitle release];
 	[subfile release];
 	[chapter release];
+	
+	[externalSubtitles release];
 	
 	[super dealloc];
 }
@@ -97,6 +101,19 @@ audioFormat, audioCodec, audioBitrate, audioSampleRate, audioChannels;
 			[self setFileCreationDate:[attr objectForKey:NSFileCreationDate]];
 		}
 	}
+}
+
+// **************************************************** //
+
+- (void)addExternalSubtitle:(NSString *)path {
+	
+	if (![externalSubtitles containsObject:path])
+		[externalSubtitles addObject:path];
+}
+
+- (NSEnumerator *)externalSubtitleEnumerator {
+	
+	return [externalSubtitles objectEnumerator];
 }
 
 // **************************************************** //
