@@ -30,6 +30,11 @@
 videoFormat, videoCodec, videoBitrate, videoWidth, videoHeight, videoFPS, videoAspect,
 audioFormat, audioCodec, audioBitrate, audioSampleRate, audioChannels;
 
++(MovieInfo *)movieInfoWithPathToFile:(NSString*)path {
+	
+	return [[[MovieInfo alloc] initWithPathToFile:path] autorelease];
+}
+
 // **************************************************** //
 
 - (id)init {
