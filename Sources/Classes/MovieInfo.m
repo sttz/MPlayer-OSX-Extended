@@ -40,6 +40,9 @@ audioFormat, audioCodec, audioBitrate, audioSampleRate, audioChannels;
 
 - (id)init {
 	
+	if (!(self = [super init]))
+		return nil;
+	
 	info = [[NSMutableDictionary alloc] initWithCapacity:10];
 	
 	video = [[NSMutableDictionary alloc] initWithCapacity:1];
@@ -60,7 +63,17 @@ audioFormat, audioCodec, audioBitrate, audioSampleRate, audioChannels;
 			  options:NSKeyValueObservingOptionNew 
 			  context:nil];
 	
-	return [super init];
+	return self;
+}
+
+- (id)initWithPathToFile:(NSString *)path {
+	
+	if (![self init])
+		return nil;
+	
+	[self setFilename:path];
+	
+	return self;
 }
 
 - (void) dealloc

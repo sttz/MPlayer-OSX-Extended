@@ -88,6 +88,7 @@ typedef enum _SubtitleType {
 
 // General methods
 -(id)init;
+-(id)initWithPathToFile:(NSString *)path;
 -(BOOL)containsInfo;
 
 // format methods
