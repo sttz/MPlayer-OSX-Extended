@@ -60,12 +60,11 @@
 	IBOutlet NSView *playerVolumeToolbarView;
 	
 	NSMutableArray *preflightQueue;
-	
-	bool isOpen;
 }
 //window 
 - (IBAction)displayWindow:(id)sender;
-- (void) openWindow:(BOOL)display;
+- (IBAction)toggleWindow:(id)sender;
+@property (nonatomic,readonly,getter=window) NSWindow *playListWindow;
 
 // data access interface
 - (NSMutableDictionary *) itemAtIndex:(int) aIndex;

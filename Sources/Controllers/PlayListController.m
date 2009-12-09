@@ -39,6 +39,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 }
 
 @implementation PlayListController
+@synthesize playListWindow;
 
 /************************************************************************************/
 -(void)awakeFromNib
@@ -153,26 +154,15 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 
 - (IBAction) displayWindow:(id)sender
 {	
-	[self openWindow:!isOpen];
+	[playListWindow makeKeyAndOrderFront:self];
 }
 
-- (void) openWindow:(BOOL)display
+- (IBAction)toggleWindow:(id)sender
 {
-	if(isOpen && !display)
-	{
-		[playListButton setState: NSOffState];
-		[playListWindow orderOut:nil];
-	}
-	else if (!isOpen && display)
-	{
-		[playListButton setState: NSOnState];
-		[playListWindow makeKeyAndOrderFront:nil];
-		[playerController updatePlaylistWindow];
-	}
-	
-	isOpen = display;
-	[self updateView];
-	[[NSApp mainWindow] update];
+	if ([playListWindow isVisible])
+		[playListWindow close];
+	else
+		[playListWindow makeKeyAndOrderFront:self];
 }
 
 /************************************************************************************
@@ -888,10 +878,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 {
 	[playListWindow setFrameAutosaveName:@"PlayListWindow"];
 	
-	[playListButton setState: NSOffState];
 	[playListWindow orderOut:nil];
-		
-	isOpen = NO;
 }
 
 /*

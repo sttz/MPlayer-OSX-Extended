@@ -169,7 +169,17 @@
 	[myPlayer setBufferName:[videoOpenGLView bufferName]];
 	
 	// Load playlist controller
-	[NSBundle loadNibNamed:@"Playlist" owner:self];	
+	[NSBundle loadNibNamed:@"Playlist" owner:self];
+	
+	// Keep track if playlist window is open
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(updatePlaylistButton:)
+												 name:NSWindowDidBecomeKeyNotification
+											   object:[playListController window]];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(updatePlaylistButton:)
+												 name:NSWindowWillCloseNotification
+											   object:[playListController window]];
 }
 
 - (void) dealloc
@@ -367,6 +377,17 @@
 	
 	// Prevent screensaver from starting
 	IOPMAssertionCreate(kIOPMAssertionTypeNoDisplaySleep, kIOPMAssertionLevelOn, &sleepAssertionId);
+}
+
+/************************************************************************************/
+- (IBAction) togglePlaylist:(id)sender
+{
+	[playListController toggleWindow:self];
+}
+
+- (void) updatePlaylistButton:(NSNotification *)notification
+{
+	[playListButton setState:[[playListController window] isVisible]];
 }
 
 /************************************************************************************/

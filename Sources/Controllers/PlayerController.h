@@ -37,7 +37,7 @@
 	IBOutlet id volumeButton;
 	IBOutlet id scrubbingBar;
 	IBOutlet id timeTextField;
-	IBOutlet id playListButton;
+	IBOutlet NSButton *playListButton;
 	IBOutlet VideoOpenGLView *videoOpenGLView;
 	IBOutlet id audioWindowMenu;
 	IBOutlet id subtitleWindowMenu;
@@ -131,6 +131,8 @@
 - (int) fullscreenDeviceId;
 - (NSWindow *) playerWindow;
 
+- (IBAction) togglePlaylist:(id)sender;
+- (void) updatePlaylistButton:(NSNotification *)notification;
 - (void) playFromPlaylist:(MovieInfo *)anItem;
 - (void) stopFromPlaylist;
 
