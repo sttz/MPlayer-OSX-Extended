@@ -43,9 +43,7 @@
 
 - (void)drawBarInside:(NSRect)aRect flipped:(BOOL)flipped
 {
-	[[self controlView] lockFocus];
 	[barImage compositeToPoint: NSMakePoint(aRect.origin.x,aRect.origin.y+(aRect.size.height/2)) operation:NSCompositeSourceOver];
-	[[self controlView] unlockFocus];	
 }
 
 - (BOOL)_usesCustomTrackImage {

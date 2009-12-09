@@ -36,9 +36,7 @@
 	else
 		knob = knobOff;
 
-	[[self controlView] lockFocus];
 	[knob compositeToPoint: NSMakePoint(knobRect.origin.x,knobRect.origin.y+knobRect.size.height+knobOffset) operation:NSCompositeSourceOver];
-	[[self controlView] unlockFocus];
 }
 
 - (BOOL)startTrackingAt:(NSPoint)startPoint inView:(NSView *)controlView
