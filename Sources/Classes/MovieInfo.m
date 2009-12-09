@@ -90,24 +90,23 @@ static NSMutableArray *busyPreflightInstances;
 	[busyPreflightInstances addObject:inst];
 	[freePreflightInstances removeObjectAtIndex:0];
 	
-	NSLog(@"start preflight for %@",[nextItem filename]);
 	// Start preflight
 	[inst loadInfo:nextItem];
 }
 
 + (void) preflightFinished:(NSNotification *)notification {
 	
-	NSLog(@"preflightFinished");
-	[self preflightNextItem];
 	[self requeuePreflightInstance:[notification object]];
+	[self preflightNextItem];
 }
 
 + (void) preflightFailed:(NSNotification *)notification {
 	
 	MplayerInterface *inst = (MplayerInterface *)[notification object];
 	[Debug log:ASL_LEVEL_ERR withMessage:@"Preflight failed for '%@'",[[inst info] filename]];
-	[self preflightNextItem];
+	
 	[self requeuePreflightInstance:inst];
+	[self preflightNextItem];
 }
 
 + (void) requeuePreflightInstance:(MplayerInterface*)inst {
@@ -226,6 +225,37 @@ externalSubtitles;
 			[self setFileCreationDate:[attr objectForKey:NSFileCreationDate]];
 		}
 	}
+}
+
++ (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
+	
+	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
+	NSSet *affectingKeys = nil;
+	
+	if ([key isEqualToString:@"displayName"])
+		affectingKeys = [NSSet setWithObjects:@"filename",nil];
+	else if ([key isEqualToString:@"displayLength"])
+		affectingKeys = [NSSet setWithObjects:@"length",nil];
+	
+	if (affectingKeys)
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKeys];
+	
+	return keyPaths;
+}
+
+// **************************************************** //
+
+- (NSString *) displayName {
+	
+	return [filename lastPathComponent];
+}
+
+- (NSString *) displayLength {
+	
+	if (length > 0)
+		return [NSString stringWithFormat:@"%01d:%02d:%02d",length/3600,(length%3600)/60,length%60];
+	else
+		return @"--:--:--";
 }
 
 // **************************************************** //

@@ -765,7 +765,6 @@ static NSDictionary *videoEqualizerCommands;
  ************************************************************************************/
 - (void) loadInfo:(MovieInfo *)item
 {
-	NSLog(@"loadInfo");
 	[playingItem release];
 	playingItem = [item retain];
 	

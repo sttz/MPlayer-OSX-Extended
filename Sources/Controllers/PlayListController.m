@@ -416,45 +416,6 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 /************************************************************************************
  MISC METHODS
  ************************************************************************************/
-/************************************************************************************
- DATA SOURCE METHODS
- ************************************************************************************/
-- (int)numberOfRowsInTableView:(NSTableView *)tableView
-{	
-	return [myData count];
-}
-
-/************************************************************************************/
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
-{    
-	MovieInfo *item = [myData objectAtIndex:row];
-	
-	// movie title column
-	if ([[tableColumn identifier] isEqualToString:@"movie"]) {
-		//if ([[myData objectAtIndex:row] objectForKey:@"ItemTitle"])
-		//	return [[myData objectAtIndex:row] objectForKey:@"ItemTitle"];
-		//else
-			return [[item filename] lastPathComponent];
-	}
-	// movie length column
-	if ([[tableColumn identifier] isEqualToString:@"time"]) {
-		if ([item length] > 0) {
-			int seconds = [item length];
-			return [NSString stringWithFormat:@"%01d:%02d:%02d",
-					seconds/3600,(seconds%3600)/60,seconds%60];
-		}
-		else
-			return @"--:--:--";
-	}
-	// movie status Column
-	if ([[tableColumn identifier] isEqualToString:@"status"])
-	{
-		if ([myData indexOfObjectIdenticalTo:[playerController playingItem]] == row)
-			return statusIcon;
-	}
-	return nil;
-}
-/************************************************************************************/
 // when a drag-and-drop operation comes through, and a filename is being dropped on the table,
 // we need to tell the table where to put the new filename (right at the end of the table).
 // This controls the visual feedback to the user on where their drop will go.
@@ -521,50 +482,29 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 /************************************************************************************/
 // This routine does the actual processing for a drag-and-drop operation on a tableview.
 // As the tableview's data source, we get this call when it's time to update our backend data.
-- (BOOL)tableView:(NSTableView*)tv acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)op
+- (BOOL)tableView:(NSTableView *)aTableView acceptDrop:(id < NSDraggingInfo >)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)operation
 {
     NSPasteboard *myPasteboard=[info draggingPasteboard];
 	// check if one of allowed types is avialable in pasteboard
     NSString *availableType=[myPasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSFilenamesPboardType,@"PlaylistSelectionEnumeratorType",nil]];
 	// get data from the pasteboard
-	NSArray *propertyList=[myPasteboard propertyListForType:availableType];		
-	
-	// reset selection
-	[tv deselectAll:nil];
+	NSArray *propertyList=[myPasteboard propertyListForType:availableType];
 	
 	if ([availableType isEqualToString:@"PlaylistSelectionEnumeratorType"])
 	{
-		NSMutableArray *itemsStore = [NSMutableArray array];
-		int i, removeIndex, insertIndex = row;
+		NSMutableArray *objects = [NSMutableArray array];
+		NSMutableIndexSet *set = [NSMutableIndexSet indexSet];
 		
-		// store dragged objects
-		for (i=0;i<[propertyList count];i++)
-		{
-			[itemsStore addObject:[myData objectAtIndex:[[propertyList objectAtIndex:i] intValue]]];
+		for (NSNumber *index in propertyList) {
+			[objects addObject:[[tableData arrangedObjects] objectAtIndex:[index unsignedIntegerValue]]];
+			[set addIndex:[index unsignedIntegerValue]];
 		}
 		
-		// remove selected objects
-		for (i=0;i<[itemsStore count];i++)
-		{
-			removeIndex = [myData indexOfObjectIdenticalTo:[itemsStore objectAtIndex:i]];
-			// remove object
-			[myData removeObjectAtIndex:removeIndex];
-			// deal with poibility that insertion point might change too
-			if (removeIndex < insertIndex)	// if insertion point was affected by remove
-				insertIndex--;				// then decrement it
-		}
-		// isert objects back to the list
-		for (i=0;i<[itemsStore count];i++)
-		{
-			// insert object
-			[myData insertObject:[itemsStore objectAtIndex:i] atIndex:insertIndex];
-			// manage selection
-			if ([tv selectedRow] == -1)
-				[tv selectRow:insertIndex byExtendingSelection:NO];
-			else
-				[tv selectRow:insertIndex byExtendingSelection:YES];
-			insertIndex++;
-		}
+		[tableData removeObjectsAtArrangedObjectIndexes:set];
+		
+		NSIndexSet *insertSet = [NSIndexSet indexSetWithIndexesInRange:
+								  NSMakeRange(row - [set countOfIndexesInRange:NSMakeRange(0, row)], [objects count])];
+		[tableData insertObjects:objects atArrangedObjectIndexes:insertSet];
 	}
 	
 	if([availableType isEqualToString:NSFilenamesPboardType])
@@ -591,7 +531,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 			[movieList addObject:path];
 		}
 
-		if (op == NSTableViewDropOn && [subtitlesList count] > 0)
+		if (operation == NSTableViewDropOn && [subtitlesList count] > 0)
 		{
 			// if only subtitles were dropped, take only first file and add it to the row
 			[[myData objectAtIndex:row] setObject:[subtitlesList objectAtIndex:0] forKey:@"SubtitlesFile"];
@@ -645,13 +585,14 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 				}
 				
 				// insert item in to playlist
-				[myData insertObject:item atIndex:insertIndex];
-				NSLog(@"%@",myData);
+				//[myData insertObject:item atIndex:insertIndex];
+				[tableData insertObject:item atArrangedObjectIndex:insertIndex];
+				
 				// manage selection
-				if ([playListTable selectedRow] == -1)
+				/*if ([playListTable selectedRow] == -1)
 					[playListTable selectRow:insertIndex byExtendingSelection:NO];
 				else
-					[playListTable selectRow:insertIndex byExtendingSelection:YES];
+					[playListTable selectRow:insertIndex byExtendingSelection:YES];*/
 				
 				[item preflight];
 				
@@ -671,18 +612,20 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 }
 /************************************************************************************/
 // handle drags inside the table
-- (BOOL)tableView:(NSTableView *)tableView writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pasteboard
+- (BOOL)tableView:(NSTableView *)aTableView writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard *)pboard
 {
-	pasteboard = [NSPasteboard pasteboardWithName:NSDragPboard];
+	pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
 	// prepare pasteboard
-	[pasteboard declareTypes:[NSArray arrayWithObject:@"PlaylistSelectionEnumeratorType"]
-			owner:nil];
+	[pboard declareTypes:[NSArray arrayWithObject:@"PlaylistSelectionEnumeratorType"] owner:nil];
+	
+	NSArray *objects = [[tableData arrangedObjects] objectsAtIndexes:rowIndexes];
+	NSMutableArray *indexes = [NSMutableArray array];
+	
+	for (MovieInfo *obj in objects)
+		[indexes addObject:[NSNumber numberWithUnsignedInteger:[myData indexOfObject:obj]]];
 	
 	// put data to the pasteboard
-	if ([pasteboard setPropertyList:rows
-				forType:@"PlaylistSelectionEnumeratorType"])
-		return YES;
-	return NO;
+	return [pboard setPropertyList:indexes forType:@"PlaylistSelectionEnumeratorType"];
 }
 
 /************************************************************************************

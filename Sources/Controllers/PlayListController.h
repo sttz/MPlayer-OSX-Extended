@@ -33,6 +33,8 @@
 	IBOutlet id playListCount;
 	IBOutlet id preflightBusy;
 	
+	IBOutlet NSArrayController *tableData	;
+	
 	// preflight panel
 	IBOutlet id preflightPanel;
 	IBOutlet id filenameBox;
@@ -96,11 +98,9 @@
 - (void) removeItemAtIndex:(unsigned int)index;
 
 // TableView data access methods
-- (int)numberOfRowsInTableView:(NSTableView *)tableView;
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row;
 - (NSDragOperation)tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)op;
-- (BOOL)tableView:(NSTableView*)tv acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)op;
-- (BOOL)tableView:(NSTableView *)tableView writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pasteboard;
+- (BOOL)tableView:(NSTableView *)aTableView acceptDrop:(id < NSDraggingInfo >)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)operation;
+- (BOOL)tableView:(NSTableView *)aTableView writeRowsWithIndexes:(NSIndexSet *)rowIndexes toPasteboard:(NSPasteboard *)pboard;
 
 // delegate methods
 - (BOOL) validateMenuItem:(NSMenuItem *)aMenuItem;

@@ -102,9 +102,11 @@ typedef enum _SubtitleType {
 -(BOOL)isVideo;
 
 // basic info
+@property (nonatomic,readonly) NSString* displayName;
 @property (nonatomic,retain) NSString* filename;
 @property (nonatomic,retain) NSString* fileFormat;
 @property (nonatomic,getter=isSeekable) BOOL seekable;
+@property (nonatomic,readonly) NSString* displayLength;
 @property (nonatomic) unsigned int length;
 
 // file attributes (set automatically with setFilename:)
