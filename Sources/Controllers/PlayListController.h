@@ -16,6 +16,8 @@
 #define kDefaultTextSize		13
 #define kSmallerTextSize		11
 
+@class MovieInfo;
+
 @interface PlayListController : NSObject
 {
     // controllers outlets
@@ -67,21 +69,21 @@
 @property (nonatomic,readonly,getter=window) NSWindow *playListWindow;
 
 // data access interface
-- (NSMutableDictionary *) itemAtIndex:(int) aIndex;
+- (MovieInfo *) itemAtIndex:(int) aIndex;
 - (void) selectItemAtIndex:(int) aIndex;
-- (NSMutableDictionary *) selectedItem;
+- (MovieInfo *) selectedItem;
 - (int) indexOfSelectedItem;
 - (int) numberOfSelectedItems;
-- (int) indexOfItem:(NSDictionary *)anItem;
+- (int) indexOfItem:(MovieInfo *)anItem;
 - (int) itemCount;
-- (void) appendItem:(NSMutableDictionary *)anItem;
-- (void) insertItem:(NSMutableDictionary *)anItem atIndex:(int) aIndex;
+- (void) appendItem:(MovieInfo *)anItem;
+- (void) insertItem:(MovieInfo *)anItem atIndex:(int) aIndex;
 - (void) deleteSelection;
 
 // controller interface
 - (void) updateView;
 - (void) applyPrefs;
-- (void) finishedPlayingItem:(NSDictionary *)playingItem;
+- (void) finishedPlayingItem:(MovieInfo *)playingItem;
 - (int) getPlayMode;
 
 // actions
@@ -109,9 +111,6 @@
 - (void) appFinishedLaunching;
 - (void) appShouldTerminate;
 - (void) appTerminating;
-
-- (void) startPreflight;
-- (void) processResultOfPreflight:(NSNotification *)notification;
 
 //Required NSToolbar delegate methods
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag;    

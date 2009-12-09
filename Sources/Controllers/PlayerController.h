@@ -119,7 +119,6 @@
 
 // interface
 - (IBAction)displayWindow:(id)sender;
-- (void) preflightItem:(MovieInfo *)anItem;
 - (void) playItem:(MovieInfo *)anItem;
 - (MovieInfo *) playingItem;
 - (void) loadExternalSubtitleFile:(NSString *)path withEncoding:(NSString *)encoding;

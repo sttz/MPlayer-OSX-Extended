@@ -48,9 +48,9 @@ static NSDictionary *videoEqualizerCommands;
 /************************************************************************************
  INIT & UNINIT
  ************************************************************************************/
-- (id)init;
+- (id)init
 {
-	if (![super init])
+	if (!(self = [super init]))
 		return  nil;
 	
 	if (!parseRunLoopModes)
@@ -63,7 +63,7 @@ static NSDictionary *videoEqualizerCommands;
 								   @"gamma", MPEVideoEqualizerGamma,
 								   @"hue", MPEVideoEqualizerHue,
 								   @"saturation", MPEVideoEqualizerSaturation,
-								   nil] retain];
+								   nil] retain];;
 	
 	// detect 64bit host
 	int is64bit;
@@ -763,18 +763,27 @@ static NSDictionary *videoEqualizerCommands;
 /************************************************************************************
  INFO
  ************************************************************************************/
-- (void) loadInfo
+- (void) loadInfo:(MovieInfo *)item
 {
+	NSLog(@"loadInfo");
+	[playingItem release];
+	playingItem = [item retain];
+	
 	// Set preflight mode
 	isPreflight = YES;
 	
+	// Set binary path
+	[myPathToPlayer release];
+	myPathToPlayer = [[[[AppController sharedController] preferencesController] 
+					   pathForBinaryWithIdentifier:[PREFS objectForKey:MPESelectedBinary]] retain];
+	
 	// run mplayer for identify
 	[self runMplayerWithParams:[NSMutableArray arrayWithObjects:
-								[playingItem filename], @"-msglevel", 
-								@"identify=4:demux=6", @"-frames",
-								@"0", @"-ao", @"null", 
-								@"-vo", @"null", 
-								nil]];
+								[playingItem filename], @"-identify",
+								 @"-frames", @"0", 
+								 @"-ao", @"null", 
+								 @"-vo", @"null", 
+								 nil]];
 }
 /************************************************************************************/
 - (MovieInfo *) info
@@ -1204,10 +1213,10 @@ static NSDictionary *videoEqualizerCommands;
 						encoding:NSUTF8StringEncoding];
 	
 	// register for another read
-	if ([myMplayerTask isRunning] || (data && [data length] > 0)) 
+	if ([myMplayerTask isRunning] || (data && [data length] > 0))
 		[[[myMplayerTask standardOutput] fileHandleForReading]
-			readInBackgroundAndNotifyForModes:parseRunLoopModes];	
-	
+			readInBackgroundAndNotifyForModes:parseRunLoopModes];
+		
 	if (!data) {
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Couldn\'t read MPlayer data. Lost bytes: %u",
 			[(NSData *)[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"] length]];
@@ -1439,23 +1448,18 @@ static NSDictionary *videoEqualizerCommands;
 					name: NSFileHandleReadCompletionNotification
 					object:[[myMplayerTask standardError] fileHandleForReading]];
 			
-			// post notification for finish of parsing
-			NSMutableDictionary *preflightInfo = [NSMutableDictionary dictionaryWithCapacity:2];
-			[preflightInfo setObject:playingItem forKey:@"MovieInfo"];
-			
-			[[NSNotificationCenter defaultCenter]
-				 postNotificationName:@"MIFinishedParsing"
-				 object:self
-				 userInfo:preflightInfo];
-			
 			// when player is not restarting
 			if (!restartingPlayer) {
 				// save value to userInfo
 				[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
 			}
-
+			
 			myOutputReadMode = 0;				// reset output read mode
-						
+			
+			// Parsing should now be finished
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"MIFinishedParsing"
+																object:self];
+			
 			restartingPlayer = NO;
 			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithFormat:@"Exited with state %d",myState]];
 			continue;							// continue on next line

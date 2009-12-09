@@ -331,14 +331,6 @@
 		[playerWindow makeKeyAndOrderFront:nil];
 }
 /************************************************************************************/
-- (void)preflightItem:(NSMutableDictionary *)anItem
-{
-	// set movie
-	[myPreflightPlayer setMovieFile:[anItem objectForKey:@"MovieFile"]];
-	// perform preflight
-	[myPreflightPlayer loadInfo];
-}
-/************************************************************************************/
 - (void)playItem:(MovieInfo *)anItem
 {
 	// re-open player window for internal video

@@ -24,12 +24,109 @@
 
 #import "MovieInfo.h"
 
+#import "MplayerInterface.h"
+
+#define MPEPreflightNumInstances	4
+
+static NSMutableArray *preflightQueue;
+
+static NSMutableArray *freePreflightInstances;
+static NSMutableArray *busyPreflightInstances;
+
+@interface MovieInfo (Preflight)
++ (void) queueForPreflight:(MovieInfo *)item;
++ (void) preflightNextItem;
++ (void) preflightFinished:(NSNotification *)notification;
++ (void) preflightFailed:(NSNotification *)notification;
++ (void) requeuePreflightInstance:(MplayerInterface*)inst;
+@end
+
+
+@implementation MovieInfo (Preflight)
+
++ (void) load {
+	preflightQueue = [NSMutableArray new];
+	freePreflightInstances = [NSMutableArray new];
+	busyPreflightInstances = [NSMutableArray new];
+}
+
++ (void) queueForPreflight:(MovieInfo *)item {
+	
+	[preflightQueue addObject:item];
+	[self preflightNextItem];
+}
+
++ (void) preflightNextItem {
+	
+	if ([preflightQueue count] == 0)
+		return;
+	
+	if ([freePreflightInstances count] == 0) {
+		// Create new instances on-demand
+		if ([busyPreflightInstances count] < MPEPreflightNumInstances) {
+			MplayerInterface *newInstance = [[MplayerInterface new] autorelease];
+			[freePreflightInstances addObject:newInstance];
+			// Listen for end of preflight
+			[[NSNotificationCenter defaultCenter] addObserver:self
+													 selector:@selector(preflightFinished:)
+														 name:@"MIFinishedParsing"
+													   object:newInstance];
+			// Listen for errors
+			[[NSNotificationCenter defaultCenter] addObserver:self
+													 selector:@selector(preflightFailed:)
+														 name:@"MIMplayerExitedAbnormally"
+													   object:newInstance];
+		// The number of allowed instances has been reached, wait for one to finish
+		} else
+			return;
+	}
+	
+	// Dequeue next item
+	MovieInfo *nextItem = [preflightQueue objectAtIndex:0];
+	[preflightQueue removeObjectAtIndex:0];
+	
+	// Dequeue a free instance and add it to the busy queue
+	MplayerInterface *inst = [freePreflightInstances objectAtIndex:0];
+	[busyPreflightInstances addObject:inst];
+	[freePreflightInstances removeObjectAtIndex:0];
+	
+	NSLog(@"start preflight for %@",[nextItem filename]);
+	// Start preflight
+	[inst loadInfo:nextItem];
+}
+
++ (void) preflightFinished:(NSNotification *)notification {
+	
+	NSLog(@"preflightFinished");
+	[self preflightNextItem];
+	[self requeuePreflightInstance:[notification object]];
+}
+
++ (void) preflightFailed:(NSNotification *)notification {
+	
+	MplayerInterface *inst = (MplayerInterface *)[notification object];
+	[Debug log:ASL_LEVEL_ERR withMessage:@"Preflight failed for '%@'",[[inst info] filename]];
+	[self preflightNextItem];
+	[self requeuePreflightInstance:inst];
+}
+
++ (void) requeuePreflightInstance:(MplayerInterface*)inst {
+	
+	[freePreflightInstances addObject:inst];
+	[busyPreflightInstances removeObject:inst];
+}
+
+@end
+
+
 
 @implementation MovieInfo
 @synthesize filename, prefs, fileFormat, seekable, length, filesize, fileModificationDate, fileCreationDate,
 videoFormat, videoCodec, videoBitrate, videoWidth, videoHeight, videoFPS, videoAspect,
 audioFormat, audioCodec, audioBitrate, audioSampleRate, audioChannels,
 externalSubtitles;
+
+// **************************************************** //
 
 +(MovieInfo *)movieInfoWithPathToFile:(NSString*)path {
 	
@@ -96,18 +193,23 @@ externalSubtitles;
 
 -(BOOL)containsInfo {
 	
-	return (fileFormat != nil && filename != nil);
+	return ([self videoStreamCount] > 0 || [self audioStreamCount] > 0);
 }
 
 -(BOOL)isVideo {
 	
-	return (videoFormat != nil && videoFormat != @"");
+	return ([self videoStreamCount] > 0);
 }
 
 -(BOOL)fileIsValid {
 	
 	return ([[NSFileManager defaultManager] fileExistsAtPath:filename]
 			|| [NSURL URLWithString:filename]);
+}
+
+- (void) preflight {
+	
+	[MovieInfo queueForPreflight:self];
 }
 
 // **************************************************** //

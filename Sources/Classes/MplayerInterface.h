@@ -178,7 +178,7 @@
 - (void) takeScreenshot;
 
 // info
-- (void) loadInfo;						// gets info returned by -identify (don't work during playback)
+- (void) loadInfo:(MovieInfo *)item;						// gets info returned by -identify (don't work during playback)
 - (MovieInfo *) info;							// returns the content of info dictionary 
 - (int) status;
 - (float) seconds;									// returns number of seconds, elapsed
