@@ -77,8 +77,6 @@ static NSDictionary *videoEqualizerCommands;
 	mySeconds = 0;
 	myVolume = 100;
 	
-	mySubtitlesFiles = [[NSMutableArray alloc] init];
-	
 	// *** playback
 	// addParams
 	
@@ -127,7 +125,6 @@ static NSDictionary *videoEqualizerCommands;
 {
 	[myMplayerTask release];
 	[myPathToPlayer release];
-	[mySubtitlesFiles release];
 	[myCommandsBuffer release];
 	[lastUnparsedLine release];
 	[lastUnparsedErrorLine release];
@@ -157,11 +154,20 @@ static NSDictionary *videoEqualizerCommands;
 						  forKeyPath:MPELoopMovie
 							 options:0
 							 context:nil];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(loadNewSubtitleFile:)
+												 name:MPEMovieInfoAddedExternalSubtitleNotification
+											   object:playingItem];
 }
 
 - (void)unregisterPlayingItem
 {
 	[[playingItem prefs] removeObserver:self forKeyPath:MPELoopMovie];
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self
+													name:MPEMovieInfoAddedExternalSubtitleNotification
+												  object:playingItem];
 	
 	[playingItem release];
 	playingItem = nil;
@@ -219,16 +225,16 @@ static NSDictionary *videoEqualizerCommands;
 	// *** FILES
 	
 	// add movie file
-	if ([[[item filename] lastPathComponent] isEqualToString:@"VIDEO_TS"]) {
+	if ([[[playingItem filename] lastPathComponent] isEqualToString:@"VIDEO_TS"]) {
 		[params addObject:@"dvd://"];
 		[params addObject:@"-dvd-device"];
 	}
-	[params addObject:[item filename]];
+	[params addObject:[playingItem filename]];
 	
 	// add subtitles file
-	if ([mySubtitlesFiles count] > 0) {
+	if ([[playingItem externalSubtitles] count] > 0) {
 		[params addObject:@"-sub"];
-		[params addObject:[mySubtitlesFiles componentsJoinedByString:@","]];
+		[params addObject:[[playingItem externalSubtitles] componentsJoinedByString:@","]];
 	}
 	else {
 		//[params addObject:@"-noautosub"];
@@ -706,22 +712,14 @@ static NSDictionary *videoEqualizerCommands;
 /************************************************************************************
  SETTINGS
  ************************************************************************************/
-- (void) setSubtitlesFile:(NSString *)aFile
+- (void) loadNewSubtitleFile:(NSNotification *)notification
 {
-	if (aFile) {
-		if (![mySubtitlesFiles containsObject:aFile]) {
-			[mySubtitlesFiles addObject:aFile];
-			if (isRunning) {
-				[self performCommand: [NSString stringWithFormat:@"sub_load '%@'", [aFile stringByReplacingOccurrencesOfString:@"'" withString:@"\\'"]]];
-				[self performCommand: [NSString stringWithFormat:
-						@"sub_file %u", [playingItem subtitleCountForType:SubtitleTypeFile]]];
-			}
-		}
-	}
-	else {
-		[mySubtitlesFiles release];
-		mySubtitlesFiles = [[NSMutableArray alloc] init];
-	}
+	NSString *path = [[notification userInfo] objectForKey:MPEMovieInfoAddedExternalSubtitlePathKey];
+	NSString *escaped = [path stringByReplacingOccurrencesOfString:@"'" withString:@"\\'"];
+	
+	[self sendCommand:[NSString stringWithFormat:@"sub_load '%@'", escaped]];
+	// Also select the newly loaded subtitle
+	[self sendCommand:[NSString stringWithFormat:@"sub_file %u",[playingItem subtitleCountForType:SubtitleTypeFile]]];
 }
 /************************************************************************************/
 - (void) applyVideoEqualizer
@@ -754,7 +752,7 @@ static NSDictionary *videoEqualizerCommands;
 - (void) applySettingsWithRestart
 {
 	[localPrefs release];
-	localPrefs = [playingItem copy];
+	localPrefs = [[playingItem prefs] copy];
 	
 	if ([self isRunning]) {
 		restartingPlayer = YES;		// set it not to send termination notification

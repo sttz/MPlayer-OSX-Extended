@@ -166,7 +166,7 @@
 
 // settings (take effect by using applySettingsWithRestart: message)
 // setting files
-- (void) setSubtitlesFile:(NSString *)aFile;
+- (void) loadNewSubtitleFile:(NSNotification *)notification;
 
 - (void) applyVideoEqualizer;
 

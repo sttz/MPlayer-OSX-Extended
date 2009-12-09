@@ -25,6 +25,9 @@
 #import <Cocoa/Cocoa.h>
 #import "LanguageCodes.h"
 
+static NSString* const MPEMovieInfoAddedExternalSubtitleNotification = @"MPEMovieInfoAddedExternalSubtitleNotification";
+static NSString* const MPEMovieInfoAddedExternalSubtitlePathKey = @"MPEMovieInfoAddedExternalSubtitlePathKey";
+
 typedef enum _SubtitleType {
 	SubtitleTypeDemux = 0,
 	SubtitleTypeFile  = 1
@@ -129,7 +132,8 @@ typedef enum _SubtitleType {
 
 // external subtitles
 - (void)addExternalSubtitle:(NSString *)path;
-- (NSEnumerator *)externalSubtitleEnumerator;
+- (unsigned int)externalSubtitleCount;
+@property (nonatomic,readonly) NSArray* externalSubtitles;
 
 // Set and get info
 -(void)setInfo:(NSString *)value forKey:(NSString *)key;

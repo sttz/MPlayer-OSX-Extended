@@ -276,9 +276,9 @@
 					// create an item from it and play it
 					MovieInfo *item = [MovieInfo movieInfoWithPathToFile:filename];
 					[self playItem:item];
-				} else {
+				} else if (movieInfo) {
 					// load subtitles file
-					[myPlayer setSubtitlesFile:filename];
+					[movieInfo addExternalSubtitle:filename];
 				}
 			}
 		}

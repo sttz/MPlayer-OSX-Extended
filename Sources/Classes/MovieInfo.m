@@ -28,7 +28,8 @@
 @implementation MovieInfo
 @synthesize filename, prefs, fileFormat, seekable, length, filesize, fileModificationDate, fileCreationDate,
 videoFormat, videoCodec, videoBitrate, videoWidth, videoHeight, videoFPS, videoAspect,
-audioFormat, audioCodec, audioBitrate, audioSampleRate, audioChannels;
+audioFormat, audioCodec, audioBitrate, audioSampleRate, audioChannels,
+externalSubtitles;
 
 +(MovieInfo *)movieInfoWithPathToFile:(NSString*)path {
 	
@@ -129,13 +130,20 @@ audioFormat, audioCodec, audioBitrate, audioSampleRate, audioChannels;
 
 - (void)addExternalSubtitle:(NSString *)path {
 	
-	if (![externalSubtitles containsObject:path])
+	if (![externalSubtitles containsObject:path]) {
 		[externalSubtitles addObject:path];
+		
+		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:path 
+															 forKey:MPEMovieInfoAddedExternalSubtitlePathKey];
+		[[NSNotificationCenter defaultCenter] postNotificationName:MPEMovieInfoAddedExternalSubtitleNotification
+															object:self
+														  userInfo:userInfo];
+	}
 }
 
-- (NSEnumerator *)externalSubtitleEnumerator {
+- (unsigned int)externalSubtitleCount {
 	
-	return [externalSubtitles objectEnumerator];
+	return [externalSubtitles count];
 }
 
 // **************************************************** //
