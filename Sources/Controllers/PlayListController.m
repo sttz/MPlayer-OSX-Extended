@@ -149,7 +149,14 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 		[self displayWindow:nil];
 	}
 	
+	// Load playlist
 	myData = [[NSMutableArray alloc] init];
+	
+	if ([PREFS objectForKey:MPEPlaylist]) {
+		
+		for (NSDictionary *item in [PREFS arrayForKey:MPEPlaylist])
+			[tableData addObject:[MovieInfo movieInfoFromDictionaryRepresentation:item]];
+	}
 }
 
 - (IBAction) displayWindow:(id)sender
@@ -739,19 +746,13 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 /************************************************************************************/
 - (void)appTerminating
 {	
-	NSUserDefaults *defaults = [[AppController sharedController] preferences];
+	// Save playlist
+	NSMutableArray *playlist = [NSMutableArray array];
 	
-	// save current playlist window state
-	[defaults setBool:[playListWindow isVisible] forKey:@"PlaylistOpen"];
+	for (MovieInfo *info in [tableData arrangedObjects])
+		[playlist addObject:[info dictionaryRepresentation]];
 	
-	// Remove MovieInfo from items
-	int i;
-	for (i = 0; i < [myData count]; i++) {
-		[[myData objectAtIndex:i] removeObjectForKey:@"MovieInfo"];
-	}
-	
-	// save playlist to prefs
-	[defaults setObject:myData forKey:@"PlayList"];
+	[PREFS setObject:playlist forKey:MPEPlaylist];
  }
 
 - (void)windowWillClose:(NSNotification *)aNotification

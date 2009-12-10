@@ -39,7 +39,11 @@
 - (NSData *)dataForKey:(NSString *)defaultName;
 - (NSArray *)arrayForKey:(NSString *)defaultName;
 - (NSDictionary *)dictionaryForKey:(NSString *)defaultName;
+- (NSDate *)dateForKey:(NSString *)defaultName;
 - (NSColor *)colorForKey:(NSString *)defaultName;
+
+- (NSMutableDictionary *)mutableDictionaryForKey:(NSString *)defaultName;
+- (NSMutableArray *)mutableArrayForKey:(NSString *)defaultName;
 @end
 
 @interface NSMutableDictionary (MPEAdditions)

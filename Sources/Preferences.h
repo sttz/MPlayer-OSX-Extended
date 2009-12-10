@@ -64,6 +64,7 @@ extern NSString* const MPEOSDLevel;
 extern NSString* const MPEOSDScale;
 extern NSString* const MPEOverrideAudioCodecs;
 extern NSString* const MPEOverrideVideoCodecs;
+extern NSString* const MPEPlaylist;
 extern NSString* const MPEPostprocessingFilter;
 extern NSString* const MPERenderSubtitlesFirst;
 extern NSString* const MPEScreenshotSaveLocation;

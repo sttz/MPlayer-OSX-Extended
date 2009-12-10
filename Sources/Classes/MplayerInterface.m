@@ -990,8 +990,10 @@ static NSDictionary *videoEqualizerCommands;
 	}
 	
 	// if no path or movie file specified the return
-	if (!myPathToPlayer || !playingItem || ![playingItem fileIsValid])
+	if (!myPathToPlayer || !playingItem || ![playingItem fileIsValid]) {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to start MPlayer (%@,%@,%d)",myPathToPlayer,playingItem,(![playingItem fileIsValid])];
 		return;
+	}
 	
 	// initialize  mplayer task object
 	myMplayerTask=[[NSTask alloc] init];

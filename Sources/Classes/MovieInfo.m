@@ -24,7 +24,13 @@
 
 #import "MovieInfo.h"
 
+#import "AppController.h"
+
 #import "MplayerInterface.h"
+
+#import "CocoaAdditions.h"
+
+// **************************************************** //
 
 #define MPEPreflightNumInstances	4
 
@@ -60,6 +66,12 @@ static NSMutableArray *busyPreflightInstances;
 	
 	if ([preflightQueue count] == 0)
 		return;
+	
+	// Wait for preferences controller to load
+	if (![[AppController sharedController] preferencesController]) {
+		[self performSelector:@selector(preflightNextItem) withObject:nil afterDelay:0];
+		return;
+	}
 	
 	if ([freePreflightInstances count] == 0) {
 		// Create new instances on-demand
@@ -117,7 +129,7 @@ static NSMutableArray *busyPreflightInstances;
 
 @end
 
-
+// **************************************************** //
 
 @implementation MovieInfo
 @synthesize filename, prefs, fileFormat, seekable, length, filesize, fileModificationDate, fileCreationDate,
@@ -127,48 +139,62 @@ externalSubtitles;
 
 // **************************************************** //
 
-+(MovieInfo *)movieInfoWithPathToFile:(NSString*)path {
++( MovieInfo *)movieInfoWithPathToFile:(NSString*)path {
 	
 	return [[[MovieInfo alloc] initWithPathToFile:path] autorelease];
 }
 
++ (MovieInfo *)movieInfoFromDictionaryRepresentation:(NSDictionary *)dict {
+	
+	return [[[MovieInfo alloc] initWithDictionaryRepresentation:dict] autorelease];
+}
+
 // **************************************************** //
 
-- (id)init {
+- (id) init {
 	
 	if (!(self = [super init]))
 		return nil;
 	
-	info = [[NSMutableDictionary alloc] initWithCapacity:10];
+	[self initializeInstance];
 	
-	video = [[NSMutableDictionary alloc] initWithCapacity:1];
-	audio = [[NSMutableDictionary alloc] initWithCapacity:2];
-	subtitle = [[NSMutableDictionary alloc] initWithCapacity:2];
-	subfile = [[NSMutableDictionary alloc] initWithCapacity:1];
-	chapter = [[NSMutableDictionary alloc] initWithCapacity:5];
+	return self;
+}
+
+- (void) initializeInstance {
 	
-	externalSubtitles = [NSMutableArray new];
+	if (!info)
+		info     = [NSMutableDictionary new];
 	
-	prefs = [NSMutableDictionary new];
+	if (!video)
+		video    = [NSMutableDictionary new];
+	if (!audio)
+		audio    = [NSMutableDictionary new];
+	if (!subtitle)
+		subtitle = [NSMutableDictionary new];
+	if (!subfile)
+		subfile  = [NSMutableDictionary new];
+	if (!chapter)
+		chapter  = [NSMutableDictionary new];
 	
-	videoHeight = 0;
-	videoWidth = 0;
+	if (!externalSubtitles)
+		externalSubtitles = [NSMutableArray new];
 	
-	length = 0;
+	if (!prefs)
+		prefs    = [NSMutableDictionary new];
 	
 	[self addObserver:self
 		   forKeyPath:@"filename" 
 			  options:NSKeyValueObservingOptionNew 
 			  context:nil];
-	
-	return self;
 }
 
-- (id)initWithPathToFile:(NSString *)path {
+- (id) initWithPathToFile:(NSString *)path {
 	
-	if (![self init])
+	if (!(self = [super init]))
 		return nil;
 	
+	[self initializeInstance];
 	[self setFilename:path];
 	
 	return self;
@@ -186,6 +212,16 @@ externalSubtitles;
 	[externalSubtitles release];
 	
 	[prefs release];
+	
+	[filename release];
+	[fileModificationDate release];
+	[fileCreationDate release];
+	[fileFormat release];
+	
+	[videoFormat release];
+	[videoCodec release];
+	[audioFormat release];
+	[audioCodec release];
 	
 	[super dealloc];
 }
@@ -294,17 +330,17 @@ externalSubtitles;
 
 -(void)newVideoStream:(unsigned int)streamId {
 	
-	[video setObject:@"" forKey:[NSNumber numberWithUnsignedInt:streamId]];
+	[video setObject:@"" forKey:[NSString stringWithFormat:@"%u",streamId]];
 }
 
 -(void)setVideoStreamName:(NSString *)streamName forId:(unsigned int)streamId {
 	
-	[video setObject:streamName forKey:[NSNumber numberWithUnsignedInt:streamId]];
+	[video setObject:streamName forKey:[NSString stringWithFormat:@"%u",streamId]];
 }
 
 -(NSString *)videoNameForStream:(unsigned int)streamId {
 	
-	return [video objectForKey:[NSNumber numberWithUnsignedInt:streamId]];
+	return [video objectForKey:[NSString stringWithFormat:@"%u",streamId]];
 }
 
 -(unsigned int)videoStreamCount {
@@ -321,27 +357,27 @@ externalSubtitles;
 -(NSString *)descriptionForVideoStream:(unsigned int)streamId {
 	
 	if ([[self videoNameForStream:streamId] length] > 0)
-		return [NSString stringWithFormat:@"%@: %@",[NSNumber numberWithInt:streamId],[self videoNameForStream:streamId]];
+		return [NSString stringWithFormat:@"%u: %@",streamId,[self videoNameForStream:streamId]];
 	else
-		return [NSString stringWithFormat:@"%@: %@",[NSNumber numberWithInt:streamId],@"Undefined"];
+		return [NSString stringWithFormat:@"%u: %@",streamId,@"Undefined"];
 }
 
 // **************************************************** //
 
 -(void)newAudioStream:(unsigned int)streamId {
 	
-	[audio setObject:[NSMutableArray arrayWithObjects:@"", @"", @"", nil] forKey:[NSNumber numberWithUnsignedInt:streamId]];
+	[audio setObject:[NSMutableArray arrayWithObjects:@"", @"", @"", nil] forKey:[NSString stringWithFormat:@"%u",streamId]];
 }
 
 -(void)setAudioStreamName:(NSString *)streamName forId:(unsigned int)streamId {
 	
-	[[audio objectForKey:[NSNumber numberWithUnsignedInt:streamId]] replaceObjectAtIndex:0 withObject:streamName];
+	[[audio objectForKey:[NSString stringWithFormat:@"%u",streamId]] replaceObjectAtIndex:0 withObject:streamName];
 }
 
 -(void)setAudioStreamLanguage:(NSString *)streamLanguage forId:(unsigned int)streamId {
 	
-	[[audio objectForKey:[NSNumber numberWithUnsignedInt:streamId]] replaceObjectAtIndex:1 withObject:streamLanguage];
-	[[audio		objectForKey:[NSNumber numberWithUnsignedInt:streamId]] 
+	[[audio objectForKey:[NSString stringWithFormat:@"%u",streamId]] replaceObjectAtIndex:1 withObject:streamLanguage];
+	[[audio		objectForKey:[NSString stringWithFormat:@"%u",streamId]] 
 		replaceObjectAtIndex:2 
 				  withObject:[[LanguageCodes sharedInstance] resolveCode:streamLanguage]];
 }
@@ -349,17 +385,17 @@ externalSubtitles;
 -(void)addAudioStream:(unsigned int)streamId withName:(NSString *)streamName andLanguage:(NSString *)lang {
 	
 	[audio setObject:[NSMutableArray arrayWithObjects:streamName, lang, [[LanguageCodes sharedInstance] resolveCode:lang], nil] 
-			  forKey:[NSNumber numberWithUnsignedInt:streamId]];
+			  forKey:[NSString stringWithFormat:@"%u",streamId]];
 }
 
 -(NSString *)audioNameForStream:(unsigned int)streamId {
 	
-	return [[audio objectForKey:[NSNumber numberWithUnsignedInt:streamId]] objectAtIndex:0];
+	return [[audio objectForKey:[NSString stringWithFormat:@"%u",streamId]] objectAtIndex:0];
 }
 
 -(NSString *)audioLanguageForStream:(unsigned int)streamId {
 	
-	return [[audio objectForKey:[NSNumber numberWithUnsignedInt:streamId]] objectAtIndex:2];
+	return [[audio objectForKey:[NSString stringWithFormat:@"%u",streamId]] objectAtIndex:2];
 }
 
 -(unsigned int)audioStreamCount {
@@ -380,38 +416,38 @@ externalSubtitles;
 		language = @"Undefined";
 	
 	if ([[self audioNameForStream:streamId] length] > 0)
-		return [NSString stringWithFormat:@"%@: %@ (%@)",[NSNumber numberWithInt:streamId],language,[self audioNameForStream:streamId]];
+		return [NSString stringWithFormat:@"%u: %@ (%@)",streamId,language,[self audioNameForStream:streamId]];
 	else
-		return [NSString stringWithFormat:@"%@: %@",[NSNumber numberWithInt:streamId],language];
+		return [NSString stringWithFormat:@"%u: %@",streamId,language];
 }
 
 // **************************************************** //
 
 -(void)newSubtitleStream:(unsigned int)streamId forType:(SubtitleType)type {
 	
-	[[self subDictForType: type] setObject:[NSMutableArray arrayWithObjects:@"", @"", @"", nil] forKey:[NSNumber numberWithUnsignedInt:streamId]];
+	[[self subDictForType: type] setObject:[NSMutableArray arrayWithObjects:@"", @"", @"", nil] forKey:[NSString stringWithFormat:@"%u",streamId]];
 }
 
 -(void)setSubtitleStreamName:(NSString *)streamName forId:(unsigned int)streamId andType:(SubtitleType)type {
 	
-	[[[self subDictForType: type] objectForKey:[NSNumber numberWithUnsignedInt:streamId]] replaceObjectAtIndex:0 withObject:streamName];
+	[[[self subDictForType: type] objectForKey:[NSString stringWithFormat:@"%u",streamId]] replaceObjectAtIndex:0 withObject:streamName];
 }
 
 -(void)setSubtitleStreamLanguage:(NSString *)streamLanguage forId:(unsigned int)streamId andType:(SubtitleType)type {
 	
-	[[[self subDictForType: type] objectForKey:[NSNumber numberWithUnsignedInt:streamId]] replaceObjectAtIndex:1 withObject:streamLanguage];
-	[[[self subDictForType: type] objectForKey:[NSNumber numberWithUnsignedInt:streamId]] 
+	[[[self subDictForType: type] objectForKey:[NSString stringWithFormat:@"%u",streamId]] replaceObjectAtIndex:1 withObject:streamLanguage];
+	[[[self subDictForType: type] objectForKey:[NSString stringWithFormat:@"%u",streamId]] 
 			 replaceObjectAtIndex:2 withObject:[[LanguageCodes sharedInstance] resolveCode:streamLanguage]];
 }
 
 -(NSString *)subtitleNameForStream:(unsigned int)streamId andType:(SubtitleType)type {
 	
-	return [[[self subDictForType: type] objectForKey:[NSNumber numberWithUnsignedInt:streamId]] objectAtIndex:0];
+	return [[[self subDictForType: type] objectForKey:[NSString stringWithFormat:@"%u",streamId]] objectAtIndex:0];
 }
 
 -(NSString *)subtitleLanguageForStream:(unsigned int)streamId andType:(SubtitleType)type {
 	
-	return [[[self subDictForType: type] objectForKey:[NSNumber numberWithUnsignedInt:streamId]] objectAtIndex:2];
+	return [[[self subDictForType: type] objectForKey:[NSString stringWithFormat:@"%u",streamId]] objectAtIndex:2];
 }
 
 
@@ -434,9 +470,9 @@ externalSubtitles;
 		language = @"Undefined";
 	
 	if ([[self subtitleNameForStream:streamId andType:type] length] > 0)
-		return [NSString stringWithFormat:@"%@: %@ (%@)",[NSNumber numberWithInt:streamId],language,[self subtitleNameForStream:streamId andType:type]];
+		return [NSString stringWithFormat:@"%u: %@ (%@)",streamId,language,[self subtitleNameForStream:streamId andType:type]];
 	else
-		return [NSString stringWithFormat:@"%@: %@",[NSNumber numberWithInt:streamId],language];
+		return [NSString stringWithFormat:@"%u: %@",streamId,language];
 }
 
 -(NSMutableDictionary *)subDictForType:(SubtitleType)type {
@@ -451,27 +487,27 @@ externalSubtitles;
 
 -(void)newChapter:(unsigned int)chapterId {
 	
-	[chapter setObject:[NSMutableArray arrayWithObjects:[NSNumber numberWithFloat:0.0], @"", nil] forKey:[NSNumber numberWithUnsignedInt:chapterId]];
+	[chapter setObject:[NSMutableArray arrayWithObjects:[NSNumber numberWithFloat:0.0], @"", nil] forKey:[NSString stringWithFormat:@"%u",chapterId]];
 }
 
 -(void)setChapterStartTime:(NSNumber *)startTime forId:(unsigned int)chapterId {
 	
-	[[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]] replaceObjectAtIndex:0 withObject:startTime];
+	[[chapter objectForKey:[NSString stringWithFormat:@"%u",chapterId]] replaceObjectAtIndex:0 withObject:startTime];
 }
 
 -(void)setChapterName:(NSString *)chapterName forId:(unsigned int)chapterId {
 	
-	[[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]] replaceObjectAtIndex:1 withObject:chapterName];
+	[[chapter objectForKey:[NSString stringWithFormat:@"%u",chapterId]] replaceObjectAtIndex:1 withObject:chapterName];
 }
 
 -(NSString *)nameForChapter:(unsigned int)chapterId {
 	
-	return [[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]] objectAtIndex:1];
+	return [[chapter objectForKey:[NSString stringWithFormat:@"%u",chapterId]] objectAtIndex:1];
 }
 
 -(float)startOfChapter:(unsigned int)chapterId {
 	
-	return [[[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]] objectAtIndex:0] floatValue];
+	return [[[chapter objectForKey:[NSString stringWithFormat:@"%u",chapterId]] objectAtIndex:0] floatValue];
 }
 
 
@@ -483,6 +519,161 @@ externalSubtitles;
 -(NSEnumerator *)getChaptersEnumerator {
 	
 	return [[[chapter allKeys] sortedArrayUsingSelector:@selector(compare:)] objectEnumerator];
+}
+
+// **************************************************** //
+
+static NSString* const MPEMovieInfoGeneralInformationKey   = @"MPEMovieInfoGeneralInformation";
+static NSString* const MPEMovieInfoVideoStreamsKey         = @"MPEMovieInfoVideoStreams";
+static NSString* const MPEMovieInfoAudioStreamsKey         = @"MPEMovieInfoAudioStreams";
+static NSString* const MPEMovieInfoSubtitleDemuxStreamsKey = @"MPEMovieInfoSubtitleDemuxStreams";
+static NSString* const MPEMovieInfoSubtitleFileStreamsKey  = @"MPEMovieInfoSubtitleFileStreams";
+static NSString* const MPEMovieInfoChapterStreamsKey       = @"MPEMovieInfoChapterStreams";
+static NSString* const MPEMovieInfoExternalSubtitlesKey    = @"MPEMovieInfoExternalSubtitles";
+static NSString* const MPEMovieInfoLocalSettingsKey        = @"MPEMovieInfoLocalSettings";
+static NSString* const MPEMovieInfoFilenameKey             = @"MPEMovieInfoFilename";
+static NSString* const MPEMovieInfoFileModificationDateKey = @"MPEMovieInfoFileModificationDate";
+static NSString* const MPEMovieInfoFileFormatKey           = @"MPEMovieInfoFileFormat";
+static NSString* const MPEMovieInfoMovieIsSeekableKey      = @"MPEMovieInfoMovieIsSeekable";
+static NSString* const MPEMovieInfoVideoFormatKey          = @"MPEMovieInfoVideoFormat";
+static NSString* const MPEMovieInfoVideoCodecKey           = @"MPEMovieInfoVideoCodec";
+static NSString* const MPEMovieInfoVideoBitrateKey         = @"MPEMovieInfoVideoBitrate";
+static NSString* const MPEMovieInfoVideoWidthKey           = @"MPEMovieInfoVideoWidth";
+static NSString* const MPEMovieInfoVideoHeightKey          = @"MPEMovieInfoVideoHeight";
+static NSString* const MPEMovieInfoVideoFPSKey             = @"MPEMovieInfoVideoFPS";
+static NSString* const MPEMovieInfoVideoAspectKey          = @"MPEMovieInfoVideoAspect";
+static NSString* const MPEMovieInfoAudioFormatKey          = @"MPEMovieInfoAudioFormat";
+static NSString* const MPEMovieInfoAudioCodecKey           = @"MPEMovieInfoAudioCodec";
+static NSString* const MPEMovieInfoAudioBitrateKey         = @"MPEMovieInfoAudioBitrate";
+static NSString* const MPEMovieInfoAudioSampleRateKey      = @"MPEMovieInfoAudioSampleRate";
+static NSString* const MPEMovieInfoAudioChannelsKey        = @"MPEMovieInfoAudioChannels";
+static NSString* const MPEMovieInfoMovieLengthKey          = @"MPEMovieInfoMovieLength";
+
+// **************************************************** //
+
+- (NSDictionary *)dictionaryRepresentation {
+	
+	if (!filename || [filename length] == 0)
+		return nil;
+	
+	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+	
+	// General dictionaries
+	if ([info count] > 0)
+		[dict setObject:info forKey:MPEMovieInfoGeneralInformationKey];
+	if ([prefs count] > 0)
+		[dict setObject:prefs forKey:MPEMovieInfoLocalSettingsKey];
+	
+	// Stream dictionaries
+	if ([video count] > 0)
+		[dict setObject:video forKey:MPEMovieInfoVideoStreamsKey];
+	if ([audio count] > 0)
+		[dict setObject:audio forKey:MPEMovieInfoAudioStreamsKey];
+	if ([subtitle count] > 0)
+		[dict setObject:subtitle forKey:MPEMovieInfoSubtitleDemuxStreamsKey];
+	if ([subfile count] > 0)
+		[dict setObject:subfile forKey:MPEMovieInfoSubtitleFileStreamsKey];
+	if ([chapter count] > 0)
+		[dict setObject:chapter forKey:MPEMovieInfoChapterStreamsKey];
+	
+	if ([externalSubtitles count] > 0)
+		[dict setObject:externalSubtitles forKey:MPEMovieInfoExternalSubtitlesKey];
+	
+	// Movie attributes
+	[dict setObject:filename forKey:MPEMovieInfoFilenameKey];
+	[dict setObject:fileModificationDate forKey:MPEMovieInfoFileModificationDateKey];
+	[dict setBool:seekable forKey:MPEMovieInfoMovieIsSeekableKey];
+	
+	if (fileFormat)
+		[dict setObject:fileFormat forKey:MPEMovieInfoFileFormatKey];
+	if (length > 0)
+		[dict setInteger:length forKey:MPEMovieInfoMovieLengthKey];
+	
+	// Video attributes
+	if (videoFormat)
+		[dict setObject:videoFormat forKey:MPEMovieInfoVideoFormatKey];
+	if (videoCodec)
+		[dict setObject:videoCodec forKey:MPEMovieInfoVideoCodecKey];
+	if (videoBitrate > 0)
+		[dict setInteger:videoBitrate forKey:MPEMovieInfoVideoBitrateKey];
+	if (videoWidth > 0)
+		[dict setInteger:videoWidth forKey:MPEMovieInfoVideoWidthKey];
+	if (videoHeight > 0)
+		[dict setInteger:videoHeight forKey:MPEMovieInfoVideoHeightKey];
+	if (videoFPS > 0)
+		[dict setFloat:videoFPS forKey:MPEMovieInfoVideoFPSKey];
+	if (videoAspect > 0)
+		[dict setFloat:videoAspect forKey:MPEMovieInfoVideoAspectKey];
+	
+	// Audio attributes
+	if (audioFormat)
+		[dict setObject:audioFormat forKey:MPEMovieInfoAudioFormatKey];
+	if (audioCodec)
+		[dict setObject:audioCodec forKey:MPEMovieInfoAudioCodecKey];
+	if (audioBitrate > 0)
+		[dict setInteger:audioBitrate forKey:MPEMovieInfoAudioBitrateKey];
+	if (audioSampleRate > 0)
+		[dict setFloat:audioSampleRate forKey:MPEMovieInfoAudioSampleRateKey];
+	if (audioChannels > 0)
+		[dict setInteger:audioChannels forKey:MPEMovieInfoAudioChannelsKey];
+	
+	return dict;
+}
+
+- (id) initWithDictionaryRepresentation:(NSDictionary *)dict {
+	
+	if (!(self = [super init]))
+		return nil;
+	
+	// General dictionaries
+	info     = [[dict mutableDictionaryForKey:MPEMovieInfoGeneralInformationKey] retain];
+	prefs    = [[dict mutableDictionaryForKey:MPEMovieInfoLocalSettingsKey] retain];
+	
+	// Stream dictionaries
+	video    = [[dict mutableDictionaryForKey:MPEMovieInfoVideoStreamsKey] retain];
+	audio    = [[dict mutableDictionaryForKey:MPEMovieInfoAudioStreamsKey] retain];
+	subtitle = [[dict mutableDictionaryForKey:MPEMovieInfoSubtitleDemuxStreamsKey] retain];
+	subfile  = [[dict mutableDictionaryForKey:MPEMovieInfoSubtitleFileStreamsKey] retain];
+	chapter  = [[dict mutableDictionaryForKey:MPEMovieInfoChapterStreamsKey] retain];
+	
+	externalSubtitles = [[dict mutableArrayForKey:MPEMovieInfoExternalSubtitlesKey] retain];
+	
+	// Movie attributes
+	filename     = [[dict stringForKey:MPEMovieInfoFilenameKey] retain];
+	fileModificationDate = [[dict dateForKey:MPEMovieInfoFileModificationDateKey] retain];
+	seekable     = [dict boolForKey:MPEMovieInfoMovieIsSeekableKey];
+	
+	fileFormat   = [[dict stringForKey:MPEMovieInfoFileFormatKey] retain];
+	length       = [dict integerForKey:MPEMovieInfoMovieLengthKey];
+	
+	// Video attributes
+	videoFormat  = [[dict stringForKey:MPEMovieInfoVideoFormatKey] retain];
+	videoCodec   = [[dict stringForKey:MPEMovieInfoVideoCodecKey] retain];
+	videoBitrate = [dict integerForKey:MPEMovieInfoVideoBitrateKey];
+	videoWidth   = [dict integerForKey:MPEMovieInfoVideoWidthKey];
+	videoHeight  = [dict integerForKey:MPEMovieInfoVideoHeightKey];
+	videoFPS     = [dict floatForKey:MPEMovieInfoVideoFPSKey];
+	videoAspect  = [dict floatForKey:MPEMovieInfoVideoAspectKey];
+	
+	// Audio attributes
+	audioFormat  = [[dict stringForKey:MPEMovieInfoAudioFormatKey] retain];
+	audioCodec   = [[dict stringForKey:MPEMovieInfoAudioCodecKey] retain];
+	audioBitrate = [dict integerForKey:MPEMovieInfoAudioBitrateKey];
+	audioSampleRate = [dict floatForKey:MPEMovieInfoAudioSampleRateKey];
+	audioChannels = [dict integerForKey:MPEMovieInfoAudioChannelsKey];
+	
+	// Make sure dictionaries and arrays are initialized
+	[self initializeInstance];
+	
+	// Check if we should update the info
+	NSDate *oldDate = [[fileModificationDate retain] autorelease];
+	// Update modification date by resetting the filename
+	[self setFilename:filename];
+	
+	if ([oldDate compare:fileModificationDate] != NSOrderedSame)
+		[MovieInfo queueForPreflight:self];
+	
+	return self;
 }
 
 // **************************************************** //

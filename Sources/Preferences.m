@@ -64,6 +64,7 @@ NSString* const MPEOSDLevel                           = @"MPEOSDLevel";
 NSString* const MPEOSDScale                           = @"MPEOSDScale";
 NSString* const MPEOverrideAudioCodecs                = @"MPEOverrideAudioCodecs";
 NSString* const MPEOverrideVideoCodecs                = @"MPEOverrideVideoCodecs";
+NSString* const MPEPlaylist                           = @"MPEPlaylist";
 NSString* const MPEPostprocessingFilter               = @"MPEPostprocessingFilter";
 NSString* const MPERenderSubtitlesFirst               = @"MPERenderSubtitlesFirst";
 NSString* const MPEScreenshotSaveLocation             = @"MPEScreenshotSaveLocation";

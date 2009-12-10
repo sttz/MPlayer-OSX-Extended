@@ -59,7 +59,6 @@ typedef enum _SubtitleType {
 	
 	// name
 	NSString *filename;
-	NSString *name;
 	unsigned long long filesize;
 	NSDate *fileModificationDate;
 	NSDate *fileCreationDate;
@@ -86,14 +85,19 @@ typedef enum _SubtitleType {
 	
 	// length
 	unsigned int length;
-	
 }
 
-+(MovieInfo *)movieInfoWithPathToFile:(NSString*)path;
++ (MovieInfo *)movieInfoWithPathToFile:(NSString*)path;
++ (MovieInfo *)movieInfoFromDictionaryRepresentation:(NSDictionary *)dict;
+
+// serialization
+- (NSDictionary *)dictionaryRepresentation;
+- (id)initWithDictionaryRepresentation:(NSDictionary *)dict;
 
 // General methods
 -(id)init;
 -(id)initWithPathToFile:(NSString *)path;
+-(void)initializeInstance;
 -(BOOL)containsInfo;
 -(BOOL)fileIsValid;
 -(void)preflight;

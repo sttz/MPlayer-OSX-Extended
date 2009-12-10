@@ -119,6 +119,11 @@
 	return (NSDictionary *)[self objectOfType:[NSDictionary class] forKey:defaultName];
 }
 
+- (NSDate *)dateForKey:(NSString *)defaultName
+{
+	return (NSDate *)[self objectOfType:[NSDate class] forKey:defaultName];
+}
+
 - (NSColor *)colorForKey:(NSString *)defaultName
 {
 	NSColor *color = (NSColor *)[self objectOfType:[NSColor class] forKey:defaultName];
@@ -127,6 +132,22 @@
 	if (data)
 		color = (NSColor *)[NSUnarchiver unarchiveObjectWithData:data];
 	return color;
+}
+
+- (NSMutableDictionary *)mutableDictionaryForKey:(NSString *)defaultName
+{
+	id dict = [self dictionaryForKey:defaultName];
+	if (dict)
+		dict = [[dict mutableCopy] autorelease];
+	return dict;
+}
+
+- (NSMutableArray *)mutableArrayForKey:(NSString *)defaultName
+{
+	id array = [self arrayForKey:defaultName];
+	if (array)
+		array = [[array mutableCopy] autorelease];
+	return array;
 }
 
 @end
