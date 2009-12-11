@@ -377,6 +377,11 @@
 	
 	[playListController updateView];
 	
+	// add item to recent menu
+	NSURL *fileURL = [NSURL fileURLWithPath:[movieInfo filename]];
+	if (fileURL)
+		[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:fileURL];
+	
 	// Prevent screensaver from starting
 	IOPMAssertionCreate(kIOPMAssertionTypeNoDisplaySleep, kIOPMAssertionLevelOn, &sleepAssertionId);
 }
