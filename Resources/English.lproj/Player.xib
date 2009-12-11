@@ -12,6 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="33"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -331,7 +332,7 @@
 				</object>
 				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<object class="NSView" key="NSWindowView" id="345994927">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -986,7 +987,7 @@
 								<string key="NSContents">PL</string>
 								<reference key="NSSupport" ref="22"/>
 								<reference key="NSControlView" ref="803588667"/>
-								<int key="NSButtonFlags">-2035007233</int>
+								<int key="NSButtonFlags">917782783</int>
 								<int key="NSButtonFlags2">36</int>
 								<string key="NSAlternateContents"/>
 								<string key="NSKeyEquivalent"/>
@@ -1036,6 +1037,7 @@
 						</object>
 					</object>
 					<string key="NSFrameSize">{450, 300}</string>
+					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
@@ -1908,6 +1910,14 @@
 						<reference key="destination" ref="596186214"/>
 					</object>
 					<int key="connectionID">175</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">togglePlaylist:</string>
+						<reference key="source" ref="596186214"/>
+						<reference key="destination" ref="803588667"/>
+					</object>
+					<int key="connectionID">177</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2798,6 +2808,7 @@
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<object class="NSArray" key="dict.sortedKeys">
 					<bool key="EncodedWithXMLCoder">YES</bool>
+					<string>-3.IBPluginDependency</string>
 					<string>1.IBEditorWindowLastContentRect</string>
 					<string>1.IBPluginDependency</string>
 					<string>1.IBWindowTemplateEditedContentRect</string>
@@ -3017,6 +3028,7 @@
 				</object>
 				<object class="NSMutableArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{14, 981}, {280, 164}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{14, 981}, {280, 164}}</string>
@@ -3098,9 +3110,9 @@
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
-					<string>{{586, 315}, {450, 300}}</string>
+					<string>{{695, 310}, {450, 300}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{586, 315}, {450, 300}}</string>
+					<string>{{695, 310}, {450, 300}}</string>
 					<boolean value="YES"/>
 					<boolean value="NO"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3400,7 +3412,7 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">176</int>
+			<int key="maxID">177</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3417,30 +3429,18 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 							<string>applyVIDEO_TSLocation:</string>
 							<string>cancelLocation:</string>
 							<string>cancelVIDEO_TSLocation:</string>
-							<string>chooseCustomAspectRatio:</string>
 							<string>closeWindow:</string>
 							<string>displayLogWindow:</string>
-							<string>displayPlayList:</string>
-							<string>openAudioEqualizer:</string>
-							<string>openCustomAspectRatioChooser:</string>
 							<string>openFile:</string>
 							<string>openHomepage:</string>
 							<string>openLicenseAndCredits:</string>
 							<string>openLocation:</string>
-							<string>openPreferences:</string>
 							<string>openSubtitle:</string>
 							<string>openVIDEO_TS:</string>
-							<string>openVideoEqualizer:</string>
 							<string>showFilesChanged:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>NSButton</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3602,12 +3602,9 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>addToPlaylist:</string>
 							<string>decreaseVolume:</string>
-							<string>doubleSize:</string>
 							<string>fullScreen:</string>
-							<string>halfSize:</string>
 							<string>increaseVolume:</string>
 							<string>muteVolume:</string>
-							<string>normalSize:</string>
 							<string>openAudioEqualizer:</string>
 							<string>openCustomAspectChooser:</string>
 							<string>openInfoWindow:</string>
@@ -3621,10 +3618,8 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 							<string>playlistNext:</string>
 							<string>playlistPrevious:</string>
 							<string>seekByTag:</string>
-							<string>selectAudioStreamFromMenu:</string>
-							<string>selectSubtitleStreamFromMenu:</string>
-							<string>selectVideoStreamFromMenu:</string>
 							<string>setAspectFromMenu:</string>
+							<string>setSizeFromMenu:</string>
 							<string>skipToChapterFromMenu:</string>
 							<string>skipToNext:</string>
 							<string>skipToPrevious:</string>
@@ -3668,27 +3663,30 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>appController</string>
 							<string>audioStreamMenu</string>
 							<string>chapterMenu</string>
 							<string>fullscreenMenu</string>
+							<string>keepAspectMenuItem</string>
 							<string>loopMenuItem</string>
+							<string>panScanMenuItem</string>
 							<string>playMenuItem</string>
 							<string>subtitleStreamMenu</string>
+							<string>toggleMuteMenuItem</string>
 							<string>videoStreamMenu</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>AppController</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
@@ -3731,9 +3729,11 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 							<string>doubleClick:</string>
 							<string>playNext:</string>
 							<string>playPrevious:</string>
+							<string>toggleWindow:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3828,6 +3828,7 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 							<string>takeScreenshot:</string>
 							<string>toggleLoop:</string>
 							<string>toggleMute:</string>
+							<string>togglePlaylist:</string>
 							<string>videoMenuAction:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -3846,6 +3847,7 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 							<string>id</string>
 							<string>id</string>
 							<string>NSMenuItem</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3892,7 +3894,6 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 							<string>subtitleCycleButton</string>
 							<string>subtitleWindowMenu</string>
 							<string>timeTextField</string>
-							<string>toggleMuteMenu</string>
 							<string>videoOpenGLView</string>
 							<string>volumeButton</string>
 							<string>volumeSlider</string>
@@ -3913,7 +3914,7 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 							<string>id</string>
 							<string>id</string>
 							<string>NSButton</string>
-							<string>id</string>
+							<string>NSButton</string>
 							<string>PlayListController</string>
 							<string>NSWindow</string>
 							<string>id</string>
@@ -3928,7 +3929,6 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
-							<string>NSMenuItem</string>
 							<string>VideoOpenGLView</string>
 							<string>id</string>
 							<string>id</string>
@@ -3972,6 +3972,7 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>changeFont:</string>
 							<string>checkForUpdates:</string>
+							<string>chooseCustomAspectRatio:</string>
 							<string>requireRestart:</string>
 							<string>restartPlayback:</string>
 							<string>selectBinary:</string>
@@ -3984,6 +3985,7 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSPopUpButton</string>
 							<string>id</string>
+							<string>NSButton</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -4128,19 +4130,6 @@ OiBTZWVrIDEwIG1pbnV0ZXMgYmFja3dhcmQ</string>
 				<object class="IBPartialClassDescription">
 					<string key="className">VideoOpenGLView</string>
 					<string key="superclassName">NSOpenGLView</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>MovieMenuAction:</string>
-							<string>setAspectRatioFromMenu:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>NSMenuItem</string>
-						</object>
-					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
