@@ -73,8 +73,6 @@
 	// we need this to properly reset the menu
 	screenshotSavePathLastSelection = [PREFS integerForKey:MPEScreenshotSaveLocation];
 	
-	[self loadFonts];
-	
 	// Add observer for binary selection to update autoupdate checkbox
 	[binariesController addObserver:self
 						 forKeyPath:@"selection"

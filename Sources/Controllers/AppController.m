@@ -556,7 +556,7 @@ static AppController *instance = nil;
 	NSEnumerator *e = [filenames objectEnumerator];
 	NSString *filename;
 	
-	[[playerController playListController] openWindow:YES];
+	[[playerController playListController] displayWindow:self];
 	
 	// add files to playlist
 	while (filename = [e nextObject]) {
@@ -624,24 +624,24 @@ static AppController *instance = nil;
 	return YES;
 }
 /******************************************************************************/
-- (void) applicationDidFinishLaunching:(NSNotification *)aNotification
+- (void) applicationWillFinishLaunching:(NSNotification *)aNotification
 {
-	// Load player
+	// Load player and preferences
 	[NSBundle loadNibNamed:@"Player" owner:self];
-	// load preferences nib to initialize fontconfig
-	// (the preferences controller depends on the player conroller being loaded,
-	// hence it's loaded afterwards.)
 	[NSBundle loadNibNamed:@"Preferences" owner:self];
 	
 	// set sparkle feed url for prereleases
 	[self setSparkleFeed];
 	
 	// offer to move application
-	BOOL willMove = PFMoveToApplicationsFolderIfNecessary();
+	if (PFMoveToApplicationsFolderIfNecessary())
+		return;
 	
 	// show main window if we won't be moved
-	if (!willMove)
-		[playerController displayWindow:self];
+	[playerController displayWindow:self];
+	
+	// only initialize fontconfig if not moving and player window is loaded
+	[preferencesController loadFonts];
 }
 /******************************************************************************/
 - (void) setSparkleFeed
