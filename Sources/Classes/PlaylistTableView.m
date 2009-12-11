@@ -24,7 +24,7 @@
 		[super keyDown:theEvent];
 }
 /************************************************************************************/
--(void)clear:(id)sender
+- (void)delete:(id)sender
 {
 	[playListController deleteSelection];
 }
@@ -36,7 +36,7 @@
 {
 	BOOL	result = NO;
 	// clear menu item
-	if ([anItem action] == @selector(clear:)) {
+	if ([anItem action] == @selector(delete:)) {
 		if ([self selectedRow] >= 0)
 			result = YES;
 		else

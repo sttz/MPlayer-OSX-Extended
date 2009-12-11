@@ -17,7 +17,7 @@
 }
 // 1st responderaction implementation
 - (void)keyDown:(NSEvent *)theEvent;
-- (void)clear:(id)sender;
+- (void)delete:(id)sender;
 // delegate methods
 - (BOOL)validateMenuItem:(NSMenuItem *)anItem;
 @end
