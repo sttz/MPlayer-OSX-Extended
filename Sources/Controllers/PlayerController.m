@@ -22,6 +22,14 @@
 #import "VideoOpenGLView.h"
 #import "VolumeSlider.h"
 #import "ScrubbingBar.h"
+
+// used for preventing screensaver on leopard
+#import <CoreServices/CoreServices.h>
+// not very nice hack to get to the header on 64bit builds
+#ifdef __LP64__
+#import <CoreServices/../Frameworks/OSServices.framework/Headers/Power.h>
+#endif
+
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
@@ -1574,12 +1582,9 @@
 /************************************************************************************/
 - (void) statusUpdate:(NSNotification *)notification
 {	
-	// reset Idle time - Carbon PowerManager calls
-//	if ([movieInfo isVideo])	// if there is a video
-//		UpdateSystemActivity (UsrActivity);		// do not dim the display
-/*	else									// if there's only audio
-		UpdateSystemActivity (OverallAct);		// avoid sleeping only
-*/
+	// prevent screensaver on leopard
+	if (NSAppKitVersionNumber < 1000 && [movieInfo isVideo])
+		UpdateSystemActivity(UsrActivity);
 	
 	// status did change
 	if ([notification userInfo] && [[notification userInfo] objectForKey:@"PlayerStatus"]
