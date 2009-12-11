@@ -7,6 +7,8 @@
 
 #import "PlaylistTableView.h"
 
+#include <Carbon/Carbon.h>
+
 @implementation PlaylistTableView
 
 /************************************************************************************
@@ -14,13 +16,15 @@
  ************************************************************************************/
 - (void)keyDown:(NSEvent *)theEvent
 {
-	unichar pressedKey;
-	
-	// check if the backspace is pressed
-	pressedKey = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
-	if ((pressedKey == NSDeleteFunctionKey || pressedKey == 127) && [self selectedRow] >= 0)
-		[playListController deleteSelection];
-	else
+	if ([self selectedRow] >= 0) {
+		unichar pressedKey = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
+		// delete item with backspace or delete
+		if ((pressedKey == NSDeleteFunctionKey || [theEvent keyCode] == kVK_Delete))
+			[playListController deleteSelection];
+		// play item with return or enter
+		else if ([theEvent keyCode] == kVK_Return || [theEvent keyCode] == kVK_ANSI_KeypadEnter)
+			[playListController playItemAtIndex:[self selectedRow]];
+	} else
 		[super keyDown:theEvent];
 }
 /************************************************************************************/
