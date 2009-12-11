@@ -23,11 +23,13 @@
 #import "VolumeSlider.h"
 #import "ScrubbingBar.h"
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED <= __MAC_OS_X_VERSION_10_5
 // used for preventing screensaver on leopard
 #import <CoreServices/CoreServices.h>
 // not very nice hack to get to the header on 64bit builds
 #ifdef __LP64__
 #import <CoreServices/../Frameworks/OSServices.framework/Headers/Power.h>
+#endif
 #endif
 
 #include <sys/types.h>
@@ -1582,9 +1584,11 @@
 /************************************************************************************/
 - (void) statusUpdate:(NSNotification *)notification
 {	
+#if __MAC_OS_X_VERSION_MIN_REQUIRED <= __MAC_OS_X_VERSION_10_5
 	// prevent screensaver on leopard
 	if (NSAppKitVersionNumber < 1000 && [movieInfo isVideo])
 		UpdateSystemActivity(UsrActivity);
+#endif
 	
 	// status did change
 	if ([notification userInfo] && [[notification userInfo] objectForKey:@"PlayerStatus"]
