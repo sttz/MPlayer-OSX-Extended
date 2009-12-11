@@ -30,6 +30,10 @@
 	else if (keyHandled = ([characters isEqualToString:@"0"]
 						   || [uCharacters isEqualToString:@"*"]))
 		[playerController increaseVolume:self];
+	else if (keyHandled = [characters isEqualToString:@"j"])
+		[playerController cycleSubtitleStreams:self];
+	else if (keyHandled = [characters isEqualToString:@"#"])
+		[playerController cycleAudioStreams:self];
 	
 	if (!keyHandled)
 		[super keyDown:theEvent];
