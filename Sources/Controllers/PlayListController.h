@@ -91,7 +91,6 @@
 // actions
 - (IBAction)displayItemSettings:(id)sender;
 - (IBAction)changePlayMode:(id)sender;
-- (IBAction)cancelPreflight:(id)sender;
 - (IBAction)playPrevious:(id)sender;
 - (IBAction)playNext:(id)sender;
 - (void)playItemAtIndex:(int)index;

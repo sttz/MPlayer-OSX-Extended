@@ -177,15 +177,15 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
  ************************************************************************************/
 - (MovieInfo *) itemAtIndex:(int) aIndex
 {
-	if (aIndex >= 0 || aIndex < [myData count])
-		return [myData objectAtIndex:aIndex];
+	if (aIndex >= 0 || aIndex < [[tableData arrangedObjects] count])
+		return [[tableData arrangedObjects] objectAtIndex:aIndex];
 	else
 		return nil;
 }
 /************************************************************************************/
 - (void) selectItemAtIndex:(int) aIndex
 {
-	[playListTable selectRow:aIndex byExtendingSelection:NO];
+	[playListTable selectRowIndexes:[NSIndexSet indexSetWithIndex:aIndex] byExtendingSelection:NO];
 }
 /************************************************************************************/
 - (MovieInfo *) selectedItem
@@ -205,8 +205,8 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 /************************************************************************************/
 - (int) indexOfItem:(MovieInfo *)anItem
 {
-	if ([myData count] > 0 && anItem) {
-		NSUInteger aIndex = [myData indexOfObjectIdenticalTo:anItem];
+	if ([[tableData arrangedObjects] count] > 0 && anItem) {
+		NSUInteger aIndex = [[tableData arrangedObjects] indexOfObjectIdenticalTo:anItem];
 		if (aIndex != NSNotFound)
 			return aIndex;
 	}
@@ -215,52 +215,34 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 /************************************************************************************/
 - (int) itemCount
 {
-	return [myData count];
+	return [[tableData arrangedObjects] count];
 }
 /************************************************************************************/
 - (void) appendItem:(MovieInfo *)anItem
 {
 	if (anItem) {
-		
-		// append item to playlist
-		[myData insertObject:anItem atIndex:[myData count]];
-		[playListTable selectRow:[myData count] byExtendingSelection:NO];
+		if (![anItem containsInfo])
+			[anItem preflight];
+		[tableData addObject:anItem];
 	}
-
 }
 /************************************************************************************/
 - (void) insertItem:(MovieInfo *)anItem atIndex:(int) aIndex
 {
-	if (anItem && aIndex >= 0 && aIndex <= [myData count])
-		[myData insertObject:anItem atIndex:aIndex];
-			[playListTable reloadData];
-
-
+	if (anItem && aIndex >= 0 && aIndex <= [[tableData arrangedObjects] count])
+		[tableData insertObject:anItem atArrangedObjectIndex:aIndex];
 }
 /************************************************************************************/
 - (void) removeItemAtIndex:(unsigned int)index
 {
-	if ([myData objectAtIndex:index]) {
-		
-		// Remove object
-		[myData removeObjectAtIndex:index];
-	}
+	if ([[tableData arrangedObjects] objectAtIndex:index])
+		[tableData removeObjectAtArrangedObjectIndex:index];
 }
 /************************************************************************************/
 - (void)deleteSelection
 {
-	id myObject;
-	// get and sort enumerator in descending order
-	NSEnumerator *selectedItemsEnum = [[[[playListTable selectedRowEnumerator] allObjects]
-			sortedArrayUsingSelector:@selector(compare:)] reverseObjectEnumerator];
+	[tableData removeObjectsAtArrangedObjectIndexes:[tableData selectionIndexes]];
 	
-	// remove object in descending order
-	myObject = [selectedItemsEnum nextObject];
-	while (myObject) {
-		[self removeItemAtIndex:[myObject intValue]];
-		myObject = [selectedItemsEnum nextObject];
-	}
-	[playListTable deselectAll:nil];
 	[self updateView];
 }
 
@@ -301,11 +283,11 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	}
 	
 	//get total time
-	for(i=0; i<[myData count]; i++)
+	for(i=0; i<[[tableData arrangedObjects] count]; i++)
 	{
-		if ([(MovieInfo *)[myData objectAtIndex:i] length] > 0)
+		if ([(MovieInfo *)[[tableData arrangedObjects] objectAtIndex:i] length] > 0)
 		{
-			totalTime += [(MovieInfo *)[myData objectAtIndex:i] length];
+			totalTime += [(MovieInfo *)[[tableData arrangedObjects] objectAtIndex:i] length];
 		}
 	}
 	
@@ -414,11 +396,6 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	if (myPlayMode > 2)
 		myPlayMode = 0;
 	[self updateView];
-}
-/************************************************************************************/
-- (IBAction)cancelPreflight:(id)sender
-{
-	[NSApp abortModal];
 }
 /************************************************************************************
  MISC METHODS
@@ -629,7 +606,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	NSMutableArray *indexes = [NSMutableArray array];
 	
 	for (MovieInfo *obj in objects)
-		[indexes addObject:[NSNumber numberWithUnsignedInteger:[myData indexOfObject:obj]]];
+		[indexes addObject:[NSNumber numberWithUnsignedInteger:[[tableData arrangedObjects] indexOfObject:obj]]];
 	
 	// put data to the pasteboard
 	return [pboard setPropertyList:indexes forType:@"PlaylistSelectionEnumeratorType"];
@@ -649,7 +626,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 /************************************************************************************/
 - (IBAction)doubleClick:(id)sender
 {
-	[playerController playFromPlaylist:[myData objectAtIndex:[playListTable clickedRow]]];
+	[playerController playFromPlaylist:[[tableData arrangedObjects] objectAtIndex:[playListTable clickedRow]]];
 }
 
 - (IBAction)playPrevious:(id)sender;
@@ -664,7 +641,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 		itemIdx--;
 		[self selectItemAtIndex:itemIdx];
 		[self updateView];
-		[playerController playFromPlaylist:[myData objectAtIndex:itemIdx]];
+		[playerController playFromPlaylist:[[tableData arrangedObjects] objectAtIndex:itemIdx]];
 	}
 }
 
@@ -680,7 +657,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 		itemIdx++;
 		[self selectItemAtIndex:itemIdx];
 		[self updateView];
-		[playerController playFromPlaylist:[myData objectAtIndex:itemIdx]];
+		[playerController playFromPlaylist:[[tableData arrangedObjects] objectAtIndex:itemIdx]];
 	}
 }
 
@@ -693,7 +670,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	
 	[self selectItemAtIndex:index];
 	[self updateView];
-	[playerController playFromPlaylist:[myData objectAtIndex:index]];
+	[playerController playFromPlaylist:[[tableData arrangedObjects] objectAtIndex:index]];
 }
 
 /************************************************************************************/
