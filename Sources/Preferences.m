@@ -71,6 +71,7 @@ NSString* const MPEScreenshotSaveLocation             = @"MPEScreenshotSaveLocat
 NSString* const MPESelectedBinary                     = @"MPESelectedBinary";
 NSString* const MPESelectedPreferencesSection         = @"MPESelectedPreferencesSection";
 NSString* const MPEStartPlaybackDisplayType           = @"MPEStartPlaybackDisplayType";
+NSString* const MPEStartTime                          = @"MPEStartTime";
 NSString* const MPESubtitleBorderColor                = @"MPESubtitleBorderColor";
 NSString* const MPESubtitleScale                      = @"MPESubtitleScale";
 NSString* const MPESubtitleTextColor                  = @"MPESubtitleTextColor";

@@ -549,9 +549,9 @@ static NSDictionary *videoEqualizerCommands;
 	// *** OPTIONS
 
 	// position from which to play
-	if (mySeconds != 0) {
+	if ([cPrefs floatForKey:MPEStartTime] > 0) {
 		[params addObject:@"-ss"];
-		[params addObject:[NSString stringWithFormat:@"%1.1f",mySeconds]];
+		[params addObject:[NSString stringWithFormat:@"%1.1f",[cPrefs floatForKey:MPEStartTime]]];
 	}
 	
 	// additional parameters
