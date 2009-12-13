@@ -21,7 +21,7 @@
 
 @class PlayListController, SettingsController, MenuController;
 
-@interface PlayerController : NSObject
+@interface PlayerController : NSObject <MplayerInterfaceClientProtocol>
 {
 	// Shorthand to menu controller
 	MenuController *menuController;
@@ -48,14 +48,7 @@
 	IBOutlet id fullscreenWindowMenu;
 	
 	// Fullscreen controls
-	IBOutlet id fcWindow;
-	IBOutlet NSButton *fcPlayButton;
-    IBOutlet id fcVolumeSlider;
-	IBOutlet id fcScrubbingBar;
-	IBOutlet id fcTimeTextField;
-	IBOutlet id fcAudioCycleButton;
-	IBOutlet id fcSubtitleCycleButton;
-	IBOutlet id fcFullscreenButton;
+	IBOutlet FullscreenControls *fullScreenControls;
 	
 	// statistics panel outlets
 	IBOutlet id statsPanel;
@@ -68,7 +61,6 @@
 	
 	// properties
 	MplayerInterface *myPlayer;
-	MplayerInterface *myPreflightPlayer;
 	
 	// actual movie parametters
 	MovieInfo *movieInfo;
@@ -81,7 +73,6 @@
 	int subtitleDemuxStreamId;
 	int subtitleFileStreamId;
 	BOOL isSeeking;
-	int lastPlayerStatus;
 	
 	// preferences
 	int fullscreenDeviceId;
@@ -99,10 +90,6 @@
 	NSImage *playImageOn;
 	NSImage *pauseImageOff;
 	NSImage *pauseImageOn;
-	NSImage *fcPlayImageOff;
-	NSImage *fcPlayImageOn;
-	NSImage *fcPauseImageOff;
-	NSImage *fcPauseImageOn;
 		
 	BOOL appleRemoteHolding;
 	uint remoteHoldIncrement;
@@ -138,7 +125,6 @@
 // misc
 - (void) setMovieSize;
 - (MplayerInterface *)playerInterface;
-- (MplayerInterface *)preflightInterface;
 
 // player control actions
 - (IBAction)playPause:(id)sender;
@@ -197,14 +183,10 @@
 
 // notification observers
 - (void) appShouldTerminate;
-- (void) appTerminating;
 - (void) statsClosed;
-- (void) statusUpdate:(NSNotification *)notification;
-- (void) statsUpdate:(NSNotification *)notification;
 - (void) progresBarClicked:(NSNotification *)notification;
 - (void) updatePlayerWindow;
 - (void) updatePlaylistWindow;
-- (void) updateFullscreenControls;
 - (void) mplayerCrashed:(NSNotification *)notification;
 
 // window delegate methods

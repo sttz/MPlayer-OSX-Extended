@@ -25,7 +25,24 @@
 #import <Cocoa/Cocoa.h>
 #import "PlayerController.h"
 
-@interface FullscreenControls : NSWindow {
+#import "MplayerInterface.h"
+
+@interface FullscreenControls : NSWindow <MplayerInterfaceClientProtocol> {
+	
+	IBOutlet id fcWindow;
+	IBOutlet NSButton *fcPlayButton;
+    IBOutlet id fcVolumeSlider;
+	IBOutlet id fcScrubbingBar;
+	IBOutlet id fcTimeTextField;
+	IBOutlet id fcAudioCycleButton;
+	IBOutlet id fcSubtitleCycleButton;
+	IBOutlet id fcFullscreenButton;
+	
+	NSImage *fcPlayImageOff;
+	NSImage *fcPlayImageOn;
+	NSImage *fcPauseImageOff;
+	NSImage *fcPauseImageOn;
+	
 	NSPoint dragStartPoint;
 	
 	NSViewAnimation *animation;

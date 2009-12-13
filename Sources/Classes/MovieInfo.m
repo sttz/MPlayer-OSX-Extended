@@ -456,7 +456,10 @@ externalSubtitles;
 
 -(unsigned int)subtitleCountForType:(SubtitleType)type {
 	
-	return [[self subDictForType:type] count];
+	if (type == SubtitleTypeAll)
+		return ([subtitle count] + [subfile count]);
+	else
+		return [[self subDictForType:type] count];
 }
 
 -(NSEnumerator *)getSubtitleStreamsEnumeratorForType:(SubtitleType)type {
@@ -481,8 +484,10 @@ externalSubtitles;
 	
 	if (type == SubtitleTypeDemux)
 		return subtitle;
-	else
+	else if (type == SubtitleTypeFile)
 		return subfile;
+	else
+		return nil;
 }
 
 // **************************************************** //

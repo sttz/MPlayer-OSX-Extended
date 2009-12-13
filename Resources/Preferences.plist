@@ -519,6 +519,10 @@
 				<real>3.6</real>
 			</dict>
 		</dict>
+		<key>MPEAudioVolume</key>
+		<integer>25</integer>
+		<key>MPEAudioMute</key>
+		<false/>
 	</dict>
 	<key>RequiresRestart</key>
 	<array>

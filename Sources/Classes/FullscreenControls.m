@@ -26,6 +26,8 @@
 #import <AppKit/AppKit.h>
 #import "Debug.h"
 
+#import "ScrubbingBar.h"
+
 @implementation FullscreenControls
 @synthesize beingDragged;
 
@@ -49,7 +51,22 @@
 	currentFade = 0;
 	currentState = 0;
 	
+	// Load images
+	fcPlayImageOn = [[NSImage imageNamed:@"fc_play_on"] retain];
+	fcPlayImageOff = [[NSImage imageNamed:@"fc_play"] retain];
+	fcPauseImageOn = [[NSImage imageNamed:@"fc_pause_on"] retain];
+	fcPauseImageOff = [[NSImage imageNamed:@"fc_pause"] retain];
+	
     return result;
+}
+
+- (void)awakeFromNib
+{
+	// Redirect scrubbing event to player controller
+	[[NSNotificationCenter defaultCenter] addObserver:playerController
+											 selector:@selector(progresBarClicked:)
+												 name:@"SBBarClickedNotification"
+											   object:fcScrubbingBar];
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent
@@ -82,7 +99,7 @@
 {
 	[super orderFront:sender];
 	[self fadeWith:NSViewAnimationFadeInEffect];
-	[playerController updateFullscreenControls];
+	[[playerController playerInterface] addClient:self];
 }
 
 - (void)orderOut:(id)sender
@@ -94,6 +111,7 @@
 - (void)endOrderOut:(id)sender
 {
 	[super orderOut:sender];
+	[[playerController playerInterface] removeClient:self];
 }
 
 - (void)fadeWith:(NSString*)effect
@@ -121,8 +139,99 @@
 	
 }
 
+- (void) interface:(MplayerInterface *)mi hasChangedStateTo:(NSNumber *)statenumber fromState:(NSNumber *)oldstatenumber
+{	
+	MIState state = [statenumber unsignedIntValue];
+	unsigned int stateMask = (1<<state);
+	MIState oldState = [oldstatenumber unsignedIntValue];
+	unsigned int oldStateMask = (1<<oldState);
+	
+	// First play after startup
+	if (state == MIStatePlaying && (oldStateMask & MIStateStartupMask)) {
+		[fcAudioCycleButton setEnabled:([[playerController playingItem] audioStreamCount] > 1)];
+		[fcSubtitleCycleButton setEnabled:([[playerController playingItem] subtitleCountForType:SubtitleTypeAll] > 1)];
+	}
+	
+	// Change of Play/Pause state
+	if (!!(stateMask & MIStatePPPlayingMask) != !!(oldStateMask & MIStatePPPlayingMask)) {
+		// Playing
+		if (stateMask & MIStatePPPlayingMask) {
+			// Update interface
+			[fcPlayButton setImage:fcPauseImageOff];
+			[fcPlayButton setAlternateImage:fcPauseImageOn];
+		// Pausing
+		} else {
+			// Update interface
+			[fcPlayButton setImage:fcPlayImageOff];
+			[fcPlayButton setAlternateImage:fcPlayImageOn];			
+		}
+	}
+	
+	// Change of Running/Stopped state
+	if (!!(stateMask & MIStateStoppedMask) != !!(oldStateMask & MIStateStoppedMask)) {
+		// Stopped
+		if (stateMask & MIStateStoppedMask) {
+			// Update interface
+			[fcTimeTextField setStringValue:@"00:00:00"];
+			[fcFullscreenButton setEnabled:NO];
+			// Disable stream buttons
+			[fcAudioCycleButton setEnabled:NO];
+			[fcSubtitleCycleButton setEnabled:NO];
+		// Running
+		} else {
+			// Update interface
+			[fcFullscreenButton setEnabled:YES];
+		}
+	}
+	
+	// Update progress bar
+	if (stateMask & MIStateStoppedMask && !(oldStateMask & MIStateStoppedMask)) {
+		// Reset progress bar
+		[fcScrubbingBar setScrubStyle:MPEScrubbingBarEmptyStyle];
+		[fcScrubbingBar setDoubleValue:0];
+		[fcScrubbingBar setIndeterminate:NO];
+	} else if (stateMask & MIStateIntermediateMask && !(oldStateMask & MIStateIntermediateMask)) {
+		// Intermediate progress bar
+		[fcScrubbingBar setScrubStyle:MPEScrubbingBarProgressStyle];
+		[fcScrubbingBar setIndeterminate:YES];
+	} else if (stateMask & MIStatePositionMask && !(oldStateMask & MIStatePositionMask)) {
+		// Progress bar
+		if ([[playerController playingItem] length] > 0) {
+			[fcScrubbingBar setMaxValue: [[playerController playingItem] length]];
+			[fcScrubbingBar setScrubStyle:MPEScrubbingBarPositionStyle];
+		} else {
+			[fcScrubbingBar setScrubStyle:MPEScrubbingBarProgressStyle];
+			[fcScrubbingBar setMaxValue:100];
+			[fcScrubbingBar setIndeterminate:NO];
+		}
+	}
+}
+
+- (void) interface:(MplayerInterface *)mi volumeUpdate:(NSNumber *)volume
+{
+	[fcVolumeSlider setFloatValue:[volume floatValue]];
+}
+
+- (void) interface:(MplayerInterface *)mi timeUpdate:(NSNumber *)newTime
+{
+	float seconds = [newTime floatValue];
+	
+	if ([[playerController playingItem] length] > 0)
+		[fcScrubbingBar setDoubleValue:seconds];
+	else
+		[fcScrubbingBar setDoubleValue:0];
+	
+	int iseconds = (int)seconds;
+	[fcTimeTextField setStringValue:[NSString stringWithFormat:@"%02d:%02d:%02d", iseconds/3600,(iseconds%3600)/60,iseconds%60]];
+}
+
 - (void) dealloc
 {
+	[fcPlayImageOn release];
+	[fcPlayImageOff release];
+	[fcPauseImageOn release];
+	[fcPauseImageOff release];
+	
 	[animation release];
 	[super dealloc];
 }

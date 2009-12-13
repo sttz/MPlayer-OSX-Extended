@@ -23,16 +23,18 @@
 
 @class MplayerInterface;
 
-@protocol MplayerInterfaceClientProtocol
-- (void) interface:(MplayerInterface *)mi hasChangedStateTo:(int)state;
-- (void) interface:(MplayerInterface *)mi timeUpdate:(float)newTime;
+@protocol MplayerInterfaceClientProtocol <NSObject>
+@optional
+- (void) interface:(MplayerInterface *)mi hasChangedStateTo:(NSNumber *)newState fromState:(NSNumber *)oldState;
+- (void) interface:(MplayerInterface *)mi timeUpdate:(NSNumber *)newTime;
 - (void) interface:(MplayerInterface *)mi streamUpate:(MovieInfo *)item;
 - (void) interface:(MplayerInterface *)mi selectedSteamsUpdate:(NSArray *)streamIds;
 - (void) interface:(MplayerInterface *)mi statsUpdate:(NSArray *)stats;
+- (void) interface:(MplayerInterface *)mi volumeUpdate:(NSNumber *)volume;
 @end
 
 enum {
-	MIStateFinished = -1,
+	MIStateFinished,
 	MIStateStopped,
 	MIStatePlaying,
 	MIStatePaused,
@@ -42,7 +44,26 @@ enum {
 	MIStateInitializing,
 	MIStateSeeking
 };
-typedef NSInteger MIState;
+typedef NSUInteger MIState;
+
+enum {
+	// Play/Paused masks dividing all states to either playing or paused
+	MIStatePPPlayingMask = (1<<MIStatePlaying|1<<MIStateOpening|1<<MIStateBuffering
+						   |1<<MIStateIndexing|1<<MIStateSeeking),
+	MIStatePPPausedMask  = (1<<MIStatePaused|1<<MIStateStopped|1<<MIStateFinished),
+	// Mask for initializing states
+	MIStateStartupMask   = (1<<MIStateOpening|1<<MIStateBuffering|1<<MIStateIndexing|1<<MIStateInitializing), 
+	// Mask to extend playing state to seeking
+	MIStatePlayingMask   = (1<<MIStatePlaying|1<<MIStateSeeking),
+	// States in which MPlayer is not running
+	MIStateStoppedMask   = (1<<MIStateStopped|1<<MIStateFinished),
+	// Intermediate Progress Mask
+	MIStateIntermediateMask = (1<<MIStateOpening|1<<MIStateBuffering|1<<MIStateInitializing),
+	// Absolute Progress Mask
+	MIStatePositionMask  = (1<<MIStateIndexing|1<<MIStatePlaying|1<<MIStateSeeking|1<<MIStatePaused),
+	// MPlayer is able to respond to commands
+	MIStateRespondMask   = (1<<MIStatePlaying|1<<MIStatePaused|1<<MIStateSeeking)
+};
 
 enum {
 	MISeekingModeRelative,
@@ -97,7 +118,7 @@ typedef NSUInteger MICommandPausingMode;
 	
 	// state variables
 	MIState	state;
-	unsigned int myVolume;
+	unsigned int stateMask;
 	BOOL playing;
 	BOOL movieOpen;
 	
@@ -127,12 +148,20 @@ typedef NSUInteger MICommandPausingMode;
 	NSDictionary *lastMissedSeek;
 	BOOL is64bitHost;
 	BOOL force32bitBinary;
+	
+	NSMutableArray *clients;
+	NSInvocation *performer;
 }
 
 @property (nonatomic,getter=isPlaying) BOOL playing;
 @property (nonatomic,getter=isMovieOpen) BOOL movieOpen;
 
 @property (nonatomic) MIState state;
+
+- (void) addClient:(id<MplayerInterfaceClientProtocol>)client;
+- (void) removeClient:(id<MplayerInterfaceClientProtocol>)client;
+- (void) notifyClientsWithSelector:(SEL)selector andObject:(id)object;
+- (void) notifyClientsWithSelector:(SEL)selector andObject:(id)object andObject:(id)otherObject;
 
 - (void) setBufferName:(NSString *)name;
 
@@ -146,7 +175,7 @@ typedef NSUInteger MICommandPausingMode;
 - (void) seek:(float)seconds mode:(int)aMode;
 - (void) performCommand:(NSString *)aCommand;
 
-- (void) setVolume:(unsigned int)percents;
+- (void) applyVolume;
 - (void) takeScreenshot;
 
 - (void) loadNewSubtitleFile:(NSNotification *)notification;

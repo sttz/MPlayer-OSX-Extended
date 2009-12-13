@@ -17,6 +17,8 @@
 #import "Preferences.h"
 #import "CocoaAdditions.h"
 
+#import <objc/runtime.h>
+
 // directly parsed mplayer output strings
 // strings that are used to get certain data from output are not included
 #define MI_PAUSED_STRING			"ID_PAUSED"
@@ -73,9 +75,10 @@ static NSDictionary *videoEqualizerCommands;
 	
 	buffer_name = @"mplayerosx";
 	
-	myCommandsBuffer = [[NSMutableArray array] retain];
+	clients = [NSMutableArray new];
+	
+	myCommandsBuffer = [NSMutableArray new];
 	mySeconds = 0;
-	myVolume = 100;
 	
 	// *** playback
 	// addParams
@@ -123,6 +126,7 @@ static NSDictionary *videoEqualizerCommands;
 // release any retained objects
 - (void) dealloc
 {
+	[clients release];
 	[myMplayerTask release];
 	[myPathToPlayer release];
 	[myCommandsBuffer release];
@@ -143,6 +147,58 @@ static NSDictionary *videoEqualizerCommands;
 	buffer_name = [name retain];
 }
 /************************************************************************************/
+- (void) addClient:(id<MplayerInterfaceClientProtocol>)client
+{
+	[clients addObject:client];
+	// send initial state update
+	[self notifyClientsWithSelector:@selector(interface:hasChangedStateTo:fromState:)
+						  andObject:[NSNumber numberWithUnsignedInt:state]
+						  andObject:[NSNumber numberWithUnsignedInt:MIStateInitializing]];
+	// send initial time update
+	[self notifyClientsWithSelector:@selector(interface:timeUpdate:)
+						  andObject:[NSNumber numberWithFloat:mySeconds]];
+	// send initial volume update
+	[self notifyClientsWithSelector:@selector(interface:volumeUpdate:)
+						  andObject:[[playingItem prefs] objectForKey:MPEAudioVolume]];
+}
+
+- (void) removeClient:(id<MplayerInterfaceClientProtocol>)client
+{
+	[clients removeObject:client];
+}
+
+- (void) notifyClientsWithSelector:(SEL)selector andObject:(id)object
+{
+	for (id<MplayerInterfaceClientProtocol> client in clients) {
+		if (client && [client respondsToSelector:selector]) {
+			[client performSelector:selector withObject:self withObject:object];
+		}
+	}
+}
+
+- (void) notifyClientsWithSelector:(SEL)selector andObject:(id)object andObject:(id)otherObject
+{
+	// Creating a method signature for a protocol is unfortunately not supported by Cocoa
+	struct objc_method_description desc = protocol_getMethodDescription(@protocol(MplayerInterfaceClientProtocol),
+																		selector, NO, YES);
+	if (!desc.name)
+		return;
+	NSMethodSignature *sig = [NSMethodSignature signatureWithObjCTypes:desc.types];
+	performer = [NSInvocation invocationWithMethodSignature:sig];
+	
+	[performer setSelector:selector];
+	[performer setArgument:&self atIndex:2];
+	[performer setArgument:&object atIndex:3];
+	[performer setArgument:&otherObject atIndex:4];
+	
+	for (id<MplayerInterfaceClientProtocol> client in clients) {
+		if (client && [client respondsToSelector:selector]) {
+			[performer invokeWithTarget:client];
+		}
+	}
+}
+
+/************************************************************************************/
 - (void)registerPlayingItem:(MovieInfo *)item
 {
 	if (playingItem && playingItem != item)
@@ -155,6 +211,16 @@ static NSDictionary *videoEqualizerCommands;
 							 options:0
 							 context:nil];
 	
+	[[playingItem prefs] addObserver:self
+						  forKeyPath:MPEAudioVolume
+							 options:0
+							 context:nil];
+	
+	[[playingItem prefs] addObserver:self
+						  forKeyPath:MPEAudioMute
+							 options:0
+							 context:nil];
+	
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(loadNewSubtitleFile:)
 												 name:MPEMovieInfoAddedExternalSubtitleNotification
@@ -164,6 +230,8 @@ static NSDictionary *videoEqualizerCommands;
 - (void)unregisterPlayingItem
 {
 	[[playingItem prefs] removeObserver:self forKeyPath:MPELoopMovie];
+	[[playingItem prefs] removeObserver:self forKeyPath:MPEAudioVolume];
+	[[playingItem prefs] removeObserver:self forKeyPath:MPEAudioMute];
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self
 													name:MPEMovieInfoAddedExternalSubtitleNotification
@@ -470,8 +538,13 @@ static NSDictionary *videoEqualizerCommands;
 	}
 	
 	// set initial volume
-	[params addObject:@"-volume"];
-	[params addObject:[NSString stringWithFormat:@"%u", myVolume]];
+	if ([cPrefs objectForKey:MPEAudioVolume] && ![cPrefs boolForKey:MPEAudioMute]) {
+		[params addObject:@"-volume"];
+		[params addObject:[NSString stringWithFormat:@"%.2f", [cPrefs floatForKey:MPEAudioVolume]]];	
+	} else if ([cPrefs boolForKey:MPEAudioMute]) {
+		[params addObject:@"-volume"];
+		[params addObject:@"0"];
+	}
 	
 	
 	// *** ADVANCED
@@ -707,6 +780,9 @@ static NSDictionary *videoEqualizerCommands;
 	
 	} else if ([keyPath isEqualToString:MPELoopMovie]) {
 		[self sendCommand:[NSString stringWithFormat:@"set_property loop %d",((int)[[playingItem prefs] boolForKey:MPELoopMovie] - 1)]];
+	
+	} else if ([keyPath isEqualToString:MPEAudioVolume] || [keyPath isEqualToString:MPEAudioMute]) {
+		[self applyVolume];
 	}
 }
 /************************************************************************************
@@ -737,14 +813,22 @@ static NSDictionary *videoEqualizerCommands;
 	}
 }
 /************************************************************************************/
-- (void) setVolume:(unsigned int)percents
+- (void) applyVolume
 {
-	if (myVolume != percents) {
-		myVolume = percents;
-		if (state == MIStatePlaying || state == MIStatePaused || state == MIStateSeeking)
-			[self sendCommand:[NSString stringWithFormat:@"volume %d 1",myVolume] 
-					  withOSD:MISurpressCommandOutputConditionally andPausing:MICommandPausingKeep];
-	}
+	if ([[playingItem prefs] boolForKey:MPEAudioMute])
+		[self sendCommand:[NSString stringWithFormat:@"set_property mute %d",
+						   [[playingItem prefs] boolForKey:MPEAudioMute]]];
+	else
+		[self sendCommand:[NSString stringWithFormat:@"set_property volume %.2f",
+						   [[playingItem prefs] floatForKey:MPEAudioVolume]]];
+	
+	// Inform clients of change
+	float volume = [[playingItem prefs] floatForKey:MPEAudioVolume];
+	if ([[playingItem prefs] boolForKey:MPEAudioMute])
+		volume = 0;
+	
+	[self notifyClientsWithSelector:@selector(interface:volumeUpdate:) 
+						  andObject:[NSNumber numberWithFloat:volume]];
 }
 /************************************************************************************/
 
@@ -792,17 +876,26 @@ static NSDictionary *videoEqualizerCommands;
 /************************************************************************************/
 - (void) setState:(MIState)newState
 {
+	unsigned int newStateMask = (1<<newState);
+	
 	// Update isMovieOpen
-	BOOL newIsMovieOpen = (newState == MIStatePlaying || newState == MIStateSeeking || newState == MIStatePaused);
+	BOOL newIsMovieOpen = !!(newStateMask & MIStateRespondMask);
 	if ([self isMovieOpen] != newIsMovieOpen)
 		[self setMovieOpen:newIsMovieOpen];
 	
 	// Update isPlaying
-	BOOL newIsPlaying = (newState == MIStatePlaying || newState == MIStateSeeking);
+	BOOL newIsPlaying = !!(newStateMask & MIStatePlayingMask);
 	if ([self isPlaying] != newIsPlaying)
 		[self setPlaying:newIsPlaying];
 	
+	// Notifiy clients of state change
+	if (state != newState)
+		[self notifyClientsWithSelector:@selector(interface:hasChangedStateTo:fromState:) 
+							  andObject:[NSNumber numberWithUnsignedInt:newState]
+							  andObject:[NSNumber numberWithUnsignedInt:state]];
+	
 	state = newState;
+	stateMask = newStateMask;
 }
 /************************************************************************************/
 - (float) seconds
@@ -901,7 +994,7 @@ static NSDictionary *videoEqualizerCommands;
 /************************************************************************************/
 - (void)sendCommand:(NSString *)aCommand
 {
-	[self sendCommand:aCommand withOSD:MISurpressCommandOutputAlways andPausing:MICommandPausingKeep];
+	[self sendCommand:aCommand withOSD:MISurpressCommandOutputConditionally andPausing:MICommandPausingKeep];
 }
 /************************************************************************************/
 - (void)sendCommands:(NSArray *)aCommands withOSD:(uint)osdMode andPausing:(uint)pausing
@@ -943,7 +1036,7 @@ static NSDictionary *videoEqualizerCommands;
 /************************************************************************************/
 - (void)sendCommands:(NSArray *)aCommands
 {
-	[self sendCommands:aCommands withOSD:MISurpressCommandOutputAlways andPausing:MICommandPausingKeep];
+	[self sendCommands:aCommands withOSD:MISurpressCommandOutputConditionally andPausing:MICommandPausingKeep];
 }
 /************************************************************************************/
 - (void)reactivateOsdAfterDelay {
@@ -955,7 +1048,7 @@ static NSDictionary *videoEqualizerCommands;
 - (void)reactivateOsd {
 	//[Debug log:ASL_LEVEL_DEBUG withMessage:@"osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)];
 	
-	if (state == MIStatePlaying || state == MIStateSeeking) {
+	if (stateMask & MIStatePlayingMask) {
 		[self sendToMplayersInput:[NSString stringWithFormat:@"pausing_keep osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)]];
 	} else if (state == MIStatePaused) {
 		[myCommandsBuffer addObject:[NSString stringWithFormat:@"osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)]];
@@ -1107,18 +1200,8 @@ static NSDictionary *videoEqualizerCommands;
 		[[NSNotificationCenter defaultCenter] removeObserver:self
 				name: NSTaskDidTerminateNotification object:myMplayerTask];
 		
-		if (!restartingPlayer && state > 0) {
-			NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-			
+		if (!restartingPlayer && state > MIStateStopped)
 			[self setState:MIStateStopped];
-			// save value to userInfo
-			[userInfo setObject:[NSNumber numberWithInt:state] forKey:@"PlayerStatus"];
-			// post notification
-			[[NSNotificationCenter defaultCenter]
-					postNotificationName:@"MIStateUpdatedNotification"
-					object:self
-					userInfo:[NSDictionary dictionaryWithDictionary:userInfo]];
-		}
 		restartingPlayer = NO;
 		isRunning = NO;
 	}
@@ -1192,19 +1275,7 @@ static NSDictionary *videoEqualizerCommands;
 }
 /************************************************************************************/
 - (void)readOutputC:(NSNotification *)notification
-{
-	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-	
-	/*unsigned dataLength = [(NSData *)[[notification userInfo]
-			objectForKey:@"NSFileHandleNotificationDataItem"] length] / sizeof(char);
-	char *stringPtr = NULL, *dataPtr = malloc([(NSData *)[[notification userInfo]
-			objectForKey:@"NSFileHandleNotificationDataItem"] length] + sizeof(char));
-	
-	// load data and terminate it with null character
-	[[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"]
-				getBytes:(void *)dataPtr];
-	*(dataPtr+dataLength) = '\0';*/
-	
+{	
 	NSString *data = [[NSString alloc] 
 						initWithData:[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"] 
 						encoding:NSUTF8StringEncoding];
@@ -1225,6 +1296,8 @@ static NSDictionary *videoEqualizerCommands;
 		[data release];
 		return;
 	}
+	
+	BOOL streamsHaveChanged = NO;
 	
 	const char *stringPtr;
 	NSString *line;
@@ -1354,10 +1427,14 @@ static NSDictionary *videoEqualizerCommands;
 				if (myOutputReadMode > 0) {
 					
 					// post notification
-					[[NSNotificationCenter defaultCenter]
+					// TODO: Update stats
+					/*[[NSNotificationCenter defaultCenter]
 							postNotificationName:@"MIStatsUpdatedNotification"
 							object:self
-							userInfo:nil];
+							userInfo:nil];*/
+					
+					[self notifyClientsWithSelector:@selector(interface:timeUpdate:) 
+										  andObject:[NSNumber numberWithFloat:mySeconds]];
 					
 					// finish seek
 					if (state == MIStateSeeking && lastMissedSeek) {
@@ -1372,7 +1449,6 @@ static NSDictionary *videoEqualizerCommands;
 					// if it was not playing before (launched or unpaused)
 					if (state != MIStatePlaying) {
 						[self setState:MIStatePlaying];
-						[userInfo setObject:[NSNumber numberWithInt:state] forKey:@"PlayerStatus"];
 						
 						// perform commands buffer
 						[self sendCommands:myCommandsBuffer 
@@ -1385,40 +1461,13 @@ static NSDictionary *videoEqualizerCommands;
 					
 					continue;
 				}
-				else
-					myOutputReadMode = 0;
-			}
-			else
+			} else
 				continue;
 		}
 		
-/*	
-		// if we don't have output mode try to parse playback output and get output mode
-		if (myOutputReadMode == 0) {
-			float aFloat;
-			int aInt;
-			if (sscanf(stringPtr,
-					"A: %f V: %*f A-V: %f ct: %*f %*d/%*d %d%% %d%% %*f%% %d %d %d%%",
-					&aFloat, &aFloat, &aInt, &aInt, &aInt, &aInt, &aInt) == 7)
-				myOutputReadMode = 1;			// audio and video
-			else if (sscanf(stringPtr, "V: %f %*d %d%% %d%% %*f%% %d %d %d%%",
-					&aFloat, &aInt, &aInt, &aInt, &aInt, &aInt) == 6)
-				myOutputReadMode = 2;			// only video
-			else if (sscanf(stringPtr, "A: %d:%2d:%f %f%% %d%%",
-					&aInt, &aInt, &aFloat, &aFloat, &aInt) == 3)
-				myOutputReadMode = 3;			// only audio in hours:minutes:seconds
-			else if (sscanf(stringPtr, "A: %2d:%f %f%% %d%%",
-					&aInt, &aFloat, &aFloat, &aInt) == 3)
-				myOutputReadMode = 4;			// only audio in minutes:second
-			else if (sscanf(stringPtr, "A: %f %f%% %d%%",
-					&aFloat, &aFloat, &aInt) == 3)
-				myOutputReadMode = 5;			// only audio in seconds
-		}
-*/		
 		//  =====  PAUSE  ===== test for paused state
 		if (strstr(stringPtr, MI_PAUSED_STRING) != NULL) {
 			[self setState:MIStatePaused];
-			[userInfo setObject:[NSNumber numberWithInt:state] forKey:@"PlayerStatus"];
 			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 			
 			continue; 							// continue on next line
@@ -1445,12 +1494,6 @@ static NSDictionary *videoEqualizerCommands;
 					name: NSFileHandleReadCompletionNotification
 					object:[[myMplayerTask standardError] fileHandleForReading]];
 			
-			// when player is not restarting
-			if (!restartingPlayer) {
-				// save value to userInfo
-				[userInfo setObject:[NSNumber numberWithInt:state] forKey:@"PlayerStatus"];
-			}
-			
 			myOutputReadMode = 0;				// reset output read mode
 			
 			// Parsing should now be finished
@@ -1471,7 +1514,8 @@ static NSDictionary *videoEqualizerCommands;
 			idValue = [line stringByMatching:MI_REPLY_REGEX capture:2];
 			
 			// streams
-			if ([idName isEqualToString:@"switch_video"]) {
+			// TODO: Stream responses
+			/*if ([idName isEqualToString:@"switch_video"]) {
 				[userInfo setObject:[NSNumber numberWithInt:[idValue intValue]] forKey:@"VideoStreamId"];
 				continue;
 			}
@@ -1495,7 +1539,7 @@ static NSDictionary *videoEqualizerCommands;
 			if ([idName isEqualToString:@"volume"]) {
 				[userInfo setObject:[NSNumber numberWithDouble:[idValue doubleValue]] forKey:@"Volume"];
 				continue;
-			}
+			}*/
 			
 			// unparsed ans lines
 			[Debug log:ASL_LEVEL_DEBUG withMessage:@"REPLY not matched : %@ = %@", idName, idValue];
@@ -1671,28 +1715,28 @@ static NSDictionary *videoEqualizerCommands;
 			// video streams
 			if ([idName isEqualToString:@"VIDEO_ID"]) {
 				[playingItem newVideoStream:[idValue intValue]];
-				[userInfo setObject:[NSNumber numberWithBool:YES] forKey:@"StreamsHaveChanged"];
+				streamsHaveChanged = YES;
 				continue;
 			}
 			
 			// audio streams
 			if ([idName isEqualToString:@"AUDIO_ID"]) {
 				[playingItem newAudioStream:[idValue intValue]];
-				[userInfo setObject:[NSNumber numberWithBool:YES] forKey:@"StreamsHaveChanged"];
+				streamsHaveChanged = YES;
 				continue;
 			}
 			
 			// subtitle demux streams
 			if ([idName isEqualToString:@"SUBTITLE_ID"]) {
 				[playingItem newSubtitleStream:[idValue intValue] forType:SubtitleTypeDemux];
-				[userInfo setObject:[NSNumber numberWithBool:YES] forKey:@"StreamsHaveChanged"];
+				streamsHaveChanged = YES;
 				continue;
 			}
 			
 			// subtitle file streams
 			if ([idName isEqualToString:@"FILE_SUB_ID"]) {
 				[playingItem newSubtitleStream:[idValue intValue] forType:SubtitleTypeFile];
-				[userInfo setObject:[NSNumber numberWithBool:YES] forKey:@"StreamsHaveChanged"];
+				streamsHaveChanged = YES;
 				subtitleFileId = [idValue intValue];
 				continue;
 			}
@@ -1705,7 +1749,7 @@ static NSDictionary *videoEqualizerCommands;
 			// chapter
 			if ([idName isEqualToString:@"CHAPTER_ID"]) {
 				[playingItem newChapter:[idValue intValue]];
-				[userInfo setObject:[NSNumber numberWithBool:YES] forKey:@"StreamsHaveChanged"];
+				streamsHaveChanged = YES;
 				continue;
 			}
 			
@@ -1715,10 +1759,6 @@ static NSDictionary *videoEqualizerCommands;
 			continue;
 			
 		}
-		
-		
-		
-		
 		
 		// *** if player is playing then do not bother with parse anything else
 		if (myOutputReadMode > 0) {
@@ -1731,7 +1771,6 @@ static NSDictionary *videoEqualizerCommands;
 		// mplayer starts to open a file
 		if (strncmp(stringPtr, MI_OPENING_STRING, 8) == 0) {
 			[self setState:MIStateOpening];
-			[userInfo setObject:[NSNumber numberWithInt:state] forKey:@"PlayerStatus"];
 			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 			continue; 							// continue on next line	
 		}
@@ -1740,26 +1779,21 @@ static NSDictionary *videoEqualizerCommands;
 		if (strncmp(stringPtr, "Cache fill:", 11) == 0) {
 			float cacheUsage;
 			[self setState:MIStateBuffering];
-			[userInfo setObject:[NSNumber numberWithInt:state] forKey:@"PlayerStatus"];
 			if (sscanf(stringPtr, "Cache fill: %f%%", &cacheUsage) == 1) {
-				[userInfo setObject:[NSNumber numberWithFloat:cacheUsage]
-						forKey:@"CacheUsage"];
+				// TODO: Update stats
+				//[userInfo setObject:[NSNumber numberWithFloat:cacheUsage]
+				//		forKey:@"CacheUsage"];
 				myCacheUsage = cacheUsage;
 			}
-			// if the string is longer then supposed divide it and continue
-			/*[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
-			if (strlen(stringPtr) > 32) {
-				*(stringPtr + 31) = '\0';
-				stringPtr = (stringPtr + 32);
-			}
-			else	*/							// if string is not longer than supposed
-				continue; 						// continue on next line
+			continue;
 		}
+		
 		// get format of audio
 		if (strstr(stringPtr, MI_AUDIO_FILE_STRING) != NULL) {
 			[playingItem setFileFormat:@"Audio"];
 			continue; 							// continue on next line	
 		}
+		
 		// get format of movie
 		tempPtr = strstr(stringPtr, " file format detected.");
 		if (tempPtr != NULL) {
@@ -1772,40 +1806,20 @@ static NSDictionary *videoEqualizerCommands;
 		if ((tempPtr = strstr(stringPtr, "Generating Index:")) != NULL) {
 			int cacheUsage;
 			[self setState:MIStateIndexing];
-			[userInfo setObject:[NSNumber numberWithInt:state] forKey:@"PlayerStatus"];
 			if (sscanf(tempPtr, "Generating Index: %d", &cacheUsage) == 1) {
-				[userInfo setObject:[NSNumber numberWithInt:cacheUsage]
-						forKey:@"CacheUsage"];
+				// TODO: update stats
+				//[userInfo setObject:[NSNumber numberWithInt:cacheUsage]
+				//		forKey:@"CacheUsage"];
 				myCacheUsage = cacheUsage;
 			}
 			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 			continue; 							// continue on next line	
 		}
 		
-		
-		// mkv chapters
-		/*if ([line isMatchedByRegex:MI_MKVCHP_REGEX]) {
-			
-			// extract
-			chapterId		= [[line stringByMatching:MI_MKVCHP_REGEX capture:1] intValue];
-			chapterTime[0]	= [[line stringByMatching:MI_MKVCHP_REGEX capture:2] floatValue];
-			chapterTime[1]	= [[line stringByMatching:MI_MKVCHP_REGEX capture:3] floatValue];
-			chapterTime[2]	= [[line stringByMatching:MI_MKVCHP_REGEX capture:4] floatValue];
-			chapterTime[3]	= [[line stringByMatching:MI_MKVCHP_REGEX capture:5] floatValue];
-			chapterTime[4]	= [[line stringByMatching:MI_MKVCHP_REGEX capture:6] floatValue];
-			chapterTime[5]	= [[line stringByMatching:MI_MKVCHP_REGEX capture:7] floatValue];
-			chapterName		=  [line stringByMatching:MI_MKVCHP_REGEX capture:8];
-			
-			[info newChapter:(chapterId+1) from:(chapterTime[0]*3600+chapterTime[1]*60+chapterTime[2])
-						  to:(chapterTime[3]*3600+chapterTime[4]*60+chapterTime[5]) withName:chapterName];
-			continue;
-		}*/
-		
 		// mplayer is starting playback -- ignore for preflight
 		if (strstr(stringPtr, MI_STARTING_STRING) != NULL && !isPreflight) {
 			[self setState:MIStatePlaying];
 			myLastUpdate = [NSDate timeIntervalSinceReferenceDate];
-			[userInfo setObject:[NSNumber numberWithInt:state] forKey:@"PlayerStatus"];
 	
 			// perform commands buffer
 			[self sendCommands:myCommandsBuffer withOSD:MISurpressCommandOutputConditionally andPausing:MICommandPausingNone];
@@ -1814,32 +1828,21 @@ static NSDictionary *videoEqualizerCommands;
 				[self sendCommand:@"pause"];
 			}
 			[myCommandsBuffer removeAllObjects];
-	
-			// post status playback start
-			[[NSNotificationCenter defaultCenter]
-					postNotificationName:@"MIInfoReadyNotification"
-					object:self
-					userInfo:nil];
+			
 			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 			continue;
 		}
 		
 		// print unused output
-		//[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
+		[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 		
 	} // while
 	
 	// post notification if there is anything in user info
-	if (!isPreflight && [userInfo count] > 0) {
-		// post notification
-		[[NSNotificationCenter defaultCenter]
-				postNotificationName:@"MIStateUpdatedNotification"
-				object:self
-				userInfo:userInfo];
-		[userInfo removeAllObjects];
+	if (streamsHaveChanged) {
+		[self notifyClientsWithSelector:@selector(interface:streamUpate:) andObject:playingItem];
 	}
-
-	//free((char *)dataPtr);
+	
 	[data release];
 }
 

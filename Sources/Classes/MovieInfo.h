@@ -29,8 +29,9 @@ static NSString* const MPEMovieInfoAddedExternalSubtitleNotification = @"MPEMovi
 static NSString* const MPEMovieInfoAddedExternalSubtitlePathKey = @"MPEMovieInfoAddedExternalSubtitlePathKey";
 
 typedef enum _SubtitleType {
+	SubtitleTypeAll   = -1,
 	SubtitleTypeDemux = 0,
-	SubtitleTypeFile  = 1
+	SubtitleTypeFile  = 1,
 } SubtitleType;
 
 @interface MovieInfo : NSObject {

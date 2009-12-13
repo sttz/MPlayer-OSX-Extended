@@ -13,7 +13,7 @@
 @implementation ScrubbingBar:NSProgressIndicator
 - (void)awakeFromNib
 {
-	myStyle = NSScrubbingBarEmptyStyle;
+	myStyle = MPEScrubbingBarEmptyStyle;
 	// load images that forms th scrubbing bar
 	[self loadImages];
 	
@@ -81,23 +81,23 @@
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
-	if ([self scrubStyle] == NSScrubbingBarPositionStyle)
+	if ([self scrubStyle] == MPEScrubbingBarPositionStyle)
 		postNotification(self, theEvent, [scrubBarBadge size]);
 }
 - (void)mouseDragged:(NSEvent *)theEvent
 {
-	if ([self scrubStyle] == NSScrubbingBarPositionStyle)
+	if ([self scrubStyle] == MPEScrubbingBarPositionStyle)
 		postNotification(self, theEvent, [scrubBarBadge size]);
 }
 - (BOOL)mouseDownCanMoveWindow
 {
-	if ([self scrubStyle] == NSScrubbingBarPositionStyle)
+	if ([self scrubStyle] == MPEScrubbingBarPositionStyle)
 		return NO;
 	return YES;
 }
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
 {
-	if ([self scrubStyle] == NSScrubbingBarPositionStyle)
+	if ([self scrubStyle] == MPEScrubbingBarPositionStyle)
 		return YES;
 	return NO;
 }
@@ -126,7 +126,7 @@
 	}
 	[scrubBarRun compositeToPoint:NSMakePoint(endWidth,0) operation:NSCompositeSourceAtop];
 	
-	if ([self scrubStyle] == NSScrubbingBarPositionStyle) {
+	if ([self scrubStyle] == MPEScrubbingBarPositionStyle) {
 		// calculate actual x-position of badge with badge offset and shadow
 		float badgePosX = ([self frame].size.width - rightClip) * theValue - xBadgeOffset;
 		// limit the badge width not to draw into the shadow on the rigth side
@@ -138,7 +138,7 @@
 				fromRect: NSMakeRect(0, 0, badgeWidth, [scrubBarBadge size].height) 
 				operation: NSCompositeSourceAtop];
 		
-	} else if ([self scrubStyle] == NSScrubbingBarProgressStyle) {
+	} else if ([self scrubStyle] == MPEScrubbingBarProgressStyle) {
 		[scrubBarAnim 
 			drawInRect:NSMakeRect(0, 0, [self frame].size.width - rightClip, [self frame].size.height) 
 			fromRect:NSMakeRect((1.0 - animFrame) * [scrubBarAnimFrame size].width, 0, [self frame].size.width - rightClip, [scrubBarAnim size].height) 
@@ -163,7 +163,7 @@
 - (void)setScrubStyle:(NSScrubbingBarStyle)style
 {
 	myStyle = style;
-	if (style == NSScrubbingBarProgressStyle)
+	if (style == MPEScrubbingBarProgressStyle)
 		[self startMyAnimation];
 	else
 		[self stopMyAnimation];

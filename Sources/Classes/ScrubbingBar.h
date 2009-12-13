@@ -23,9 +23,9 @@
 	//	@"SBClickedValue"		NSNumber double
 
 typedef enum _NSScrubbingBarStyle {
-    NSScrubbingBarEmptyStyle = 0,
-	NSScrubbingBarProgressStyle = 1,
-	NSScrubbingBarPositionStyle = 2
+    MPEScrubbingBarEmptyStyle = 0,
+	MPEScrubbingBarProgressStyle = 1,
+	MPEScrubbingBarPositionStyle = 2
 } NSScrubbingBarStyle;
 
 @interface ScrubbingBar:NSProgressIndicator
