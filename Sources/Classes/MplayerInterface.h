@@ -21,66 +21,50 @@
 
 #import "Debug.h"
 
-// Notifications posted by MplayerInterface
-	// 	@"MIPlayerTerminatedNotification"	mplayer has been terminated
-	// 	@"MIInfoReadyNotification"			notification has been updated
-	// 	@"MIStateUpdatedNotification"		status updated
-	// 	@"MIFinishedParsing"				parsing of output has finished
+@class MplayerInterface;
 
-// status update notification info keys
-	//	@"PlayerStatus"				NSNumber - int (player status constants)
-	//	@"MovieSeconds"				NSNumber - float
-	//	@"SyncDifference"			NSNumber - float
-	//	@"DroppedFrames"			NSNumber - int
-	//	@"PostProcessingLevel"		NSNumber - int
-	//	@"CPUUsage"					NSNumber - float percents
-	//	@"CacheUsage"				NSNumber - float percents
+@protocol MplayerInterfaceClientProtocol
+- (void) interface:(MplayerInterface *)mi hasChangedStateTo:(int)state;
+- (void) interface:(MplayerInterface *)mi timeUpdate:(float)newTime;
+- (void) interface:(MplayerInterface *)mi streamUpate:(MovieInfo *)item;
+- (void) interface:(MplayerInterface *)mi selectedSteamsUpdate:(NSArray *)streamIds;
+- (void) interface:(MplayerInterface *)mi statsUpdate:(NSArray *)stats;
+@end
 
-// keys to mplayer info dictionary (all represents NSString objects)
-	//	@"ID_FILENAME"				file path
-	//	@"ID_FILE_FORMAT"			media format (AVI,MOV....)
-	//	@"ID_VIDEO_FORMAT"			video codec
-	//	@"ID_VIDEO_BITRATE"
-	//	@"ID_VIDEO_WIDTH"
-	//	@"ID_VIDEO_HEIGHT"
-	//	@"ID_VIDEO_FPS"
-	//	@"ID_VIDEO_ASPECT"
-	//	@"ID_AUDIO_CODEC"
-	//	@"ID_AUDIO_FORMAT"
-	//	@"ID_AUDIO_BITRATE"			Bits per second
-	//	@"ID_AUDIO_RATE"			kHz
-	//	@"ID_AUDIO_NCH"				number of channels
-	//	@"ID_LENGTH"				length in seconds
+enum {
+	MIStateFinished = -1,
+	MIStateStopped,
+	MIStatePlaying,
+	MIStatePaused,
+	MIStateOpening,
+	MIStateBuffering,
+	MIStateIndexing,
+	MIStateInitializing,
+	MIStateSeeking
+};
+typedef NSInteger MIState;
 
-// player status constants
-#define kFinished					-1	// terminated by reaching end-of-file
-#define kStopped					0	// terminated by not reaching EOF
-#define kPlaying					1
-#define kPaused						2
-#define kOpening					3
-#define kBuffering					4
-#define kIndexing					5
-#define kInitializing				6	// task just started, no status yet
-#define kSeeking					7
+enum {
+	MISeekingModeRelative,
+	MISeekingModePercent,
+	MISeekingModeAbsolute
+};
+typedef NSUInteger MISeekingMode;
 
-// seeking modes
-#define	MIRelativeSeekingMode		0	// relative seeking in seconds 
-#define	MIPercentSeekingMode		1	// absolute seeking in percents
-#define	MIAbsoluteSeekingMode		2	// absolute seeking in seconds
+enum {
+	MISurpressCommandOutputAlways,
+	MISurpressCommandOutputConditionally,
+	MISurpressCommandOutputNever
+};
+typedef NSUInteger MICommandOutputSurpression;
 
-// default constants
-#define kDefaultMovieSize 			NSMakeSize(0,0)
-
-// osd level modes
-#define MI_CMD_SHOW_ALWAYS			1
-#define MI_CMD_SHOW_COND			2
-#define MI_CMD_SHOW_NEVER			0
-
-// pausing command modes
-#define MI_CMD_PAUSING_NONE			0
-#define MI_CMD_PAUSING_KEEP			1
-#define MI_CMD_PAUSING_TOGGLE		2
-#define MI_CMD_PAUSING_FORCE		3
+enum {
+	MICommandPausingNone,
+	MICommandPausingKeep,
+	MICommandPausingToggle,
+	MICommandPausingKeepForce
+};
+typedef NSUInteger MICommandPausingMode;
 
 @interface MplayerInterface : NSObject
 {	
@@ -112,36 +96,35 @@
 	BOOL isPreflight;
 	
 	// state variables
-	int	myState;				// player state
-	unsigned int myVolume;		// volume 0-100
+	MIState	state;
+	unsigned int myVolume;
 	BOOL playing;
 	BOOL movieOpen;
 	
 	//beta
-	float mySeconds;			// actual/saved seconds
+	float mySeconds;
 	BOOL isSeeking;
 	
 	// statistics
-	BOOL myUpdateStatistics;		// if set the following properties are periodicaly updated
-	float mySyncDifference;		// difference in secconds between audion and video
-	int myCPUUsage;			// overal player CPU usage
-	int myCacheUsage;			// cache usage
-	int	myDroppedFrames;		// number of dropped frames since last key frame
-	int myPostProcLevel;		// actual level of postprocessing
+	BOOL myUpdateStatistics;
+	float mySyncDifference;
+	int myCPUUsage;
+	int myCacheUsage;
+	int	myDroppedFrames;
+	int myPostProcLevel;
 	
 	// internal use
 	NSTask *myMplayerTask;
-	double myLastUpdate;			// date when last update notificationa was sent
-	BOOL restartingPlayer;			// set when player is teminated to be restarted
-	BOOL pausedOnRestart;			// set when paused during attemp to restart player
-	BOOL isRunning;					// set off after recieving termination notification
-	int myOutputReadMode;				// defines playback output form 
-	NSMutableArray *myCommandsBuffer;	// store cmds that cannot be send immediatelly
+	double myLastUpdate;
+	BOOL restartingPlayer;
+	BOOL pausedOnRestart;
+	BOOL isRunning;
+	int myOutputReadMode;
+	NSMutableArray *myCommandsBuffer;
 	NSString *lastUnparsedLine;
 	NSString *lastUnparsedErrorLine;
-	//NSMutableDictionary *myInfo;	// dict filled by -identify command
-	int subtitleFileId;				// since sub file identify output is not numberede, we need to cache the id
-	NSDictionary *lastMissedSeek;	// last seek that couldn't be processed
+	int subtitleFileId;
+	NSDictionary *lastMissedSeek;
 	BOOL is64bitHost;
 	BOOL force32bitBinary;
 }
@@ -149,54 +132,48 @@
 @property (nonatomic,getter=isPlaying) BOOL playing;
 @property (nonatomic,getter=isMovieOpen) BOOL movieOpen;
 
-// interface
-// init and uninit
+@property (nonatomic) MIState state;
+
 - (void) setBufferName:(NSString *)name;
 
+- (void) playItem:(MovieInfo *)item;
+- (void) play;
 - (void) registerPlayingItem:(MovieInfo *)item;
 - (void) unregisterPlayingItem;
 
-// playback controls (take effect imediately)
-- (void) playItem:(MovieInfo *)item;				// play item from saved time
-- (void) play;
-- (void) stop;										// stops playback
-- (void) pause;										// pause / unpause playback
-- (void) seek:(float)seconds mode:(int)aMode;		// seek in movie
+- (void) stop;
+- (void) pause;
+- (void) seek:(float)seconds mode:(int)aMode;
 - (void) performCommand:(NSString *)aCommand;
 
-// settings (take effect by using applySettingsWithRestart: message)
-// setting files
-- (void) loadNewSubtitleFile:(NSNotification *)notification;
-
-- (void) applyVideoEqualizer;
-
-// misc settings (don't work during playback)
-- (void) setVolume:(unsigned int)percents;			// set audio volume
-
-// other methods
-- (void) applySettingsWithRestart;	// applyes settings that require restart
+- (void) setVolume:(unsigned int)percents;
 - (void) takeScreenshot;
 
+- (void) loadNewSubtitleFile:(NSNotification *)notification;
+- (void) applyVideoEqualizer;
+
+- (void) applySettingsWithRestart;
+
 // info
-- (void) loadInfo:(MovieInfo *)item;						// gets info returned by -identify (don't work during playback)
-- (MovieInfo *) info;							// returns the content of info dictionary 
-- (int) status;
-- (float) seconds;									// returns number of seconds, elapsed
-- (BOOL) changesNeedRestart;						// retuns YES if changes needs restart
+- (void) loadInfo:(MovieInfo *)item;
+- (MovieInfo *) info;
+
+- (float) seconds;
+- (BOOL) changesNeedRestart;
 - (BOOL) localChangesNeedRestart;
 
-- (void) setState:(int)newState;
+- (void) setState:(MIState)newState;
 - (BOOL) isRunning;
 
 // statistics
-- (void) setUpdateStatistics:(BOOL)aBool;			// sets whether to update stats
+- (void) setUpdateStatistics:(BOOL)aBool;
 - (float) syncDifference;
 - (int) cpuUsage;
 - (int) cacheUsage;
 - (int) droppedFrames;
 - (int) postProcLevel;
 
-// advenced
+// advanced
 - (void)sendCommand:(NSString *)aCommand withOSD:(uint)osdMode andPausing:(uint)pausing;
 - (void)sendCommand:(NSString *)aCommand;
 - (void)sendCommands:(NSArray *)aCommands withOSD:(uint)osdMode andPausing:(uint)pausing;
@@ -210,7 +187,7 @@
 
 // notification handlers
 - (void) mplayerTerminated;
-- (void)readError:(NSNotification *)notification;
+- (void) readError:(NSNotification *)notification;
 - (void) readOutputC:(NSNotification *)notification;
 
 @end

@@ -641,7 +641,7 @@
 /************************************************************************************/
 - (IBAction)playPause:(id)sender
 {
-	if ([myPlayer status] > 0) {
+	if ([myPlayer state] > 0) {
 		[myPlayer pause];				// if playing pause/unpause
 		
 	}
@@ -723,7 +723,7 @@
 {
 	
 	if ([myPlayer isRunning])
-		[self seek:-[self getSeekSeconds] mode:MIRelativeSeekingMode];
+		[self seek:-[self getSeekSeconds] mode:MISeekingModeRelative];
 	else {
 		if ([playListController indexOfSelectedItem] < 1)
 			[playListController selectItemAtIndex:0];
@@ -738,7 +738,7 @@
 - (IBAction)seekFwd:(id)sender
 {
 	if ([myPlayer isRunning])
-		[self seek:[self getSeekSeconds] mode:MIRelativeSeekingMode];
+		[self seek:[self getSeekSeconds] mode:MISeekingModeRelative];
 	else {
 		if ([playListController indexOfSelectedItem] < ([playListController itemCount]-1))
 			[playListController selectItemAtIndex:
@@ -751,7 +751,7 @@
 
 - (IBAction)seekFromMenu:(NSMenuItem *)item
 {
-	[self seek:[item tag] mode:MIRelativeSeekingMode];
+	[self seek:[item tag] mode:MISeekingModeRelative];
 }
 
 /************************************************************************************/
@@ -766,7 +766,7 @@
 				[playListController finishedPlayingItem:movieInfo];
 			else
 				[self stop:nil];
-			//[self seek:100 mode:MIPercentSeekingMode];
+			//[self seek:100 mode:MISeekingModePercent];
 		}
 	}
 }
@@ -778,7 +778,7 @@
 		if (movieInfo && [movieInfo chapterCount] > 0)
 			[self skipToPreviousChapter];
 		else
-			[self seek:0 mode:MIPercentSeekingMode];
+			[self seek:0 mode:MISeekingModePercent];
 	}
 }
 
@@ -792,7 +792,7 @@
 			[playListController finishedPlayingItem:movieInfo];
 		else
 			[self stop:nil];
-		//[self seek:100 mode:MIPercentSeekingMode];
+		//[self seek:100 mode:MISeekingModePercent];
 	}
 }
 
@@ -801,7 +801,7 @@
 	if ([myPlayer isRunning] && movieInfo&& [movieInfo chapterCount] > 0 && currentChapter > 1)
 		[self goToChapter:(currentChapter-1)];
 	else
-		[self seek:0 mode:MIPercentSeekingMode];
+		[self seek:0 mode:MISeekingModePercent];
 }
 
 - (void)goToChapter:(unsigned int)chapter {
@@ -811,7 +811,7 @@
 		
 		currentChapter = chapter;
 		[myPlayer sendCommand:[NSString stringWithFormat:@"set_property chapter %d 1", currentChapter] 
-					  withOSD:MI_CMD_SHOW_COND andPausing:MI_CMD_PAUSING_KEEP];
+					  withOSD:MISurpressCommandOutputConditionally andPausing:MICommandPausingKeep];
 		lastChapterCheck = -MP_CHAPTER_CHECK_INTERVAL; // force update of chapter menu
 	}
 }
@@ -843,11 +843,11 @@
         {
 			// Right: Seek forward
 			case kRemoteButtonRight_Hold:
-				[self seek:10*pow(2,remoteHoldIncrement) mode:MIRelativeSeekingMode];
+				[self seek:10*pow(2,remoteHoldIncrement) mode:MISeekingModeRelative];
 				break;
 			// Left: Seek back
             case kRemoteButtonLeft_Hold:
-				[self seek:-10*pow(2,remoteHoldIncrement) mode:MIRelativeSeekingMode];
+				[self seek:-10*pow(2,remoteHoldIncrement) mode:MISeekingModeRelative];
 				break;
 			// Volume+: Increase volume
             case kRemoteButtonVolume_Plus_Hold:
@@ -898,14 +898,14 @@
 			if (movieInfo && [movieInfo chapterCount] > 0)
 				[self seekNext:nil];
 			else
-				[self seek:600 mode:MIRelativeSeekingMode];
+				[self seek:600 mode:MISeekingModeRelative];
             break;
 		// Left: Skip backward
         case kRemoteButtonLeft:
             if (movieInfo && [movieInfo chapterCount] > 0)
 				[self seekPrevious:nil];
 			else
-				[self seek:-600 mode:MIRelativeSeekingMode];
+				[self seek:-600 mode:MISeekingModeRelative];
             break;
 		// Menu: Switch fullscreen
         case kRemoteButtonMenu:
@@ -997,7 +997,7 @@
 }
 /************************************************************************************/
 - (IBAction)takeScreenshot:(id)sender {
-	if ([myPlayer status] > 0) {
+	if ([myPlayer state] > 0) {
 		[myPlayer takeScreenshot];
 	}
 }
@@ -1549,7 +1549,7 @@
 - (void) appShouldTerminate
 {
 	// save values before all is saved to disk and released
-	if ([myPlayer status] > 0 && [[[AppController sharedController] preferences] objectForKey:@"PlaylistRemember"])
+	if ([myPlayer state] > 0 && [[[AppController sharedController] preferences] objectForKey:@"PlaylistRemember"])
 	{
 		/*if ([[[AppController sharedController] preferences] boolForKey:@"PlaylistRemember"])
 		{
@@ -1605,10 +1605,10 @@
 		// switch Play menu item title and playbutton image
 		
 		switch (lastPlayerStatus) {
-		case kOpening :
-		case kBuffering :
-		case kIndexing :
-		case kPlaying :
+		case MIStateOpening :
+		case MIStateBuffering :
+		case MIStateIndexing :
+		case MIStatePlaying :
 			[playButton setImage:pauseImageOff];
 			[playButton setAlternateImage:pauseImageOn];
 			//[playButtonToolbar setImage:pauseImageOff];
@@ -1620,9 +1620,9 @@
 			[self updateWindowOnTop];
 			[self updateLoopStatus];
 			break;
-		case kPaused :
-		case kStopped :
-		case kFinished :
+		case MIStatePaused :
+		case MIStateStopped :
+		case MIStateFinished :
 			[playButton setImage:playImageOff];
 			[playButton setAlternateImage:playImageOn];
 			//[playButtonToolbar setImage:playImageOff];
@@ -1638,7 +1638,7 @@
 		}
 		
 		switch (lastPlayerStatus) {
-		case kOpening :
+		case MIStateOpening :
 		{
 			[playerWindow setTitle:[NSString stringWithFormat:@"%@ - %@",
 									[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
@@ -1652,7 +1652,7 @@
 			[fcScrubbingBar setIndeterminate:YES];
 			break;
 		}
-		case kBuffering :
+		case MIStateBuffering :
 			status = NSLocalizedString(@"Buffering",nil);
 			// progress bars
 			[scrubbingBar setScrubStyle:NSScrubbingBarProgressStyle];
@@ -1662,7 +1662,7 @@
 			[fcScrubbingBar setScrubStyle:NSScrubbingBarProgressStyle];
 			[fcScrubbingBar setIndeterminate:YES];
 			break;
-		case kIndexing :
+		case MIStateIndexing :
 			status = NSLocalizedString(@"Indexing",nil);
 			// progress bars
 			[scrubbingBar setScrubStyle:NSScrubbingBarProgressStyle];
@@ -1675,7 +1675,7 @@
 			[fcScrubbingBar setMaxValue:100];
 			[fcScrubbingBar setIndeterminate:NO];
 			break;
-		case kPlaying :
+		case MIStatePlaying :
 			if (isSeeking) {
 				isSeeking = NO;
 				break;
@@ -1711,12 +1711,12 @@
 				[fcScrubbingBar setScrubStyle:NSScrubbingBarPositionStyle];
 			}
 			break;
-		case kPaused :
+		case MIStatePaused :
 			status = NSLocalizedString(@"Paused",nil);
 			// stop progress bars
 			break;
-		case kStopped :
-		case kFinished :
+		case MIStateStopped :
+		case MIStateFinished :
 			//Set win title
 			[playerWindow setTitle:@"MPlayer OSX Extended"];
 			// reset status panel
@@ -1753,7 +1753,7 @@
 			if (playingFromPlaylist) {
 				// if playback finished itself (not by user) let playListController know
 				if ([[[notification userInfo]
-						objectForKey:@"PlayerStatus"] intValue] == kFinished)
+						objectForKey:@"PlayerStatus"] intValue] == MIStateFinished)
 					[playListController finishedPlayingItem:movieInfo];
 				// close view otherwise
 				else if (!continuousPlayback)
@@ -1798,34 +1798,34 @@
 	}
 	
 	// update values
-	switch ([myPlayer status]) {
-	case kOpening :
+	switch ([myPlayer state]) {
+	case MIStateOpening :
 		break;
-	case kBuffering :
+	case MIStateBuffering :
 		if ([statsPanel isVisible])
 			[statsCacheUsageBox setStringValue:[NSString localizedStringWithFormat:@"%3.1f %%",
 				[myPlayer cacheUsage]]];
 		break;
-	case kIndexing :
+	case MIStateIndexing :
 		[scrubbingBar setDoubleValue:[myPlayer cacheUsage]];
 		//[scrubbingBarToolbar setDoubleValue:[myPlayer cacheUsage]];
 		[fcScrubbingBar setDoubleValue:[myPlayer cacheUsage]];
 		break;
-	case kSeeking :
-	case kPlaying :
+	case MIStateSeeking :
+	case MIStatePlaying :
 		// check for stream update
 		if ([[notification userInfo] objectForKey:@"StreamsHaveChanged"])
 			[self fillStreamMenus];
 		[self statsUpdate:notification];
 		break;
-	case kPaused :
+	case MIStatePaused :
 		break;
 	}
 }
 /************************************************************************************/
 - (void) statsUpdate:(NSNotification *)notification {
 	
-	if ([myPlayer status] == kPlaying || [myPlayer status] == kSeeking) {
+	if ([myPlayer state] == MIStatePlaying || [myPlayer state] == MIStateSeeking) {
 		if (movieInfo) {
 			// update time
 			if (seekUpdateBlockUntil < [NSDate timeIntervalSinceReferenceDate]) {
@@ -1905,10 +1905,10 @@
 /************************************************************************************/
 - (void) progresBarClicked:(NSNotification *)notification
 {
-	if ([myPlayer status] == kPlaying || [myPlayer status] == kPaused || [myPlayer status] == kSeeking) {
-		int theMode = MIPercentSeekingMode;
+	if ([myPlayer state] == MIStatePlaying || [myPlayer state] == MIStatePaused || [myPlayer state] == MIStateSeeking) {
+		int theMode = MISeekingModePercent;
 		if ([movieInfo length] > 0)
-			theMode = MIAbsoluteSeekingMode;
+			theMode = MISeekingModeAbsolute;
 
 		[self seek:[[[notification userInfo] 
 				objectForKey:@"SBClickedValue"] floatValue] mode:theMode];

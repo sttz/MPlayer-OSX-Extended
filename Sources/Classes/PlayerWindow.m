@@ -70,7 +70,7 @@
 		
 		// seek when ready
 		if (![playerController isSeeking]) {
-			[playerController seek:(-scrollXAcc*SCROLL_SEEK_MULT) mode:MIRelativeSeekingMode];
+			[playerController seek:(-scrollXAcc*SCROLL_SEEK_MULT) mode:MISeekingModeRelative];
 			scrollXAcc = 0;
 		}
 	}

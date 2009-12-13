@@ -43,7 +43,7 @@ static NSArray* parseRunLoopModes;
 static NSDictionary *videoEqualizerCommands;
 
 @implementation MplayerInterface
-@synthesize playing, movieOpen;
+@synthesize playing, movieOpen, state;
 
 /************************************************************************************
  INIT & UNINIT
@@ -592,20 +592,20 @@ static NSDictionary *videoEqualizerCommands;
 - (void) stop
 {
 	if (myMplayerTask) {
-		switch (myState) {
-		case kPlaying :
-		case kSeeking :
+		switch (state) {
+		case MIStatePlaying :
+		case MIStateSeeking :
 //			[myMplayerTask terminate];
 			[self sendCommand:@"quit"];
 			break;
-		case kPaused :
+		case MIStatePaused :
 			[myCommandsBuffer addObject:@"quit"];
 			[self sendCommand:@"pause"];
 //			[self sendCommand:@"quit"];
 			break;
-		case kStopped:
+		case MIStateStopped:
 			break;
-		case kFinished:
+		case MIStateFinished:
 			break;
 		default :
 			[myCommandsBuffer addObject:@"quit"];
@@ -618,17 +618,17 @@ static NSDictionary *videoEqualizerCommands;
 - (void) pause
 {
 	if (myMplayerTask) {
-		switch (myState) {
-		case kPlaying:					// mplayer is just playing then pause it
-		case kSeeking :
+		switch (state) {
+		case MIStatePlaying:					// mplayer is just playing then pause it
+		case MIStateSeeking :
 			[self sendCommand:@"pause"];
 			break;
-		case kPaused:					// mplayer is paused then unpause it
+		case MIStatePaused:					// mplayer is paused then unpause it
 			[self sendCommand:@"pause"];
 			break;
-		case kStopped:					// if stopped do nothing
+		case MIStateStopped:					// if stopped do nothing
 			break;
-		case kFinished:					// if stopped do nothing
+		case MIStateFinished:					// if stopped do nothing
 			break;
 		default:						// otherwise save command to the buffer
 			[myCommandsBuffer addObject:@"pause"];
@@ -640,13 +640,13 @@ static NSDictionary *videoEqualizerCommands;
 - (void) seek:(float)seconds mode:(int)aMode
 {		
 	switch (aMode) {
-	case MIRelativeSeekingMode :
+	case MISeekingModeRelative :
 		mySeconds += seconds;
 		break;
-	case MIPercentSeekingMode :
+	case MISeekingModePercent :
 		
 		break;
-	case MIAbsoluteSeekingMode :
+	case MISeekingModeAbsolute :
 		mySeconds = seconds;
 		break;
 	default :
@@ -654,14 +654,14 @@ static NSDictionary *videoEqualizerCommands;
 	}
 	
 	if (myMplayerTask) {
-		switch (myState) {
-		case kPlaying:
-		case kPaused:
+		switch (state) {
+		case MIStatePlaying:
+		case MIStatePaused:
 				[self sendCommand:[NSString stringWithFormat:@"seek %1.1f %d",seconds, aMode] 
-						  withOSD:MI_CMD_SHOW_COND andPausing:MI_CMD_PAUSING_KEEP];
-				[self setState:kSeeking];
+						  withOSD:MISurpressCommandOutputConditionally andPausing:MICommandPausingKeep];
+				[self setState:MIStateSeeking];
 			break;
-		case kSeeking:
+		case MIStateSeeking:
 			// Save missed seek
 			[lastMissedSeek release];
 			lastMissedSeek = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -676,12 +676,12 @@ static NSDictionary *videoEqualizerCommands;
 /************************************************************************************/
 - (void) performCommand:(NSString *)aCommand
 {
-	switch (myState) {
-	case kPlaying:					// if is playing send it directly to player
-	case kSeeking:
+	switch (state) {
+	case MIStatePlaying:					// if is playing send it directly to player
+	case MIStateSeeking:
 		[self sendCommand:aCommand];
 		break;
-	case kStopped:					// if stopped do nothing
+	case MIStateStopped:					// if stopped do nothing
 		break;
 	default :						// otherwise save the command to the buffer
 		[myCommandsBuffer addObject:aCommand];
@@ -741,9 +741,9 @@ static NSDictionary *videoEqualizerCommands;
 {
 	if (myVolume != percents) {
 		myVolume = percents;
-		if (myState == kPlaying || myState == kPaused || myState == kSeeking)
+		if (state == MIStatePlaying || state == MIStatePaused || state == MIStateSeeking)
 			[self sendCommand:[NSString stringWithFormat:@"volume %d 1",myVolume] 
-					  withOSD:MI_CMD_SHOW_COND andPausing:MI_CMD_PAUSING_KEEP];
+					  withOSD:MISurpressCommandOutputConditionally andPausing:MICommandPausingKeep];
 	}
 }
 /************************************************************************************/
@@ -790,23 +790,19 @@ static NSDictionary *videoEqualizerCommands;
 	return playingItem;
 }
 /************************************************************************************/
-- (int) status
-{	
-	return myState;		
-}
-- (void) setState:(int)newState
+- (void) setState:(MIState)newState
 {
 	// Update isMovieOpen
-	BOOL newIsMovieOpen = (newState == kPlaying || newState == kSeeking || newState == kPaused);
+	BOOL newIsMovieOpen = (newState == MIStatePlaying || newState == MIStateSeeking || newState == MIStatePaused);
 	if ([self isMovieOpen] != newIsMovieOpen)
 		[self setMovieOpen:newIsMovieOpen];
 	
 	// Update isPlaying
-	BOOL newIsPlaying = (newState == kPlaying || newState == kSeeking);
+	BOOL newIsPlaying = (newState == MIStatePlaying || newState == MIStateSeeking);
 	if ([self isPlaying] != newIsPlaying)
 		[self setPlaying:newIsPlaying];
 	
-	myState = newState;
+	state = newState;
 }
 /************************************************************************************/
 - (float) seconds
@@ -905,7 +901,7 @@ static NSDictionary *videoEqualizerCommands;
 /************************************************************************************/
 - (void)sendCommand:(NSString *)aCommand
 {
-	[self sendCommand:aCommand withOSD:MI_CMD_SHOW_ALWAYS andPausing:MI_CMD_PAUSING_KEEP];
+	[self sendCommand:aCommand withOSD:MISurpressCommandOutputAlways andPausing:MICommandPausingKeep];
 }
 /************************************************************************************/
 - (void)sendCommands:(NSArray *)aCommands withOSD:(uint)osdMode andPausing:(uint)pausing
@@ -913,7 +909,7 @@ static NSDictionary *videoEqualizerCommands;
 	if ([aCommands count] == 0)
 		return;
 	
-	BOOL quietCommand = (osdMode == MI_CMD_SHOW_NEVER || (osdMode == MI_CMD_SHOW_COND && osdLevel == 1));
+	BOOL quietCommand = (osdMode == MISurpressCommandOutputNever || (osdMode == MISurpressCommandOutputConditionally && osdLevel == 1));
 	
 	if (quietCommand && !osdSilenced) {
 		[Debug log:ASL_LEVEL_DEBUG withMessage:@"osd 0 (%@, %i, %i)\n",[aCommands objectAtIndex:0], osdMode, osdLevel];
@@ -922,11 +918,11 @@ static NSDictionary *videoEqualizerCommands;
 	}
 	
 	NSString *pausingPrefix = @"";
-	if (pausing == MI_CMD_PAUSING_KEEP)
+	if (pausing == MICommandPausingKeep)
 		pausingPrefix = @"pausing_keep ";
-	else if (pausing == MI_CMD_PAUSING_TOGGLE)
+	else if (pausing == MICommandPausingToggle)
 		pausingPrefix = @"pausing_toggle ";
-	else if (pausing == MI_CMD_PAUSING_FORCE)
+	else if (pausing == MICommandPausingKeepForce)
 		pausingPrefix = @"pausing_keep_force ";
 	
 	int i;
@@ -936,7 +932,7 @@ static NSDictionary *videoEqualizerCommands;
 	}
 		
 	if (quietCommand) {
-		if (myState == kPlaying)
+		if (state == MIStatePlaying)
 			[self reactivateOsdAfterDelay];
 		else {
 			[self sendToMplayersInput:[NSString stringWithFormat:@"pausing_keep osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)]];
@@ -947,7 +943,7 @@ static NSDictionary *videoEqualizerCommands;
 /************************************************************************************/
 - (void)sendCommands:(NSArray *)aCommands
 {
-	[self sendCommands:aCommands withOSD:MI_CMD_SHOW_ALWAYS andPausing:MI_CMD_PAUSING_KEEP];
+	[self sendCommands:aCommands withOSD:MISurpressCommandOutputAlways andPausing:MICommandPausingKeep];
 }
 /************************************************************************************/
 - (void)reactivateOsdAfterDelay {
@@ -959,9 +955,9 @@ static NSDictionary *videoEqualizerCommands;
 - (void)reactivateOsd {
 	//[Debug log:ASL_LEVEL_DEBUG withMessage:@"osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)];
 	
-	if (myState == kPlaying || myState == kSeeking) {
+	if (state == MIStatePlaying || state == MIStateSeeking) {
 		[self sendToMplayersInput:[NSString stringWithFormat:@"pausing_keep osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)]];
-	} else if (myState == kPaused) {
+	} else if (state == MIStatePaused) {
 		[myCommandsBuffer addObject:[NSString stringWithFormat:@"osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)]];
 	}
 	osdSilenced = NO;
@@ -980,7 +976,7 @@ static NSDictionary *videoEqualizerCommands;
 
 	// terminate mplayer if it is running
 	if (myMplayerTask) {
-		if (myState == kPaused && restartingPlayer)
+		if (state == MIStatePaused && restartingPlayer)
 			pausedOnRestart = YES;
 		else
 			pausedOnRestart = NO;
@@ -1070,7 +1066,7 @@ static NSDictionary *videoEqualizerCommands;
 	// launch mplayer task
 	[myMplayerTask launch];
 	isRunning = YES;
-	[self setState:kInitializing];
+	[self setState:MIStateInitializing];
 	
 	[Debug log:ASL_LEVEL_INFO withMessage:@"Path to fontconfig: %@", [[myMplayerTask environment] objectForKey:@"FONTCONFIG_PATH"]];
 }
@@ -1111,12 +1107,12 @@ static NSDictionary *videoEqualizerCommands;
 		[[NSNotificationCenter defaultCenter] removeObserver:self
 				name: NSTaskDidTerminateNotification object:myMplayerTask];
 		
-		if (!restartingPlayer && myState > 0) {
+		if (!restartingPlayer && state > 0) {
 			NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 			
-			[self setState:kStopped];
+			[self setState:MIStateStopped];
 			// save value to userInfo
-			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
+			[userInfo setObject:[NSNumber numberWithInt:state] forKey:@"PlayerStatus"];
 			// post notification
 			[[NSNotificationCenter defaultCenter]
 					postNotificationName:@"MIStateUpdatedNotification"
@@ -1267,7 +1263,7 @@ static NSDictionary *videoEqualizerCommands;
 			double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - myLastUpdate);
 				
 			// parse the output according to the preset mode
-			if ((myState == kSeeking && timeDifference >= MI_SEEK_UPDATE_INTERVAL)
+			if ((state == MIStateSeeking && timeDifference >= MI_SEEK_UPDATE_INTERVAL)
 					|| timeDifference >= MI_STATS_UPDATE_INTERVAL) {
 				float audioCPUUsage = 0;
 				int videoCPUUsage = 0, voCPUUsage = 0;
@@ -1364,8 +1360,8 @@ static NSDictionary *videoEqualizerCommands;
 							userInfo:nil];
 					
 					// finish seek
-					if (myState == kSeeking && lastMissedSeek) {
-						[self setState:kPlaying];
+					if (state == MIStateSeeking && lastMissedSeek) {
+						[self setState:MIStatePlaying];
 						[self seek:[[lastMissedSeek objectForKey:@"seconds"] floatValue]
 							  mode:[[lastMissedSeek objectForKey:@"mode"] intValue]];
 						[lastMissedSeek release];
@@ -1374,14 +1370,14 @@ static NSDictionary *videoEqualizerCommands;
 					}
 					
 					// if it was not playing before (launched or unpaused)
-					if (myState != kPlaying) {
-						[self setState:kPlaying];
-						[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
+					if (state != MIStatePlaying) {
+						[self setState:MIStatePlaying];
+						[userInfo setObject:[NSNumber numberWithInt:state] forKey:@"PlayerStatus"];
 						
 						// perform commands buffer
 						[self sendCommands:myCommandsBuffer 
-								   withOSD:MI_CMD_SHOW_COND
-								andPausing:MI_CMD_PAUSING_NONE];
+								   withOSD:MISurpressCommandOutputConditionally
+								andPausing:MICommandPausingNone];
 						[myCommandsBuffer removeAllObjects];	// clear command buffer
 			
 						continue; 							// continue on next line
@@ -1421,8 +1417,8 @@ static NSDictionary *videoEqualizerCommands;
 */		
 		//  =====  PAUSE  ===== test for paused state
 		if (strstr(stringPtr, MI_PAUSED_STRING) != NULL) {
-			[self setState:kPaused];
-			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
+			[self setState:MIStatePaused];
+			[userInfo setObject:[NSNumber numberWithInt:state] forKey:@"PlayerStatus"];
 			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 			
 			continue; 							// continue on next line
@@ -1434,10 +1430,10 @@ static NSDictionary *videoEqualizerCommands;
 			
 			// player reached end of file
 			if ([exitType isEqualToString:@"EOF"])
-				[self setState:kFinished];
+				[self setState:MIStateFinished];
 			// player was stopped (by user or with an error)
 			else
-				[self setState:kStopped];
+				[self setState:MIStateStopped];
 			
 			// remove observer for output
 				// it's here because the NSTask sometimes do not terminate
@@ -1452,7 +1448,7 @@ static NSDictionary *videoEqualizerCommands;
 			// when player is not restarting
 			if (!restartingPlayer) {
 				// save value to userInfo
-				[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
+				[userInfo setObject:[NSNumber numberWithInt:state] forKey:@"PlayerStatus"];
 			}
 			
 			myOutputReadMode = 0;				// reset output read mode
@@ -1462,7 +1458,7 @@ static NSDictionary *videoEqualizerCommands;
 																object:self];
 			
 			restartingPlayer = NO;
-			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithFormat:@"Exited with state %d",myState]];
+			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithFormat:@"Exited with state %d",state]];
 			continue;							// continue on next line
 		}
 		
@@ -1734,8 +1730,8 @@ static NSDictionary *videoEqualizerCommands;
 		
 		// mplayer starts to open a file
 		if (strncmp(stringPtr, MI_OPENING_STRING, 8) == 0) {
-			[self setState:kOpening];
-			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
+			[self setState:MIStateOpening];
+			[userInfo setObject:[NSNumber numberWithInt:state] forKey:@"PlayerStatus"];
 			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 			continue; 							// continue on next line	
 		}
@@ -1743,8 +1739,8 @@ static NSDictionary *videoEqualizerCommands;
 		// filling cache
 		if (strncmp(stringPtr, "Cache fill:", 11) == 0) {
 			float cacheUsage;
-			[self setState:kBuffering];
-			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
+			[self setState:MIStateBuffering];
+			[userInfo setObject:[NSNumber numberWithInt:state] forKey:@"PlayerStatus"];
 			if (sscanf(stringPtr, "Cache fill: %f%%", &cacheUsage) == 1) {
 				[userInfo setObject:[NSNumber numberWithFloat:cacheUsage]
 						forKey:@"CacheUsage"];
@@ -1775,8 +1771,8 @@ static NSDictionary *videoEqualizerCommands;
 		// rebuilding index
 		if ((tempPtr = strstr(stringPtr, "Generating Index:")) != NULL) {
 			int cacheUsage;
-			[self setState:kIndexing];
-			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
+			[self setState:MIStateIndexing];
+			[userInfo setObject:[NSNumber numberWithInt:state] forKey:@"PlayerStatus"];
 			if (sscanf(tempPtr, "Generating Index: %d", &cacheUsage) == 1) {
 				[userInfo setObject:[NSNumber numberWithInt:cacheUsage]
 						forKey:@"CacheUsage"];
@@ -1807,12 +1803,12 @@ static NSDictionary *videoEqualizerCommands;
 		
 		// mplayer is starting playback -- ignore for preflight
 		if (strstr(stringPtr, MI_STARTING_STRING) != NULL && !isPreflight) {
-			[self setState:kPlaying];
+			[self setState:MIStatePlaying];
 			myLastUpdate = [NSDate timeIntervalSinceReferenceDate];
-			[userInfo setObject:[NSNumber numberWithInt:myState] forKey:@"PlayerStatus"];
+			[userInfo setObject:[NSNumber numberWithInt:state] forKey:@"PlayerStatus"];
 	
 			// perform commands buffer
-			[self sendCommands:myCommandsBuffer withOSD:MI_CMD_SHOW_COND andPausing:MI_CMD_PAUSING_NONE];
+			[self sendCommands:myCommandsBuffer withOSD:MISurpressCommandOutputConditionally andPausing:MICommandPausingNone];
 			if (pausedOnRestart) {
 				NSLog(@"pause after restart");
 				[self sendCommand:@"pause"];
