@@ -202,6 +202,8 @@ externalSubtitles;
 
 - (void) dealloc
 {
+	[self removeObserver:self forKeyPath:@"filename"];
+	
 	[info release];
 	[video release];
 	[audio release];
