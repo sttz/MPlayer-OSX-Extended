@@ -120,14 +120,6 @@
 			selector: @selector(progresBarClicked:)
 			name: @"SBBarClickedNotification"
 			object:scrubbingBar];
-	/*[[NSNotificationCenter defaultCenter] addObserver: self
-			selector: @selector(progresBarClicked:)
-			name: @"SBBarClickedNotification"
-			object:scrubbingBarToolbar];*/
-	
-	// set up prograss bar
-	//[scrubbingBarToolbar setScrubStyle:MPEScrubbingBarEmptyStyle];
-	//[scrubbingBarToolbar setIndeterminate:NO];
 	
 	// set mute status and reload unmuted volume
 	if ([PREFS objectForKey:MPEAudioVolume] && [PREFS boolForKey:MPEAudioMute]) {
@@ -534,28 +526,23 @@
 		
 	//set volume icon
 	if (volume == 0)
-		volumeImage = [[NSImage imageNamed:@"volume0"] retain];
+		volumeImage = [NSImage imageNamed:@"volume0"];
 	
 	 else if (volume > 66)
-		volumeImage = [[NSImage imageNamed:@"volume3"] retain];
+		volumeImage = [NSImage imageNamed:@"volume3"];
 	
 	else if (volume > 33 && volume < 67)
-		volumeImage = [[NSImage imageNamed:@"volume2"] retain];
+		volumeImage = [NSImage imageNamed:@"volume2"];
 	
 	else
-		volumeImage = [[NSImage imageNamed:@"volume1"] retain];
+		volumeImage = [NSImage imageNamed:@"volume1"];
 	
 	
 	[volumeSlider setDoubleValue:volume];
-	//[volumeSliderToolbar setDoubleValue:volume];
 	[volumeButton setImage:volumeImage];
-	//[volumeButtonToolbar setImage:volumeImage];
 	[volumeButton setNeedsDisplay:YES];
-	//[volumeButtonToolbar setNeedsDisplay:YES];
 	
 	[menuController->toggleMuteMenuItem setState:(volume == 0)];
-	
-	[volumeImage release];
 }
 
 // Volume change action from sliders
@@ -650,7 +637,6 @@
 /************************************************************************************/
 - (void) seek:(float)seconds mode:(int)aMode
 {
-	isSeeking = YES;
 	// Tell MPlayer to seek
 	[myPlayer seek:seconds mode:aMode];
 	// Force recheck of chapters
@@ -661,11 +647,6 @@
 	[self interface:nil timeUpdate:nil];
 	// Block time updates to not update with values before the seek
 	seekUpdateBlockUntil = [NSDate timeIntervalSinceReferenceDate] + MP_SEEK_UPDATE_BLOCK;
-}
-
-- (BOOL) isSeeking
-{
-	return isSeeking;
 }
 
 - (float)getSeekSeconds
@@ -1859,8 +1840,6 @@
 			if (seekUpdateBlockUntil < [NSDate timeIntervalSinceReferenceDate]) {
 				if ([playerWindow isVisible])
 					[self updatePlayerWindow];
-				if ([[scrubbingBar window] isVisible])
-					[self updatePlaylistWindow];
 			}
 			
 			// stats window
@@ -1902,18 +1881,6 @@
 		[scrubbingBar setDoubleValue:0];
 	
 	[timeTextField setStringValue:[NSString stringWithFormat:@"%02d:%02d:%02d", seconds/3600,(seconds%3600)/60,seconds%60]];
-}
-
-- (void) updatePlaylistWindow
-{
-	//int seconds = (int)[myPlayer seconds];
-	
-	/*if ([movieInfo length] > 0)
-		[scrubbingBarToolbar setDoubleValue:seconds];
-	else
-		[scrubbingBarToolbar setDoubleValue:0];
-	
-	[timeTextFieldToolbar setStringValue:[NSString stringWithFormat:@"%02d:%02d:%02d", seconds/3600,(seconds%3600)/60,seconds%60]];*/
 }
 
 /************************************************************************************/

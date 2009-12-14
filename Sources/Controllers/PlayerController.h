@@ -72,7 +72,6 @@
 	int audioStreamId;
 	int subtitleDemuxStreamId;
 	int subtitleFileStreamId;
-	BOOL isSeeking;
 	
 	// preferences
 	int fullscreenDeviceId;
@@ -130,7 +129,6 @@
 - (IBAction)playPause:(id)sender;
 - (IBAction)stepFrame:(id)sender;
 - (void) seek:(float)seconds mode:(int)aMode;
-- (BOOL) isSeeking;
 - (float)getSeekSeconds;
 - (IBAction)seekBack:(id)sender;
 - (IBAction)seekFwd:(id)sender;
@@ -186,7 +184,6 @@
 - (void) statsClosed;
 - (void) progresBarClicked:(NSNotification *)notification;
 - (void) updatePlayerWindow;
-- (void) updatePlaylistWindow;
 - (void) mplayerCrashed:(NSNotification *)notification;
 
 // window delegate methods

@@ -124,7 +124,6 @@ typedef NSUInteger MICommandPausingMode;
 	
 	//beta
 	float mySeconds;
-	BOOL isSeeking;
 	
 	// statistics
 	BOOL myUpdateStatistics;
@@ -150,7 +149,6 @@ typedef NSUInteger MICommandPausingMode;
 	BOOL force32bitBinary;
 	
 	NSMutableArray *clients;
-	NSInvocation *performer;
 }
 
 @property (nonatomic,getter=isPlaying) BOOL playing;

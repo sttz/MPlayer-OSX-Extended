@@ -13,12 +13,14 @@
 
 #import <Cocoa/Cocoa.h>
 
+#import "MplayerInterface.h"
+
 #define kDefaultTextSize		13
 #define kSmallerTextSize		11
 
-@class MovieInfo;
+@class MovieInfo, ScrubbingBar;
 
-@interface PlayListController : NSObject
+@interface PlayListController : NSObject <MplayerInterfaceClientProtocol>
 {
     // controllers outlets
 	IBOutlet id playerController;
@@ -53,6 +55,10 @@
 	NSImage *playMode0Image;
 	NSImage *playMode1Image;
 	NSImage *playMode2Image;
+	NSImage *playImageOff;
+	NSImage *playImageOn;
+	NSImage *pauseImageOff;
+	NSImage *pauseImageOn;
 	
 	//toolbar
 	NSMutableDictionary *toolbarItems;
@@ -62,6 +68,15 @@
 	IBOutlet NSView *playerNextToolbarView;
 	IBOutlet NSView *playerScrubToolbarView;
 	IBOutlet NSView *playerVolumeToolbarView;
+	
+	IBOutlet NSButton *playButtonToolbar;
+	IBOutlet NSButton *stopButtonToolbar;
+	IBOutlet NSButton *nextButtonToolbar;
+	IBOutlet NSButton *prevButtonToolbar;
+	IBOutlet ScrubbingBar *scrubbingBarToolbar;
+	IBOutlet NSTextField *timeTextFieldToolbar;
+	IBOutlet NSSlider *volumeSliderToolbar;
+	
 	
 	NSMutableArray *preflightQueue;
 }
@@ -105,9 +120,7 @@
 - (BOOL) validateMenuItem:(NSMenuItem *)aMenuItem;
 - (IBAction)doubleClick:(id)sender;
 - (BOOL)tableView:(NSTableView *)tableView shouldEditTableColumn:(NSTableColumn *)tableColumn row:(int)row;
-//- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex;
 // notification handlers
-- (void) appFinishedLaunching;
 - (void) appShouldTerminate;
 - (void) appTerminating;
 

@@ -13,6 +13,7 @@
 #import "AppController.h"
 #import "SettingsController.h"
 
+#import "ScrubbingBar.h"
 #import "MovieInfo.h"
 #import "Preferences.h"
 #import "CocoaAdditions.h"
@@ -66,12 +67,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
     // register for dragged types
 	[playListTable registerForDraggedTypes:[NSArray 
 			arrayWithObjects:NSFilenamesPboardType,@"PlaylistSelectionEnumeratorType",nil]];
-
-    // register for app launch finish
-	[[NSNotificationCenter defaultCenter] addObserver: self
-			selector: @selector(appFinishedLaunching)
-			name: NSApplicationDidFinishLaunchingNotification
-			object:NSApp];
+	
 	// register for app termination notification
 	[[NSNotificationCenter defaultCenter] addObserver: self
 			selector: @selector(appTerminating)
@@ -89,6 +85,12 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 			name: NSTableViewSelectionDidChangeNotification
 			object:playListTable];
 	
+	// redirect scrubbing events to player controller
+	[[NSNotificationCenter defaultCenter] addObserver:playerController
+											 selector:@selector(progresBarClicked:)
+												 name:@"SBBarClickedNotification"
+											   object:scrubbingBarToolbar];
+	
 	// preset status column for displaying pictures
 	[[playListTable tableColumnWithIdentifier:@"status"] setDataCell:[[[NSImageCell alloc] initImageCell:nil] autorelease]];
 	
@@ -105,7 +107,12 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	playMode2Image = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle]
 							pathForResource:@"play_mode_2"
 							ofType:@"png"]];
-
+	
+	playImageOn = [[NSImage imageNamed:@"play_button_on"] retain];
+	playImageOff = [[NSImage imageNamed:@"play_button_off"] retain];
+	pauseImageOn = [[NSImage imageNamed:@"pause_button_on"] retain];
+	pauseImageOff = [[NSImage imageNamed:@"pause_button_off"] retain];
+	
 	// set play mode
 	if ([defaults objectForKey:@"PlayMode"])
 		myPlayMode = [[defaults objectForKey:@"PlayMode"] intValue];
@@ -164,12 +171,15 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	[playListWindow makeKeyAndOrderFront:self];
 }
 
-- (IBAction)toggleWindow:(id)sender
+- (IBAction) toggleWindow:(id)sender
 {
-	if ([playListWindow isVisible])
+	if ([playListWindow isVisible]) {
 		[playListWindow close];
-	else
+		[[playerController playerInterface] removeClient:self];
+	} else {
 		[playListWindow makeKeyAndOrderFront:self];
+		[[playerController playerInterface] addClient:self];
+	}
 }
 
 /************************************************************************************
@@ -684,35 +694,78 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 /************************************************************************************
  NOTIFICATION HANDLERS
  ************************************************************************************/
-- (void) appFinishedLaunching
-{
-	// TODO: No longer called!
+- (void) interface:(MplayerInterface *)mi hasChangedStateTo:(NSNumber *)statenumber fromState:(NSNumber *)oldstatenumber
+{	
+	MIState state = [statenumber unsignedIntValue];
+	unsigned int stateMask = (1<<state);
+	MIState oldState = [oldstatenumber unsignedIntValue];
+	unsigned int oldStateMask = (1<<oldState);
 	
-	// load playlist from preferences
-	/*NSArray *savedPlaylist = [[[AppController sharedController] preferences] objectForKey:@"PlayList"];
-	
-	if (savedPlaylist)
-	{
-		int i;
-		myData = [[NSMutableArray alloc] init];
-		
-		//make item mutable
-		for(i=0; i<[savedPlaylist count]; i++)
-		{
-			// add to preflight queue
-			[preflightQueue addObject:[[[savedPlaylist objectAtIndex:i] mutableCopy] autorelease]];
+	// Change of Play/Pause state
+	if (!!(stateMask & MIStatePPPlayingMask) != !!(oldStateMask & MIStatePPPlayingMask)) {
+		// Playing
+		if (stateMask & MIStatePPPlayingMask) {
+			// Update interface
+			[playButtonToolbar setImage:pauseImageOff];
+			[playButtonToolbar setAlternateImage:pauseImageOn];
+		// Pausing
+		} else {
+			// Update interface
+			[playButtonToolbar setImage:playImageOff];
+			[playButtonToolbar setAlternateImage:playImageOn];
 		}
-		
-		// start preflight
-		[self startPreflight];
-	}
-	else
-	{
-		// if no playilist found
-		myData = [[NSMutableArray alloc] init];	// create new one
 	}
 	
-	[self applyPrefs];*/
+	// Change of Running/Stopped state
+	if (!!(stateMask & MIStateStoppedMask) != !!(oldStateMask & MIStateStoppedMask)) {
+		// Stopped
+		if (stateMask & MIStateStoppedMask) {
+			[timeTextFieldToolbar setStringValue:@"00:00:00"];
+		// Running
+		} else {
+			
+		}
+	}
+	
+	// Update progress bar
+	if (stateMask & MIStateStoppedMask && !(oldStateMask & MIStateStoppedMask)) {
+		// Reset progress bar
+		[scrubbingBarToolbar setScrubStyle:MPEScrubbingBarEmptyStyle];
+		[scrubbingBarToolbar setDoubleValue:0];
+		[scrubbingBarToolbar setIndeterminate:NO];
+	} else if (stateMask & MIStateIntermediateMask && !(oldStateMask & MIStateIntermediateMask)) {
+		// Intermediate progress bar
+		[scrubbingBarToolbar setScrubStyle:MPEScrubbingBarProgressStyle];
+		[scrubbingBarToolbar setIndeterminate:YES];
+	} else if (stateMask & MIStatePositionMask && !(oldStateMask & MIStatePositionMask)) {
+		// Progress bar
+		if ([[playerController playingItem] length] > 0) {
+			[scrubbingBarToolbar setMaxValue: [[playerController playingItem] length]];
+			[scrubbingBarToolbar setScrubStyle:MPEScrubbingBarPositionStyle];
+		} else {
+			[scrubbingBarToolbar setScrubStyle:MPEScrubbingBarProgressStyle];
+			[scrubbingBarToolbar setMaxValue:100];
+			[scrubbingBarToolbar setIndeterminate:NO];
+		}
+	}
+}
+/************************************************************************************/
+- (void) interface:(MplayerInterface *)mi volumeUpdate:(NSNumber *)volume
+{
+	[volumeSliderToolbar setFloatValue:[volume floatValue]];
+}
+/************************************************************************************/
+- (void) interface:(MplayerInterface *)mi timeUpdate:(NSNumber *)newTime
+{
+	float seconds = [newTime floatValue];
+	
+	if ([[playerController playingItem] length] > 0)
+		[scrubbingBarToolbar setDoubleValue:seconds];
+	else
+		[scrubbingBarToolbar setDoubleValue:0];
+	
+	int iseconds = (int)seconds;
+	[timeTextFieldToolbar setStringValue:[NSString stringWithFormat:@"%02d:%02d:%02d", iseconds/3600,(iseconds%3600)/60,iseconds%60]];
 }
 /************************************************************************************/
 - (void) appShouldTerminate
@@ -795,6 +848,10 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	[playMode0Image release];
 	[playMode1Image release];
 	[playMode2Image release];
+	[playImageOn release];
+	[playImageOff release];
+	[pauseImageOn release];
+	[pauseImageOff release];
 	
     [super dealloc];
 }

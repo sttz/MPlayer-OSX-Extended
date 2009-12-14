@@ -69,7 +69,7 @@
 		scrollXAcc += dX;
 		
 		// seek when ready
-		if (![playerController isSeeking]) {
+		if (![[playerController playerInterface] state] == MIStatePlaying) {
 			[playerController seek:(-scrollXAcc*SCROLL_SEEK_MULT) mode:MISeekingModeRelative];
 			scrollXAcc = 0;
 		}

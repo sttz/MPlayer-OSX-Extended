@@ -184,7 +184,7 @@ static NSDictionary *videoEqualizerCommands;
 	if (!desc.name)
 		return;
 	NSMethodSignature *sig = [NSMethodSignature signatureWithObjCTypes:desc.types];
-	performer = [NSInvocation invocationWithMethodSignature:sig];
+	NSInvocation *performer = [NSInvocation invocationWithMethodSignature:sig];
 	
 	[performer setSelector:selector];
 	[performer setArgument:&self atIndex:2];
@@ -193,6 +193,7 @@ static NSDictionary *videoEqualizerCommands;
 	
 	for (id<MplayerInterfaceClientProtocol> client in clients) {
 		if (client && [client respondsToSelector:selector]) {
+			NSLog(@"notify %@ %@ with %@ %@ %@ in (%@)",client,NSStringFromSelector(selector),self,object,otherObject,[NSThread currentThread]);
 			[performer invokeWithTarget:client];
 		}
 	}
@@ -664,26 +665,8 @@ static NSDictionary *videoEqualizerCommands;
 /************************************************************************************/
 - (void) stop
 {
-	if (myMplayerTask) {
-		switch (state) {
-		case MIStatePlaying :
-		case MIStateSeeking :
-//			[myMplayerTask terminate];
-			[self sendCommand:@"quit"];
-			break;
-		case MIStatePaused :
-			[myCommandsBuffer addObject:@"quit"];
-			[self sendCommand:@"pause"];
-//			[self sendCommand:@"quit"];
-			break;
-		case MIStateStopped:
-			break;
-		case MIStateFinished:
-			break;
-		default :
-			[myCommandsBuffer addObject:@"quit"];
-			break;
-		}
+	if (myMplayerTask && state > MIStateStopped) {
+		[self sendCommand:@"quit"];
 		[myMplayerTask waitUntilExit];
 	}
 }
@@ -877,6 +860,7 @@ static NSDictionary *videoEqualizerCommands;
 - (void) setState:(MIState)newState
 {
 	unsigned int newStateMask = (1<<newState);
+	MIState oldState = state;
 	
 	// Update isMovieOpen
 	BOOL newIsMovieOpen = !!(newStateMask & MIStateRespondMask);
@@ -888,14 +872,14 @@ static NSDictionary *videoEqualizerCommands;
 	if ([self isPlaying] != newIsPlaying)
 		[self setPlaying:newIsPlaying];
 	
-	// Notifiy clients of state change
-	if (state != newState)
-		[self notifyClientsWithSelector:@selector(interface:hasChangedStateTo:fromState:) 
-							  andObject:[NSNumber numberWithUnsignedInt:newState]
-							  andObject:[NSNumber numberWithUnsignedInt:state]];
-	
 	state = newState;
 	stateMask = newStateMask;
+	
+	// Notifiy clients of state change
+	if (oldState != newState)
+		[self notifyClientsWithSelector:@selector(interface:hasChangedStateTo:fromState:) 
+							  andObject:[NSNumber numberWithUnsignedInt:newState]
+							  andObject:[NSNumber numberWithUnsignedInt:oldState]];
 }
 /************************************************************************************/
 - (float) seconds
