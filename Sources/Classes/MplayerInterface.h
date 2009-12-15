@@ -28,7 +28,7 @@
 - (void) interface:(MplayerInterface *)mi hasChangedStateTo:(NSNumber *)newState fromState:(NSNumber *)oldState;
 - (void) interface:(MplayerInterface *)mi timeUpdate:(NSNumber *)newTime;
 - (void) interface:(MplayerInterface *)mi streamUpate:(MovieInfo *)item;
-- (void) interface:(MplayerInterface *)mi selectedSteamsUpdate:(NSArray *)streamIds;
+- (void) interface:(MplayerInterface *)mi hasSelectedStream:(NSNumber *)streamId ofType:(NSNumber *)type;
 - (void) interface:(MplayerInterface *)mi statsUpdate:(NSArray *)stats;
 - (void) interface:(MplayerInterface *)mi volumeUpdate:(NSNumber *)volume;
 @end

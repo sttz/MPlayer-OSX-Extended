@@ -1002,6 +1002,8 @@
 					   action:@selector(videoMenuAction:)
 					   keyEquivalent:@""];
 			[newItem setRepresentedObject:key];
+			if ([movieInfo videoStreamCount] == 1)
+				[newItem setState:NSOnState];
 			[menu addItem:newItem];
 			[newItem release];
 		}
@@ -1019,6 +1021,8 @@
 					   action:@selector(audioMenuAction:)
 					   keyEquivalent:@""];
 			[newItem setRepresentedObject:key];
+			if ([movieInfo audioStreamCount] == 1)
+				[newItem setState:NSOnState];
 			[menu addItem:newItem];
 			[newItem release];
 		}
@@ -1055,6 +1059,8 @@
 		[newItem setRepresentedObject:[NSArray arrayWithObjects: [NSNumber numberWithInt:SubtitleTypeDemux], 
 									   [NSNumber numberWithInt:-1], nil]];
 		[newItem setAction:@selector(subtitleMenuAction:)];
+		if ([movieInfo subtitleCountForType:SubtitleTypeAll] == 0)
+			[newItem setState:NSOnState];
 		[menu addItem:newItem];
 		[newItem release];
 		
@@ -1109,7 +1115,6 @@
 		[menuController->subtitleStreamMenu setEnabled:hasItems];
 		[subtitleWindowMenu setEnabled:hasItems];
 		[subtitleCycleButton setEnabled:([menu numberOfItems] > 1)];
-		
 	}
 }
 /************************************************************************************/
@@ -1170,7 +1175,15 @@
 	if (streamId != -1) {
 		
 		videoStreamId = streamId;
-		int index = [[menuController->videoStreamMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:streamId]];
+		
+		int index = -1;
+		for (NSMenuItem *item in [[menuController->videoStreamMenu submenu] itemArray]) {
+			NSNumber *itemId = [item representedObject];
+			if (itemId && [itemId intValue] == streamId) {
+				index = [[menuController->videoStreamMenu submenu] indexOfItem:item];
+				break;
+			}
+		}
 		
 		if (index != -1)
 			[[[menuController->videoStreamMenu submenu] itemAtIndex:index] setState:NSOnState];
@@ -1186,7 +1199,15 @@
 	if (streamId != -1) {
 		
 		audioStreamId = streamId;
-		int index = [[menuController->audioStreamMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:streamId]];
+		
+		int index = -1;
+		for (NSMenuItem *item in [[menuController->audioStreamMenu submenu] itemArray]) {
+			NSNumber *itemId = [item representedObject];
+			if (itemId && [itemId intValue] == streamId) {
+				index = [[menuController->audioStreamMenu submenu] indexOfItem:item];
+				break;
+			}
+		}
 		
 		if (index != -1) {
 			[[[menuController->audioStreamMenu submenu] itemAtIndex:index] setState:NSOnState];
@@ -1207,9 +1228,17 @@
 			subtitleFileStreamId = streamId;
 		else
 			subtitleDemuxStreamId = streamId;
-			
-		int index = [[menuController->subtitleStreamMenu submenu] indexOfItemWithRepresentedObject:
-					 [NSArray arrayWithObjects: [NSNumber numberWithInt:type], [NSNumber numberWithInt:streamId], nil]];
+		
+		int index = -1;
+		for (NSMenuItem *item in [[menuController->subtitleStreamMenu submenu] itemArray]) {
+			NSArray *arr = [item representedObject];
+			if (arr && [arr count] == 2 
+				&& [[arr objectAtIndex:0] intValue] == type
+				&& [[arr objectAtIndex:1] intValue] == streamId) {
+				index = [[menuController->subtitleStreamMenu submenu] indexOfItem:item];
+				break;
+			}
+		}
 		
 		if (index != -1) {
 			[[[menuController->subtitleStreamMenu submenu] itemAtIndex:index] setState:NSOnState];
@@ -1826,7 +1855,31 @@
 	}*/
 }
 /************************************************************************************/
-- (void) interface:(MplayerInterface *)mi timeUpdate:(NSNumber *)newTime {
+- (void) interface:(MplayerInterface *)mi streamUpate:(MovieInfo *)item
+{
+	[self fillStreamMenus];
+}
+
+/************************************************************************************/
+- (void) interface:(MplayerInterface *)mi hasSelectedStream:(NSNumber *)streamId ofType:(NSNumber *)type
+{
+	// Streams
+	if ([type intValue] == MPEStreamTypeVideo)
+		[self newVideoStreamId:[streamId intValue]];
+	
+	if ([type intValue] == MPEStreamTypeAudio)
+		[self newAudioStreamId:[streamId intValue]];
+	
+	if ([type intValue] == MPEStreamTypeSubtitleDemux)
+		[self newSubtitleStreamId:[streamId intValue] forType:SubtitleTypeDemux];
+	
+	if ([type intValue] == MPEStreamTypeSubtitleFile)
+		[self newSubtitleStreamId:[streamId intValue] forType:SubtitleTypeFile];
+}
+
+/************************************************************************************/
+- (void) interface:(MplayerInterface *)mi timeUpdate:(NSNumber *)newTime
+{
 	
 #if __MAC_OS_X_VERSION_MIN_REQUIRED <= __MAC_OS_X_VERSION_10_5
 	// prevent screensaver on leopard
@@ -1857,13 +1910,13 @@
 			}
 		}
 		// poll volume
-		double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - lastVolumePoll);
+		/*double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - lastVolumePoll);
 		if (timeDifference >= MP_VOLUME_POLL_INTERVAL) {
 			lastVolumePoll = [NSDate timeIntervalSinceReferenceDate];
 			[myPlayer sendCommand:@"get_property volume"];
-		}
+		}*/
 		// check chapters
-		timeDifference = ([NSDate timeIntervalSinceReferenceDate] - lastChapterCheck);
+		double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - lastChapterCheck);
 		if (timeDifference >= MP_CHAPTER_CHECK_INTERVAL) {
 			lastChapterCheck = [NSDate timeIntervalSinceReferenceDate];
 			[self selectChapterForTime:[myPlayer seconds]];

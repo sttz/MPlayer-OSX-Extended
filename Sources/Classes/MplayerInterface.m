@@ -193,7 +193,6 @@ static NSDictionary *videoEqualizerCommands;
 	
 	for (id<MplayerInterfaceClientProtocol> client in clients) {
 		if (client && [client respondsToSelector:selector]) {
-			NSLog(@"notify %@ %@ with %@ %@ %@ in (%@)",client,NSStringFromSelector(selector),self,object,otherObject,[NSThread currentThread]);
 			[performer invokeWithTarget:client];
 		}
 	}
@@ -779,6 +778,7 @@ static NSDictionary *videoEqualizerCommands;
 	[self sendCommand:[NSString stringWithFormat:@"sub_load '%@'", escaped]];
 	// Also select the newly loaded subtitle
 	[self sendCommand:[NSString stringWithFormat:@"sub_file %u",[playingItem subtitleCountForType:SubtitleTypeFile]]];
+	[self sendCommand:@"get_property sub_file"];
 }
 /************************************************************************************/
 - (void) applyVideoEqualizer
@@ -1497,30 +1497,40 @@ static NSDictionary *videoEqualizerCommands;
 			idName = [line stringByMatching:MI_REPLY_REGEX capture:1];
 			idValue = [line stringByMatching:MI_REPLY_REGEX capture:2];
 			
+			BOOL isStreamSelection = NO;
+			MPEStreamType streamType;
+			
 			// streams
 			// TODO: Stream responses
-			/*if ([idName isEqualToString:@"switch_video"]) {
-				[userInfo setObject:[NSNumber numberWithInt:[idValue intValue]] forKey:@"VideoStreamId"];
-				continue;
+			if ([idName isEqualToString:@"switch_video"]) {
+				isStreamSelection = YES;
+				streamType = MPEStreamTypeVideo;
 			}
 			
 			if ([idName isEqualToString:@"switch_audio"]) {
-				[userInfo setObject:[NSNumber numberWithInt:[idValue intValue]] forKey:@"AudioStreamId"];
-				continue;
+				isStreamSelection = YES;
+				streamType = MPEStreamTypeAudio;
 			}
 			
 			if ([idName isEqualToString:@"sub_demux"]) {
-				[userInfo setObject:[NSNumber numberWithInt:[idValue intValue]] forKey:@"SubDemuxStreamId"];
-				continue;
+				isStreamSelection = YES;
+				streamType = MPEStreamTypeSubtitleDemux;
 			}
 			
 			if ([idName isEqualToString:@"sub_file"]) {
-				[userInfo setObject:[NSNumber numberWithInt:[idValue intValue]] forKey:@"SubFileStreamId"];
+				isStreamSelection = YES;
+				streamType = MPEStreamTypeSubtitleFile;
+			}
+			
+			if (isStreamSelection) {
+				[self notifyClientsWithSelector:@selector(interface:hasSelectedStream:ofType:)
+									  andObject:[NSNumber numberWithInt:[idValue intValue]]
+									  andObject:[NSNumber numberWithUnsignedInt:streamType]];
 				continue;
 			}
 			
 			// current volume
-			if ([idName isEqualToString:@"volume"]) {
+			/*if ([idName isEqualToString:@"volume"]) {
 				[userInfo setObject:[NSNumber numberWithDouble:[idValue doubleValue]] forKey:@"Volume"];
 				continue;
 			}*/
