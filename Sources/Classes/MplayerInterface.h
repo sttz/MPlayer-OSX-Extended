@@ -49,12 +49,14 @@ typedef NSUInteger MIState;
 enum {
 	// Play/Paused masks dividing all states to either playing or paused
 	MIStatePPPlayingMask = (1<<MIStatePlaying|1<<MIStateOpening|1<<MIStateBuffering
-						   |1<<MIStateIndexing|1<<MIStateSeeking),
+						   |1<<MIStateIndexing),
 	MIStatePPPausedMask  = (1<<MIStatePaused|1<<MIStateStopped|1<<MIStateFinished),
 	// Mask for initializing states
 	MIStateStartupMask   = (1<<MIStateOpening|1<<MIStateBuffering|1<<MIStateIndexing|1<<MIStateInitializing), 
 	// Mask to extend playing state to seeking
 	MIStatePlayingMask   = (1<<MIStatePlaying|1<<MIStateSeeking),
+	// States in which MPlayer can seek
+	MIStateCanSeekMask   = (1<<MIStatePlaying|1<<MIStatePaused),
 	// States in which MPlayer is not running
 	MIStateStoppedMask   = (1<<MIStateStopped|1<<MIStateFinished),
 	// Intermediate Progress Mask
@@ -119,6 +121,7 @@ typedef NSUInteger MICommandPausingMode;
 	// state variables
 	MIState	state;
 	unsigned int stateMask;
+	MIState stateBeforeSeeking;
 	BOOL playing;
 	BOOL movieOpen;
 	
@@ -171,7 +174,7 @@ typedef NSUInteger MICommandPausingMode;
 - (void) stop;
 - (void) pause;
 - (void) seek:(float)seconds mode:(int)aMode;
-- (void) performCommand:(NSString *)aCommand;
+- (void) seek:(float)seconds mode:(int)aMode force:(BOOL)forced;
 
 - (void) applyVolume;
 - (void) takeScreenshot;

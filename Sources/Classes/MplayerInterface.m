@@ -32,6 +32,7 @@
 #define MI_MKVCHP_REGEX				@"^\\[mkv\\] Chapter (\\d+) from (\\d+):(\\d+):(\\d+\\.\\d+) to (\\d+):(\\d+):(\\d+\\.\\d+), (.+)$"
 #define MI_EXIT_REGEX				@"^ID_EXIT=(.*)$"
 #define MI_NEWLINE_REGEX			@"(?:\r\n|[\n\v\f\r\302\205\\p{Zl}\\p{Zp}])"
+#define MI_SEEK_RETURN_REGEX		@"^ID_SEEK=(.*)$"
 
 #define MI_STATS_UPDATE_INTERVAL	0.2f // Stats update interval when playing
 #define MI_SEEK_UPDATE_INTERVAL		0.1f // Stats update interval while seeking
@@ -77,7 +78,6 @@ static NSDictionary *videoEqualizerCommands;
 	
 	clients = [NSMutableArray new];
 	
-	myCommandsBuffer = [NSMutableArray new];
 	mySeconds = 0;
 	
 	// *** playback
@@ -129,7 +129,6 @@ static NSDictionary *videoEqualizerCommands;
 	[clients release];
 	[myMplayerTask release];
 	[myPathToPlayer release];
-	[myCommandsBuffer release];
 	[lastUnparsedLine release];
 	[lastUnparsedErrorLine release];
 	[buffer_name release];
@@ -644,8 +643,6 @@ static NSDictionary *videoEqualizerCommands;
 	if (disableAppleRemote)
 		[params addObject:@"-noar"];
 	
-	[myCommandsBuffer removeAllObjects];	// empty buffer before launch
-	
 	// Disable preflight mode
 	isPreflight = NO;
 	
@@ -676,55 +673,49 @@ static NSDictionary *videoEqualizerCommands;
 }
 /************************************************************************************/
 - (void) seek:(float)seconds mode:(int)aMode
-{		
-	switch (aMode) {
-	case MISeekingModeRelative :
+{
+	[self seek:seconds mode:aMode force:NO];
+}
+
+- (void) seek:(float)seconds mode:(int)aMode force:(BOOL)forced
+{
+	// Optimistically update local seconds
+	if (aMode == MISeekingModeRelative)
 		mySeconds += seconds;
-		break;
-	case MISeekingModePercent :
-		
-		break;
-	case MISeekingModeAbsolute :
+	else if (aMode == MISeekingModeAbsolute)
 		mySeconds = seconds;
-		break;
-	default :
-		break;
-	}
 	
-	if (myMplayerTask) {
-		switch (state) {
-		case MIStatePlaying:
-		case MIStatePaused:
-				[self sendCommand:[NSString stringWithFormat:@"seek %1.1f %d",seconds, aMode] 
-						  withOSD:MISurpressCommandOutputConditionally andPausing:MICommandPausingKeep];
-				[self setState:MIStateSeeking];
-			break;
-		case MIStateSeeking:
-			// Save missed seek
-			[lastMissedSeek release];
-			lastMissedSeek = [[NSDictionary alloc] initWithObjectsAndKeys:
-				[NSNumber numberWithFloat:seconds], @"seconds",
-				[NSNumber numberWithInt:aMode], @"mode", nil];
-			break;
-		default :
-			break;
+	if (stateMask & MIStateCanSeekMask || forced) {
+		
+		[self sendCommand:[NSString stringWithFormat:@"seek %1.1f %d",seconds, aMode] 
+				  withOSD:MISurpressCommandOutputConditionally andPausing:MICommandPausingNone];
+		
+		if (state != MIStateSeeking) {
+			stateBeforeSeeking = state;
+			[self setState:MIStateSeeking];
 		}
+		
+	} else if (state == MIStateSeeking) {
+		
+		// Save missed seek
+		[lastMissedSeek release];
+		lastMissedSeek = [[NSDictionary alloc] initWithObjectsAndKeys:
+						  [NSNumber numberWithFloat:seconds], @"seconds",
+						  [NSNumber numberWithInt:aMode], @"mode", nil];
 	}
 }
-/************************************************************************************/
-- (void) performCommand:(NSString *)aCommand
+
+- (BOOL) finishSeek
 {
-	switch (state) {
-	case MIStatePlaying:					// if is playing send it directly to player
-	case MIStateSeeking:
-		[self sendCommand:aCommand];
-		break;
-	case MIStateStopped:					// if stopped do nothing
-		break;
-	default :						// otherwise save the command to the buffer
-		[myCommandsBuffer addObject:aCommand];
-		break;
+	if (state == MIStateSeeking && lastMissedSeek) {
+		[self seek:[[lastMissedSeek objectForKey:@"seconds"] floatValue]
+			  mode:[[lastMissedSeek objectForKey:@"mode"] intValue]
+			 force:YES];
+		[lastMissedSeek release];
+		lastMissedSeek = nil;
+		return YES;
 	}
+	return NO;
 }
 /************************************************************************************/
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -842,27 +833,28 @@ static NSDictionary *videoEqualizerCommands;
 /************************************************************************************/
 - (void) setState:(MIState)newState
 {
-	unsigned int newStateMask = (1<<newState);
-	MIState oldState = state;
-	
-	// Update isMovieOpen
-	BOOL newIsMovieOpen = !!(newStateMask & MIStateRespondMask);
-	if ([self isMovieOpen] != newIsMovieOpen)
-		[self setMovieOpen:newIsMovieOpen];
-	
-	// Update isPlaying
-	BOOL newIsPlaying = !!(newStateMask & MIStatePlayingMask);
-	if ([self isPlaying] != newIsPlaying)
-		[self setPlaying:newIsPlaying];
-	
-	state = newState;
-	stateMask = newStateMask;
-	
-	// Notifiy clients of state change
-	if (oldState != newState)
+	if (state != newState) {
+		unsigned int newStateMask = (1<<newState);
+		MIState oldState = state;
+		
+		// Update isMovieOpen
+		BOOL newIsMovieOpen = !!(newStateMask & MIStateRespondMask);
+		if ([self isMovieOpen] != newIsMovieOpen)
+			[self setMovieOpen:newIsMovieOpen];
+		
+		// Update isPlaying
+		BOOL newIsPlaying = !!(newStateMask & MIStatePlayingMask);
+		if ([self isPlaying] != newIsPlaying)
+			[self setPlaying:newIsPlaying];
+		
+		state = newState;
+		stateMask = newStateMask;
+		
+		// Notifiy clients of state change
 		[self notifyClientsWithSelector:@selector(interface:hasChangedStateTo:fromState:) 
 							  andObject:[NSNumber numberWithUnsignedInt:newState]
 							  andObject:[NSNumber numberWithUnsignedInt:oldState]];
+	}
 }
 /************************************************************************************/
 - (float) seconds
@@ -994,10 +986,8 @@ static NSDictionary *videoEqualizerCommands;
 	if (quietCommand) {
 		if (state == MIStatePlaying)
 			[self reactivateOsdAfterDelay];
-		else {
-			[self sendToMplayersInput:[NSString stringWithFormat:@"pausing_keep osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)]];
-			osdSilenced = NO;
-		}
+		else
+			[self reactivateOsd];
 	}
 }
 /************************************************************************************/
@@ -1013,8 +1003,8 @@ static NSDictionary *videoEqualizerCommands;
 }
 
 - (void)reactivateOsd {
-	//[Debug log:ASL_LEVEL_DEBUG withMessage:@"osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)];
 	
+	[Debug log:ASL_LEVEL_DEBUG withMessage:@"osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)];
 	[self sendToMplayersInput:[NSString stringWithFormat:@"pausing_keep osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)]];
 	osdSilenced = NO;
 }
@@ -1401,25 +1391,25 @@ static NSDictionary *videoEqualizerCommands;
 					
 					// finish seek
 					if (state == MIStateSeeking && lastMissedSeek) {
-						[self setState:MIStatePlaying];
 						[self seek:[[lastMissedSeek objectForKey:@"seconds"] floatValue]
-							  mode:[[lastMissedSeek objectForKey:@"mode"] intValue]];
+							  mode:[[lastMissedSeek objectForKey:@"mode"] intValue]
+							 force:YES];
 						[lastMissedSeek release];
 						lastMissedSeek = nil;
+						continue;
+					}
+					
+					if (state == MIStateSeeking) {
+						[self setState:stateBeforeSeeking];
+						if (stateBeforeSeeking == MIStatePaused)
+							[self sendCommand:@"pause"];
 						continue;
 					}
 					
 					// if it was not playing before (launched or unpaused)
 					if (state != MIStatePlaying) {
 						[self setState:MIStatePlaying];
-						
-						// perform commands buffer
-						[self sendCommands:myCommandsBuffer 
-								   withOSD:MISurpressCommandOutputConditionally
-								andPausing:MICommandPausingNone];
-						[myCommandsBuffer removeAllObjects];	// clear command buffer
-			
-						continue; 							// continue on next line
+						continue;
 					}
 					
 					continue;
@@ -1792,14 +1782,9 @@ static NSDictionary *videoEqualizerCommands;
 		if (strstr(stringPtr, MI_STARTING_STRING) != NULL && !isPreflight) {
 			[self setState:MIStatePlaying];
 			myLastUpdate = [NSDate timeIntervalSinceReferenceDate];
-	
-			// perform commands buffer
-			[self sendCommands:myCommandsBuffer withOSD:MISurpressCommandOutputConditionally andPausing:MICommandPausingNone];
-			if (pausedOnRestart) {
-				NSLog(@"pause after restart");
+			
+			if (pausedOnRestart)
 				[self sendCommand:@"pause"];
-			}
-			[myCommandsBuffer removeAllObjects];
 			
 			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 			continue;

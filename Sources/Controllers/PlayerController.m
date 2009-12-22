@@ -1574,7 +1574,7 @@
 			[playButton setAlternateImage:pauseImageOn];
 			[menuController->playMenuItem setTitle:@"Pause"];
 		// Pausing
-		} else {
+		} else if (stateMask & MIStatePPPausedMask) {
 			// Update interface
 			[playButton setImage:playImageOff];
 			[playButton setAlternateImage:playImageOn];
