@@ -672,24 +672,7 @@ static NSDictionary *videoEqualizerCommands;
 /************************************************************************************/
 - (void) pause
 {
-	if (myMplayerTask) {
-		switch (state) {
-		case MIStatePlaying:					// mplayer is just playing then pause it
-		case MIStateSeeking :
-			[self sendCommand:@"pause"];
-			break;
-		case MIStatePaused:					// mplayer is paused then unpause it
-			[self sendCommand:@"pause"];
-			break;
-		case MIStateStopped:					// if stopped do nothing
-			break;
-		case MIStateFinished:					// if stopped do nothing
-			break;
-		default:						// otherwise save command to the buffer
-			[myCommandsBuffer addObject:@"pause"];
-			break;
-		}
-	}
+	[self sendCommand:@"pause" withOSD:MISurpressCommandOutputNever andPausing:MICommandPausingNone];
 }
 /************************************************************************************/
 - (void) seek:(float)seconds mode:(int)aMode
@@ -986,7 +969,7 @@ static NSDictionary *videoEqualizerCommands;
 	if ([aCommands count] == 0)
 		return;
 	
-	BOOL quietCommand = (osdMode == MISurpressCommandOutputNever || (osdMode == MISurpressCommandOutputConditionally && osdLevel == 1));
+	BOOL quietCommand = (osdMode == MISurpressCommandOutputAlways || (osdMode == MISurpressCommandOutputConditionally && osdLevel == 1));
 	
 	if (quietCommand && !osdSilenced) {
 		[Debug log:ASL_LEVEL_DEBUG withMessage:@"osd 0 (%@, %i, %i)\n",[aCommands objectAtIndex:0], osdMode, osdLevel];
@@ -1032,11 +1015,7 @@ static NSDictionary *videoEqualizerCommands;
 - (void)reactivateOsd {
 	//[Debug log:ASL_LEVEL_DEBUG withMessage:@"osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)];
 	
-	if (stateMask & MIStatePlayingMask) {
-		[self sendToMplayersInput:[NSString stringWithFormat:@"pausing_keep osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)]];
-	} else if (state == MIStatePaused) {
-		[myCommandsBuffer addObject:[NSString stringWithFormat:@"osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)]];
-	}
+	[self sendToMplayersInput:[NSString stringWithFormat:@"pausing_keep osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)]];
 	osdSilenced = NO;
 }
 /************************************************************************************/
@@ -1501,7 +1480,6 @@ static NSDictionary *videoEqualizerCommands;
 			MPEStreamType streamType;
 			
 			// streams
-			// TODO: Stream responses
 			if ([idName isEqualToString:@"switch_video"]) {
 				isStreamSelection = YES;
 				streamType = MPEStreamTypeVideo;
