@@ -326,7 +326,7 @@
 
 - (void) unloadBinary:(NSString *)identifier withUpdater:(BOOL)updater
 {
-	// Invalid bundle object
+	// Invalidate bundle object
 	[[binaryBundles objectForKey:identifier] invalidateBinaryBundle];
 	// Remove bundle objects
 	[binaryBundles removeObjectForKey:identifier];
