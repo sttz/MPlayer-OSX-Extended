@@ -19,25 +19,21 @@
 
 #import <objc/runtime.h>
 
-// directly parsed mplayer output strings
-// strings that are used to get certain data from output are not included
-#define MI_PAUSED_STRING			"ID_PAUSED"
-#define MI_OPENING_STRING			"Playing "
-#define MI_AUDIO_FILE_STRING		"Audio file detected."
-#define MI_STARTING_STRING			"Starting playback..."
+static NSString *MI_PAUSED_STRING		= @"ID_PAUSED";
+static NSString *MI_OPENING_STRING		= @"Playing ";
+static NSString *MI_AUDIO_FILE_STRING	= @"Audio file detected.";
+static NSString *MI_STARTING_STRING		= @"Starting playback...";
 
-#define MI_DEFINE_REGEX				@"^ID_(.*)=(.*)$"
-#define MI_REPLY_REGEX				@"^ANS_(.*)=(.*)$"
-#define MI_STREAM_REGEX				@"^ID_(.*)_(\\d+)_(.*)=(.*)$"
-#define MI_MKVCHP_REGEX				@"^\\[mkv\\] Chapter (\\d+) from (\\d+):(\\d+):(\\d+\\.\\d+) to (\\d+):(\\d+):(\\d+\\.\\d+), (.+)$"
-#define MI_EXIT_REGEX				@"^ID_EXIT=(.*)$"
-#define MI_NEWLINE_REGEX			@"(?:\r\n|[\n\v\f\r\302\205\\p{Zl}\\p{Zp}])"
-#define MI_SEEK_RETURN_REGEX		@"^ID_SEEK=(.*)$"
+static NSString *MI_DEFINE_REGEX		= @"^ID_(.*)=(.*)$";
+static NSString *MI_REPLY_REGEX			= @"^ANS_(.*)=(.*)$";
+static NSString *MI_STREAM_REGEX		= @"^ID_(.*)_(\\d+)_(.*)=(.*)$";
+static NSString *MI_EXIT_REGEX			= @"^ID_EXIT=(.*)$";
+static NSString *MI_NEWLINE_REGEX		= @"(?:\r\n|[\n\v\f\r\302\205\\p{Zl}\\p{Zp}])";
 
-#define MI_STATS_UPDATE_INTERVAL	0.2f // Stats update interval when playing
-#define MI_SEEK_UPDATE_INTERVAL		0.1f // Stats update interval while seeking
+static float MI_STATS_UPDATE_INTERVAL	= 0.2f;
+static float MI_SEEK_UPDATE_INTERVAL	= 0.1f;
 
-#define MI_LAVC_MAX_THREADS			8
+static unsigned int MI_LAVC_MAX_THREADS	= 8;
 
 // run loop modes in which we parse MPlayer's output
 static NSArray* parseRunLoopModes;
@@ -45,8 +41,35 @@ static NSArray* parseRunLoopModes;
 // video equalizer keys to command mapping
 static NSDictionary *videoEqualizerCommands;
 
+static BOOL is64bitHost					= NO;
+
 @implementation MplayerInterface
 @synthesize playing, movieOpen, state;
+
++ (void)initialize
+{
+	if (self != [MplayerInterface class])
+		return;
+	
+	parseRunLoopModes = [[NSArray alloc] initWithObjects:
+						 NSDefaultRunLoopMode, 
+						 NSEventTrackingRunLoopMode, 
+						 nil];
+	
+	videoEqualizerCommands = [[NSDictionary alloc] initWithObjectsAndKeys:
+							   @"brightness", MPEVideoEqualizerBrightness,
+							   @"contrast", MPEVideoEqualizerContrast,
+							   @"gamma", MPEVideoEqualizerGamma,
+							   @"hue", MPEVideoEqualizerHue,
+							   @"saturation", MPEVideoEqualizerSaturation,
+							   nil];
+	
+	// detect 64bit host
+	int is64bit;
+	size_t len = sizeof(is64bit);
+	if (!sysctlbyname("hw.optional.x86_64",&is64bit,&len,NULL,0))
+		is64bitHost = (BOOL)is64bit;
+}
 
 /************************************************************************************
  INIT & UNINIT
@@ -55,24 +78,6 @@ static NSDictionary *videoEqualizerCommands;
 {
 	if (!(self = [super init]))
 		return  nil;
-	
-	if (!parseRunLoopModes)
-		parseRunLoopModes = [[NSArray arrayWithObjects:NSDefaultRunLoopMode, NSEventTrackingRunLoopMode, nil] retain];
-	
-	if (!videoEqualizerCommands)
-		videoEqualizerCommands = [[NSDictionary dictionaryWithObjectsAndKeys:
-								   @"brightness", MPEVideoEqualizerBrightness,
-								   @"contrast", MPEVideoEqualizerContrast,
-								   @"gamma", MPEVideoEqualizerGamma,
-								   @"hue", MPEVideoEqualizerHue,
-								   @"saturation", MPEVideoEqualizerSaturation,
-								   nil] retain];;
-	
-	// detect 64bit host
-	int is64bit;
-	size_t len = sizeof(is64bit);
-	if (!sysctlbyname("hw.optional.x86_64",&is64bit,&len,NULL,0))
-		is64bitHost = (BOOL)is64bit;
 	
 	buffer_name = @"mplayerosx";
 	
@@ -687,6 +692,9 @@ static NSDictionary *videoEqualizerCommands;
 	
 	if (stateMask & MIStateCanSeekMask || forced) {
 		
+		// Don't use pausing_keep with seek to detect when MPlayer is playing
+		// again and ready for the next seek. Instead use stateBeforeSeeking to
+		// repause after seeking.
 		[self sendCommand:[NSString stringWithFormat:@"seek %1.1f %d",seconds, aMode] 
 				  withOSD:MISurpressCommandOutputConditionally andPausing:MICommandPausingNone];
 		
@@ -962,8 +970,9 @@ static NSDictionary *videoEqualizerCommands;
 		return;
 	
 	BOOL quietCommand = (osdMode == MISurpressCommandOutputAlways || (osdMode == MISurpressCommandOutputConditionally && osdLevel == 1));
+	quietCommand = (quietCommand && !osdSilenced && !lastMissedSeek);
 	
-	if (quietCommand && !osdSilenced) {
+	if (quietCommand) {
 		[Debug log:ASL_LEVEL_DEBUG withMessage:@"osd 0 (%@, %i, %i)\n",[aCommands objectAtIndex:0], osdMode, osdLevel];
 		[self sendToMplayersInput:@"pausing_keep osd 0\n"];
 		osdSilenced = YES;
@@ -983,12 +992,8 @@ static NSDictionary *videoEqualizerCommands;
 		[self sendToMplayersInput:[NSString stringWithFormat:@"%@%@\n",pausingPrefix,[aCommands objectAtIndex:i]]];
 	}
 		
-	if (quietCommand) {
-		if (state == MIStatePlaying)
-			[self reactivateOsdAfterDelay];
-		else
-			[self reactivateOsd];
-	}
+	if (osdSilenced)
+		[self reactivateOsdAfterDelay];
 }
 /************************************************************************************/
 - (void)sendCommands:(NSArray *)aCommands
@@ -1419,7 +1424,7 @@ static NSDictionary *videoEqualizerCommands;
 		}
 		
 		//  =====  PAUSE  ===== test for paused state
-		if (strstr(stringPtr, MI_PAUSED_STRING) != NULL) {
+		if ([line hasPrefix:MI_PAUSED_STRING]) {
 			[self setState:MIStatePaused];
 			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 			
@@ -1731,7 +1736,7 @@ static NSDictionary *videoEqualizerCommands;
 		
 		
 		// mplayer starts to open a file
-		if (strncmp(stringPtr, MI_OPENING_STRING, 8) == 0) {
+		if ([line hasPrefix:MI_OPENING_STRING]) {
 			[self setState:MIStateOpening];
 			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
 			continue; 							// continue on next line	
@@ -1751,7 +1756,7 @@ static NSDictionary *videoEqualizerCommands;
 		}
 		
 		// get format of audio
-		if (strstr(stringPtr, MI_AUDIO_FILE_STRING) != NULL) {
+		if ([line hasPrefix:MI_AUDIO_FILE_STRING]) {
 			[playingItem setFileFormat:@"Audio"];
 			continue; 							// continue on next line	
 		}
@@ -1779,7 +1784,7 @@ static NSDictionary *videoEqualizerCommands;
 		}
 		
 		// mplayer is starting playback -- ignore for preflight
-		if (strstr(stringPtr, MI_STARTING_STRING) != NULL && !isPreflight) {
+		if ([line hasPrefix:MI_STARTING_STRING] && !isPreflight) {
 			[self setState:MIStatePlaying];
 			myLastUpdate = [NSDate timeIntervalSinceReferenceDate];
 			

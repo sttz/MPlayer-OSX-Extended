@@ -148,7 +148,6 @@ typedef NSUInteger MICommandPausingMode;
 	NSString *lastUnparsedErrorLine;
 	int subtitleFileId;
 	NSDictionary *lastMissedSeek;
-	BOOL is64bitHost;
 	BOOL force32bitBinary;
 	
 	NSMutableArray *clients;
