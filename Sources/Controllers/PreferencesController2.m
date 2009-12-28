@@ -362,7 +362,7 @@
 	if (sysctlbyname("hw.optional.x86_64",&is64bitCapable,&len,NULL,0))
 		is64bitCapable = NO;
 	
-	// x86_64 is able to run all (i386 and pcc through Rosetta)
+	// x86_64 is able to run all (i386 and ppc through Rosetta)
 	if (current_arch->cputype == CPU_TYPE_X86_64
 		|| (current_arch->cputype == CPU_TYPE_I386 && is64bitCapable))
 		return YES;
