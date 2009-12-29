@@ -33,6 +33,8 @@
 	NSString *currentViewName;
 	
 	NSDictionary *views;
+	NSDictionary *viewTags;
+	NSDictionary *identifiers;
 	IBOutlet NSView *generalView;
 	IBOutlet NSView *displayView;
 	IBOutlet NSView *textView;

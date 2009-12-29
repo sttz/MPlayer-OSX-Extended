@@ -57,6 +57,27 @@
 			 advancedView,	@"Advanced",
 			 nil];
 	
+	// Compile toobar identifiers from tags
+	viewTags = [[NSDictionary alloc] initWithObjectsAndKeys:
+				@"General",	@"0",
+				@"Display",	@"1",
+				@"Text",	@"2",
+				@"Video",	@"3",
+				@"Audio",	@"4",
+				@"MPlayer",	@"5",
+				@"Advanced",@"6",
+				nil];
+	
+	NSMutableDictionary *idents = [NSMutableDictionary new];
+	for (NSToolbarItem *item in [[[self window] toolbar] items]) {
+		if ([item tag] >= 0) {
+			NSString *viewName = [viewTags objectForKey:[NSString stringWithFormat:@"%d",[item tag]]];
+			[idents setObject:[item itemIdentifier] 
+					   forKey:viewName];
+		}
+	}
+	identifiers = idents;
+	
 	// Restore selected view from preferences or default to first one
 	if ([PREFS objectForKey:MPESelectedPreferencesSection])
 		[self loadView:[PREFS stringForKey:MPESelectedPreferencesSection]];
@@ -102,13 +123,15 @@
 	[binaryBundles release];
 	[binaryInfo release];
 	[binaryUpdaters release];
+	[identifiers release];
+	[viewTags release];
 	
 	[super dealloc];
 }
 
 - (IBAction) switchView:(NSToolbarItem*)sender
 {
-	[self loadView:[sender itemIdentifier]];
+	[self loadView:[[identifiers allKeysForObject:[sender itemIdentifier]] objectAtIndex:0]];
 }
 
 /** Switch prefences section.
@@ -127,7 +150,7 @@
 	[currentViewName release];
 	currentViewName = [viewName retain];
 	
-	[[[self window] toolbar] setSelectedItemIdentifier:viewName];
+	[[[self window] toolbar] setSelectedItemIdentifier:[identifiers objectForKey:viewName]];
 	
 	NSRect contentFrame = [newView frame];
 	
