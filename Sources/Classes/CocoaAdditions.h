@@ -24,6 +24,10 @@
 
 #import <Cocoa/Cocoa.h>
 
+@interface NSNumber (MPEAdditions)
+- (NSString *) humanReadableSizeStringValue;
+@end
+
 @interface NSView (MPEAdditions)
 - (void) resizeAndArrangeSubviewsVerticallyWithPadding:(float)padding;
 @end

@@ -44,7 +44,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 }
 
 @implementation PlayListController
-@synthesize playListWindow;
+@synthesize playListWindow, currentMovieInfo;
 
 /************************************************************************************/
 -(void)awakeFromNib
@@ -60,9 +60,6 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	[playListTable setTarget:self];
 	[playListTable setDoubleAction:@selector(doubleClick:)];
 	[playListTable setVerticalMotionCanBeginDrag:YES];
-	
-	// create preflight queue
-	preflightQueue = [[NSMutableArray alloc] init];
 	
     // register for dragged types
 	[playListTable registerForDraggedTypes:[NSArray 
@@ -691,6 +688,16 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 {    
 	return NO;
 }
+
+/************************************************************************************/
+- (void)tableViewSelectionDidChange:(NSNotification *)notification
+{
+	if ([self selectedItem])
+		[self setCurrentMovieInfo:[self selectedItem]];
+	if ([playListWindow isKeyWindow] && [[AppController sharedController] movieInfoProvider] != self)
+		[[AppController sharedController] setMovieInfoProvider:self];
+}
+
 /************************************************************************************
  NOTIFICATION HANDLERS
  ************************************************************************************/
@@ -792,6 +799,12 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	[playListWindow orderOut:nil];
 }
 
+- (void)windowDidBecomeKey:(NSNotification *)notification
+{
+	if ([self selectedItem])
+		[[AppController sharedController] setMovieInfoProvider:self];
+}
+
 /*
 	Toolbar
 */
@@ -839,7 +852,6 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 // throw away our toolbar items dictionary
 - (void) dealloc
 {
-    [preflightQueue release];
 	[toolbarItems release];
 	
 	// release data

@@ -79,8 +79,7 @@ SettingsController, EqualizerController;
 - (IBAction) openVideoEqualizer:(NSMenuItem *)sender;
 - (IBAction) openAudioEqualizer:(NSMenuItem *)sender;
 
-- (IBAction) openStatisticsWindow:(NSMenuItem *)sender;
-- (IBAction) openInfoWindow:(NSMenuItem *)sender;
+- (IBAction) openInspector:(NSMenuItem *)sender;
 - (IBAction) openLog:(NSMenuItem *)sender;
 
 @end

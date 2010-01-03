@@ -68,6 +68,7 @@ typedef NSUInteger MPEStreamType;
 	NSMutableDictionary *prefs;
 	
 	// name
+	NSString *title;
 	NSString *filename;
 	unsigned long long filesize;
 	NSDate *fileModificationDate;
@@ -116,6 +117,7 @@ typedef NSUInteger MPEStreamType;
 -(BOOL)isVideo;
 
 // basic info
+@property (nonatomic,retain) NSString *title;
 @property (nonatomic,readonly) NSString* displayName;
 @property (nonatomic,retain) NSString* filename;
 @property (nonatomic,retain) NSString* fileFormat;
@@ -125,6 +127,7 @@ typedef NSUInteger MPEStreamType;
 
 // file attributes (set automatically with setFilename:)
 @property (nonatomic) unsigned long long filesize;
+@property (nonatomic,readonly) NSString* displayFilesize; 
 @property (nonatomic,retain) NSDate *fileModificationDate;
 @property (nonatomic,retain) NSDate *fileCreationDate;
 
@@ -196,3 +199,9 @@ typedef NSUInteger MPEStreamType;
 -(NSMutableDictionary *)subDictForType:(SubtitleType)type;
 
 @end
+
+
+@protocol MovieInfoProvider <NSObject>
+- (MovieInfo *)currentMovieInfo;
+@end
+

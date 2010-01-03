@@ -19,8 +19,9 @@
 #define kSmallerTextSize		11
 
 @class MovieInfo, ScrubbingBar;
+@protocol MovieInfoProvider;
 
-@interface PlayListController : NSObject <MplayerInterfaceClientProtocol>
+@interface PlayListController : NSObject <MplayerInterfaceClientProtocol, MovieInfoProvider>
 {
     // controllers outlets
 	IBOutlet id playerController;
@@ -77,9 +78,11 @@
 	IBOutlet NSTextField *timeTextFieldToolbar;
 	IBOutlet NSSlider *volumeSliderToolbar;
 	
-	
-	NSMutableArray *preflightQueue;
+	MovieInfo *currentMovieInfo;
 }
+
+@property (nonatomic,retain) MovieInfo *currentMovieInfo;
+
 //window 
 - (IBAction)displayWindow:(id)sender;
 - (IBAction)toggleWindow:(id)sender;

@@ -42,7 +42,7 @@
 #define		MP_SEEK_UPDATE_BLOCK		0.5f
 
 @implementation PlayerController
-@synthesize myPlayer, playListController, settingsController, videoOpenGLView;
+@synthesize myPlayer, playListController, settingsController, videoOpenGLView, movieInfo;
 
 /************************************************************************************/
 -(id)init
@@ -153,6 +153,20 @@
 											 selector:@selector(updatePlaylistButton:)
 												 name:NSWindowWillCloseNotification
 											   object:[playListController window]];
+}
+
++ (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
+	
+	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
+	NSSet *affectingKeys = nil;
+	
+	if ([key isEqualToString:@"currentMovieInfo"])
+		affectingKeys = [NSSet setWithObjects:@"movieInfo",nil];
+	
+	if (affectingKeys)
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKeys];
+	
+	return keyPaths;
 }
 
 - (void) dealloc
@@ -321,8 +335,9 @@
 	}
 	
 	if (movieInfo || movieInfo != anItem) {
-		[movieInfo autorelease];
-		movieInfo = [anItem retain];
+		[self setMovieInfo:anItem];
+		if ([playerWindow isKeyWindow] && [[AppController sharedController] movieInfoProvider] != self)
+			[[AppController sharedController] setMovieInfoProvider:self];
 	}
 	
 	// Apply local volume
@@ -397,6 +412,11 @@
 		return [[movieInfo retain] autorelease]; // get it's own retention
 	else
 		return nil;
+}
+
+- (MovieInfo *) currentMovieInfo
+{
+	return [[movieInfo retain] autorelease];
 }
 
 /************************************************************************************/
@@ -741,7 +761,7 @@
 
 - (void)skipToPreviousChapter {
 	
-	if ([myPlayer isRunning] && movieInfo&& [movieInfo chapterCount] > 0 && currentChapter > 1)
+	if ([myPlayer isRunning] && movieInfo && [movieInfo chapterCount] > 0 && currentChapter > 1)
 		[self goToChapter:(currentChapter-1)];
 	else
 		[self seek:0 mode:MISeekingModePercent];
@@ -1660,199 +1680,6 @@
 				continuousPlayback = NO;
 		}
 	}
-	
-	// status did change
-	/*if (true) {
-		lastPlayerStatus = [state intValue];
-		
-		NSString *status = @"";
-		// status is changing
-		// switch Play menu item title and playbutton image
-		
-		switch (lastPlayerStatus) {
-		case MIStateOpening :
-		case MIStateBuffering :
-		case MIStateIndexing :
-		case MIStatePlaying :
-			
-			//[playButtonToolbar setImage:pauseImageOff];
-			//[playButtonToolbar setAlternateImage:pauseImageOn];
-			[fcPlayButton setImage:fcPauseImageOff];
-			[fcPlayButton setAlternateImage:fcPauseImageOn];
-			
-			
-			break;
-		case MIStatePaused :
-		case MIStateStopped :
-		case MIStateFinished :
-			
-			//[playButtonToolbar setImage:playImageOff];
-			//[playButtonToolbar setAlternateImage:playImageOn];
-			[fcPlayButton setImage:fcPlayImageOff];
-			[fcPlayButton setAlternateImage:fcPlayImageOn];
-			
-			break;
-		}
-		
-		switch (lastPlayerStatus) {
-		case MIStateOpening :
-		{
-			
-			// progress bars
-			
-			//[scrubbingBarToolbar setScrubStyle:MPEScrubbingBarProgressStyle];
-			//[scrubbingBarToolbar setIndeterminate:YES];
-			[fcScrubbingBar setScrubStyle:MPEScrubbingBarProgressStyle];
-			[fcScrubbingBar setIndeterminate:YES];
-			break;
-		}
-		case MIStateBuffering :
-			status = NSLocalizedString(@"Buffering",nil);
-			// progress bars
-			[scrubbingBar setScrubStyle:MPEScrubbingBarProgressStyle];
-			[scrubbingBar setIndeterminate:YES];
-			//[scrubbingBarToolbar setScrubStyle:MPEScrubbingBarProgressStyle];
-			//[scrubbingBarToolbar setIndeterminate:YES];
-			[fcScrubbingBar setScrubStyle:MPEScrubbingBarProgressStyle];
-			[fcScrubbingBar setIndeterminate:YES];
-			break;
-		case MIStateIndexing :
-			status = NSLocalizedString(@"Indexing",nil);
-			// progress bars
-			
-			//[scrubbingBarToolbar setScrubStyle:MPEScrubbingBarProgressStyle];
-			//[scrubbingBarToolbar setMaxValue:100];
-			//[scrubbingBarToolbar setIndeterminate:NO];
-			[fcScrubbingBar setScrubStyle:MPEScrubbingBarProgressStyle];
-			[fcScrubbingBar setMaxValue:100];
-			[fcScrubbingBar setIndeterminate:NO];
-			break;
-		case MIStatePlaying :
-			if (isSeeking) {
-				isSeeking = NO;
-				break;
-			}
-			status = NSLocalizedString(@"Playing",nil);
-			
-			//[scrubbingBarToolbar setScrubStyle:MPEScrubbingBarEmptyStyle];
-			//[scrubbingBarToolbar setIndeterminate:NO];
-			//[scrubbingBarToolbar setMaxValue:100];
-			
-			[fcScrubbingBar setScrubStyle:MPEScrubbingBarEmptyStyle];
-			[fcScrubbingBar setIndeterminate:NO];
-			[fcScrubbingBar setMaxValue:100];
-			
-				if ([movieInfo length] > 0) {
-					//[scrubbingBarToolbar setMaxValue: [movieInfo length]];
-					//[scrubbingBarToolbar setScrubStyle:MPEScrubbingBarPositionStyle];
-					[fcScrubbingBar setMaxValue: [movieInfo length]];
-					[fcScrubbingBar setScrubStyle:MPEScrubbingBarPositionStyle];
-				}
-			
-			
-			break;
-		case MIStatePaused :
-			status = NSLocalizedString(@"Paused",nil);
-			// stop progress bars
-			break;
-		case MIStateStopped :
-		case MIStateFinished :
-			//Set win title
-			
-			// reset status panel
-			status = NSLocalizedString(@"N/A",nil);
-			[statsCPUUsageBox setStringValue:status];
-			[statsCacheUsageBox setStringValue:status];
-			[statsAVsyncBox setStringValue:status];
-			[statsDroppedBox setStringValue:status];
-			[statsPostProcBox setStringValue:status];
-			// reset status box
-			status = @"";
-			
-			//[timeTextFieldToolbar setStringValue:@"00:00:00"];
-			[fcTimeTextField setStringValue:@"00:00:00"];
-			// hide progress bars
-			
-			//[scrubbingBarToolbar setScrubStyle:MPEScrubbingBarEmptyStyle];
-			//[scrubbingBarToolbar setDoubleValue:0];
-			//[scrubbingBarToolbar setIndeterminate:NO];
-			[fcScrubbingBar setScrubStyle:MPEScrubbingBarEmptyStyle];
-			[fcScrubbingBar setDoubleValue:0];
-			[fcScrubbingBar setIndeterminate:NO];
-			
-			// update state of playlist
-			[playListController updateView];
-			// Playlist mode
-			if (playingFromPlaylist) {
-				// if playback finished itself (not by user) let playListController know
-				if ([state intValue] == MIStateFinished)
-					[playListController finishedPlayingItem:movieInfo];
-				// close view otherwise
-				else if (!continuousPlayback)
-					[self stopFromPlaylist];
-				else
-					continuousPlayback = NO;
-			// Regular play mode
-			} else {
-				if (!continuousPlayback)
-					[self cleanUpAfterStop];
-				else
-					continuousPlayback = NO;
-			}
-			
-			
-			
-			break;
-		}
-		[statsStatusBox setStringValue:status];
-		//[statusBox setStringValue:status];
-	}*/
-	
-	// responses from commands
-	/*if ([notification userInfo]) {
-		
-		// Streams
-		if ([[notification userInfo] objectForKey:@"VideoStreamId"])
-			[self newVideoStreamId:[[[notification userInfo] objectForKey:@"VideoStreamId"] intValue]];
-		
-		if ([[notification userInfo] objectForKey:@"AudioStreamId"])
-			[self newAudioStreamId:[[[notification userInfo] objectForKey:@"AudioStreamId"] intValue]];
-		
-		if ([[notification userInfo] objectForKey:@"SubDemuxStreamId"])
-			[self newSubtitleStreamId:[[[notification userInfo] objectForKey:@"SubDemuxStreamId"] intValue] forType:SubtitleTypeDemux];
-		
-		if ([[notification userInfo] objectForKey:@"SubFileStreamId"])
-			[self newSubtitleStreamId:[[[notification userInfo] objectForKey:@"SubFileStreamId"] intValue] forType:SubtitleTypeFile];
-		
-		if ([[notification userInfo] objectForKey:@"Volume"])
-			[self applyVolume:[[[notification userInfo] objectForKey:@"Volume"] doubleValue]];
-		
-	}*/
-	
-	// update values
-	/*switch ([myPlayer state]) {
-	case MIStateOpening :
-		break;
-	case MIStateBuffering :
-		if ([statsPanel isVisible])
-			[statsCacheUsageBox setStringValue:[NSString localizedStringWithFormat:@"%3.1f %%",
-				[myPlayer cacheUsage]]];
-		break;
-	case MIStateIndexing :
-		[scrubbingBar setDoubleValue:[myPlayer cacheUsage]];
-		//[scrubbingBarToolbar setDoubleValue:[myPlayer cacheUsage]];
-		[fcScrubbingBar setDoubleValue:[myPlayer cacheUsage]];
-		break;
-	case MIStateSeeking :
-	case MIStatePlaying :
-		// check for stream update
-		//if ([[notification userInfo] objectForKey:@"StreamsHaveChanged"])
-		//	[self fillStreamMenus];
-		//[self statsUpdate:notification];
-		break;
-	case MIStatePaused :
-		break;
-	}*/
 }
 /************************************************************************************/
 - (void) interface:(MplayerInterface *)mi streamUpate:(MovieInfo *)item
@@ -1990,5 +1817,12 @@
 	
 	[playerWindow close];
 }
+
+- (void)windowDidBecomeKey:(NSNotification *)notification
+{
+	if (movieInfo)
+		[[AppController sharedController] setMovieInfoProvider:self];
+}
+
 
 @end

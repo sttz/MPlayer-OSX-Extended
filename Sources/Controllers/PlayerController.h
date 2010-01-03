@@ -20,8 +20,9 @@
 #define		volumeStep				10.0
 
 @class PlayListController, SettingsController, MenuController;
+@protocol MovieInfoProvider;
 
-@interface PlayerController : NSObject <MplayerInterfaceClientProtocol>
+@interface PlayerController : NSObject <MplayerInterfaceClientProtocol, MovieInfoProvider>
 {
 	// Shorthand to menu controller
 	MenuController *menuController;
@@ -102,6 +103,9 @@
 @property (nonatomic,readonly) BOOL isFullscreen;
 @property (nonatomic,readonly,getter=player) MplayerInterface* myPlayer;
 @property (nonatomic,readonly) VideoOpenGLView* videoOpenGLView;
+
+@property (nonatomic,retain) MovieInfo *movieInfo;
+@property (nonatomic,readonly) MovieInfo *currentMovieInfo;
 
 // interface
 - (IBAction)displayWindow:(id)sender;

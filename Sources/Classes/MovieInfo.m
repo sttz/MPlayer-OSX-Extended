@@ -274,6 +274,10 @@ externalSubtitles;
 		affectingKeys = [NSSet setWithObjects:@"filename",nil];
 	else if ([key isEqualToString:@"displayLength"])
 		affectingKeys = [NSSet setWithObjects:@"length",nil];
+	else if ([key isEqualToString:@"displayFilesize"])
+		affectingKeys = [NSSet setWithObjects:@"filesize",nil];
+	else if ([key isEqualToString:@"title"])
+		affectingKeys = [NSSet setWithObjects:@"filesize",nil];
 	
 	if (affectingKeys)
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKeys];
@@ -294,6 +298,32 @@ externalSubtitles;
 		return [NSString stringWithFormat:@"%01d:%02d:%02d",length/3600,(length%3600)/60,length%60];
 	else
 		return @"--:--:--";
+}
+
+- (NSString *) displayFilesize {
+	
+	return [[NSNumber numberWithUnsignedLongLong:filesize] humanReadableSizeStringValue];
+}
+
+- (NSString *) title {
+	
+	if (title)
+		return title;
+	else
+		return [self displayName];
+}
+
+- (void) setTitle:(NSString *)aTitle {
+	
+	[self willChangeValueForKey:@"title"];
+	[title autorelease];
+	
+	if ([aTitle length] == 0)
+		title = nil;
+	else
+		title = [aTitle retain];
+	
+	[self didChangeValueForKey:@"title"];
 }
 
 // **************************************************** //

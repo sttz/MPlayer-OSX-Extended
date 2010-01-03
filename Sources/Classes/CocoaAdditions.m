@@ -25,6 +25,28 @@
 #import "CocoaAdditions.h"
 #import <AppKit/NSView.h>
 
+@implementation NSNumber (MPEAdditions)
+
+- (NSString *) humanReadableSizeStringValue
+{
+	if (self == nil)
+		return nil;
+	
+	unsigned long long size = [self unsignedLongLongValue];
+	
+	if (size < 1024)
+		return [NSString stringWithFormat:@"%llu bytes", size];
+	else if (size < 1024 * 1024)
+		return [NSString stringWithFormat:@"%.1f KB", (size/1024.0f)];
+	else if (size < 1024 * 1024 * 1024)
+		return [NSString stringWithFormat:@"%.1f MB", (size/(1024.0f*1024.0f))];
+	else
+		return [NSString stringWithFormat:@"%.1f GB", (size/(1024.0f*1024.0f*1024.0f))];
+}
+
+@end
+
+
 @implementation NSView (MPEAdditions)
 
 - (void) resizeAndArrangeSubviewsVerticallyWithPadding:(float)padding

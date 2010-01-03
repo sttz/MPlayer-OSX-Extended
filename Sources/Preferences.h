@@ -48,6 +48,7 @@ extern NSString* const MPEDisplaySize;
 extern NSString* const MPEDropFrames;
 extern NSString* const MPEEnableAudio;
 extern NSString* const MPEEnableVideo;
+extern NSString* const MPEExpandedInspectorSections;
 extern NSString* const MPEFastDecoding;
 extern NSString* const MPEFlipDisplayHorizontally;
 extern NSString* const MPEFlipDisplayVertically;

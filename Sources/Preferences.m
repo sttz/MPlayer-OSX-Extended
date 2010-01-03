@@ -48,6 +48,7 @@ NSString* const MPEDisplaySize                        = @"MPEDisplaySize";
 NSString* const MPEDropFrames                         = @"MPEDropFrames";
 NSString* const MPEEnableAudio                        = @"MPEEnableAudio";
 NSString* const MPEEnableVideo                        = @"MPEEnableVideo";
+NSString* const MPEExpandedInspectorSections          = @"MPEExpandedInspectorSections";
 NSString* const MPEFastDecoding                       = @"MPEFastDecoding";
 NSString* const MPEFlipDisplayHorizontally            = @"MPEFlipDisplayHorizontally";
 NSString* const MPEFlipDisplayVertically              = @"MPEFlipDisplayVertically";

@@ -20,7 +20,9 @@
 #define MP_DIALOG_SUBTITLES 3
 
 @class AppleRemote, PlayerController, PreferencesController2, EqualizerController,
-PlayListController, SettingsController, MenuController;
+PlayListController, SettingsController, MenuController, InspectorController, MovieInfo;
+
+@protocol MovieInfoProvider;
 
 @interface AppController : NSObject
 {
@@ -28,6 +30,7 @@ PlayListController, SettingsController, MenuController;
 	IBOutlet MenuController *menuController;
 	IBOutlet PlayerController *playerController;
 	IBOutlet EqualizerController *equalizerController;
+	IBOutlet InspectorController *inspectorController;
 		
 	// GUI outlets
 	IBOutlet id locationPanel;
@@ -47,9 +50,6 @@ PlayListController, SettingsController, MenuController;
 	IBOutlet NSView *openSubtitleSettings;
 	IBOutlet NSPopUpButton *openSubtitleEncoding;
 	
-	// other outlets
-	IBOutlet id theApp;
-	
 	// open dialog
 	NSOpenPanel *openPanel;
 	
@@ -59,6 +59,8 @@ PlayListController, SettingsController, MenuController;
 	// Preferences
 	IBOutlet PreferencesController2 *preferencesController;
 	NSDictionary *preferencesSpecs;
+	
+	id<MovieInfoProvider> movieInfoProvider;
 }
 
 @property (nonatomic,readonly) MenuController *menuController;
@@ -66,9 +68,12 @@ PlayListController, SettingsController, MenuController;
 @property (nonatomic,readonly) PreferencesController2 *preferencesController;
 @property (nonatomic,readonly) PlayListController *playListController;
 @property (nonatomic,readonly) SettingsController *settingsController;
+@property (nonatomic,readonly) InspectorController *inspectorController;
 - (EqualizerController *)equalizerController;
 
 @property (readonly) NSMenu *aspectMenu;
+
+@property (nonatomic,retain) id<MovieInfoProvider> movieInfoProvider;
 
 + (AppController *) sharedController;
 

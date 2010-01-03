@@ -16,6 +16,7 @@
 #import "PlayListController.h"
 #import "PreferencesController2.h"
 #import "EqualizerController.h"
+#import "InspectorController.h"
 
 #import "MovieInfo.h"
 #import "Preferences.h"
@@ -26,7 +27,7 @@
 #import "PFMoveApplication.h"
 
 @implementation AppController
-@synthesize playerController, preferencesController, menuController, aspectMenu;
+@synthesize playerController, preferencesController, menuController, aspectMenu, movieInfoProvider;
 
 static AppController *instance = nil;
 
@@ -98,6 +99,13 @@ static AppController *instance = nil;
 	if (!equalizerController)
 		[NSBundle loadNibNamed:@"Equalizers" owner:self];
 	return equalizerController;
+}
+
+- (InspectorController *)inspectorController
+{
+	if (!inspectorController)
+		[NSBundle loadNibNamed:@"Inspector" owner:self];
+	return inspectorController;
 }
 
 /************************************************************************************
@@ -547,9 +555,9 @@ static AppController *instance = nil;
 	// Handle single file
 	if ([filenames count] == 1) {
 		if ([self application:sender openFile:[filenames objectAtIndex:0]])
-			[theApp replyToOpenOrPrint:NSApplicationDelegateReplySuccess];
+			[[NSApplication sharedApplication] replyToOpenOrPrint:NSApplicationDelegateReplySuccess];
 		else
-			[theApp replyToOpenOrPrint:NSApplicationDelegateReplyFailure];
+			[[NSApplication sharedApplication] replyToOpenOrPrint:NSApplicationDelegateReplyFailure];
 		return;
 	}
 	
@@ -629,6 +637,7 @@ static AppController *instance = nil;
 	// Load player and preferences
 	[NSBundle loadNibNamed:@"Player" owner:self];
 	[NSBundle loadNibNamed:@"Preferences" owner:self];
+	[NSBundle loadNibNamed:@"Inspector" owner:self];
 	
 	// set sparkle feed url for prereleases
 	[self setSparkleFeed];

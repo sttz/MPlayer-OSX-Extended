@@ -192,14 +192,9 @@
 }
 
 
-- (IBAction) openStatisticsWindow:(NSMenuItem *)sender
+- (IBAction) openInspector:(NSMenuItem *)sender
 {
-	[[appController playerController] displayStats:sender];
-}
-
-- (IBAction) openInfoWindow:(NSMenuItem *)sender
-{
-	[[[appController playerController] playListController] displayItemSettings:sender];
+	[[[appController inspectorController] window] makeKeyAndOrderFront:self];
 }
 
 - (IBAction) openLog:(NSMenuItem *)sender
