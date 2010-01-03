@@ -538,7 +538,6 @@
 		<string>MPEGuessTextEncoding</string>
 		<string>MPELoadEmbeddedFonts</string>
 		<string>MPERenderSubtitlesFirst</string>
-		<string>MPESubtitleScale</string>
 		<string>MPESubtitleTextColor</string>
 		<string>MPESubtitleBorderColor</string>
 		<string>MPEOSDScale</string>

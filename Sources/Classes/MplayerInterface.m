@@ -124,6 +124,12 @@ static BOOL is64bitHost					= NO;
 			   options:NSKeyValueObservingOptionNew
 			   context:nil];
 	
+	// Watch for subtitle size changes
+	[PREFS addObserver:self
+			forKeyPath:MPESubtitleScale
+			   options:NSKeyValueObservingOptionNew
+			   context:nil];
+	
 	return self;
 }
 
@@ -747,6 +753,12 @@ static BOOL is64bitHost					= NO;
 	
 	} else if ([keyPath isEqualToString:MPEAudioVolume] || [keyPath isEqualToString:MPEAudioMute]) {
 		[self applyVolume];
+	
+	} else if ([keyPath isEqualToString:MPESubtitleScale]) {
+		float sub_scale = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
+		[self sendCommand:[NSString stringWithFormat:@"set_property sub_scale %f 1",sub_scale]
+				  withOSD:MISurpressCommandOutputAlways
+			   andPausing:MICommandPausingKeep];
 	}
 }
 /************************************************************************************
