@@ -215,6 +215,7 @@ externalSubtitles;
 	
 	[prefs release];
 	
+	[title release];
 	[filename release];
 	[fileModificationDate release];
 	[fileCreationDate release];
@@ -568,6 +569,7 @@ static NSString* const MPEMovieInfoSubtitleFileStreamsKey  = @"MPEMovieInfoSubti
 static NSString* const MPEMovieInfoChapterStreamsKey       = @"MPEMovieInfoChapterStreams";
 static NSString* const MPEMovieInfoExternalSubtitlesKey    = @"MPEMovieInfoExternalSubtitles";
 static NSString* const MPEMovieInfoLocalSettingsKey        = @"MPEMovieInfoLocalSettings";
+static NSString* const MPEMovieInfoTitleKey                = @"MPEMovieInfoTitle";
 static NSString* const MPEMovieInfoFilenameKey             = @"MPEMovieInfoFilename";
 static NSString* const MPEMovieInfoFileModificationDateKey = @"MPEMovieInfoFileModificationDate";
 static NSString* const MPEMovieInfoFileFormatKey           = @"MPEMovieInfoFileFormat";
@@ -621,6 +623,8 @@ static NSString* const MPEMovieInfoMovieLengthKey          = @"MPEMovieInfoMovie
 	[dict setObject:fileModificationDate forKey:MPEMovieInfoFileModificationDateKey];
 	[dict setBool:seekable forKey:MPEMovieInfoMovieIsSeekableKey];
 	
+	if (title)
+		[dict setObject:title forKey:MPEMovieInfoTitleKey];
 	if (fileFormat)
 		[dict setObject:fileFormat forKey:MPEMovieInfoFileFormatKey];
 	if (length > 0)
@@ -680,6 +684,7 @@ static NSString* const MPEMovieInfoMovieLengthKey          = @"MPEMovieInfoMovie
 	fileModificationDate = [[dict dateForKey:MPEMovieInfoFileModificationDateKey] retain];
 	seekable     = [dict boolForKey:MPEMovieInfoMovieIsSeekableKey];
 	
+	title        = [[dict stringForKey:MPEMovieInfoTitleKey] retain];
 	fileFormat   = [[dict stringForKey:MPEMovieInfoFileFormatKey] retain];
 	length       = [dict integerForKey:MPEMovieInfoMovieLengthKey];
 	
