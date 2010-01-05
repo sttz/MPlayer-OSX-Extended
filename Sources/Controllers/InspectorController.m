@@ -201,6 +201,9 @@ static const float const collapsedSectionHeight = 21.0f;
 		height = collapsedSectionHeight;
 	}
 	
+	if (![sender isKindOfClass:[NSButton class]] || [sender bezelStyle] != NSDisclosureBezelStyle)
+		[[triangles objectForKey:name] setState:[expanded containsObject:name]];
+	
 	lastSectionHeight = [section frame].size.height;
 	
 	float width = [window frame].size.width;
