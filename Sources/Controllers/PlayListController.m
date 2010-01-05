@@ -766,8 +766,6 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 
 - (void)windowWillClose:(NSNotification *)aNotification
 {
-	[playListWindow setFrameAutosaveName:@"PlayListWindow"];
-	
 	[playListWindow orderOut:nil];
 }
 
