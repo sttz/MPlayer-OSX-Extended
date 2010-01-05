@@ -59,7 +59,6 @@ static const float const collapsedSectionHeight = 21.0f;
 					@"statistics",
 					nil];
 	
-	float sectionWidth = [window frame].size.width;
 	NSArray *expanded = [PREFS arrayForKey:MPEExpandedInspectorSections];
 	expandedHeights = [NSMutableDictionary new];
 	
@@ -78,13 +77,16 @@ static const float const collapsedSectionHeight = 21.0f;
 		[container addSubview:section];
 		
 		BOOL isExpanded = (expanded && [expanded containsObject:name]);
+		float width = [section frame].size.width;
 		float height;
 		if (isExpanded)
 			height = [[expandedHeights objectForKey:name] floatValue];
 		else
 			height = collapsedSectionHeight;
+		
+		[section setFrameSize:NSMakeSize(width, height)];
+		
 		[[triangles objectForKey:name] setState:isExpanded];
-		[section setFrameSize:NSMakeSize(sectionWidth, height)];
 	}
 	
 	[self positionSections:nil];
@@ -141,7 +143,6 @@ static const float const collapsedSectionHeight = 21.0f;
 {
 	isResizing = YES;
 	
-	float sectionWidth = [window frame].size.width;
 	float viewHeight = [container frame].size.height;
 	
 	float topOffset = firstSectionTopOffset;
@@ -149,9 +150,10 @@ static const float const collapsedSectionHeight = 21.0f;
 	for (NSString *name in sectionOrder) {
 		NSView *section = [views objectForKey:name];
 		float height = [section frame].size.height;
+		float width  = [section frame].size.width;
 		
 		[section setFrame:NSMakeRect(0, viewHeight - topOffset - height, 
-									 sectionWidth, height)];
+									 width, height)];
 		
 		if (section == sender) {
 			float newOriginY = [[scroller contentView] bounds].origin.y + (height - lastSectionHeight);
@@ -162,14 +164,14 @@ static const float const collapsedSectionHeight = 21.0f;
 		topOffset += height;
 	}
 	
-	NSSize contentSize = NSMakeSize(sectionWidth, topOffset);
+	NSSize contentSize = NSMakeSize([container frame].size.width, topOffset);
 	
 	NSRect viewRect;
 	viewRect.size = contentSize;
 	viewRect.origin = [container frame].origin;
 	
 	NSRect windowRect;
-	windowRect.size = contentSize;
+	windowRect.size = NSMakeSize([window frame].size.width, topOffset);
 	windowRect = [window frameRectForContentRect:windowRect];
 	windowRect.origin = [window frame].origin;
 	windowRect.origin.y += [window frame].size.height - windowRect.size.height;
