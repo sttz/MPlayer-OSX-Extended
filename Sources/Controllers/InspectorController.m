@@ -119,12 +119,16 @@ static const float const collapsedSectionHeight = 21.0f;
 {
 	if (statsExpanded)
 		[[[[AppController sharedController] movieInfoProvider] currentMovieInfo] setCaptureStats:YES];
+	
+	[PREFS setBool:YES forKey:MPEInspectorOpen];
 }
 
 - (void) windowWillClose:(NSNotification *)notification
 {
 	if (statsExpanded)
 		[[[[AppController sharedController] movieInfoProvider] currentMovieInfo] setCaptureStats:NO];
+	
+	[PREFS setBool:NO forKey:MPEInspectorOpen];
 }
 
 - (void) sectionDidResize:(NSNotification *)notification

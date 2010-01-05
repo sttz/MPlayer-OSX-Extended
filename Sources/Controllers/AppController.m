@@ -633,6 +633,9 @@ static AppController *instance = nil;
 	[NSBundle loadNibNamed:@"Player" owner:self];
 	[NSBundle loadNibNamed:@"Preferences" owner:self];
 	
+	if ([PREFS boolForKey:MPEInspectorOpen])
+		[[[self inspectorController] window] makeKeyAndOrderFront:self];
+	
 	// set sparkle feed url for prereleases
 	[self setSparkleFeed];
 	
