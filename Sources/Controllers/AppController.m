@@ -632,7 +632,6 @@ static AppController *instance = nil;
 	// Load player and preferences
 	[NSBundle loadNibNamed:@"Player" owner:self];
 	[NSBundle loadNibNamed:@"Preferences" owner:self];
-	[NSBundle loadNibNamed:@"Inspector" owner:self];
 	
 	// set sparkle feed url for prereleases
 	[self setSparkleFeed];
