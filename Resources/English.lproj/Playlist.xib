@@ -13,6 +13,7 @@
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="30"/>
+			<integer value="2"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -105,14 +106,14 @@
 				<string key="NSExtension">NSResponder</string>
 			</object>
 			<object class="NSCustomView" id="408610584">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">256</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<object class="NSButton" id="281776004">
 						<reference key="NSNextResponder" ref="408610584"/>
 						<int key="NSvFlags">256</int>
-						<string key="NSFrame">{{-2, -4}, {43, 42}}</string>
+						<string key="NSFrame">{{-2, -3}, {43, 42}}</string>
 						<reference key="NSSuperview" ref="408610584"/>
 						<bool key="NSEnabled">YES</bool>
 						<object class="NSButtonCell" key="NSCell" id="160989003">
@@ -142,7 +143,8 @@
 						</object>
 					</object>
 				</object>
-				<string key="NSFrameSize">{39, 36}</string>
+				<string key="NSFrameSize">{38, 39}</string>
+				<reference key="NSSuperview"/>
 				<string key="NSClassName">NSView</string>
 				<string key="NSExtension">NSResponder</string>
 			</object>
@@ -4212,7 +4214,7 @@
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{149, 1059}, {39, 36}}</string>
+					<string>{{149, 1056}, {38, 39}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -4579,7 +4581,6 @@
 							<string>cycleAudioStreams:</string>
 							<string>cycleSubtitleStreams:</string>
 							<string>decreaseVolume:</string>
-							<string>displayStats:</string>
 							<string>displayWindow:</string>
 							<string>fullscreenMenuAction:</string>
 							<string>increaseVolume:</string>
@@ -4601,7 +4602,6 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -4645,13 +4645,6 @@
 							<string>playerWindow</string>
 							<string>scrubbingBar</string>
 							<string>settingsController</string>
-							<string>statsAVsyncBox</string>
-							<string>statsCPUUsageBox</string>
-							<string>statsCacheUsageBox</string>
-							<string>statsDroppedBox</string>
-							<string>statsPanel</string>
-							<string>statsPostProcBox</string>
-							<string>statsStatusBox</string>
 							<string>subtitleCycleButton</string>
 							<string>subtitleWindowMenu</string>
 							<string>timeTextField</string>
@@ -4673,13 +4666,6 @@
 							<string>NSWindow</string>
 							<string>id</string>
 							<string>SettingsController</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
