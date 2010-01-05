@@ -36,6 +36,7 @@
 enum {
 	MIStateFinished,
 	MIStateStopped,
+	MIStateError,
 	MIStatePlaying,
 	MIStatePaused,
 	MIStateOpening,
@@ -50,7 +51,7 @@ enum {
 	// Play/Paused masks dividing all states to either playing or paused
 	MIStatePPPlayingMask = (1<<MIStatePlaying|1<<MIStateOpening|1<<MIStateBuffering
 						   |1<<MIStateIndexing),
-	MIStatePPPausedMask  = (1<<MIStatePaused|1<<MIStateStopped|1<<MIStateFinished),
+	MIStatePPPausedMask  = (1<<MIStatePaused|1<<MIStateStopped|1<<MIStateFinished|1<<MIStateError),
 	// Mask for initializing states
 	MIStateStartupMask   = (1<<MIStateOpening|1<<MIStateBuffering|1<<MIStateIndexing|1<<MIStateInitializing), 
 	// Mask to extend playing state to seeking
@@ -58,7 +59,7 @@ enum {
 	// States in which MPlayer can seek
 	MIStateCanSeekMask   = (1<<MIStatePlaying|1<<MIStatePaused),
 	// States in which MPlayer is not running
-	MIStateStoppedMask   = (1<<MIStateStopped|1<<MIStateFinished),
+	MIStateStoppedMask   = (1<<MIStateStopped|1<<MIStateFinished|1<<MIStateError),
 	// Intermediate Progress Mask
 	MIStateIntermediateMask = (1<<MIStateOpening|1<<MIStateBuffering|1<<MIStateInitializing),
 	// Absolute Progress Mask

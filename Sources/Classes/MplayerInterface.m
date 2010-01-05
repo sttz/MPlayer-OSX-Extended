@@ -762,7 +762,7 @@ static NSArray* statusNames;
 /************************************************************************************/
 - (void) stop
 {
-	if (myMplayerTask && state > MIStateStopped) {
+	if (isRunning) {
 		[self sendCommand:@"quit"];
 		[myMplayerTask waitUntilExit];
 	}
@@ -1138,7 +1138,7 @@ static NSArray* statusNames;
 - (void)runMplayerWithParams:(NSMutableArray *)aParams
 {
 	NSMutableDictionary *env;
-
+	
 	// terminate mplayer if it is running
 	if (myMplayerTask) {
 		if (state == MIStatePaused && restartingPlayer)
@@ -1149,7 +1149,7 @@ static NSArray* statusNames;
 		[myMplayerTask release];
 		myMplayerTask = nil;
 	}
-	
+		
 	// if no path or movie file specified the return
 	if (!myPathToPlayer || !playingItem || ![playingItem fileIsValid]) {
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to start MPlayer (%@,%@,%d)",myPathToPlayer,playingItem,(![playingItem fileIsValid])];
@@ -1272,7 +1272,7 @@ static NSArray* statusNames;
 		[[NSNotificationCenter defaultCenter] removeObserver:self
 				name: NSTaskDidTerminateNotification object:myMplayerTask];
 		
-		if (!restartingPlayer && state > MIStateStopped)
+		if (!restartingPlayer && state > MIStateError)
 			[self setState:MIStateStopped];
 		restartingPlayer = NO;
 		isRunning = NO;
@@ -1371,6 +1371,11 @@ static NSArray* statusNames;
 		return;
 	}
 	
+	// Use an intermediate state variable since state changes are
+	// notified immediately and this can cause issues.
+	// The new state is applied at the end of this function.
+	int newState = state;
+	
 	BOOL streamsHaveChanged = NO;
 	
 	NSString *line;
@@ -1396,6 +1401,8 @@ static NSArray* statusNames;
 		// Read next line of data
 		line = [myLines objectAtIndex:lineIndex];
 		
+		//NSLog(@"%@",line);
+		
 		// skip empty lines
 		if ([[line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length] == 0)
 			continue;
@@ -1404,7 +1411,7 @@ static NSArray* statusNames;
 			double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - myLastUpdate);
 				
 			// parse the output according to the preset mode
-			if ((state == MIStateSeeking && timeDifference >= MI_SEEK_UPDATE_INTERVAL)
+			if ((newState == MIStateSeeking && timeDifference >= MI_SEEK_UPDATE_INTERVAL)
 					|| timeDifference >= MI_STATS_UPDATE_INTERVAL) {
 				int voCPUUsage = 0;
 				myLastUpdate = [NSDate timeIntervalSinceReferenceDate];
@@ -1455,7 +1462,7 @@ static NSArray* statusNames;
 				// Update stats
 				if (myUpdateStatistics) {
 					NSMutableDictionary *stats = [NSMutableDictionary dictionary];
-					[stats setObject:[statusNames objectAtIndex:state] forKey:MIStatsStatusStringKey];
+					[stats setObject:[statusNames objectAtIndex:newState] forKey:MIStatsStatusStringKey];
 					if (myCPUUsage > -1)
 						[stats setInteger:myCPUUsage forKey:MIStatsCPUUsageKey];
 					if (myAudioCPUUsage > -1)
@@ -1476,7 +1483,7 @@ static NSArray* statusNames;
 									  andObject:[NSNumber numberWithFloat:mySeconds]];
 				
 				// finish seek
-				if (state == MIStateSeeking && lastMissedSeek) {
+				if (newState == MIStateSeeking && lastMissedSeek) {
 					[self seek:[[lastMissedSeek objectForKey:@"seconds"] floatValue]
 						  mode:[[lastMissedSeek objectForKey:@"mode"] intValue]
 						 force:YES];
@@ -1485,16 +1492,16 @@ static NSArray* statusNames;
 					continue;
 				}
 				
-				if (state == MIStateSeeking) {
-					[self setState:stateBeforeSeeking];
+				if (newState == MIStateSeeking) {
+					newState = stateBeforeSeeking;
 					if (stateBeforeSeeking == MIStatePaused)
 						[self sendCommand:@"pause"];
 					continue;
 				}
 				
 				// if it was not playing before (launched or unpaused)
-				if (state != MIStatePlaying) {
-					[self setState:MIStatePlaying];
+				if (newState != MIStatePlaying) {
+					newState = MIStatePlaying;
 					continue;
 				}
 			}
@@ -1504,20 +1511,25 @@ static NSArray* statusNames;
 		
 		//  =====  PAUSE  ===== test for paused state
 		if ([line hasPrefix:MI_PAUSED_STRING]) {
-			[self setState:MIStatePaused];
+			newState = MIStatePaused;
 			continue;
 		}
 		
 		// Exiting... test for player termination
 		if ([line isMatchedByRegex:MI_EXIT_REGEX]) {
+			
 			NSString *exitType = [line stringByMatching:MI_EXIT_REGEX capture:1];
 			
 			// player reached end of file
 			if ([exitType isEqualToString:@"EOF"])
-				[self setState:MIStateFinished];
-			// player was stopped (by user or with an error)
+				newState = MIStateFinished;
+			// player was stopped
+			else if ([exitType isEqualToString:@"QUIT"])
+				newState = MIStateStopped;
+			// an error occured (or unkown reason)
 			else
-				[self setState:MIStateStopped];
+				newState = MIStateError;
+
 			
 			// remove observer for output
 				// it's here because the NSTask sometimes do not terminate
@@ -1536,7 +1548,7 @@ static NSArray* statusNames;
 																object:self];
 			
 			restartingPlayer = NO;
-			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithFormat:@"Exited with state %d",state]];
+			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithFormat:@"Exited with state %d and reason %@",newState,exitType]];
 			continue;							// continue on next line
 		}
 		
@@ -1806,14 +1818,14 @@ static NSArray* statusNames;
 		
 		// mplayer starts to open a file
 		if ([line hasPrefix:MI_OPENING_STRING]) {
-			[self setState:MIStateOpening];
+			newState = MIStateOpening;
 			[Debug log:ASL_LEVEL_INFO withMessage:line];
 			continue;	
 		}
 		
 		// filling cache
 		if ([line isMatchedByRegex:MI_CACHE_FILL_REGEX]) {
-			[self setState:MIStateBuffering];
+			newState = MIStateBuffering;
 			myCacheUsage = [[line stringByMatching:MI_CACHE_FILL_REGEX capture:1] intValue];
 			if (myUpdateStatistics) {
 				NSMutableDictionary *stats = [playingItem playbackStats];
@@ -1839,14 +1851,14 @@ static NSArray* statusNames;
 		
 		// rebuilding index
 		if ([line isMatchedByRegex:MI_INDEXING_REGEX]) {
-			[self setState:MIStateIndexing];
+			newState = MIStateIndexing;
 			// TODO: Read fill state
 			continue;
 		}
 		
 		// mplayer is starting playback -- ignore for preflight
 		if ([line hasPrefix:MI_STARTING_STRING] && !isPreflight) {
-			[self setState:MIStatePlaying];
+			newState = MIStatePlaying;
 			myLastUpdate = [NSDate timeIntervalSinceReferenceDate];
 			
 			if (pausedOnRestart)
@@ -1860,6 +1872,9 @@ static NSArray* statusNames;
 		[Debug log:ASL_LEVEL_INFO withMessage:line];
 		
 	} // while
+	
+	if (newState != state)
+		[self setState:newState];
 	
 	// post notification if there is anything in user info
 	if (streamsHaveChanged) {
