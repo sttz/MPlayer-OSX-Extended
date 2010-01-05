@@ -75,11 +75,6 @@ static AppController *instance = nil;
 		setEventHandler:self andSelector:@selector(getUrl:withReplyEvent:) 
 		forEventClass:kInternetEventClass andEventID:kAEGetURL];
 	
-	// enable apple remote support
-	appleRemote = [[AppleRemote alloc] init];
-	[appleRemote setClickCountEnabledButtons: kRemoteButtonPlay];
-	[appleRemote setDelegate: playerController];
-	
 	// pre-load language codes
 	[LanguageCodes sharedInstance];
 }
@@ -635,6 +630,11 @@ static AppController *instance = nil;
 	
 	if ([PREFS boolForKey:MPEInspectorOpen])
 		[[[self inspectorController] window] makeKeyAndOrderFront:self];
+	
+	// enable apple remote support
+	appleRemote = [[AppleRemote alloc] init];
+	[appleRemote setClickCountEnabledButtons: kRemoteButtonPlay];
+	[appleRemote setDelegate: playerController];
 	
 	// set sparkle feed url for prereleases
 	[self setSparkleFeed];
