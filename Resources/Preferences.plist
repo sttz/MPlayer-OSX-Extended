@@ -525,6 +525,10 @@
 		<false/>
 		<key>MPEPlaylistPlayMode</key>
 		<integer>1</integer>
+		<key>MPEExpandedInspectorSections</key>
+		<array>
+			<string>fileAttributes</string>
+		</array>
 	</dict>
 	<key>RequiresRestart</key>
 	<array>
