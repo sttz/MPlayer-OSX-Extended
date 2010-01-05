@@ -19,17 +19,65 @@
 
 #import <objc/runtime.h>
 
+NSString* const MIStatsStatusStringKey	= @"MIStatsStatusString";
+NSString* const MIStatsCPUUsageKey		= @"MIStatsCPUUsage";
+NSString* const MIStatsAudioCPUUsageKey	= @"MIStatsAudioCPUUsage";
+NSString* const MIStatsVideoCPUUsageKey	= @"MIStatsVideoCPUUsage";
+NSString* const MIStatsCacheUsageKey	= @"MIStatsCacheUsage";
+NSString* const MIStatsAVSyncKey		= @"MIStatsAVSync";
+NSString* const MIStatsDroppedFramesKey = @"MIStatsDroppedFrames";
+
+// Strings used for output parsing
 static NSString *MI_PAUSED_STRING		= @"ID_PAUSED";
 static NSString *MI_OPENING_STRING		= @"Playing ";
 static NSString *MI_AUDIO_FILE_STRING	= @"Audio file detected.";
 static NSString *MI_STARTING_STRING		= @"Starting playback...";
 
+// Regexes used for output parsing
 static NSString *MI_DEFINE_REGEX		= @"^ID_(.*)=(.*)$";
 static NSString *MI_REPLY_REGEX			= @"^ANS_(.*)=(.*)$";
 static NSString *MI_STREAM_REGEX		= @"^ID_(.*)_(\\d+)_(.*)=(.*)$";
 static NSString *MI_EXIT_REGEX			= @"^ID_EXIT=(.*)$";
 static NSString *MI_NEWLINE_REGEX		= @"(?:\r\n|[\n\v\f\r\302\205\\p{Zl}\\p{Zp}])";
+static NSString *MI_CACHE_FILL_REGEX	= @"^Cache fill:\\s+([0-9.]+)%";
+static NSString *MI_INDEXING_REGEX		= @"^Generating Index:\\s+(\\d+) %";
+static NSString *MI_FORMAT_REGEX		= @"^(.*) file format detected.$";
 
+// Short status line parsing regex (only for time)
+static NSString *MI_STATUS_SHORT_REGEX  = @"^(?:A:\\s*([0-9.-]+)\\s*)?"
+											"(?:V:\\s*([0-9.-]+)\\s*)?";
+// Full status line parsing regex			// Audio-time "A: 00.0 (00.0) of 00.0 (0:00:00.0)"
+static NSString *MI_STATUS_REGEX		= @"^(?:A:\\s*([0-9.-]+)(?:\\s*\\([0-9.-]+\\) of [0-9.-]+ \\([ 0-9.-:]+\\))?\\s*)?"
+											// Video-time "V: 00.0"
+											"(?:V:\\s*([0-9.-]+)\\s*)?"
+											// Audio-Video sync "A-V: -0.000"
+											"(?:A-V:\\s*([0-9.-]+)\\s*)?"
+											// Sync correction "c-t: -0.000"
+											"(?:ct:\\s*[0-9.-]+\\s*)?"
+											// Video stats "0/ 0" 
+											"(?:\\d+\\/\\s*\\d+\\s*)?"
+											// First two percent values "00% 00%"
+											"(?:([0-9.-?]+)%(?:\\s*([0-9.-?]+)%)?"
+											// Third percent value "00%"
+											"(?:\\s*([0-9.-?,]+)?%)?\\s*)?"
+											// VO-Statistics (dropped frames and postprocessing) "0 0"
+											"(?:(\\d+)\\s*\\d+\\s*)?"
+											// Last percent value "00%"
+											"(?:(\\d+)%\\s*)?"
+											// Playback speed "00.0x"
+											"(?:[0-9.-]+x\\s*)?";
+
+// Capture group indexes for the status regexes
+static const int MI_STATUS_AUDIO_TIME_INDEX     = 1;
+static const int MI_STATUS_VIDEO_TIME_INDEX     = 2;
+static const int MI_STATUS_AV_SYNC_INDEX        = 3;
+static const int MI_STATUS_FIRST_PERCENT_INDEX  = 4;
+static const int MI_STATUS_SECOND_PERCENT_INDEX = 5;
+static const int MI_STATUS_THIRD_PERCENT_INDEX  = 6;
+static const int MI_STATUS_DROPPED_FRAMES_INDEX = 7;
+static const int MI_STATUS_FORUTH_PERCENT_INDEX = 8;
+
+// Status update interval (regular & while seeking)
 static float MI_STATS_UPDATE_INTERVAL	= 0.2f;
 static float MI_SEEK_UPDATE_INTERVAL	= 0.1f;
 
@@ -42,6 +90,12 @@ static NSArray* parseRunLoopModes;
 static NSDictionary *videoEqualizerCommands;
 
 static BOOL is64bitHost					= NO;
+
+// Local MovieInfo prefs to observe using KVO
+static NSArray* localPrefsToObserve;
+
+// String names for states
+static NSArray* statusNames;
 
 @implementation MplayerInterface
 @synthesize playing, movieOpen, state;
@@ -63,6 +117,27 @@ static BOOL is64bitHost					= NO;
 							   @"hue", MPEVideoEqualizerHue,
 							   @"saturation", MPEVideoEqualizerSaturation,
 							   nil];
+	
+	localPrefsToObserve = [[NSArray alloc] initWithObjects:
+						   MPELoopMovie,
+						   MPEAudioVolume,
+						   MPEAudioMute,
+						   MPEPlaybackSpeed,
+						   MPEAudioDelay,
+						   MPESubtitleDelay,
+						   nil];
+	
+	statusNames = [[NSArray alloc] initWithObjects:
+				   @"Finished",
+				   @"Stopped",
+				   @"Playing",
+				   @"Paused",
+				   @"Opening",
+				   @"Buffering",
+				   @"Indexing",
+				   @"Initializing",
+				   @"Seeking",
+				   nil];
 	
 	// detect 64bit host
 	int is64bit;
@@ -216,20 +291,12 @@ static BOOL is64bitHost					= NO;
 	
 	playingItem = [item retain];
 	
-	[[playingItem prefs] addObserver:self
-						  forKeyPath:MPELoopMovie
-							 options:0
-							 context:nil];
-	
-	[[playingItem prefs] addObserver:self
-						  forKeyPath:MPEAudioVolume
-							 options:0
-							 context:nil];
-	
-	[[playingItem prefs] addObserver:self
-						  forKeyPath:MPEAudioMute
-							 options:0
-							 context:nil];
+	for (NSString *name in localPrefsToObserve) {
+		[[playingItem prefs] addObserver:self
+							  forKeyPath:name
+								 options:NSKeyValueObservingOptionNew
+								 context:nil];
+	}
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(loadNewSubtitleFile:)
@@ -239,9 +306,9 @@ static BOOL is64bitHost					= NO;
 
 - (void)unregisterPlayingItem
 {
-	[[playingItem prefs] removeObserver:self forKeyPath:MPELoopMovie];
-	[[playingItem prefs] removeObserver:self forKeyPath:MPEAudioVolume];
-	[[playingItem prefs] removeObserver:self forKeyPath:MPEAudioMute];
+	for (NSString *name in localPrefsToObserve) {
+		[[playingItem prefs] removeObserver:self forKeyPath:name];
+	}
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self
 													name:MPEMovieInfoAddedExternalSubtitleNotification
@@ -378,6 +445,18 @@ static BOOL is64bitHost					= NO;
 		[params addObject:[NSString stringWithFormat:@"corevideo:buffer_name=%@",buffer_name]];
 	}
 	
+	// playback speed
+	if ([cPrefs objectForKey:MPEPlaybackSpeed] && [cPrefs floatForKey:MPEPlaybackSpeed] != 100) {
+		float speed = [cPrefs floatForKey:MPEPlaybackSpeed];
+		if (speed > 101)
+			speed -= 100;
+		else
+			speed /= 100;
+		[params addObject:@"-speed"];
+		[params addObject:[NSString stringWithFormat:@"%.2f", speed]];
+	}
+	
+	
 	
 	// *** TEXT
 	
@@ -456,6 +535,12 @@ static BOOL is64bitHost					= NO;
 	if ([cPrefs floatForKey:MPEOSDScale] > 0) {
 		[params addObject:@"-subfont-osd-scale"];
 		[params addObject:[NSString stringWithFormat:@"%.3f",[cPrefs floatForKey:MPEOSDScale]*6.0]];
+	}
+	
+	// subtitle delay
+	if ([cPrefs floatForKey:MPESubtitleDelay] != 0) {
+		[params addObject:@"-subdelay"];
+		[params addObject:[NSString stringWithFormat:@"%.2f", [cPrefs floatForKey:MPESubtitleDelay]]];
 	}
 	
 	
@@ -556,6 +641,11 @@ static BOOL is64bitHost					= NO;
 		[params addObject:@"0"];
 	}
 	
+	// audio delay
+	if ([cPrefs floatForKey:MPEAudioDelay] != 0) {
+		[params addObject:@"-delay"];
+		[params addObject:[NSString stringWithFormat:@"%.2f", [cPrefs floatForKey:MPEAudioDelay]]];
+	}
 	
 	// *** ADVANCED
 	
@@ -756,9 +846,26 @@ static BOOL is64bitHost					= NO;
 	
 	} else if ([keyPath isEqualToString:MPESubtitleScale]) {
 		float sub_scale = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
-		[self sendCommand:[NSString stringWithFormat:@"set_property sub_scale %f 1",sub_scale]
+		[self sendCommand:[NSString stringWithFormat:@"set_property sub_scale %f",sub_scale]
 				  withOSD:MISurpressCommandOutputAlways
 			   andPausing:MICommandPausingKeep];
+	
+	} else if ([keyPath isEqualToString:MPEPlaybackSpeed]) {
+		float speed = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
+		if (speed > 101)
+			speed -= 100;
+		else
+			speed /= 100;
+		[self sendCommand:[NSString stringWithFormat:@"set_property speed %f",speed]];
+	
+	} else if ([keyPath isEqualToString:MPEAudioDelay]) {
+		float delay = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
+		[self sendCommand:[NSString stringWithFormat:@"set_property audio_delay %f",delay]];
+		
+	} else if ([keyPath isEqualToString:MPESubtitleDelay]) {
+		float delay = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
+		[self sendCommand:[NSString stringWithFormat:@"set_property sub_delay %f",delay]];
+		
 	}
 }
 /************************************************************************************
@@ -936,31 +1043,20 @@ static BOOL is64bitHost					= NO;
 - (void) setUpdateStatistics:(BOOL)aBool
 {
 	myUpdateStatistics = aBool;
+	[self resetStatistics];
 }
-/************************************************************************************/
-- (float) syncDifference
+
+- (void) resetStatistics
 {
-	return mySyncDifference;
-}
-/************************************************************************************/
-- (int) cpuUsage
-{
-	return myCPUUsage;
-}
-/************************************************************************************/
-- (int) cacheUsage
-{
-	return myCacheUsage;
-}
-/************************************************************************************/
-- (int) droppedFrames
-{
-	return myDroppedFrames;
-}
-/************************************************************************************/
-- (int) postProcLevel
-{
-	return myPostProcLevel;
+	myCPUUsage			= -1;
+	myAudioCPUUsage		= -1;
+	myVideoCPUUsage		= -1;
+	myCacheUsage		= -1;
+	mySyncDifference	= NAN;
+	myDroppedFrames		= -1;
+	myPostProcLevel		= -1;
+	if (playingItem)
+		[playingItem setPlaybackStats:nil];
 }
 
 /************************************************************************************
@@ -1176,6 +1272,8 @@ static BOOL is64bitHost					= NO;
 		isRunning = NO;
 	}
 	
+	[self resetStatistics];
+	
 	returnCode = [myMplayerTask terminationStatus];
 	[Debug log:ASL_LEVEL_INFO withMessage:@"MPlayer process exited with code %d",returnCode];
 	
@@ -1269,7 +1367,6 @@ static BOOL is64bitHost					= NO;
 	
 	BOOL streamsHaveChanged = NO;
 	
-	const char *stringPtr;
 	NSString *line;
 	
 	// For ID_ and ANS_ matching
@@ -1289,7 +1386,6 @@ static BOOL is64bitHost					= NO;
 	int lineIndex = -1;
 	
 	while (++lineIndex < [myLines count]) {
-		char *tempPtr;
 		
 		// Read next line of data
 		line = [myLines objectAtIndex:lineIndex];
@@ -1298,149 +1394,112 @@ static BOOL is64bitHost					= NO;
 		if ([[line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length] == 0)
 			continue;
 		
-		// create cstring for legacy code
-		stringPtr = [line UTF8String];
-		
-		if (strstr(stringPtr, "A:") == stringPtr ||
-				strstr(stringPtr, "V:") == stringPtr) {
+		if ([line hasPrefix:@"A:"] || [line hasPrefix:@"V:"]) {
 			double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - myLastUpdate);
 				
 			// parse the output according to the preset mode
 			if ((state == MIStateSeeking && timeDifference >= MI_SEEK_UPDATE_INTERVAL)
 					|| timeDifference >= MI_STATS_UPDATE_INTERVAL) {
-				float audioCPUUsage = 0;
-				int videoCPUUsage = 0, voCPUUsage = 0;
-				int hours = 0, mins = 0;
+				int voCPUUsage = 0;
 				myLastUpdate = [NSDate timeIntervalSinceReferenceDate];
 				
-				if (myUpdateStatistics) {
-					switch (myOutputReadMode) {
-					case 0:
-					case 1:
-						if (sscanf(stringPtr, "A: %f V: %*f A-V: %f ct: %*f %*d/%*d %d%% %d%% %f%% %d %d %d%%",
-								&mySeconds, &mySyncDifference, &videoCPUUsage, &voCPUUsage,
-								&audioCPUUsage, &myDroppedFrames, &myPostProcLevel,
-								&myCacheUsage) >= 7) {
-							myCPUUsage = (int)(audioCPUUsage + videoCPUUsage + voCPUUsage);
-							myOutputReadMode = 1;
-							break;
-						}
-					case 2:			// only video
-						if (sscanf(stringPtr, "V: %f %*d/%*d %d%% %*f%% %d %d %d%%",
-								&mySeconds, &videoCPUUsage, &voCPUUsage, &myDroppedFrames,
-								&myPostProcLevel, &myCacheUsage) >= 5) {
-							myCPUUsage = (int)(videoCPUUsage + voCPUUsage);
-							myOutputReadMode = 2;
-							break;
-						}
-					case 3:			// only audio
-						if (sscanf(stringPtr, "A: %d:%2d:%f %f%% %d%%", &hours, &mins,
-								&mySeconds, &audioCPUUsage, &myCacheUsage) >= 4) {
-							myCPUUsage = (int)audioCPUUsage;
-							mySeconds += (3600 * hours + 60 * mins);
-						}
-						else if (sscanf(stringPtr, "A: %2d:%f %f%% %d%%", &mins,
-								&mySeconds, &audioCPUUsage, &myCacheUsage) >= 3) {
-							myCPUUsage = (int)audioCPUUsage;
-							mySeconds += 60 * mins;
-						}
-						else if (sscanf(stringPtr, "A: %f %f%% %d%%", &mySeconds,
-								&audioCPUUsage, &myCacheUsage) >= 2) {
-							myCPUUsage = (int)audioCPUUsage;
-						}
-						else {
-							myOutputReadMode = 0;
-							break;
-						}
-						myOutputReadMode = 3;
-						break;
-					default :
-						break;
-					}
-				}
-				else {
-					switch (myOutputReadMode) {
-					case 0:
-					case 1:
-						if (sscanf(stringPtr, "A: %f V: %*f A-V: %f", &mySeconds,
-								&mySyncDifference) == 2) {
-							myOutputReadMode = 1;
-							break;
-						}
-					case 2:
-						if (sscanf(stringPtr, "V: %f ", &mySeconds) == 1) {
-							myOutputReadMode = 2;
-							break;
-						}
-					case 3:
-						if (sscanf(stringPtr, "A: %d:%2d:%f ", &hours, &mins,
-								&mySeconds) == 3) {
-							mySeconds += (3600 * hours + 60 * mins);
-							myOutputReadMode = 3;
-							break;
-						}
-						else if (sscanf(stringPtr, "A: %2d:%f ", &mins, &mySeconds) == 2) {
-							mySeconds += 60 * mins;
-							myOutputReadMode = 3;
-							break;
-						}
-						else if (sscanf(stringPtr, "A: %f ", &mySeconds) == 1) {
-							myOutputReadMode = 3;
-							break;
-						}
-					default :
-						break;
-					}
-				}
+				NSArray *captures;
+				if (myUpdateStatistics)
+					captures = [line captureComponentsMatchedByRegex:MI_STATUS_REGEX];
+				else
+					captures = [line captureComponentsMatchedByRegex:MI_STATUS_SHORT_REGEX];
 				
-				// if the line was parsed then post notification and continue on next line
-				if (myOutputReadMode > 0) {
-					
-					// post notification
-					// TODO: Update stats
-					/*[[NSNotificationCenter defaultCenter]
-							postNotificationName:@"MIStatsUpdatedNotification"
-							object:self
-							userInfo:nil];*/
-					
-					[self notifyClientsWithSelector:@selector(interface:timeUpdate:) 
-										  andObject:[NSNumber numberWithFloat:mySeconds]];
-					
-					// finish seek
-					if (state == MIStateSeeking && lastMissedSeek) {
-						[self seek:[[lastMissedSeek objectForKey:@"seconds"] floatValue]
-							  mode:[[lastMissedSeek objectForKey:@"mode"] intValue]
-							 force:YES];
-						[lastMissedSeek release];
-						lastMissedSeek = nil;
-						continue;
-					}
-					
-					if (state == MIStateSeeking) {
-						[self setState:stateBeforeSeeking];
-						if (stateBeforeSeeking == MIStatePaused)
-							[self sendCommand:@"pause"];
-						continue;
-					}
-					
-					// if it was not playing before (launched or unpaused)
-					if (state != MIStatePlaying) {
-						[self setState:MIStatePlaying];
-						continue;
-					}
-					
+				if ((!myUpdateStatistics && [captures count] != 3)
+					|| (myUpdateStatistics && [captures count] != 9)) {
+					[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to read status line: %@",line];
 					continue;
 				}
-			} else
-				continue;
+				
+				// Audio only
+				if ([(NSString*)[captures objectAtIndex:MI_STATUS_VIDEO_TIME_INDEX] length] == 0) {
+					
+					mySeconds = [[captures objectAtIndex:MI_STATUS_AUDIO_TIME_INDEX] floatValue];
+					
+					if (myUpdateStatistics) {
+						myAudioCPUUsage = [[captures objectAtIndex:MI_STATUS_FIRST_PERCENT_INDEX] floatValue];
+						myCPUUsage = myAudioCPUUsage;
+						if ([(NSString*)[captures objectAtIndex:MI_STATUS_SECOND_PERCENT_INDEX] length] > 0)
+							myCacheUsage = [[captures objectAtIndex:MI_STATUS_SECOND_PERCENT_INDEX] intValue];
+					}
+					
+				// Video
+				} else {
+					
+					mySeconds = [[captures objectAtIndex:MI_STATUS_VIDEO_TIME_INDEX] floatValue];
+					
+					if (myUpdateStatistics) {
+						if ([(NSString*)[captures objectAtIndex:MI_STATUS_AV_SYNC_INDEX] length] > 0)
+							mySyncDifference = [[captures objectAtIndex:MI_STATUS_AV_SYNC_INDEX] floatValue];
+						myVideoCPUUsage = [[captures objectAtIndex:MI_STATUS_FIRST_PERCENT_INDEX] intValue];
+						voCPUUsage = [[captures objectAtIndex:MI_STATUS_SECOND_PERCENT_INDEX] intValue];
+						myAudioCPUUsage = [[captures objectAtIndex:MI_STATUS_THIRD_PERCENT_INDEX] floatValue];
+						myCPUUsage = myVideoCPUUsage + myAudioCPUUsage + voCPUUsage;
+						myDroppedFrames = [[captures objectAtIndex:MI_STATUS_DROPPED_FRAMES_INDEX] intValue];
+						if ([(NSString*)[captures objectAtIndex:MI_STATUS_FORUTH_PERCENT_INDEX] length] > 0)
+							myCacheUsage = [[captures objectAtIndex:MI_STATUS_FORUTH_PERCENT_INDEX] intValue];
+					}
+					
+				}
+					
+				// Update stats
+				if (myUpdateStatistics) {
+					NSMutableDictionary *stats = [NSMutableDictionary dictionary];
+					[stats setObject:[statusNames objectAtIndex:state] forKey:MIStatsStatusStringKey];
+					if (myCPUUsage > -1)
+						[stats setInteger:myCPUUsage forKey:MIStatsCPUUsageKey];
+					if (myAudioCPUUsage > -1)
+						[stats setFloat:myAudioCPUUsage forKey:MIStatsAudioCPUUsageKey];
+					if (myVideoCPUUsage > -1)
+						[stats setInteger:myVideoCPUUsage forKey:MIStatsVideoCPUUsageKey];
+					if (myCacheUsage > -1)
+						[stats setInteger:myCacheUsage forKey:MIStatsCacheUsageKey];
+					if (!isnan(mySyncDifference))
+						[stats setFloat:mySyncDifference forKey:MIStatsAVSyncKey];
+					if (myDroppedFrames > -1)
+						[stats setInteger:myDroppedFrames forKey:MIStatsDroppedFramesKey];
+					
+					[playingItem setPlaybackStats:stats];
+				}
+				
+				[self notifyClientsWithSelector:@selector(interface:timeUpdate:) 
+									  andObject:[NSNumber numberWithFloat:mySeconds]];
+				
+				// finish seek
+				if (state == MIStateSeeking && lastMissedSeek) {
+					[self seek:[[lastMissedSeek objectForKey:@"seconds"] floatValue]
+						  mode:[[lastMissedSeek objectForKey:@"mode"] intValue]
+						 force:YES];
+					[lastMissedSeek release];
+					lastMissedSeek = nil;
+					continue;
+				}
+				
+				if (state == MIStateSeeking) {
+					[self setState:stateBeforeSeeking];
+					if (stateBeforeSeeking == MIStatePaused)
+						[self sendCommand:@"pause"];
+					continue;
+				}
+				
+				// if it was not playing before (launched or unpaused)
+				if (state != MIStatePlaying) {
+					[self setState:MIStatePlaying];
+					continue;
+				}
+			}
+			
+			continue;
 		}
 		
 		//  =====  PAUSE  ===== test for paused state
 		if ([line hasPrefix:MI_PAUSED_STRING]) {
 			[self setState:MIStatePaused];
-			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
-			
-			continue; 							// continue on next line
+			continue;
 		}
 		
 		// Exiting... test for player termination
@@ -1739,30 +1798,23 @@ static BOOL is64bitHost					= NO;
 			
 		}
 		
-		// *** if player is playing then do not bother with parse anything else
-		if (myOutputReadMode > 0) {
-			// print unused line
-			//[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
-			continue;
-		}
-		
-		
 		// mplayer starts to open a file
 		if ([line hasPrefix:MI_OPENING_STRING]) {
 			[self setState:MIStateOpening];
-			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
-			continue; 							// continue on next line	
+			[Debug log:ASL_LEVEL_INFO withMessage:line];
+			continue;	
 		}
 		
 		// filling cache
-		if (strncmp(stringPtr, "Cache fill:", 11) == 0) {
-			float cacheUsage;
+		if ([line isMatchedByRegex:MI_CACHE_FILL_REGEX]) {
 			[self setState:MIStateBuffering];
-			if (sscanf(stringPtr, "Cache fill: %f%%", &cacheUsage) == 1) {
-				// TODO: Update stats
-				//[userInfo setObject:[NSNumber numberWithFloat:cacheUsage]
-				//		forKey:@"CacheUsage"];
-				myCacheUsage = cacheUsage;
+			myCacheUsage = [[line stringByMatching:MI_CACHE_FILL_REGEX capture:1] intValue];
+			if (myUpdateStatistics) {
+				NSMutableDictionary *stats = [playingItem playbackStats];
+				if (!stats)
+					stats = [NSMutableDictionary dictionary];
+				[stats setInteger:myCacheUsage forKey:MIStatsCacheUsageKey];
+				[playingItem setPlaybackStats:stats];
 			}
 			continue;
 		}
@@ -1770,29 +1822,20 @@ static BOOL is64bitHost					= NO;
 		// get format of audio
 		if ([line hasPrefix:MI_AUDIO_FILE_STRING]) {
 			[playingItem setFileFormat:@"Audio"];
-			continue; 							// continue on next line	
+			continue;	
 		}
 		
 		// get format of movie
-		tempPtr = strstr(stringPtr, " file format detected.");
-		if (tempPtr != NULL) {
-			*(tempPtr) = '\0';
-			[playingItem setFileFormat:[NSString stringWithUTF8String:stringPtr]];
-			continue; 							// continue on next line	
+		if ([line isMatchedByRegex:MI_FORMAT_REGEX]) {
+			[playingItem setFileFormat:[line stringByMatching:MI_FORMAT_REGEX capture:1]];
+			continue;
 		}
 		
 		// rebuilding index
-		if ((tempPtr = strstr(stringPtr, "Generating Index:")) != NULL) {
-			int cacheUsage;
+		if ([line isMatchedByRegex:MI_INDEXING_REGEX]) {
 			[self setState:MIStateIndexing];
-			if (sscanf(tempPtr, "Generating Index: %d", &cacheUsage) == 1) {
-				// TODO: update stats
-				//[userInfo setObject:[NSNumber numberWithInt:cacheUsage]
-				//		forKey:@"CacheUsage"];
-				myCacheUsage = cacheUsage;
-			}
-			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
-			continue; 							// continue on next line	
+			// TODO: Read fill state
+			continue;
 		}
 		
 		// mplayer is starting playback -- ignore for preflight
@@ -1803,12 +1846,12 @@ static BOOL is64bitHost					= NO;
 			if (pausedOnRestart)
 				[self sendCommand:@"pause"];
 			
-			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
+			[Debug log:ASL_LEVEL_INFO withMessage:line];
 			continue;
 		}
 		
 		// print unused output
-		[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithUTF8String:stringPtr]];
+		[Debug log:ASL_LEVEL_INFO withMessage:line];
 		
 	} // while
 	

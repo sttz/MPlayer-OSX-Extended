@@ -33,24 +33,37 @@
 	IBOutlet NSScrollView *scroller;
 	IBOutlet NSView *container;
 	IBOutlet NSView *fileAttributesSection;
+	IBOutlet NSView *playbackSettingsSection;
 	IBOutlet NSView *statisticsSection;
 	
 	IBOutlet NSButton *fileAttributesTriangle;
+	IBOutlet NSButton *playbackSettingsTriangle;
 	IBOutlet NSButton *statisticsTriangle;
 	
 	NSDictionary *views;
 	NSDictionary *triangles;
 	NSMutableDictionary *expandedHeights;
+	NSArray *sectionOrder;
 	
 	BOOL isResizing;
 	float lastSectionHeight;
+	
+	BOOL statsExpanded;
+	
+	IBOutlet NSSlider *playbackSpeed;
+	IBOutlet NSSlider *audioDelay;
+	IBOutlet NSSlider *subtitleDelay;
 }
 
 @property (nonatomic,readonly) NSWindow *window;
 
 - (IBAction)toggleSection:(id)sender;
-- (void) sectionDidResize:(NSNotification *)notification;
+- (void)sectionDidResize:(NSNotification *)notification;
 
-- (void) positionSections:(id)sender;
+- (void)positionSections:(id)sender;
+
+- (IBAction)resetPlaybackSpeed:(id)sender;
+- (IBAction)resetAudioDelay:(id)sender;
+- (IBAction)resetSubtitleDelay:(id)sender;
 
 @end

@@ -29,7 +29,7 @@
 - (void) interface:(MplayerInterface *)mi timeUpdate:(NSNumber *)newTime;
 - (void) interface:(MplayerInterface *)mi streamUpate:(MovieInfo *)item;
 - (void) interface:(MplayerInterface *)mi hasSelectedStream:(NSNumber *)streamId ofType:(NSNumber *)type;
-- (void) interface:(MplayerInterface *)mi statsUpdate:(NSArray *)stats;
+- (void) interface:(MplayerInterface *)mi statsUpdate:(NSDictionary *)stats;
 - (void) interface:(MplayerInterface *)mi volumeUpdate:(NSNumber *)volume;
 @end
 
@@ -89,6 +89,14 @@ enum {
 };
 typedef NSUInteger MICommandPausingMode;
 
+extern NSString* const MIStatsStatusStringKey;
+extern NSString* const MIStatsCPUUsageKey;
+extern NSString* const MIStatsAudioCPUUsageKey;
+extern NSString* const MIStatsVideoCPUUsageKey;
+extern NSString* const MIStatsCacheUsageKey;
+extern NSString* const MIStatsAVSyncKey;
+extern NSString* const MIStatsDroppedFramesKey;
+
 @interface MplayerInterface : NSObject
 {	
 	// Properties
@@ -132,6 +140,8 @@ typedef NSUInteger MICommandPausingMode;
 	BOOL myUpdateStatistics;
 	float mySyncDifference;
 	int myCPUUsage;
+	float myAudioCPUUsage;
+	int myVideoCPUUsage;
 	int myCacheUsage;
 	int	myDroppedFrames;
 	int myPostProcLevel;
@@ -196,11 +206,7 @@ typedef NSUInteger MICommandPausingMode;
 
 // statistics
 - (void) setUpdateStatistics:(BOOL)aBool;
-- (float) syncDifference;
-- (int) cpuUsage;
-- (int) cacheUsage;
-- (int) droppedFrames;
-- (int) postProcLevel;
+- (void) resetStatistics;
 
 // advanced
 - (void)sendCommand:(NSString *)aCommand withOSD:(uint)osdMode andPausing:(uint)pausing;

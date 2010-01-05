@@ -335,7 +335,11 @@
 	}
 	
 	if (movieInfo || movieInfo != anItem) {
+		// switch movie info (take care of unregistering and registering the player instance)
+		[movieInfo setPlayer:nil];
 		[self setMovieInfo:anItem];
+		[anItem setPlayer:self];
+		// set self as movie info provider if key window
 		if ([playerWindow isKeyWindow] && [[AppController sharedController] movieInfoProvider] != self)
 			[[AppController sharedController] setMovieInfoProvider:self];
 	}
@@ -949,16 +953,6 @@
 		return fullscreenDeviceId;
 }
 /************************************************************************************/
-- (IBAction)displayStats:(id)sender
-{
-	[myPlayer setUpdateStatistics:YES];
-	[statsPanel makeKeyAndOrderFront:self];
-	[[NSNotificationCenter defaultCenter] addObserver: self
-			selector: @selector(statsClosed)
-			name: NSWindowWillCloseNotification
-			object:statsPanel];
-}
-/************************************************************************************/
 - (IBAction)takeScreenshot:(id)sender {
 	if ([myPlayer state] > MIStateStopped) {
 		[myPlayer takeScreenshot];
@@ -1554,13 +1548,6 @@
 	[myPlayer stop];	
 }
 /************************************************************************************/
-- (void) statsClosed
-{
-	[myPlayer setUpdateStatistics:NO];
-	[[NSNotificationCenter defaultCenter] removeObserver:self
-			name: @"NSWindowWillCloseNotification" object:statsPanel];
-}
-/************************************************************************************/
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
 	if ([keyPath isEqualToString:MPEWindowOnTopMode])
@@ -1721,20 +1708,6 @@
 				if ([playerWindow isVisible])
 					[self updatePlayerWindow];
 			}
-			
-			// stats window
-			if ([statsPanel isVisible]) {
-				[statsCPUUsageBox setStringValue:[NSString localizedStringWithFormat:@"%d %%",
-												  [myPlayer cpuUsage]]];
-				[statsCacheUsageBox setStringValue:[NSString localizedStringWithFormat:@"%d %%",
-													[myPlayer cacheUsage]]];
-				[statsAVsyncBox setStringValue:[NSString localizedStringWithFormat:@"%3.1f",
-												[myPlayer syncDifference]]];
-				[statsDroppedBox setStringValue:[NSString localizedStringWithFormat:@"%d",
-												 [myPlayer droppedFrames]]];
-				[statsPostProcBox setStringValue:[NSString localizedStringWithFormat:@"%d",
-												  [myPlayer postProcLevel]]];
-			}
 		}
 		// poll volume
 		/*double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - lastVolumePoll);
@@ -1820,7 +1793,7 @@
 
 - (void)windowDidBecomeKey:(NSNotification *)notification
 {
-	if (movieInfo)
+	if (movieInfo && [[AppController sharedController] movieInfoProvider] != self)
 		[[AppController sharedController] setMovieInfoProvider:self];
 }
 

@@ -25,6 +25,10 @@
 
 #import "InspectorController.h"
 
+#import "AppController.h"
+#import "MovieInfo.h"
+#import "MplayerInterface.h"
+
 #import "Preferences.h"
 #import "CocoaAdditions.h"
 
@@ -38,20 +42,28 @@ static const float const collapsedSectionHeight = 21.0f;
 - (void)awakeFromNib
 {
 	views = [[NSDictionary alloc] initWithObjectsAndKeys:
-			 fileAttributesSection, @"fileAttributes",
-			 statisticsSection,		@"statistics",
+			 fileAttributesSection,		@"fileAttributes",
+			 playbackSettingsSection,	@"playbackSettings",
+			 statisticsSection,			@"statistics",
 			 nil];
 	
 	triangles = [[NSDictionary alloc] initWithObjectsAndKeys:
-				 fileAttributesTriangle, @"fileAttributes",
-				 statisticsTriangle,	 @"statistics",
+				 fileAttributesTriangle,	@"fileAttributes",
+				 playbackSettingsTriangle,	@"playbackSettings",
+				 statisticsTriangle,		@"statistics",
 				 nil];
+	
+	sectionOrder = [[NSArray alloc] initWithObjects:
+					@"fileAttributes",
+					@"playbackSettings",
+					@"statistics",
+					nil];
 	
 	float sectionWidth = [window frame].size.width;
 	NSArray *expanded = [PREFS arrayForKey:MPEExpandedInspectorSections];
 	expandedHeights = [NSMutableDictionary new];
 	
-	for (NSString *name in views) {
+	for (NSString *name in sectionOrder) {
 		NSView *section = [views objectForKey:name];
 		
 		[expandedHeights setObject:[NSNumber numberWithFloat:[section frame].size.height]
@@ -76,6 +88,43 @@ static const float const collapsedSectionHeight = 21.0f;
 	}
 	
 	[self positionSections:nil];
+	
+	statsExpanded = [expanded containsObject:@"statistics"];
+	
+	// Observe provider changes to enable/disable statistics capturing
+	[[AppController sharedController] addObserver:self
+									   forKeyPath:@"movieInfoProvider.currentMovieInfo"
+										  options:(NSKeyValueObservingOptionNew|
+												   NSKeyValueObservingOptionOld)
+										  context:nil];
+}
+
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if ([keyPath isEqualToString:@"movieInfoProvider.currentMovieInfo"]) {
+		if (![window isVisible] || !statsExpanded)
+			return;
+		MovieInfo *old = [change objectForKey:NSKeyValueChangeOldKey];
+		MovieInfo *new = [change objectForKey:NSKeyValueChangeNewKey];
+		if (old != new) {
+			if (![old isKindOfClass:[NSNull class]])
+				[old setCaptureStats:NO];
+			if (![new isKindOfClass:[NSNull class]])
+				[new setCaptureStats:YES];
+		}
+	}
+}
+
+- (void) windowDidBecomeKey:(NSNotification *)notification
+{
+	if (statsExpanded)
+		[[[[AppController sharedController] movieInfoProvider] currentMovieInfo] setCaptureStats:YES];
+}
+
+- (void) windowWillClose:(NSNotification *)notification
+{
+	if (statsExpanded)
+		[[[[AppController sharedController] movieInfoProvider] currentMovieInfo] setCaptureStats:NO];
 }
 
 - (void) sectionDidResize:(NSNotification *)notification
@@ -93,7 +142,7 @@ static const float const collapsedSectionHeight = 21.0f;
 	
 	float topOffset = firstSectionTopOffset;
 	
-	for (NSString *name in views) {
+	for (NSString *name in sectionOrder) {
 		NSView *section = [views objectForKey:name];
 		float height = [section frame].size.height;
 		
@@ -154,6 +203,29 @@ static const float const collapsedSectionHeight = 21.0f;
 	[[section animator] setFrameSize:NSMakeSize(width, height)];
 	
 	[PREFS setObject:expanded forKey:MPEExpandedInspectorSections];
+	
+	if ([name isEqualToString:@"statistics"]) {
+		statsExpanded = [expanded containsObject:name];
+		[[[[AppController sharedController] movieInfoProvider] currentMovieInfo] setCaptureStats:statsExpanded];
+	}
+}
+
+- (IBAction)resetPlaybackSpeed:(id)sender
+{
+	[playbackSpeed setDoubleValue:100];
+	[playbackSpeed performClick:self];
+}
+
+- (IBAction)resetAudioDelay:(id)sender
+{
+	[audioDelay setDoubleValue:0];
+	[audioDelay performClick:self];
+}
+
+- (IBAction)resetSubtitleDelay:(id)sender
+{
+	[subtitleDelay setDoubleValue:0];
+	[subtitleDelay performClick:self];
 }
 
 - (void)dealloc
@@ -161,6 +233,7 @@ static const float const collapsedSectionHeight = 21.0f;
 	[views release];
 	[triangles release];
 	[expandedHeights release];
+	[sectionOrder release];
 	
 	[super dealloc];
 }

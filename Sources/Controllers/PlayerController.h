@@ -51,15 +51,6 @@
 	// Fullscreen controls
 	IBOutlet FullscreenControls *fullScreenControls;
 	
-	// statistics panel outlets
-	IBOutlet id statsPanel;
-    IBOutlet id statsAVsyncBox;
-    IBOutlet id statsCacheUsageBox;
-    IBOutlet id statsCPUUsageBox;
-    IBOutlet id statsPostProcBox;
-    IBOutlet id statsDroppedBox;
-    IBOutlet id statsStatusBox;
-	
 	// properties
 	MplayerInterface *myPlayer;
 	
@@ -142,7 +133,6 @@
 - (IBAction)seekFromMenu:(NSMenuItem *)item;
 - (void)cleanUpAfterStop;
 - (IBAction)switchFullscreen:(id)sender;
-- (IBAction)displayStats:(id)sender;
 - (IBAction)takeScreenshot:(id)sender;
 - (void) setVolume:(double)volume;
 - (double)volume;
@@ -185,7 +175,6 @@
 
 // notification observers
 - (void) appShouldTerminate;
-- (void) statsClosed;
 - (void) progresBarClicked:(NSNotification *)notification;
 - (void) updatePlayerWindow;
 - (void) mplayerCrashed:(NSNotification *)notification;

@@ -135,7 +135,7 @@ static NSMutableArray *busyPreflightInstances;
 @synthesize filename, prefs, fileFormat, seekable, length, filesize, fileModificationDate, fileCreationDate,
 videoFormat, videoCodec, videoBitrate, videoWidth, videoHeight, videoFPS, videoAspect,
 audioFormat, audioCodec, audioBitrate, audioSampleRate, audioChannels,
-externalSubtitles;
+externalSubtitles, captureStats, playbackStats, player;
 
 // **************************************************** //
 
@@ -187,6 +187,12 @@ externalSubtitles;
 		   forKeyPath:@"filename" 
 			  options:NSKeyValueObservingOptionNew 
 			  context:nil];
+	
+	[self addObserver:self
+		   forKeyPath:@"player"
+			  options:(NSKeyValueObservingOptionNew|
+					   NSKeyValueObservingOptionOld)
+			  context:nil];
 }
 
 - (id) initWithPathToFile:(NSString *)path {
@@ -203,6 +209,7 @@ externalSubtitles;
 - (void) dealloc
 {
 	[self removeObserver:self forKeyPath:@"filename"];
+	[self removeObserver:self forKeyPath:@"player"];
 	
 	[info release];
 	[video release];
@@ -263,6 +270,14 @@ externalSubtitles;
 			[self setFileModificationDate:[attr objectForKey:NSFileModificationDate]];
 			[self setFileCreationDate:[attr objectForKey:NSFileCreationDate]];
 		}
+	
+	} else if ([keyPath isEqualToString:@"player"]) {
+		PlayerController *old = [change objectForKey:NSKeyValueChangeOldKey];
+		PlayerController *new = [change objectForKey:NSKeyValueChangeNewKey];
+		if (old && ![old isKindOfClass:[NSNull class]])
+			[[old player] setUpdateStatistics:NO];
+		if (new && ![new isKindOfClass:[NSNull class]] && captureStats)
+			[[new player] setUpdateStatistics:YES];
 	}
 }
 
@@ -325,6 +340,18 @@ externalSubtitles;
 		title = [aTitle retain];
 	
 	[self didChangeValueForKey:@"title"];
+}
+
+// **************************************************** //
+
+- (void) setCaptureStats:(BOOL)aBool {
+	
+	captureStats = aBool;
+	
+	if (captureStats)
+		[[player player] setUpdateStatistics:YES];
+	else
+		[[player player] setUpdateStatistics:NO];
 }
 
 // **************************************************** //

@@ -43,6 +43,8 @@ enum {
 };
 typedef NSUInteger MPEStreamType;
 
+@class PlayerController;
+
 @interface MovieInfo : NSObject {
 	
 @protected
@@ -96,6 +98,12 @@ typedef NSUInteger MPEStreamType;
 	
 	// length
 	unsigned int length;
+	
+	// statistics
+	BOOL captureStats;
+	NSMutableDictionary *playbackStats;
+	// player playing this item
+	PlayerController *player;
 }
 
 + (MovieInfo *)movieInfoWithPathToFile:(NSString*)path;
@@ -149,6 +157,11 @@ typedef NSUInteger MPEStreamType;
 
 // local preferences
 @property (nonatomic, readonly) NSMutableDictionary *prefs;
+
+// playback statistics
+@property (nonatomic) BOOL captureStats;
+@property (retain) NSMutableDictionary *playbackStats;
+@property (nonatomic,retain) PlayerController *player;
 
 // external subtitles
 - (void)addExternalSubtitle:(NSString *)path;
