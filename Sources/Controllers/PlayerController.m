@@ -535,7 +535,8 @@
 	}
 	
 	[PREFS setBool:isMute forKey:MPEAudioMute];
-	[PREFS setFloat:volume forKey:MPEAudioVolume];
+	if (volume > 0)
+		[PREFS setFloat:volume forKey:MPEAudioVolume];
 }
 
 - (double)volume
