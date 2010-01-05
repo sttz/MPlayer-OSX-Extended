@@ -51,7 +51,6 @@
 	int myPlayMode;
 	
 	// images
-	NSImage *statusIcon;
 	NSImage *playMode0Image;
 	NSImage *playMode1Image;
 	NSImage *playMode2Image;

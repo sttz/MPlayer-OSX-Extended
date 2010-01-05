@@ -84,9 +84,6 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	[[playListTable tableColumnWithIdentifier:@"status"] setDataCell:[[[NSImageCell alloc] initImageCell:nil] autorelease]];
 	
 	// load images
-	statusIcon = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle]
-							pathForResource:@"playing_state"
-							ofType:@"png"]];
 	playMode0Image = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle]
 							pathForResource:@"play_mode_0"
 							ofType:@"png"]];
@@ -826,7 +823,6 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	
 	// release data
 	[myData release];
-	[statusIcon release];
 	[playMode0Image release];
 	[playMode1Image release];
 	[playMode2Image release];
