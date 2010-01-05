@@ -357,7 +357,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	
 	// play the next item if it is set to do so
 	if (theIndex >= 0)
-		[playerController playFromPlaylist:[self itemAtIndex:theIndex]];
+		[playerController playItem:[self itemAtIndex:theIndex] fromPlaylist:YES];
 	else
 		[playerController stopFromPlaylist];
 }
@@ -606,7 +606,8 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 /************************************************************************************/
 - (IBAction)doubleClick:(id)sender
 {
-	[playerController playFromPlaylist:[[tableData arrangedObjects] objectAtIndex:[playListTable clickedRow]]];
+	[playerController playItem:[[tableData arrangedObjects] objectAtIndex:[playListTable clickedRow]]
+				  fromPlaylist:YES];
 }
 
 - (IBAction)playPrevious:(id)sender;
@@ -621,7 +622,8 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 		itemIdx--;
 		[self selectItemAtIndex:itemIdx];
 		[self updateView];
-		[playerController playFromPlaylist:[[tableData arrangedObjects] objectAtIndex:itemIdx]];
+		[playerController playItem:[[tableData arrangedObjects] objectAtIndex:itemIdx]
+					  fromPlaylist:YES];
 	}
 }
 
@@ -637,7 +639,8 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 		itemIdx++;
 		[self selectItemAtIndex:itemIdx];
 		[self updateView];
-		[playerController playFromPlaylist:[[tableData arrangedObjects] objectAtIndex:itemIdx]];
+		[playerController playItem:[[tableData arrangedObjects] objectAtIndex:itemIdx]
+					  fromPlaylist:YES];
 	}
 }
 
@@ -650,7 +653,8 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	
 	[self selectItemAtIndex:index];
 	[self updateView];
-	[playerController playFromPlaylist:[[tableData arrangedObjects] objectAtIndex:index]];
+	[playerController playItem:[[tableData arrangedObjects] objectAtIndex:index]
+				  fromPlaylist:YES];
 }
 
 /************************************************************************************/

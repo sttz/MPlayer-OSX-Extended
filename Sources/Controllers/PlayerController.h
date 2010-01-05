@@ -101,6 +101,7 @@ extern NSString* const MPEPlaybackStoppedNotification;
 // interface
 - (IBAction)displayWindow:(id)sender;
 - (void) playItem:(MovieInfo *)anItem;
+- (void) playItem:(MovieInfo *)anItem fromPlaylist:(BOOL)fromPlaylist;
 - (MovieInfo *) playingItem;
 - (void) loadExternalSubtitleFile:(NSString *)path withEncoding:(NSString *)encoding;
 - (BOOL) isRunning;
@@ -113,7 +114,6 @@ extern NSString* const MPEPlaybackStoppedNotification;
 
 - (IBAction) togglePlaylist:(id)sender;
 - (void) updatePlaylistButton:(NSNotification *)notification;
-- (void) playFromPlaylist:(MovieInfo *)anItem;
 - (void) stopFromPlaylist;
 
 // misc

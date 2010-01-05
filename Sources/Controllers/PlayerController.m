@@ -317,6 +317,14 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 /************************************************************************************/
 - (void)playItem:(MovieInfo *)anItem
 {
+	[self playItem:anItem fromPlaylist:NO];
+}
+
+/************************************************************************************/
+- (void)playItem:(MovieInfo *)anItem fromPlaylist:(BOOL)fromPlaylist
+{
+	playingFromPlaylist = fromPlaylist;
+	
 	// re-open player window for internal video
 	if (![videoOpenGLView isFullscreen] && ![playerWindow isVisible])
 		[self displayWindow:self];
@@ -324,12 +332,14 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	// prepare player
 	// stops mplayer if it is running
 	if ([myPlayer isRunning]) {
-		continuousPlayback = YES;	// don't close view
-		saveTime = NO;		// don't save time
+		if (!fromPlaylist) {
+			continuousPlayback = YES;	// don't close view
+			saveTime = NO;		// don't save time
+		}
 		[myPlayer stop];
 		[playListController updateView];
 	}
-
+	
 	if (![anItem fileIsValid]) {
 		NSRunAlertPanel(NSLocalizedString(@"Error",nil), [NSString stringWithFormat:
 				NSLocalizedString(@"File or URL %@ could not be found.",nil), [anItem filename]],
@@ -375,13 +385,6 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 - (void) updatePlaylistButton:(NSNotification *)notification
 {
 	[playListButton setState:[[playListController window] isVisible]];
-}
-
-/************************************************************************************/
-- (void) playFromPlaylist:(MovieInfo *)anItem
-{
-	playingFromPlaylist = YES;
-	[self playItem:anItem];
 }
 
 /************************************************************************************/
@@ -1564,7 +1567,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	unsigned int stateMask = (1<<state);
 	MIState oldState = [oldstatenumber unsignedIntValue];
 	unsigned int oldStateMask = (1<<oldState);
-	
+		
 	// First play after startup
 	if (state == MIStatePlaying && (oldStateMask & MIStateStartupMask)) {
 		// Populate menus
@@ -1656,7 +1659,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		// Playlist mode
 		if (playingFromPlaylist) {
 			// if playback finished itself (not by user) let playListController know
-			if (state == MIStateFinished)
+			if (state == MIStateFinished || state == MIStateError)
 				[playListController finishedPlayingItem:movieInfo];
 			// close view otherwise
 			else if (!continuousPlayback)
