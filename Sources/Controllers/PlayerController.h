@@ -19,7 +19,7 @@
 
 #define		volumeStep				10.0
 
-@class PlayListController, SettingsController, MenuController;
+@class PlayListController, MenuController;
 @protocol MovieInfoProvider;
 
 @interface PlayerController : NSObject <MplayerInterfaceClientProtocol, MovieInfoProvider>
@@ -29,7 +29,6 @@
 	
 	// other controllers outlets
     IBOutlet PlayListController	*playListController;
-	IBOutlet SettingsController *settingsController;
 	
 	//Player Window
 	IBOutlet NSWindow *playerWindow;
@@ -89,7 +88,6 @@
 }
 
 @property (nonatomic,readonly) PlayListController *playListController;
-@property (nonatomic,readonly) SettingsController *settingsController;
 
 @property (nonatomic,readonly) BOOL isFullscreen;
 @property (nonatomic,readonly,getter=player) MplayerInterface* myPlayer;

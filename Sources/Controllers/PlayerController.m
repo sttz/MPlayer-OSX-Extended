@@ -42,7 +42,7 @@
 #define		MP_SEEK_UPDATE_BLOCK		0.5f
 
 @implementation PlayerController
-@synthesize myPlayer, playListController, settingsController, videoOpenGLView, movieInfo;
+@synthesize myPlayer, playListController, videoOpenGLView, movieInfo;
 
 /************************************************************************************/
 -(id)init

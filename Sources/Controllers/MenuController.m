@@ -12,7 +12,6 @@
 #import "PlayerController.h"
 #import "PlayListController.h"
 #import "PreferencesController2.h"
-#import "SettingsController.h"
 #import "EqualizerController.h"
 
 #import "VideoOpenGLView.h"

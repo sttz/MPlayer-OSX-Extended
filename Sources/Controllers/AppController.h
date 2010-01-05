@@ -20,7 +20,7 @@
 #define MP_DIALOG_SUBTITLES 3
 
 @class AppleRemote, PlayerController, PreferencesController2, EqualizerController,
-PlayListController, SettingsController, MenuController, InspectorController, MovieInfo;
+PlayListController, MenuController, InspectorController, MovieInfo;
 
 @protocol MovieInfoProvider;
 
@@ -67,7 +67,6 @@ PlayListController, SettingsController, MenuController, InspectorController, Mov
 @property (nonatomic,readonly) PlayerController *playerController;
 @property (nonatomic,readonly) PreferencesController2 *preferencesController;
 @property (nonatomic,readonly) PlayListController *playListController;
-@property (nonatomic,readonly) SettingsController *settingsController;
 @property (nonatomic,readonly) InspectorController *inspectorController;
 - (EqualizerController *)equalizerController;
 

@@ -25,7 +25,6 @@
 {
     // controllers outlets
 	IBOutlet id playerController;
-	IBOutlet id settingsController;
 
 	// UI outlets
 	IBOutlet id playListWindow;

@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class AppController, PlayerController, PlayListController, PreferencesController2,
-SettingsController, EqualizerController;
+EqualizerController;
 
 @interface MenuController : NSObject {
 

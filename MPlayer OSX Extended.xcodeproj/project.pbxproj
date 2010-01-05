@@ -50,7 +50,6 @@
 		377E0371085E480E00D64A26 /* ScrubbingBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E036E085E480E00D64A26 /* ScrubbingBar.m */; };
 		377E037D085E482B00D64A26 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E0374085E482B00D64A26 /* AppController.m */; };
 		377E037E085E482B00D64A26 /* PlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E0376085E482B00D64A26 /* PlayerController.m */; };
-		377E0381085E482B00D64A26 /* SettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E037C085E482B00D64A26 /* SettingsController.m */; };
 		378749400891B7A60068D97D /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 378749150891B7A60068D97D /* fonts */; };
 		379740A10875CA980049E91B /* VideoOpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 379740A00875CA980049E91B /* VideoOpenGLView.m */; };
 		37B934DC088FDF9200C81536 /* PlaylistTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 37B934DB088FDF9200C81536 /* PlaylistTableView.m */; };
@@ -216,8 +215,6 @@
 		377E0373085E482B00D64A26 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AppController.h; path = Sources/Controllers/AppController.h; sourceTree = "<group>"; };
 		377E0374085E482B00D64A26 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AppController.m; path = Sources/Controllers/AppController.m; sourceTree = "<group>"; };
 		377E0376085E482B00D64A26 /* PlayerController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = PlayerController.m; path = Sources/Controllers/PlayerController.m; sourceTree = "<group>"; };
-		377E037B085E482B00D64A26 /* SettingsController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SettingsController.h; path = Sources/Controllers/SettingsController.h; sourceTree = "<group>"; };
-		377E037C085E482B00D64A26 /* SettingsController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SettingsController.m; path = Sources/Controllers/SettingsController.m; sourceTree = "<group>"; };
 		378749150891B7A60068D97D /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fonts; path = Resources/fonts; sourceTree = "<group>"; };
 		3797409F0875CA980049E91B /* VideoOpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = VideoOpenGLView.h; path = Sources/Classes/VideoOpenGLView.h; sourceTree = "<group>"; };
 		379740A00875CA980049E91B /* VideoOpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = VideoOpenGLView.m; path = Sources/Classes/VideoOpenGLView.m; sourceTree = "<group>"; };
@@ -563,8 +560,6 @@
 				377E0374085E482B00D64A26 /* AppController.m */,
 				372E8238086A43CD00FC39B4 /* PlayerController.h */,
 				377E0376085E482B00D64A26 /* PlayerController.m */,
-				377E037B085E482B00D64A26 /* SettingsController.h */,
-				377E037C085E482B00D64A26 /* SettingsController.m */,
 				3A6E433010A33AE400B0BDC3 /* PreferencesController2.h */,
 				3A6E433110A33AE400B0BDC3 /* PreferencesController2.m */,
 				3AF0A9AF10C4202D00A2D10E /* EqualizerController.h */,
@@ -813,7 +808,6 @@
 				377E0371085E480E00D64A26 /* ScrubbingBar.m in Sources */,
 				377E037D085E482B00D64A26 /* AppController.m in Sources */,
 				377E037E085E482B00D64A26 /* PlayerController.m in Sources */,
-				377E0381085E482B00D64A26 /* SettingsController.m in Sources */,
 				37EA4B6C086256590026216A /* VolumeSlider.m in Sources */,
 				372E8226086A431900FC39B4 /* PlayListController.m in Sources */,
 				379740A10875CA980049E91B /* VideoOpenGLView.m in Sources */,

@@ -112,8 +112,6 @@
 	IBOutlet NSMenuItem* CustomAspectMenuItem;
 	
 	// other controllers outlets
-	IBOutlet id	playListController;
-	IBOutlet id settingsController;
 	IBOutlet id playerController;
 	
 	IBOutlet NSWindow *fcControlWindow;

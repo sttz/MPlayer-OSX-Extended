@@ -11,7 +11,6 @@
 // other controllers
 #import "PlayerController.h"
 #import "AppController.h"
-#import "SettingsController.h"
 
 #import "ScrubbingBar.h"
 #import "MovieInfo.h"
@@ -266,14 +265,6 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	
 	[playListTable reloadData];
 	
-	if ([playListTable selectedRow] < 0 || [playListTable numberOfSelectedRows] > 1 ||
-			[settingsController isVisible]) {
-		[settingsButton setEnabled:NO];
-	}
-	else {
-		[settingsButton setEnabled:YES];
-	}
-	
 	switch (myPlayMode) {
 	case 1:
 		[playModeButton setImage:playMode1Image];
@@ -391,10 +382,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	if (![(MovieInfo *)[self selectedItem] containsInfo])
 		[(MovieInfo *)[self selectedItem] preflight];
 		
-	//NSMutableDictionary *myItem = [NSMutableDictionary dictionaryWithDictionary:[self selectedItem]];
-	//[settingsController displayForItem:myItem];
-	[settingsController displayForItem:[self selectedItem]];
-	[settingsButton setEnabled:NO];
+	[[[[AppController sharedController] inspectorController] window] makeKeyAndOrderFront:self];
 }
 /************************************************************************************/
 - (IBAction)changePlayMode:(id)sender
@@ -624,10 +612,6 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
  ************************************************************************************/
 - (BOOL) validateMenuItem:(NSMenuItem *)aMenuItem
 {
-	if ([[aMenuItem title] isEqualToString:NSLocalizedString(@"Show Info",nil)]) {
-		if ([playListTable numberOfSelectedRows] == 1 && ![settingsController isVisible])
-			return YES;
-	}
 	return NO;
 }
 /************************************************************************************/

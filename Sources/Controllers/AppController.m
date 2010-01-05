@@ -89,11 +89,6 @@ static AppController *instance = nil;
 	return [playerController playListController];
 }
 
-- (SettingsController *) settingsController
-{
-	return [playerController settingsController];
-}
-
 - (EqualizerController *)equalizerController
 {
 	if (!equalizerController)

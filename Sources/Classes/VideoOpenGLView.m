@@ -3,7 +3,6 @@
 
 // other controllers
 #import "AppController.h"
-#import "PlayListController.h"
 #import "MenuController.h"
 
 //Custom Class
