@@ -48,8 +48,6 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 /************************************************************************************/
 -(void)awakeFromNib
 {	    
-	NSUserDefaults *defaults = [[AppController sharedController] preferences];
-	
 	//window
 	[playListWindow setLevel:NSNormalWindowLevel];
 	[playListWindow setHidesOnDeactivate:NO];
@@ -64,11 +62,6 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	[playListTable registerForDraggedTypes:[NSArray 
 			arrayWithObjects:NSFilenamesPboardType,@"PlaylistSelectionEnumeratorType",nil]];
 	
-	// register for app termination notification
-	[[NSNotificationCenter defaultCenter] addObserver: self
-			selector: @selector(appTerminating)
-			name: NSApplicationWillTerminateNotification
-			object:NSApp];
     // register for app pre-termination notification
 	[[NSNotificationCenter defaultCenter] addObserver: self
 			selector: @selector(appShouldTerminate)
@@ -110,10 +103,10 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	pauseImageOff = [[NSImage imageNamed:@"pause_button_off"] retain];
 	
 	// set play mode
-	if ([defaults objectForKey:@"PlayMode"])
-		myPlayMode = [[defaults objectForKey:@"PlayMode"] intValue];
+	if ([PREFS objectForKey:MPEPlaylistPlayMode])
+		myPlayMode = [[PREFS objectForKey:MPEPlaylistPlayMode] intValue];
 	else
-		myPlayMode = 0;
+		myPlayMode = 1;
 	
 	[self applyPrefs];
 	
@@ -147,7 +140,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
     [playListWindow setToolbar:toolbar];
 	
 	//display if set in pref or if playlist was opened on last quit
-	if ([defaults boolForKey:@"PlaylistOnStartup"] || [defaults boolForKey:@"PlaylistOpen"]) 
+	if ([PREFS boolForKey:@"PlaylistOnStartup"] || [PREFS boolForKey:@"PlaylistOpen"]) 
 	{
 		[self displayWindow:nil];
 	}
@@ -391,6 +384,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	if (myPlayMode > 2)
 		myPlayMode = 0;
 	[self updateView];
+	[PREFS setInteger:myPlayMode forKey:MPEPlaylistPlayMode];
 }
 /************************************************************************************
  MISC METHODS
@@ -759,13 +753,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	[timeTextFieldToolbar setStringValue:[NSString stringWithFormat:@"%02d:%02d:%02d", iseconds/3600,(iseconds%3600)/60,iseconds%60]];
 }
 /************************************************************************************/
-- (void) appShouldTerminate
-{
-	// save values to prefs
-	[[[AppController sharedController] preferences] setObject:[NSNumber numberWithInt:myPlayMode] forKey:@"PlayMode"];
-}
-/************************************************************************************/
-- (void)appTerminating
+- (void)appShouldTerminate
 {	
 	// Save playlist
 	NSMutableArray *playlist = [NSMutableArray array];

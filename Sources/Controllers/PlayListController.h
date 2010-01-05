@@ -124,7 +124,6 @@
 - (BOOL)tableView:(NSTableView *)tableView shouldEditTableColumn:(NSTableColumn *)tableColumn row:(int)row;
 // notification handlers
 - (void) appShouldTerminate;
-- (void) appTerminating;
 
 //Required NSToolbar delegate methods
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag;    

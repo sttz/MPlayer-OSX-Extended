@@ -523,6 +523,8 @@
 		<integer>25</integer>
 		<key>MPEAudioMute</key>
 		<false/>
+		<key>MPEPlaylistPlayMode</key>
+		<integer>1</integer>
 	</dict>
 	<key>RequiresRestart</key>
 	<array>
