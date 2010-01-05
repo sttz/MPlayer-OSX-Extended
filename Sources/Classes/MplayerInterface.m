@@ -991,6 +991,9 @@ static NSArray* statusNames;
 /************************************************************************************/
 - (BOOL) changesNeedRestart
 {
+	if (stateMask & MIStateStoppedMask)
+		return NO;
+	
 	NSArray *requiresRestart = [[AppController sharedController] preferencesRequiringRestart];
 	NSDictionary *currentPrefs = [PREFS dictionaryRepresentation];
 	
@@ -1015,6 +1018,9 @@ static NSArray* statusNames;
 /************************************************************************************/
 - (BOOL) localChangesNeedRestart
 {
+	if (stateMask & MIStateStoppedMask)
+		return NO;
+	
 	NSArray *requiresRestart = [[AppController sharedController] preferencesRequiringRestart];
 	
 	BOOL different = NO;

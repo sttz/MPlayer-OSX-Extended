@@ -22,6 +22,8 @@
 @class PlayListController, MenuController;
 @protocol MovieInfoProvider;
 
+extern NSString* const MPEPlaybackStoppedNotification;
+
 @interface PlayerController : NSObject <MplayerInterfaceClientProtocol, MovieInfoProvider>
 {
 	// Shorthand to menu controller

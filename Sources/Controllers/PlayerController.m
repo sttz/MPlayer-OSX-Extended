@@ -41,6 +41,8 @@
 #define		MP_CHAPTER_CHECK_INTERVAL	0.5f
 #define		MP_SEEK_UPDATE_BLOCK		0.5f
 
+NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotification";
+
 @implementation PlayerController
 @synthesize myPlayer, playListController, videoOpenGLView, movieInfo;
 
@@ -1668,6 +1670,8 @@
 			else
 				continuousPlayback = NO;
 		}
+		[[NSNotificationCenter defaultCenter] postNotificationName:MPEPlaybackStoppedNotification
+															object:self];
 	}
 }
 /************************************************************************************/

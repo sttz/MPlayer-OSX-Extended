@@ -113,6 +113,12 @@
 		[Debug log:ASL_LEVEL_WARNING withMessage:@"Reset to default binary (selected binary either not found or not compatible)."];
 		[PREFS removeObjectForKey:MPESelectedBinary];
 	}
+	
+	// listen for playback restarts to recheck if the restart requirement
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(requireRestart:)
+												 name:MPEPlaybackStoppedNotification
+											   object:[[AppController sharedController] playerController]];
 }
 
 - (void) dealloc
