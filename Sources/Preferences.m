@@ -70,6 +70,7 @@ NSString* const MPEOverrideAudioCodecs                = @"MPEOverrideAudioCodecs
 NSString* const MPEOverrideVideoCodecs                = @"MPEOverrideVideoCodecs";
 NSString* const MPEPlaybackSpeed                      = @"MPEPlaybackSpeed";
 NSString* const MPEPlaylist                           = @"MPEPlaylist";
+NSString* const MPEPlaylistOpen                       = @"MPEPlaylistOpen";
 NSString* const MPEPlaylistPlayMode                   = @"MPEPlaylistPlayMode";
 NSString* const MPEPostprocessingFilter               = @"MPEPostprocessingFilter";
 NSString* const MPERenderSubtitlesFirst               = @"MPERenderSubtitlesFirst";

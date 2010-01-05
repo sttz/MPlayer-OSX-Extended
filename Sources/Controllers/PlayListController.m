@@ -139,11 +139,9 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
     [toolbar setDisplayMode: NSToolbarDisplayModeIconOnly];
     [playListWindow setToolbar:toolbar];
 	
-	//display if set in pref or if playlist was opened on last quit
-	if ([PREFS boolForKey:@"PlaylistOnStartup"] || [PREFS boolForKey:@"PlaylistOpen"]) 
-	{
+	//display if playlist was opened on last quit
+	if ([PREFS boolForKey:MPEPlaylistOpen]) 
 		[self displayWindow:nil];
-	}
 	
 	// Load playlist
 	myData = [[NSMutableArray alloc] init];
@@ -762,6 +760,8 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 		[playlist addObject:[info dictionaryRepresentation]];
 	
 	[PREFS setObject:playlist forKey:MPEPlaylist];
+	
+	[PREFS setBool:[playListWindow isVisible] forKey:MPEPlaylistOpen];
  }
 
 - (void)windowWillClose:(NSNotification *)aNotification

@@ -70,6 +70,7 @@ extern NSString* const MPEOverrideAudioCodecs;
 extern NSString* const MPEOverrideVideoCodecs;
 extern NSString* const MPEPlaybackSpeed;
 extern NSString* const MPEPlaylist;
+extern NSString* const MPEPlaylistOpen;
 extern NSString* const MPEPlaylistPlayMode;
 extern NSString* const MPEPostprocessingFilter;
 extern NSString* const MPERenderSubtitlesFirst;
