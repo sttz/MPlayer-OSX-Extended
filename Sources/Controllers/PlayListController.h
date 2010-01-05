@@ -130,3 +130,7 @@
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar;
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar;
 @end
+
+
+@interface PlayListPlayingItemTransformer : NSValueTransformer {}
+@end

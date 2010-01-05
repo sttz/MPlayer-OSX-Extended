@@ -840,3 +840,27 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
     [super dealloc];
 }
 @end
+
+
+@implementation PlayListPlayingItemTransformer
+
++ (Class)transformedValueClass
+{
+    return [NSString self];
+}
+
++ (BOOL)allowsReverseTransformation
+{
+    return NO;
+}
+
+- (id)transformedValue:(id)beforeObject
+{
+	if (!beforeObject || ![beforeObject boolValue])
+		return nil;
+    
+	NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+    return [resourcePath stringByAppendingPathComponent:@"playing_state.png"];
+}
+
+@end
