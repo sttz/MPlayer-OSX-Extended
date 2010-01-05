@@ -143,6 +143,7 @@
 	
 	// Load playlist controller
 	[NSBundle loadNibNamed:@"Playlist" owner:self];
+	[self updatePlaylistButton:nil];
 	
 	// Keep track if playlist window is open
 	[[NSNotificationCenter defaultCenter] addObserver:self
