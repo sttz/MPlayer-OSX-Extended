@@ -586,7 +586,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 - (IBAction)increaseVolume:(id)sender
 {
 	
-	double newVolume = [[[AppController sharedController] preferences] floatForKey:@"LastAudioVolume"] + volumeStep;
+	double newVolume = [PREFS floatForKey:MPEAudioVolume] + volumeStep;
 	if (newVolume > 100)
 		newVolume = 100;
 		
@@ -596,7 +596,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 - (IBAction)decreaseVolume:(id)sender
 {
 	
-	double newVolume = [[[AppController sharedController] preferences] floatForKey:@"LastAudioVolume"] - volumeStep;
+	double newVolume = [PREFS floatForKey:MPEAudioVolume] - volumeStep;
 	if (newVolume < 0)
 		newVolume = 0;
 	
