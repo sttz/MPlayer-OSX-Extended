@@ -1619,7 +1619,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 			// Update interface
 			[playerWindow setTitle:[NSString stringWithFormat:@"%@ - %@",
 									[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
-									[[movieInfo filename] lastPathComponent]]];
+									[movieInfo title]]];
 			[fullscreenButton setEnabled:YES];
 			// Disable loop when movie finished
 			[self setLoopMovie:NO];
