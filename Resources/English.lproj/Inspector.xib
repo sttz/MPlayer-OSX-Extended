@@ -12,9 +12,9 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="100"/>
-			<integer value="79"/>
 			<integer value="197"/>
+			<integer value="79"/>
+			<integer value="100"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2542,6 +2542,106 @@
 					</object>
 					<int key="connectionID">415</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: movieInfoProvider.currentMovieInfo.playbackStats.MIStatsCPUUsage</string>
+						<reference key="source" ref="1002465169"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1002465169"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">hidden: movieInfoProvider.currentMovieInfo.playbackStats.MIStatsCPUUsage</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.playbackStats.MIStatsCPUUsage</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSIsNil</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">418</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: movieInfoProvider.currentMovieInfo.playbackStats.MIStatsAudioCPUUsage</string>
+						<reference key="source" ref="858644938"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="858644938"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">hidden: movieInfoProvider.currentMovieInfo.playbackStats.MIStatsAudioCPUUsage</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.playbackStats.MIStatsAudioCPUUsage</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSIsNil</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">421</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: movieInfoProvider.currentMovieInfo.playbackStats.MIStatsVideoCPUUsage</string>
+						<reference key="source" ref="545191870"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="545191870"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">hidden: movieInfoProvider.currentMovieInfo.playbackStats.MIStatsVideoCPUUsage</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.playbackStats.MIStatsVideoCPUUsage</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSIsNil</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">424</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: movieInfoProvider.currentMovieInfo.playbackStats.MIStatsCacheUsage</string>
+						<reference key="source" ref="47669503"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="47669503"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">hidden: movieInfoProvider.currentMovieInfo.playbackStats.MIStatsCacheUsage</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.playbackStats.MIStatsCacheUsage</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSIsNil</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">427</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: movieInfoProvider.currentMovieInfo.playbackStats.MIStatsAVSync</string>
+						<reference key="source" ref="1042117612"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1042117612"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">hidden: movieInfoProvider.currentMovieInfo.playbackStats.MIStatsAVSync</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.playbackStats.MIStatsAVSync</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSIsNil</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">430</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -4242,7 +4342,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">415</int>
+			<int key="maxID">430</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -4657,7 +4757,6 @@
 							<string>progressBar</string>
 							<string>scrubbingBarToolbar</string>
 							<string>settingsButton</string>
-							<string>settingsController</string>
 							<string>stopButtonToolbar</string>
 							<string>tableData</string>
 							<string>timeTextFieldToolbar</string>
@@ -4687,7 +4786,6 @@
 							<string>NSButton</string>
 							<string>id</string>
 							<string>ScrubbingBar</string>
-							<string>id</string>
 							<string>id</string>
 							<string>NSButton</string>
 							<string>NSArrayController</string>
@@ -4777,7 +4875,6 @@
 							<string>playListController</string>
 							<string>playerWindow</string>
 							<string>scrubbingBar</string>
-							<string>settingsController</string>
 							<string>subtitleCycleButton</string>
 							<string>subtitleWindowMenu</string>
 							<string>timeTextField</string>
@@ -4798,7 +4895,6 @@
 							<string>PlayListController</string>
 							<string>NSWindow</string>
 							<string>id</string>
-							<string>SettingsController</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -4937,70 +5033,6 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">SettingsController</string>
-					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>applySettings:</string>
-							<string>cancelSettings:</string>
-							<string>chooseAudio:</string>
-							<string>chooseSubtitles:</string>
-							<string>removeAudio:</string>
-							<string>removeSubtitles:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>audioBox</string>
-							<string>audioFormatBox</string>
-							<string>encodingMenu</string>
-							<string>fileFormatBox</string>
-							<string>lengthBox</string>
-							<string>movieFileBox</string>
-							<string>playListController</string>
-							<string>playerController</string>
-							<string>rebuildIndexButton</string>
-							<string>settingsPanel</string>
-							<string>subtitlesBox</string>
-							<string>titleBox</string>
-							<string>videoFormatBox</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>NSPopUpButton</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>NSButton</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Sources/Controllers/SettingsController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
 					<string key="className">VideoOpenGLView</string>
 					<string key="superclassName">NSOpenGLView</string>
 					<object class="NSMutableDictionary" key="outlets">
@@ -5022,9 +5054,7 @@
 							<string>PanScanMenuItem</string>
 							<string>fcControlWindow</string>
 							<string>fullscreenWindow</string>
-							<string>playListController</string>
 							<string>playerController</string>
-							<string>settingsController</string>
 							<string>threadProto</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -5044,8 +5074,6 @@
 							<string>NSMenuItem</string>
 							<string>NSWindow</string>
 							<string>PlayerFullscreenWindow</string>
-							<string>id</string>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 						</object>
