@@ -1,6 +1,7 @@
 #import "PlayerWindow.h"
 
 #import "PlayerController.h"
+#import "MplayerInterface.h"
 
 #import <Carbon/Carbon.h>
 
@@ -31,9 +32,11 @@
 						   || [uCharacters isEqualToString:@"*"]))
 		[playerController increaseVolume:self];
 	else if (keyHandled = [characters isEqualToString:@"j"])
-		[playerController cycleSubtitleStreams:self];
+		[playerController cycleSubtitleStreamsWithOSD:YES];
 	else if (keyHandled = [characters isEqualToString:@"#"])
-		[playerController cycleAudioStreams:self];
+		[playerController cycleAudioStreamsWithOSD:YES];
+	else if (keyHandled = [characters isEqualToString:@"o"])
+		[playerController cycleOSD:self];
 	
 	if (!keyHandled)
 		[super keyDown:theEvent];

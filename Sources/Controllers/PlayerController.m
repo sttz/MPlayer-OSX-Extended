@@ -1175,17 +1175,49 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 }
 - (IBAction)cycleAudioStreams:(id)sender {
 	
+	[self cycleAudioStreamsWithOSD:NO];
+}
+- (void)cycleAudioStreamsWithOSD:(BOOL)showOSD {
+	
 	[myPlayer sendCommands:[NSArray arrayWithObjects:
 							@"set_property switch_audio -2",
 							@"get_property switch_audio",
-							nil]];
+							nil]
+				   withOSD:(showOSD ? MISurpressCommandOutputNever : MISurpressCommandOutputConditionally)
+				andPausing:MICommandPausingKeep];
 }
 - (IBAction)cycleSubtitleStreams:(id)sender {
+	
+	[self cycleSubtitleStreamsWithOSD:NO];
+}
+- (void)cycleSubtitleStreamsWithOSD:(BOOL)showOSD {
 	
 	[myPlayer sendCommands:[NSArray arrayWithObjects:
 							@"sub_select",
 							@"get_property sub_demux",@"get_property sub_file",
-							nil]];
+							nil]
+				   withOSD:(showOSD ? MISurpressCommandOutputNever : MISurpressCommandOutputConditionally)
+				andPausing:MICommandPausingKeep];
+}
+/************************************************************************************/
+- (IBAction)cycleOSD:(id)sender {
+	
+	if (!movieInfo)
+		return;
+	
+	int osdLevel;
+	
+	if ([[movieInfo prefs] objectForKey:MPEOSDLevel])
+		osdLevel = [[movieInfo prefs] integerForKey:MPEOSDLevel];
+	else
+		osdLevel = [PREFS integerForKey:MPEOSDLevel];
+	
+	osdLevel++;
+	
+	if (osdLevel > 4)
+		osdLevel = 0;
+	
+	[[movieInfo prefs] setInteger:osdLevel forKey:MPEOSDLevel];
 }
 /************************************************************************************/
 - (void)newVideoStreamId:(int)streamId {

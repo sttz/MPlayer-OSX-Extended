@@ -218,6 +218,7 @@ extern NSString* const MIStatsDroppedFramesKey;
 - (void)sendToMplayersInput:(NSString *)aCommand;
 - (void)terminateMplayer;
 
+- (int)mplayerOSDLevel;
 - (void)reactivateOsdAfterDelay;
 - (void)reactivateOsd;
 

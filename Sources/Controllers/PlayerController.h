@@ -156,11 +156,15 @@ extern NSString* const MPEPlaybackStoppedNotification;
 - (void)audioMenuAction:(id)sender;
 - (void)subtitleMenuAction:(id)sender;
 - (IBAction)cycleAudioStreams:(id)sender;
+- (void)cycleAudioStreamsWithOSD:(BOOL)showOSD;
 - (IBAction)cycleSubtitleStreams:(id)sender;
+- (void)cycleSubtitleStreamsWithOSD:(BOOL)showOSD;
 - (void)newVideoStreamId:(int)streamId;
 - (void)newAudioStreamId:(int)streamId;
 - (void)newSubtitleStreamId:(int)streamId forType:(SubtitleType)type;
 - (void)disableMenuItemsInMenu:(NSMenu *)menu;
+
+- (IBAction)cycleOSD:(id)sender;
 
 - (void)clearChapterMenu;
 - (void)fillChapterMenu;

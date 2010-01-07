@@ -125,6 +125,7 @@ static NSArray* statusNames;
 						   MPEPlaybackSpeed,
 						   MPEAudioDelay,
 						   MPESubtitleDelay,
+						   MPEOSDLevel,
 						   nil];
 	
 	statusNames = [[NSArray alloc] initWithObjects:
@@ -525,9 +526,9 @@ static NSArray* statusNames;
 	
 	if ([cPrefs objectForKey:MPEOSDLevel]) {
 		osdLevel = [cPrefs integerForKey:MPEOSDLevel];
-		if (osdLevel != 1 && osdLevel != 2) {
+		if ([self mplayerOSDLevel] != 1) {
 			[params addObject:@"-osdlevel"];
-			[params addObject:[NSString stringWithFormat:@"%i",(osdLevel == 0 ? 0 : osdLevel - 1)]];
+			[params addObject:[NSString stringWithFormat:@"%i",[self mplayerOSDLevel]]];
 		}
 	}
 	
@@ -833,8 +834,11 @@ static NSArray* statusNames;
 		
 	} else if ([keyPath isEqualToString:MPEOSDLevel]) {
 		osdLevel = [[change objectForKey:NSKeyValueChangeNewKey] intValue];
-		[self sendCommand:[NSString stringWithFormat:@"set_property osdlevel %d",(osdLevel < 2 ? osdLevel : osdLevel - 1)]];
-	
+		[self sendCommand:[NSString stringWithFormat:@"set_property osdlevel %d",[self mplayerOSDLevel]]];
+		if (object == [playingItem prefs])
+			[self sendCommand:[NSString stringWithFormat:@"osd_show_property_text 'OSD: %@'",
+							   [PreferencesController2 osdLevelDescriptionForLevel:osdLevel]]];
+		
 	} else if ([keyPath isEqualToString:MPEVideoEqualizerValues]) {
 		[self applyVideoEqualizer];
 	
@@ -1084,12 +1088,15 @@ static NSArray* statusNames;
 		return;
 	
 	BOOL quietCommand = (osdMode == MISurpressCommandOutputAlways || (osdMode == MISurpressCommandOutputConditionally && osdLevel == 1));
-	quietCommand = (quietCommand && !osdSilenced && !lastMissedSeek);
 	
-	if (quietCommand) {
+	if (quietCommand && !osdSilenced) {
 		[Debug log:ASL_LEVEL_DEBUG withMessage:@"osd 0 (%@, %i, %i)\n",[aCommands objectAtIndex:0], osdMode, osdLevel];
 		[self sendToMplayersInput:@"pausing_keep osd 0\n"];
 		osdSilenced = YES;
+		
+	} else if (!quietCommand) {
+		[self sendToMplayersInput:[NSString stringWithFormat:@"pausing_keep osd %d\n", [self mplayerOSDLevel]]];
+		osdSilenced = NO;
 	}
 	
 	NSString *pausingPrefix = @"";
@@ -1115,6 +1122,11 @@ static NSArray* statusNames;
 	[self sendCommands:aCommands withOSD:MISurpressCommandOutputConditionally andPausing:MICommandPausingKeep];
 }
 /************************************************************************************/
+- (int)mplayerOSDLevel
+{
+	return (osdLevel < 2 ? osdLevel : osdLevel - 1);
+}
+
 - (void)reactivateOsdAfterDelay {
 	
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(reactivateOsd) object:nil];
@@ -1123,8 +1135,8 @@ static NSArray* statusNames;
 
 - (void)reactivateOsd {
 	
-	[Debug log:ASL_LEVEL_DEBUG withMessage:@"osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)];
-	[self sendToMplayersInput:[NSString stringWithFormat:@"pausing_keep osd %d\n", (osdLevel < 2 ? osdLevel : osdLevel - 1)]];
+	[Debug log:ASL_LEVEL_DEBUG withMessage:@"osd %d\n", [self mplayerOSDLevel]];
+	[self sendToMplayersInput:[NSString stringWithFormat:@"pausing_keep osd %d\n", [self mplayerOSDLevel]]];
 	osdSilenced = NO;
 }
 /************************************************************************************/

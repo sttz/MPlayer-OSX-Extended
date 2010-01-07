@@ -71,6 +71,8 @@
 	
 	IBOutlet NSView *binarySelectionView;
 	IBOutlet NSPopUpButton *binarySelectionPopUp;
+	
+	IBOutlet NSPopUpButton *osdLevelPopUp;
 }
 
 @property (retain) NSMutableDictionary *fonts;
@@ -103,6 +105,7 @@
 - (IBAction) chooseCustomAspectRatio:(NSButton *)sender;
 
 + (float) parseAspectRatio:(NSString *)aspectString;
++ (NSString *) osdLevelDescriptionForLevel:(int)osdLevel;
 
 - (NSView *) binarySelectionView;
 - (NSString *) identifierFromSelectionInView;
