@@ -29,9 +29,6 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	
 	zoomFactor = 1;
 	
-	port1 = [NSPort port];
-	port2 = [NSPort port];
-	
 	// Choose buffer name and pass it on the way to mplayer
 	buffer_name = [[NSString stringWithFormat:@"mplayerosx-%i", [[NSProcessInfo processInfo] processIdentifier]] retain];
 	
@@ -46,28 +43,16 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 
 - (void) awakeFromNib
 {
-	[NSThread detachNewThreadSelector:@selector(threadMain:) toTarget:self withObject:[NSArray arrayWithObjects:port1, port2, nil]];
+	renderThread = [[NSThread alloc] initWithTarget:self selector:@selector(threadMain) object:nil];
+	[renderThread start];
 }
 
 - (void) dealloc
 {
 	[buffer_name release];
-	[threadProxy release];
+	[renderThread release];
 	
 	[super dealloc];
-}
-
-/*
-	Callback from render thread after server has been created
- */
-- (void) connectToServer:(NSArray *)ports
-{
-	
-	NSConnection *client = [NSConnection connectionWithReceivePort:[ports objectAtIndex:1] sendPort:[ports objectAtIndex:0]];
-	[client enableMultipleThreads];
-	threadProxy = [[client rootProxy] retain];
-	[threadProxy setProtocolForProxy:@protocol(VOGLVThreadProto)];
-	threadProto = (id <VOGLVThreadProto>)threadProxy;
 }
 
 /*
@@ -76,9 +61,8 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
  
  */
 
-- (void)threadMain:(NSArray *)ports
+- (void)threadMain
 {
-	
 	NSAutoreleasePool * pool = [NSAutoreleasePool new];
 	
 	NSRunLoop* myRunLoop = [NSRunLoop currentRunLoop];
@@ -92,17 +76,8 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
     [serverConnection setRootObject:self];
     [serverConnection registerName:buffer_name];
 	
-	// setup server connection for thread communication
-	NSConnection *otherConnection = [[NSConnection alloc] initWithReceivePort:[ports objectAtIndex:0] sendPort:[ports objectAtIndex:1]];
-	[otherConnection enableMultipleThreads];
-	[otherConnection setRootObject:self];
-	
-	// let client connect
-	[self performSelectorOnMainThread:@selector(connectToServer:) withObject:ports waitUntilDone:NO];
-	
 	[myRunLoop run];
 	
-	[otherConnection release];
 	[pool release];
 }
 
@@ -420,7 +395,10 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
     
 	//Play in fullscreen
 	if ([PREFS integerForKey:MPEStartPlaybackDisplayType] == MPEStartPlaybackDisplayTypeFullscreen)
-		[threadProto toggleFullscreen];
+		[self performSelector:@selector(toggleFullscreen)
+					 onThread:renderThread 
+				   withObject:nil
+				waitUntilDone:NO];
 }
 
 /*
@@ -528,8 +506,6 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 		
 		[fullscreenWindow startMouseTracking];
 		
-		[threadProto finishToggleFullscreen];
-		
 	} else {
 		
 		[fullscreenWindow orderOut:nil];
@@ -544,9 +520,12 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 		
 		// reset drag point
 		dragStartPoint = NSZeroPoint;
-		
-		[threadProto finishToggleFullscreen];
 	}
+	
+	[self performSelector:@selector(finishToggleFullscreen)
+				 onThread:renderThread 
+			   withObject:nil
+			waitUntilDone:NO];
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:VVAnimationsDidEnd object:nil];
 }
@@ -690,7 +669,10 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 			name: @"MIFullscreenSwitchDone"
 			object: self];
 		
-		[threadProto toggleFullscreen];
+		[self performSelector:@selector(toggleFullscreen)
+					 onThread:renderThread 
+				   withObject:nil
+				waitUntilDone:NO];
 		
 		return;
 	}
@@ -748,7 +730,10 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 			name: @"MIFullscreenSwitchDone"
 			object: self];
 		
-		[threadProto toggleFullscreen];
+		[self performSelector:@selector(toggleFullscreen)
+					 onThread:renderThread 
+				   withObject:nil
+				waitUntilDone:NO];
 		
 	} else
 		// not in fullscreen: resize now
@@ -792,17 +777,26 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
  */
 - (void) reshape
 {
-	[threadProto adaptSize];
+	[self performSelector:@selector(adaptSize)
+				 onThread:renderThread 
+			   withObject:nil
+			waitUntilDone:NO];
 }
 
 - (void) update
 {
-	[threadProto updateInThread];
+	[self performSelector:@selector(updateInThread)
+				 onThread:renderThread 
+			   withObject:nil
+			waitUntilDone:NO];
 }
 
 - (void) drawRect: (NSRect) bounds
 {
-	[threadProto drawRectInThread];
+	[self performSelector:@selector(drawRectInThread)
+				 onThread:renderThread 
+			   withObject:nil
+			waitUntilDone:NO];
 }
 
 /*

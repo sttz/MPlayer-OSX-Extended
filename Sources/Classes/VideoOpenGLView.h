@@ -26,15 +26,6 @@
 - (void) ontop;
 @end
 
-// Inter-Thread Protocol
-@protocol VOGLVThreadProto
-- (void) toggleFullscreen;
-- (void) finishToggleFullscreen;
-- (void) adaptSize;
-- (void) updateInThread;
-- (void) drawRectInThread;
-@end
-
 #define		WSM_SCALE		1
 #define		WSM_FIT_SCREEN	2
 #define		WSM_FIT_WIDTH	3
@@ -114,20 +105,14 @@
 	// other controllers outlets
 	IBOutlet id playerController;
 	
+	NSThread *renderThread;
+	
 	IBOutlet NSWindow *fcControlWindow;
 	IBOutlet PlayerFullscreenWindow* fullscreenWindow;
-	
-	// Inter-thread communication
-	NSPort *port1;
-	NSPort *port2;
-	NSDistantObject *threadProxy;
-	id <VOGLVThreadProto> threadProto;
 }
 
-- (void) connectToServer:(NSArray *)ports;
-
 // Render Thread methods
-- (void)threadMain:(NSArray *)ports;
+- (void)threadMain;
 - (void)prepareOpenGL;
 - (int) startWithWidth: (int)width withHeight: (int)height withBytes: (int)bytes withAspect: (int)aspect;
 - (void) stop;
