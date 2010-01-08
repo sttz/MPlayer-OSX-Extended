@@ -163,6 +163,9 @@ extern NSString* const MPEPlaybackStoppedNotification;
 - (void)disableMenuItemsInMenu:(NSMenu *)menu;
 
 - (IBAction)cycleOSD:(id)sender;
+- (void)setAudioDelay:(float)delay relative:(BOOL)setRelative;
+- (void)setSubtitleDelay:(float)delay relative:(BOOL)setRelative;
+- (void)setPlaybackSpeed:(float)speed multiply:(BOOL)multiply;
 
 - (void)clearChapterMenu;
 - (void)fillChapterMenu;

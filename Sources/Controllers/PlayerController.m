@@ -1229,6 +1229,40 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	[[movieInfo prefs] setInteger:osdLevel forKey:MPEOSDLevel];
 }
 /************************************************************************************/
+- (void)setAudioDelay:(float)delay relative:(BOOL)setRelative {
+	
+	if (!movieInfo) return;
+	
+	if (setRelative)
+		delay = [[movieInfo prefs] floatForKey:MPEAudioDelay] + delay;
+	
+	[[movieInfo prefs] setFloat:delay forKey:MPEAudioDelay];
+}
+
+- (void)setSubtitleDelay:(float)delay relative:(BOOL)setRelative {
+	
+	if (!movieInfo) return;
+	
+	if (setRelative)
+		delay = [[movieInfo prefs] floatForKey:MPESubtitleDelay] + delay;
+	
+	[[movieInfo prefs] setFloat:delay forKey:MPESubtitleDelay];
+}
+
+- (void)setPlaybackSpeed:(float)speed multiply:(BOOL)multiply {
+	
+	if (!movieInfo) return;
+	
+	if (multiply) {
+		float oldSpeed = 1;
+		if ([[movieInfo prefs] objectForKey:MPEPlaybackSpeed])
+			oldSpeed = [[movieInfo prefs] floatForKey:MPEPlaybackSpeed];
+		speed = oldSpeed * speed;
+	}
+	
+	[[movieInfo prefs] setFloat:speed forKey:MPEPlaybackSpeed];
+}
+/************************************************************************************/
 - (void)newVideoStreamId:(int)streamId {
 	
 	[self disableMenuItemsInMenu:[menuController->videoStreamMenu submenu]];
