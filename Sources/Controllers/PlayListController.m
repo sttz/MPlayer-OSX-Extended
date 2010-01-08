@@ -356,6 +356,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	}
 	
 	// play the next item if it is set to do so
+	NSLog(@"playing next playlist index %d",theIndex);
 	if (theIndex >= 0)
 		[playerController playItem:[self itemAtIndex:theIndex] fromPlaylist:YES];
 	else

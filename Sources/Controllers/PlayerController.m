@@ -321,6 +321,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 /************************************************************************************/
 - (void)playItem:(MovieInfo *)anItem fromPlaylist:(BOOL)fromPlaylist
 {
+	NSLog(@"playItem:%@ fromPlaylist:%d",anItem,fromPlaylist);
 	playingFromPlaylist = fromPlaylist;
 	
 	// re-open player window for internal video
@@ -330,10 +331,8 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	// prepare player
 	// stops mplayer if it is running
 	if ([myPlayer isRunning]) {
-		if (!fromPlaylist) {
-			continuousPlayback = YES;	// don't close view
-			saveTime = NO;		// don't save time
-		}
+		continuousPlayback = YES;	// don't close view
+		saveTime = NO;		// don't save time
 		[myPlayer stop];
 		[playListController updateView];
 	}
@@ -442,6 +441,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 /************************************************************************************/
 - (void) applyChangesWithRestart:(BOOL)restart
 {
+	continuousPlayback = YES;
 	[myPlayer applySettingsWithRestart];
 	
 	// set streams
@@ -1690,23 +1690,23 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	
 	// Handle stop
 	if (stateMask & MIStateStoppedMask) {
-		// Playlist mode
-		if (playingFromPlaylist) {
-			// if playback finished itself (not by user) let playListController know
-			if (state == MIStateFinished || state == MIStateError)
-				[playListController finishedPlayingItem:movieInfo];
-			// close view otherwise
-			else if (!continuousPlayback)
-				[self stopFromPlaylist];
-			else
-				continuousPlayback = NO;
-		// Regular play mode
-		} else {
-			if (!continuousPlayback)
+		// Nothing more to play, look for next or clean up
+		if (!continuousPlayback) {
+			// Playlist mode
+			if (playingFromPlaylist) {
+				// if playback finished itself (not by user) let playListController know
+				if (state == MIStateFinished || state == MIStateError)
+					[playListController finishedPlayingItem:movieInfo];
+				// close view otherwise
+				else
+					[self stopFromPlaylist];
+			// Regular play mode
+			} else
 				[self cleanUpAfterStop];
-			else
-				continuousPlayback = NO;
-		}
+		// Next item already waiting, don't clean up
+		} else
+			continuousPlayback = NO;
+		
 		[[NSNotificationCenter defaultCenter] postNotificationName:MPEPlaybackStoppedNotification
 															object:self];
 	}
