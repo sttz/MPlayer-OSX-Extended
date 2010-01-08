@@ -65,9 +65,12 @@ static AppController *instance = nil;
 	NSString *specFilePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"Preferences.plist"];
 	preferencesSpecs = [[NSDictionary alloc] initWithContentsOfFile:specFilePath];
 	
-	if (preferencesSpecs)
-		[[NSUserDefaults standardUserDefaults] registerDefaults:[preferencesSpecs objectForKey:@"Defaults"]];
-	else
+	if (preferencesSpecs) {
+		NSMutableDictionary *defaultsAndConstants = [NSMutableDictionary dictionary];
+		[defaultsAndConstants addEntriesFromDictionary:[preferencesSpecs objectForKey:@"Defaults"]];
+		[defaultsAndConstants addEntriesFromDictionary:[preferencesSpecs objectForKey:@"Constants"]];
+		[[NSUserDefaults standardUserDefaults] registerDefaults:defaultsAndConstants];
+	} else
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to load preferences specs."];
 	
 	// register for urls
