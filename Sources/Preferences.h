@@ -94,6 +94,7 @@ extern NSString* const MPEWindowOnTopMode;
 
 // *** Top-level constants keys
 extern NSString* const MPEFullscreenControlsHideTimeout;
+extern NSString* const MPEFullscreenControlsSensitivity;
 extern NSString* const MPEPreflightNumInstances;
 extern NSString* const MPEScrollWheelSeekMultiple;
 extern NSString* const MPESeekStepLarge;

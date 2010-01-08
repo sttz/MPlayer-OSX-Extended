@@ -92,6 +92,7 @@ NSString* const MPEVideoEqualizerEnabled              = @"MPEVideoEqualizerEnabl
 NSString* const MPEWindowOnTopMode                    = @"MPEWindowOnTopMode";
 
 NSString* const MPEFullscreenControlsHideTimeout      = @"MPEFullscreenControlsHideTimeout";
+NSString* const MPEFullscreenControlsSensitivity      = @"MPEFullscreenControlsSensitivity";
 NSString* const MPEPreflightNumInstances              = @"MPEPreflightNumInstances";
 NSString* const MPEScrollWheelSeekMultiple            = @"MPEScrollWheelSeekMultiple";
 NSString* const MPESeekStepLarge                      = @"MPESeekStepLarge";

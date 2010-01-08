@@ -163,6 +163,7 @@
 - (void)mouseEnteredFSWindow
 {
 	mouseInWindow = YES;
+	lastMousePosition = [NSEvent mouseLocation];
 	[self setAcceptsMouseMovedEvents:YES];
 	[self makeFirstResponder:[self contentView]];
 	CGDisplayHideCursor(kCGDirectMainDisplay);
@@ -206,7 +207,12 @@
 
 - (void)mouseMoved:(NSEvent *)theEvent
 {	
-	if(isFullscreen && [PREFS floatForKey:MPEFullscreenControlsHideTimeout] > 0)
+	NSPoint mousePosition = [NSEvent mouseLocation];
+	float sqrDelta = pow(lastMousePosition.x - mousePosition.x, 2) + pow(lastMousePosition.y - mousePosition.y, 2);
+	lastMousePosition = mousePosition;
+	
+	if(isFullscreen && [PREFS floatForKey:MPEFullscreenControlsHideTimeout] > 0
+	   && sqrDelta > [PREFS floatForKey:MPEFullscreenControlsSensitivity])
 	{
 		CGDisplayShowCursor(kCGDirectMainDisplay);
 		

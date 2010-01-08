@@ -37,6 +37,7 @@
 	
 	NSTrackingRectTag fsTrackTag, fcTrackTag;
 	NSTimer *osdTimer;
+	NSPoint lastMousePosition;
 }
 
 -(id) initWithContentRect: (NSRect) contentRect 

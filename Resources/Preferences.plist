@@ -534,6 +534,8 @@
 	<dict>
 		<key>MPEFullscreenControlsHideTimeout</key>
 		<integer>3</integer>
+		<key>MPEFullscreenControlsSensitivity</key>
+		<integer>200</integer>
 		<key>MPEPreflightNumInstances</key>
 		<integer>4</integer>
 		<key>MPEScrollWheelSeekMultiple</key>
