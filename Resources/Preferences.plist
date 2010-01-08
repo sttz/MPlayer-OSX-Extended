@@ -530,6 +530,23 @@
 			<string>fileAttributes</string>
 		</array>
 	</dict>
+	<key>Constants</key>
+	<dict>
+		<key>MPEFullscreenControlsHideTimeout</key>
+		<integer>3</integer>
+		<key>MPEPreflightNumInstances</key>
+		<integer>4</integer>
+		<key>MPEScrollWheelSeekMultiple</key>
+		<integer>10</integer>
+		<key>MPESeekStepLarge</key>
+		<integer>600</integer>
+		<key>MPESeekStepMedium</key>
+		<integer>60</integer>
+		<key>MPESeekStepSmall</key>
+		<integer>10</integer>
+		<key>MPEVolumeStepSize</key>
+		<integer>10</integer>
+	</dict>
 	<key>RequiresRestart</key>
 	<array>
 		<string>MPECacheSizeInMB</string>
