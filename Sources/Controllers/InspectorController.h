@@ -67,3 +67,6 @@
 - (IBAction)resetSubtitleDelay:(id)sender;
 
 @end
+
+@interface PlaybackSpeedTransfomer : NSValueTransformer { }
+@end

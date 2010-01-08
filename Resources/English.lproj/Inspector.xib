@@ -12,8 +12,8 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="76"/>
 			<integer value="197"/>
+			<integer value="76"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2186,26 +2186,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: movieInfoProvider.currentMovieInfo.prefs.MPEPlaybackSpeed</string>
-						<reference key="source" ref="159103554"/>
-						<reference key="destination" ref="1001"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="159103554"/>
-							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">value: movieInfoProvider.currentMovieInfo.prefs.MPEPlaybackSpeed</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEPlaybackSpeed</string>
-							<object class="NSDictionary" key="NSOptions">
-								<string key="NS.key.0">NSNullPlaceholder</string>
-								<real value="100" key="NS.object.0"/>
-							</object>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">293</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
 						<string key="label">enabled: movieInfoProvider.currentMovieInfo</string>
 						<reference key="source" ref="159103554"/>
 						<reference key="destination" ref="1001"/>
@@ -2683,6 +2663,35 @@
 						</object>
 					</object>
 					<int key="connectionID">447</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: movieInfoProvider.currentMovieInfo.prefs.MPEPlaybackSpeed</string>
+						<reference key="source" ref="159103554"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="159103554"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: movieInfoProvider.currentMovieInfo.prefs.MPEPlaybackSpeed</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEPlaybackSpeed</string>
+							<object class="NSDictionary" key="NSOptions">
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSArray" key="dict.sortedKeys">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>NSNullPlaceholder</string>
+									<string>NSValueTransformerName</string>
+								</object>
+								<object class="NSMutableArray" key="dict.values">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<real value="100"/>
+									<string>PlaybackSpeedTransfomer</string>
+								</object>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">448</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -4384,7 +4393,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">447</int>
+			<int key="maxID">448</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -4852,6 +4861,7 @@
 							<string>chapterMenuAction:</string>
 							<string>closeWindowNow:</string>
 							<string>cycleAudioStreams:</string>
+							<string>cycleOSD:</string>
 							<string>cycleSubtitleStreams:</string>
 							<string>decreaseVolume:</string>
 							<string>displayWindow:</string>
@@ -4875,6 +4885,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -5030,6 +5041,7 @@
 							<string>fullscreenSelectionMatrix</string>
 							<string>generalView</string>
 							<string>mplayerView</string>
+							<string>osdLevelPopUp</string>
 							<string>restartView</string>
 							<string>textView</string>
 							<string>videoView</string>
@@ -5056,6 +5068,7 @@
 							<string>NSMatrix</string>
 							<string>NSView</string>
 							<string>NSView</string>
+							<string>NSPopUpButton</string>
 							<string>NSView</string>
 							<string>NSView</string>
 							<string>NSView</string>
@@ -5097,7 +5110,6 @@
 							<string>fcControlWindow</string>
 							<string>fullscreenWindow</string>
 							<string>playerController</string>
-							<string>threadProto</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -5116,7 +5128,6 @@
 							<string>NSMenuItem</string>
 							<string>NSWindow</string>
 							<string>PlayerFullscreenWindow</string>
-							<string>id</string>
 							<string>id</string>
 						</object>
 					</object>

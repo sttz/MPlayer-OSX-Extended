@@ -447,14 +447,9 @@ static NSArray* statusNames;
 	}
 	
 	// playback speed
-	if ([cPrefs objectForKey:MPEPlaybackSpeed] && [cPrefs floatForKey:MPEPlaybackSpeed] != 100) {
-		float speed = [cPrefs floatForKey:MPEPlaybackSpeed];
-		if (speed > 101)
-			speed -= 100;
-		else
-			speed /= 100;
+	if ([cPrefs objectForKey:MPEPlaybackSpeed] && [cPrefs floatForKey:MPEPlaybackSpeed] != 1.0) {
 		[params addObject:@"-speed"];
-		[params addObject:[NSString stringWithFormat:@"%.2f", speed]];
+		[params addObject:[NSString stringWithFormat:@"%.2f", [cPrefs floatForKey:MPEPlaybackSpeed]]];
 	}
 	
 	
@@ -855,12 +850,7 @@ static NSArray* statusNames;
 			   andPausing:MICommandPausingKeep];
 	
 	} else if ([keyPath isEqualToString:MPEPlaybackSpeed]) {
-		float speed = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
-		if (speed > 101)
-			speed -= 100;
-		else
-			speed /= 100;
-		[self sendCommand:[NSString stringWithFormat:@"set_property speed %f",speed]];
+		[self sendCommand:[NSString stringWithFormat:@"set_property speed %f",[[change objectForKey:NSKeyValueChangeNewKey] floatValue]]];
 	
 	} else if ([keyPath isEqualToString:MPEAudioDelay]) {
 		float delay = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];

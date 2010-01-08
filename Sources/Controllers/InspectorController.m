@@ -248,3 +248,51 @@ static const float const collapsedSectionHeight = 21.0f;
 }
 
 @end
+
+
+
+@implementation PlaybackSpeedTransfomer
+
++ (Class)transformedValueClass
+{
+	return [NSNumber class];
+}
+
++ (BOOL)allowsReverseTransformation
+{
+	return YES;
+}
+
+- (id)transformedValue:(id)value
+{
+	NSNumber *speedNumber = value;
+	
+	if (!speedNumber || ![value isKindOfClass:[NSNumber class]])
+		return nil;
+	
+	float speed = [speedNumber floatValue];
+	
+	if (speed <= 1.0)
+		return [NSNumber numberWithFloat:(speed*100)];
+	else
+		return [NSNumber numberWithFloat:(speed+99)];
+
+}
+
+- (id)reverseTransformedValue:(id)value
+{
+	NSNumber *sliderNumber = value;
+	
+	if (!sliderNumber || ![value isKindOfClass:[NSNumber class]])
+		return nil;
+	
+	float sliderValue = [sliderNumber floatValue];
+	
+	if (sliderValue <= 100.0)
+		return [NSNumber numberWithFloat:(sliderValue/100)];
+	else
+		return [NSNumber numberWithFloat:(sliderValue-99)];
+}
+
+@end
+
