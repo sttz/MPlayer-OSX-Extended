@@ -759,7 +759,8 @@ static NSArray* statusNames;
 - (void) stop
 {
 	if (isRunning) {
-		[self sendCommand:@"quit"];
+		if (!(stateMask & MIStateStoppedMask))
+			[self sendCommand:@"quit"];
 		[myMplayerTask waitUntilExit];
 	}
 }
