@@ -17,8 +17,6 @@
 #import "MplayerInterface.h"
 #import "VideoOpenGLView.h"
 
-#define		volumeStep				10.0
-
 @class PlayListController, MenuController;
 @protocol MovieInfoProvider;
 

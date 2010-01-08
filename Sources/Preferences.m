@@ -91,6 +91,14 @@ NSString* const MPEVideoEqualizerValues               = @"MPEVideoEqualizerValue
 NSString* const MPEVideoEqualizerEnabled              = @"MPEVideoEqualizerEnabled";
 NSString* const MPEWindowOnTopMode                    = @"MPEWindowOnTopMode";
 
+NSString* const MPEFullscreenControlsHideTimeout      = @"MPEFullscreenControlsHideTimeout";
+NSString* const MPEPreflightNumInstances              = @"MPEPreflightNumInstances";
+NSString* const MPEScrollWheelSeekMultiple            = @"MPEScrollWheelSeekMultiple";
+NSString* const MPESeekStepLarge                      = @"MPESeekStepLarge";
+NSString* const MPESeekStepMedium                     = @"MPESeekStepMedium";
+NSString* const MPESeekStepSmall                      = @"MPESeekStepSmall";
+NSString* const MPEVolumeStepSize                     = @"MPEVolumeStepSize";
+
 NSString* const MPECustomAspectRatioStringKey         = @"MPECustomAspectRatioString";
 NSString* const MPECustomAspectRatioValueKey          = @"MPECustomAspectRatioValue";
 

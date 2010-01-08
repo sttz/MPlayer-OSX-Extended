@@ -28,11 +28,10 @@
 
 #import "MplayerInterface.h"
 
+#import "Preferences.h"
 #import "CocoaAdditions.h"
 
 // **************************************************** //
-
-#define MPEPreflightNumInstances	4
 
 static NSMutableArray *preflightQueue;
 
@@ -75,7 +74,7 @@ static NSMutableArray *busyPreflightInstances;
 	
 	if ([freePreflightInstances count] == 0) {
 		// Create new instances on-demand
-		if ([busyPreflightInstances count] < MPEPreflightNumInstances) {
+		if ([busyPreflightInstances count] < [PREFS integerForKey:MPEPreflightNumInstances]) {
 			MplayerInterface *newInstance = [[MplayerInterface new] autorelease];
 			[freePreflightInstances addObject:newInstance];
 			// Listen for end of preflight

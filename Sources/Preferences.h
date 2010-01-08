@@ -24,6 +24,7 @@
 
 #define PREFS [NSUserDefaults standardUserDefaults]
 
+// *** Top-Level preferences keys
 extern NSString* const MPEAdvancedOptions;
 extern NSString* const MPEAnimateInterfaceTransitions;
 extern NSString* const MPEAspectRatio;
@@ -91,26 +92,41 @@ extern NSString* const MPEVideoEqualizerValues;
 extern NSString* const MPEVideoEqualizerEnabled;
 extern NSString* const MPEWindowOnTopMode;
 
+// *** Top-level constants keys
+extern NSString* const MPEFullscreenControlsHideTimeout;
+extern NSString* const MPEPreflightNumInstances;
+extern NSString* const MPEScrollWheelSeekMultiple;
+extern NSString* const MPESeekStepLarge;
+extern NSString* const MPESeekStepMedium;
+extern NSString* const MPESeekStepSmall;
+extern NSString* const MPEVolumeStepSize;
+
+// *** MPECustomAspectRatio dictionary keys
 extern NSString* const MPECustomAspectRatioStringKey;
 extern NSString* const MPECustomAspectRatioValueKey;
 
+// *** MPEAdvancedOptions dictionaries keys
 extern NSString* const MPEAdvancedOptionsStringKey;
 extern NSString* const MPEAdvancedOptionsEnabledKey;
 
+// *** MPEStartPlaybackDisplayType values
 extern int const MPEStartPlaybackDisplayTypeWindow;
 extern int const MPEStartPlaybackDisplayTypeFullscreen;
 extern int const MPEStartPlaybackDisplayTypeDesktop;
 
+// *** MPEWindowOnTopMode values
 extern int const MPEWindowOnTopModeNever; 
 extern int const MPEWindowOnTopModeWhilePlaying;
 extern int const MPEWindowOnTopModeAlways;
 
+// *** MPEDisplaySize values
 extern int const MPEDisplaySizeHalf;
 extern int const MPEDisplaySizeOriginal;
 extern int const MPEDisplaySizeDouble;
 extern int const MPEDisplaySizeFitScreen;
 extern int const MPEDisplaySizeCustom;
 
+// *** MPEScreenshotSaveLocation values
 extern int const MPEScreenshotsDisabled;
 extern int const MPEScreenshotSaveLocationHomeFolder;
 extern int const MPEScreenshotSaveLocationDocumentsFolder;
@@ -118,13 +134,16 @@ extern int const MPEScreenshotSaveLocationPicturesFolder;
 extern int const MPEScreenshotSaveLocationDesktop;
 extern int const MPEScreenshotSaveLocationCustom;
 
+// *** MPEGoToFullscreenOn values
 extern int const MPEGoToFullscreenOnSameScreen;
 extern int const MPEGoToFullscreenOnFixedScreen;
 
+// *** MPEDropFrames values
 extern int const MPEDropFramesNever;
 extern int const MPEDropFramesSoft;
 extern int const MPEDropFramesHard;
 
+// *** MPEDeinterlaceFilter values
 extern int const MPEDeinterlaceFilterOff;
 extern int const MPEDeinterlaceFilterYadif;
 extern int const MPEDeinterlaceFilterKernel;
@@ -132,11 +151,13 @@ extern int const MPEDeinterlaceFilterFFmpeg;
 extern int const MPEDeinterlaceFilterFilm;
 extern int const MPEDeinterlaceFilterBlend;
 
+// *** MPEPostprocessingFilter values
 extern int const MPEPostprocessingFilterOff;
 extern int const MPEPostprocessingFilterDefault;
 extern int const MPEPostprocessingFilterFast;
 extern int const MPEPostprocessingFilterHighQuality;
 
+// *** MPEVideoEqualizerValues dictionary keys
 extern NSString* const MPEVideoEqualizerBrightness;
 extern NSString* const MPEVideoEqualizerContrast;
 extern NSString* const MPEVideoEqualizerGamma;

@@ -27,9 +27,10 @@
 #import "AppController.h"
 #import "PlayerController.h"
 #import "FullscreenControls.h"
+
+#import "Preferences.h"
 #import "Debug.h"
 
-#define MP_FC_HIDEAFTERSECONDS	3
 #define INITIAL_FC_X_POS		0.5
 #define INITIAL_FC_Y_POS		0.15
 
@@ -57,96 +58,89 @@
 	return YES;
 }
 
-/*- (BOOL)acceptsFirstResponder
-{
-	return YES;
-}*/
-
-/*- (void) awakeFromNib
-{
-	//[self setAcceptsMouseMovedEvents:YES];
-	
-}*/
-
-/*- (void)makeKeyAndOrderFront:(id)sender
-{
-	[super makeKeyAndOrderFront:sender];
-	//[self makeFirstResponder:self];
-}*/
-
 - (void) startMouseTracking
 {
 	fsTrackTag = [[self contentView] addTrackingRect:[[self contentView] frame] owner:self userData:nil assumeInside:NO];
-	fcTrackTag = [[fullscreenControls contentView] addTrackingRect:[[fullscreenControls contentView] frame]	
-														owner:self userData:nil assumeInside:NO];
 	
 	NSPoint mp = [[self contentView] convertPoint:[self mouseLocationOutsideOfEventStream] fromView:nil];
 	if ([[self contentView] mouse:mp inRect:[[self contentView] frame]])
 		[self mouseEnteredFSWindow];
 	
-	mp = [[fullscreenControls contentView] convertPoint:[fullscreenControls mouseLocationOutsideOfEventStream] fromView:nil];
-	if ([[fullscreenControls contentView] mouse:mp inRect:[[fullscreenControls contentView] frame]])
-		[self mouseEnteredFCWindow];
-	
-	// place controls on screen
-	NSArray *pos;
-	if ([[[AppController sharedController] preferences] objectForKey:@"FullscreenControlsPosition"]) 
-		pos = [[[AppController sharedController] preferences] arrayForKey:@"FullscreenControlsPosition"];
-	else
-		pos = [NSArray arrayWithObjects:[NSNumber numberWithFloat:INITIAL_FC_X_POS],[NSNumber numberWithFloat:INITIAL_FC_Y_POS], nil];
-	
-	NSRect screenFrame = [[self screen] frame];
-	NSRect controllerFrame = [fullscreenControls frame];
-	NSPoint point;
-	
-	BOOL onScreen = NO;
-	int i,j;
-	for (j = 0; onScreen == NO && j < 2; j++) {
+	if ([PREFS floatForKey:MPEFullscreenControlsHideTimeout] > 0) {
 		
-		// use percent values to get absolute origin
-		point = NSMakePoint(
-			screenFrame.origin.x + [[pos objectAtIndex:0] floatValue] * screenFrame.size.width - (controllerFrame.size.width / 2), 
-			screenFrame.origin.y + [[pos objectAtIndex:1] floatValue] * screenFrame.size.height - (controllerFrame.size.height / 2));
+		fcTrackTag = [[fullscreenControls contentView] addTrackingRect:[[fullscreenControls contentView] frame]	
+																 owner:self userData:nil assumeInside:NO];
 		
-		// check if point is on any screen
-		for (i = 0; i < [[NSScreen screens] count]; i++) {
-			if (NSPointInRect(point, [[[NSScreen screens] objectAtIndex:i] frame]))
-				onScreen = YES;
+		mp = [[fullscreenControls contentView] convertPoint:[fullscreenControls mouseLocationOutsideOfEventStream] fromView:nil];
+		if ([[fullscreenControls contentView] mouse:mp inRect:[[fullscreenControls contentView] frame]])
+			[self mouseEnteredFCWindow];
+		
+		// place controls on screen
+		NSArray *pos;
+		if ([[[AppController sharedController] preferences] objectForKey:@"FullscreenControlsPosition"]) 
+			pos = [[[AppController sharedController] preferences] arrayForKey:@"FullscreenControlsPosition"];
+		else
+			pos = [NSArray arrayWithObjects:[NSNumber numberWithFloat:INITIAL_FC_X_POS],[NSNumber numberWithFloat:INITIAL_FC_Y_POS], nil];
+		
+		NSRect screenFrame = [[self screen] frame];
+		NSRect controllerFrame = [fullscreenControls frame];
+		NSPoint point;
+		
+		BOOL onScreen = NO;
+		int i,j;
+		for (j = 0; onScreen == NO && j < 2; j++) {
+			
+			// use percent values to get absolute origin
+			point = NSMakePoint(
+				screenFrame.origin.x + [[pos objectAtIndex:0] floatValue] * screenFrame.size.width - (controllerFrame.size.width / 2), 
+				screenFrame.origin.y + [[pos objectAtIndex:1] floatValue] * screenFrame.size.height - (controllerFrame.size.height / 2));
+			
+			// check if point is on any screen
+			for (i = 0; i < [[NSScreen screens] count]; i++) {
+				if (NSPointInRect(point, [[[NSScreen screens] objectAtIndex:i] frame])) {
+					onScreen = YES;
+					continue;
+				}
+			}
+			
+			// reset to default position if not on screen
+			if (!onScreen)
+				pos = [NSArray arrayWithObjects:[NSNumber numberWithFloat:INITIAL_FC_X_POS],[NSNumber numberWithFloat:INITIAL_FC_Y_POS], nil];
 		}
 		
-		// reset to default position if not on screen
-		if (!onScreen)
-			pos = [NSArray arrayWithObjects:[NSNumber numberWithFloat:INITIAL_FC_X_POS],[NSNumber numberWithFloat:INITIAL_FC_Y_POS], nil];
+		controllerFrame.origin.x = point.x;
+		controllerFrame.origin.y = point.y;
+		[fullscreenControls setFrame:controllerFrame display:YES];
 	}
-	
-	controllerFrame.origin.x = point.x;
-	controllerFrame.origin.y = point.y;
-	[fullscreenControls setFrame:controllerFrame display:YES];
 }
 
 - (void) stopMouseTracking
 {
 	[[self contentView] removeTrackingRect:fsTrackTag];
-	[[fullscreenControls contentView] removeTrackingRect:fcTrackTag];
 	[self mouseExitedFSWindow];
 	
-	// save controller position
-	NSRect screenFrame = [[self screen] frame];
-	NSRect controllerFrame = [fullscreenControls frame];
-	
-	// transform position to relative screen-coordiantes
-	float px, py;
-	px = ((controllerFrame.origin.x + (controllerFrame.size.width / 2)) - screenFrame.origin.x) / screenFrame.size.width;
-	py = ((controllerFrame.origin.y + (controllerFrame.size.height / 2)) - screenFrame.origin.y) / screenFrame.size.height;
-	
-	// check values for sanity and reset to defaults if so
-	if (!isfinite(px) || isnan(px) || !isfinite(py) || isnan(py))
-		[[[AppController sharedController] preferences] removeObjectForKey:@"FullscreenControlsPosition"];
-	// save sane values in preferences
-	else {
-		NSArray *pos = [NSArray arrayWithObjects:
-			[NSNumber numberWithFloat:px],[NSNumber numberWithFloat:py],nil];
-		[[[AppController sharedController] preferences] setObject:pos forKey:@"FullscreenControlsPosition"];
+	if ([PREFS floatForKey:MPEFullscreenControlsHideTimeout] > 0) {
+		
+		[[fullscreenControls contentView] removeTrackingRect:fcTrackTag];
+		
+		// save controller position
+		NSRect screenFrame = [[self screen] frame];
+		NSRect controllerFrame = [fullscreenControls frame];
+		
+		// transform position to relative screen-coordiantes
+		float px, py;
+		px = ((controllerFrame.origin.x + (controllerFrame.size.width / 2)) - screenFrame.origin.x) / screenFrame.size.width;
+		py = ((controllerFrame.origin.y + (controllerFrame.size.height / 2)) - screenFrame.origin.y) / screenFrame.size.height;
+		
+		// check values for sanity and reset to defaults if so
+		if (!isfinite(px) || isnan(px) || !isfinite(py) || isnan(py))
+			[[[AppController sharedController] preferences] removeObjectForKey:@"FullscreenControlsPosition"];
+		// save sane values in preferences
+		else {
+			NSArray *pos = [NSArray arrayWithObjects:
+				[NSNumber numberWithFloat:px],[NSNumber numberWithFloat:py],nil];
+			[[[AppController sharedController] preferences] setObject:pos forKey:@"FullscreenControlsPosition"];
+		}
 	}
 }
 
@@ -202,21 +196,23 @@
 	{
 		if (mouseInWindow)
 			CGDisplayHideCursor(kCGDirectMainDisplay);
+		
 		if (mouseOverControls)
 			[self mouseExitedFCWindow];
+			
 		[fullscreenControls orderOut:self];
 	}
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent
 {	
-	if(isFullscreen)
+	if(isFullscreen && [PREFS floatForKey:MPEFullscreenControlsHideTimeout] > 0)
 	{
 		CGDisplayShowCursor(kCGDirectMainDisplay);
 		
 		if (![fullscreenControls isVisible])
 			[fullscreenControls orderFront:self];
-		
+			
 		[self refreshOSDTimer];
 	}
 }
@@ -226,7 +222,7 @@
 	if(!osdTimer || ![osdTimer isValid])
 	{
 		[osdTimer release];
-		osdTimer = [NSTimer	scheduledTimerWithTimeInterval:MP_FC_HIDEAFTERSECONDS
+		osdTimer = [NSTimer	scheduledTimerWithTimeInterval:[PREFS floatForKey:MPEFullscreenControlsHideTimeout]
 													target:self
 												  selector:@selector(hideOSD)
 												  userInfo:nil repeats:NO];
@@ -234,7 +230,7 @@
 	}
 	else
 	{
-		[osdTimer setFireDate: [NSDate dateWithTimeIntervalSinceNow: MP_FC_HIDEAFTERSECONDS]];
+		[osdTimer setFireDate: [NSDate dateWithTimeIntervalSinceNow: [PREFS floatForKey:MPEFullscreenControlsHideTimeout]]];
 	}
 }
 

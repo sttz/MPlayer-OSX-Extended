@@ -586,7 +586,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 - (IBAction)increaseVolume:(id)sender
 {
 	
-	double newVolume = [PREFS floatForKey:MPEAudioVolume] + volumeStep;
+	double newVolume = [PREFS floatForKey:MPEAudioVolume] + [PREFS floatForKey:MPEVolumeStepSize];
 	if (newVolume > 100)
 		newVolume = 100;
 		
@@ -596,7 +596,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 - (IBAction)decreaseVolume:(id)sender
 {
 	
-	double newVolume = [PREFS floatForKey:MPEAudioVolume] - volumeStep;
+	double newVolume = [PREFS floatForKey:MPEAudioVolume] - [PREFS floatForKey:MPEVolumeStepSize];
 	if (newVolume < 0)
 		newVolume = 0;
 	
@@ -682,12 +682,12 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 
 - (float)getSeekSeconds
 {
-	float seconds = 60;
+	float seconds = [PREFS floatForKey:MPESeekStepMedium];
 	if ([NSApp currentEvent]) {
 		if ([[NSApp currentEvent] modifierFlags] & NSShiftKeyMask) {
-			seconds = 600;
+			seconds = [PREFS floatForKey:MPESeekStepLarge];
 		} else if ([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask) {
-			seconds = 10;
+			seconds = [PREFS floatForKey:MPESeekStepSmall];
 		}
 	}
 	return seconds;
@@ -725,7 +725,16 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 
 - (IBAction)seekFromMenu:(NSMenuItem *)item
 {
-	[self seek:[item tag] mode:MISeekingModeRelative];
+	float seconds;
+	int sign = ([item tag] >= 0) ? 1 : -1;
+	if (abs([item tag]) == 1)
+		seconds = [PREFS floatForKey:MPESeekStepSmall] * sign;
+	else if (abs([item tag]) == 2)
+		seconds = [PREFS floatForKey:MPESeekStepMedium] * sign;
+	else
+		seconds = [PREFS floatForKey:MPESeekStepLarge] * sign;
+		
+	[self seek:seconds mode:MISeekingModeRelative];
 }
 
 /************************************************************************************/
@@ -872,14 +881,14 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 			if (movieInfo && [movieInfo chapterCount] > 0)
 				[self seekNext:nil];
 			else
-				[self seek:600 mode:MISeekingModeRelative];
+				[self seek:[PREFS floatForKey:MPESeekStepLarge] mode:MISeekingModeRelative];
             break;
 		// Left: Skip backward
         case kRemoteButtonLeft:
             if (movieInfo && [movieInfo chapterCount] > 0)
 				[self seekPrevious:nil];
 			else
-				[self seek:-600 mode:MISeekingModeRelative];
+				[self seek:-[PREFS floatForKey:MPESeekStepLarge] mode:MISeekingModeRelative];
             break;
 		// Menu: Switch fullscreen
         case kRemoteButtonMenu:

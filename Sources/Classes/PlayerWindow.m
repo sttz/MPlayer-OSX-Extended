@@ -3,9 +3,9 @@
 #import "PlayerController.h"
 #import "MplayerInterface.h"
 
-#import <Carbon/Carbon.h>
+#import "Preferences.h"
 
-#define SCROLL_SEEK_MULT	10.0
+#import <Carbon/Carbon.h>
 
 @implementation PlayerWindow
 
@@ -73,7 +73,7 @@
 		
 		// seek when ready
 		if (![[playerController playerInterface] state] == MIStatePlaying) {
-			[playerController seek:(-scrollXAcc*SCROLL_SEEK_MULT) mode:MISeekingModeRelative];
+			[playerController seek:(-scrollXAcc*[PREFS floatForKey:MPEScrollWheelSeekMultiple]) mode:MISeekingModeRelative];
 			scrollXAcc = 0;
 		}
 	}
