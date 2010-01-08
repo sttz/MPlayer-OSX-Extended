@@ -104,7 +104,6 @@ extern NSString* const MPEPlaybackStoppedNotification;
 - (void) loadExternalSubtitleFile:(NSString *)path withEncoding:(NSString *)encoding;
 - (BOOL) isRunning;
 - (void) setOntop:(BOOL)aBool;
-- (void) applySettings;
 - (BOOL) changesRequireRestart;
 - (void) applyChangesWithRestart:(BOOL)restart;
 - (int) fullscreenDeviceId;

@@ -1593,12 +1593,6 @@ static NSArray* statusNames;
 				continue;
 			}
 			
-			// current volume
-			/*if ([idName isEqualToString:@"volume"]) {
-				[userInfo setObject:[NSNumber numberWithDouble:[idValue doubleValue]] forKey:@"Volume"];
-				continue;
-			}*/
-			
 			// unparsed ans lines
 			[Debug log:ASL_LEVEL_DEBUG withMessage:@"REPLY not matched : %@ = %@", idName, idValue];
 			continue;

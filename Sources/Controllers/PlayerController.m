@@ -37,7 +37,6 @@
 
 #include "AppleRemote.h"
 
-#define		MP_VOLUME_POLL_INTERVAL		10.0f
 #define		MP_CHAPTER_CHECK_INTERVAL	0.5f
 #define		MP_SEEK_UPDATE_BLOCK		0.5f
 
@@ -432,47 +431,6 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 /************************************************************************************/
 - (BOOL) isRunning
 {	return [myPlayer isRunning];		}
-/************************************************************************************/
-- (void) applySettings
-{
-	/*NSString *aPath;
-	
-	// set audio file	
-	aPath = [myPlayingItem objectForKey:@"AudioFile"];
-	if (aPath) {
-		if (![[NSFileManager defaultManager] fileExistsAtPath:aPath])
-			NSRunAlertPanel(NSLocalizedString(@"Error",nil), [NSString stringWithFormat:
-					NSLocalizedString(@"File %@ could not be found.",nil), aPath],
-					NSLocalizedString(@"OK",nil),nil,nil);
-		else
-			[myPlayer setAudioFile:aPath];
-	}
-	else
-		[myPlayer setAudioFile:nil];
-	
-	// set subtitles file
-	aPath = [myPlayingItem objectForKey:@"SubtitlesFile"];
-	if (aPath) {
-		if (![[NSFileManager defaultManager] fileExistsAtPath:aPath])
-			NSRunAlertPanel(NSLocalizedString(@"Error",nil), [NSString stringWithFormat:
-					NSLocalizedString(@"File %@ could not be found.",nil), aPath],
-					NSLocalizedString(@"OK",nil),nil,nil);
-		else
-			[myPlayer setSubtitlesFile:aPath];
-	}
-	else
-		[myPlayer setSubtitlesFile:nil];
-	
-	// set to rebuild index
-	if ([myPlayingItem objectForKey:@"RebuildIndex"]) {
-		if ([[myPlayingItem objectForKey:@"RebuildIndex"] isEqualToString:@"YES"])
-			[myPlayer setRebuildIndex:YES];
-		else
-			[myPlayer setRebuildIndex:NO];
-	}
-	else
-		[myPlayer setRebuildIndex:NO];*/
-}
 /************************************************************************************/
 - (BOOL) changesRequireRestart
 {
@@ -1793,12 +1751,6 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 					[self updatePlayerWindow];
 			}
 		}
-		// poll volume
-		/*double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - lastVolumePoll);
-		if (timeDifference >= MP_VOLUME_POLL_INTERVAL) {
-			lastVolumePoll = [NSDate timeIntervalSinceReferenceDate];
-			[myPlayer sendCommand:@"get_property volume"];
-		}*/
 		// check chapters
 		double timeDifference = ([NSDate timeIntervalSinceReferenceDate] - lastChapterCheck);
 		if (timeDifference >= MP_CHAPTER_CHECK_INTERVAL) {
