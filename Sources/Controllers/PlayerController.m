@@ -53,7 +53,6 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	
 	// Initialize some variables
 	saveTime = YES;
-	lastVolumePoll = -MP_VOLUME_POLL_INTERVAL;
 	lastChapterCheck = -MP_CHAPTER_CHECK_INTERVAL;
 	
 	// fullscreen device defaults to automatic
@@ -338,6 +337,8 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		[myPlayer stop];
 		[playListController updateView];
 	}
+	
+	NSLog(@"playItem:fromPlaylist:%d continuous:%d",playingFromPlaylist,continuousPlayback);
 	
 	if (![anItem fileIsValid]) {
 		NSRunAlertPanel(NSLocalizedString(@"Error",nil), [NSString stringWithFormat:
