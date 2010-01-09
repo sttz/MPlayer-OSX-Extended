@@ -80,7 +80,7 @@ static NSMutableArray *busyPreflightInstances;
 			// Listen for end of preflight
 			[[NSNotificationCenter defaultCenter] addObserver:self
 													 selector:@selector(preflightFinished:)
-														 name:@"MIFinishedParsing"
+														 name:@"MIMPlayerExitedAndIsReady"
 													   object:newInstance];
 			// Listen for errors
 			[[NSNotificationCenter defaultCenter] addObserver:self

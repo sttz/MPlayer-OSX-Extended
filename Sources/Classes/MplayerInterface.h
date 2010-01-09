@@ -153,6 +153,7 @@ extern NSString* const MIStatsDroppedFramesKey;
 	BOOL restartingPlayer;
 	BOOL pausedOnRestart;
 	BOOL isRunning;
+	BOOL isReading;
 	int myOutputReadMode;
 	NSMutableArray *myCommandsBuffer;
 	NSString *lastUnparsedLine;
@@ -224,6 +225,7 @@ extern NSString* const MIStatsDroppedFramesKey;
 
 // notification handlers
 - (void) mplayerTerminated;
+- (void) mplayerTermiantedAndFinishedReading;
 - (void) readError:(NSNotification *)notification;
 - (void) readOutputC:(NSNotification *)notification;
 

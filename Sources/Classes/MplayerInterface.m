@@ -1234,6 +1234,7 @@ static NSArray* statusNames;
 	// launch mplayer task
 	[myMplayerTask launch];
 	isRunning = YES;
+	isReading = YES;
 	[self setState:MIStateInitializing];
 	
 	[Debug log:ASL_LEVEL_INFO withMessage:@"Path to fontconfig: %@", [[myMplayerTask environment] objectForKey:@"FONTCONFIG_PATH"]];
@@ -1284,6 +1285,7 @@ static NSArray* statusNames;
 		
 		if (!restartingPlayer && state > MIStateError)
 			[self setState:MIStateStopped];
+		
 		restartingPlayer = NO;
 		isRunning = NO;
 	}
@@ -1302,7 +1304,17 @@ static NSArray* statusNames;
 		 object:self];
 		
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Abnormal playback error. mplayer returned error code: %d", returnCode];
-	}
+	
+	} else
+		// Check if we're ready again
+		[self mplayerTermiantedAndFinishedReading];
+}
+/************************************************************************************/
+- (void) mplayerTermiantedAndFinishedReading
+{
+	if (!isRunning && !isReading)
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"MIMPlayerExitedAndIsReady"
+															object:self];
 }
 /************************************************************************************/
 - (void)readError:(NSNotification *)notification
@@ -1365,9 +1377,15 @@ static NSArray* statusNames;
 						encoding:NSUTF8StringEncoding];
 	
 	// register for another read
-	if ([myMplayerTask isRunning] || (data && [data length] > 0))
+	if (data && [data length] > 0)
 		[[[myMplayerTask standardOutput] fileHandleForReading]
 			readInBackgroundAndNotifyForModes:parseRunLoopModes];
+	// Nothing more to read
+	else {
+		isReading = NO;
+		// Check we're ready again
+		[self mplayerTermiantedAndFinishedReading];
+	}
 		
 	if (!data) {
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Couldn\'t read MPlayer data. Lost bytes: %u",
@@ -1539,17 +1557,6 @@ static NSArray* statusNames;
 			// an error occured (or unkown reason)
 			else
 				newState = MIStateError;
-
-			
-			// remove observer for output
-				// it's here because the NSTask sometimes do not terminate
-				// as it is supposed to do
-			[[NSNotificationCenter defaultCenter] removeObserver:self
-					name: NSFileHandleReadCompletionNotification
-					object:[[myMplayerTask standardOutput] fileHandleForReading]];
-			[[NSNotificationCenter defaultCenter] removeObserver:self
-					name: NSFileHandleReadCompletionNotification
-					object:[[myMplayerTask standardError] fileHandleForReading]];
 			
 			myOutputReadMode = 0;				// reset output read mode
 			
