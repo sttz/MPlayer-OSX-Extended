@@ -6,12 +6,16 @@
 //  Copyright The MPlayer Project 2005. All rights reserved.
 //
 
+#import <signal.h>
+
 #import <Cocoa/Cocoa.h>
 #import "Debug.h"
 
 int main(int argc, char *argv[])
 {
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
+	
+	signal(SIGPIPE, SIG_IGN);
 	
 #ifdef DEBUG
 	[Debug setSharedDebuggerConnectsStderr:YES];

@@ -1243,8 +1243,15 @@ static NSArray* statusNames;
 {
     if (myMplayerTask) {
 		if ([myMplayerTask isRunning]) {
-			NSFileHandle *thePipe = [[myMplayerTask standardInput] fileHandleForWriting];
-			[thePipe writeData:[aCommand dataUsingEncoding:NSUTF8StringEncoding]];
+			@try {
+				NSFileHandle *thePipe = [[myMplayerTask standardInput] fileHandleForWriting];
+				[thePipe writeData:[aCommand dataUsingEncoding:NSUTF8StringEncoding]];
+			}
+			@catch (NSException * e) {
+				[Debug log:ASL_LEVEL_WARNING withMessage:@"Pipe broke while trying to send command to MPlayer: %@",aCommand];
+				if ([myMplayerTask isRunning])
+					[myMplayerTask terminate];
+			}
 		}
 	}
 }
