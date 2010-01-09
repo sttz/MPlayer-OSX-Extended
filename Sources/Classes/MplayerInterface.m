@@ -159,24 +159,9 @@ static NSArray* statusNames;
 	
 	clients = [NSMutableArray new];
 	
-	mySeconds = 0;
-	
-	// *** playback
-	// addParams
-	
-	// *** display
-	screenshotPath = nil;
-	
-	// *** text
 	osdLevel = 1;
 
 	myLastUpdate = [NSDate timeIntervalSinceReferenceDate];
-	restartingPlayer = NO;
-	pausedOnRestart = NO;
-	isRunning = NO;
-	myOutputReadMode = 0;
-	myUpdateStatistics = NO;
-	isPreflight = NO;
 		
 	// Disable MPlayer AppleRemote code unconditionally, as it causing problems 
 	// when MPlayer runs in background only and we provide our own AR implementation.
@@ -1225,9 +1210,6 @@ static NSArray* statusNames;
 	[[[myMplayerTask standardError] fileHandleForReading]
 			readInBackgroundAndNotifyForModes:parseRunLoopModes];
 	
-	// reset output read mode
-	myOutputReadMode = 0;
-	
 	// reset subtitle file id
 	subtitleFileId = 0;
 	
@@ -1557,8 +1539,6 @@ static NSArray* statusNames;
 			// an error occured (or unkown reason)
 			else
 				newState = MIStateError;
-			
-			myOutputReadMode = 0;				// reset output read mode
 			
 			// Parsing should now be finished
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"MIFinishedParsing"

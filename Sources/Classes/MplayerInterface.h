@@ -154,7 +154,6 @@ extern NSString* const MIStatsDroppedFramesKey;
 	BOOL pausedOnRestart;
 	BOOL isRunning;
 	BOOL isReading;
-	int myOutputReadMode;
 	NSMutableArray *myCommandsBuffer;
 	NSString *lastUnparsedLine;
 	NSString *lastUnparsedErrorLine;
