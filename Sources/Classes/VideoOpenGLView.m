@@ -43,6 +43,9 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 
 - (void) awakeFromNib
 {
+	//renderer = [[MPlayerVideoRenderer alloc] initWithContext:[self openGLContext] andConnectionName:buffer_name];
+	//[renderer setDelegate:self];
+	
 	renderThread = [[NSThread alloc] initWithTarget:self selector:@selector(threadMain) object:nil];
 	[renderThread start];
 }
@@ -51,6 +54,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 {
 	[buffer_name release];
 	[renderThread release];
+	[renderer release];
 	
 	[super dealloc];
 }
@@ -399,6 +403,17 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 					 onThread:renderThread 
 				   withObject:nil
 				waitUntilDone:NO];
+}
+
+- (void)startRenderingWithSize:(NSArray *)size {
+	
+	image_width  = [[size objectAtIndex:0] unsignedIntValue];
+	image_height = [[size objectAtIndex:1] unsignedIntValue];
+	image_aspect = [[size objectAtIndex:2] floatValue];
+	org_image_aspect = image_aspect;
+	//image_aspect = (float)image_width/(float)image_height;
+	
+	[self startOpenGLView];
 }
 
 /*
@@ -781,6 +796,8 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 				 onThread:renderThread 
 			   withObject:nil
 			waitUntilDone:NO];
+	
+	[renderer boundsDidChangeTo:[self bounds]];
 }
 
 - (void) update
@@ -789,6 +806,12 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 				 onThread:renderThread 
 			   withObject:nil
 			waitUntilDone:NO];
+	
+	if (renderer) {
+		CGLLockContext([[self openGLContext] CGLContextObj]);
+		[[self openGLContext] update];
+		CGLUnlockContext([[self openGLContext] CGLContextObj]);
+	}
 }
 
 - (void) drawRect: (NSRect) bounds
@@ -797,6 +820,8 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 				 onThread:renderThread 
 			   withObject:nil
 			waitUntilDone:NO];
+	
+	[renderer redraw];
 }
 
 /*

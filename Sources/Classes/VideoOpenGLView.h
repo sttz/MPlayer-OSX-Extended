@@ -12,7 +12,13 @@
 #import "PlayerFullscreenWindow.h"
 #import "PlayListController.h"
 
+#import "MPlayerVideoRenderer.h"
+
 #import "Debug.h"
+
+#define		WSM_SCALE		1
+#define		WSM_FIT_SCREEN	2
+#define		WSM_FIT_WIDTH	3
 
 // MPlayer OS X VO Protocol
 @protocol MPlayerOSXVOProto
@@ -26,12 +32,10 @@
 - (void) ontop;
 @end
 
-#define		WSM_SCALE		1
-#define		WSM_FIT_SCREEN	2
-#define		WSM_FIT_WIDTH	3
-
-@interface VideoOpenGLView : NSOpenGLView <MPlayerOSXVOProto>
+@interface VideoOpenGLView : NSOpenGLView <MPlayerOSXVOProto, MPlayerVideoRenderereDelegateProtocol>
 {
+	MPlayerVideoRenderer *renderer;
+	
 	bool isFullscreen;
 	bool switchingToFullscreen;
 	bool switchingInProgress;
