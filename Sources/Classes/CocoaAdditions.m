@@ -204,3 +204,23 @@
 
 @end
 
+
+@implementation Protocol (MPEAdditions)
+
+- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector isRequired:(BOOL)isRequiredMethod isInstanceMethod:(BOOL)isInstanceMethod
+{
+	struct objc_method_description desc = protocol_getMethodDescription(self, 
+																		aSelector,
+																		isRequiredMethod, 
+																		isInstanceMethod);
+	
+	if (!desc.name)
+		return nil;
+	
+	return [NSMethodSignature signatureWithObjCTypes:desc.types];
+}
+
+@end
+
+
+

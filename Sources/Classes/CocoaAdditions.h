@@ -23,6 +23,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import <objc/Protocol.h>
 
 @interface NSNumber (MPEAdditions)
 - (NSString *) humanReadableSizeStringValue;
@@ -57,4 +58,8 @@
 - (void)setDouble:(double)value forKey:(NSString *)defaultName;
 
 - (void)archiveAndSetColor:(NSColor *)color forKey:(NSString *)defaultName;
+@end
+
+@interface Protocol (MPEAdditions)
+- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector isRequired:(BOOL)isRequiredMethod isInstanceMethod:(BOOL)isInstanceMethod;
 @end

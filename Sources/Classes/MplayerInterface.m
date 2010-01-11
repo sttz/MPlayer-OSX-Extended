@@ -248,12 +248,9 @@ static NSArray* statusNames;
 
 - (void) notifyClientsWithSelector:(SEL)selector andObject:(id)object andObject:(id)otherObject
 {
-	// Creating a method signature for a protocol is unfortunately not supported by Cocoa
-	struct objc_method_description desc = protocol_getMethodDescription(@protocol(MplayerInterfaceClientProtocol),
-																		selector, NO, YES);
-	if (!desc.name)
-		return;
-	NSMethodSignature *sig = [NSMethodSignature signatureWithObjCTypes:desc.types];
+	NSMethodSignature *sig = [@protocol(MplayerInterfaceClientProtocol) methodSignatureForSelector:selector
+																						isRequired:NO
+																				  isInstanceMethod:YES];
 	NSInvocation *performer = [NSInvocation invocationWithMethodSignature:sig];
 	
 	[performer setSelector:selector];
@@ -1467,7 +1464,7 @@ static NSArray* statusNames;
 					}
 					
 				}
-					
+				
 				// Update stats
 				if (myUpdateStatistics) {
 					NSMutableDictionary *stats = [NSMutableDictionary dictionary];
