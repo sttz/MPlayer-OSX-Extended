@@ -106,8 +106,7 @@ static NSArray* statusNames;
 		return;
 	
 	parseRunLoopModes = [[NSArray alloc] initWithObjects:
-						 NSDefaultRunLoopMode, 
-						 NSEventTrackingRunLoopMode, 
+						 NSRunLoopCommonModes,
 						 nil];
 	
 	videoEqualizerCommands = [[NSDictionary alloc] initWithObjectsAndKeys:
