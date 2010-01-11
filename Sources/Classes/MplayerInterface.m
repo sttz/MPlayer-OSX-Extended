@@ -130,6 +130,7 @@ static NSArray* statusNames;
 	statusNames = [[NSArray alloc] initWithObjects:
 				   @"Finished",
 				   @"Stopped",
+				   @"Error",
 				   @"Playing",
 				   @"Paused",
 				   @"Opening",
