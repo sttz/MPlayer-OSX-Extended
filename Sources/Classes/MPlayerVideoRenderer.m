@@ -280,9 +280,9 @@
 		glColor3f(1,1,1);
 		glBegin(GL_QUADS);
 		glTexCoord2f(upperLeft[0], upperLeft[1]); glVertex2i(	textureFrame.origin.x,		textureFrame.origin.y);
-		glTexCoord2f(lowerLeft[0], lowerLeft[1]); glVertex2i(	textureFrame.origin.x,		textureFrame.size.height);
-		glTexCoord2f(lowerRight[0], lowerRight[1]); glVertex2i(	textureFrame.size.width,	textureFrame.size.height);
-		glTexCoord2f(upperRight[0], upperRight[1]); glVertex2i(	textureFrame.size.width,	textureFrame.origin.y);
+		glTexCoord2f(lowerLeft[0], lowerLeft[1]); glVertex2i(	textureFrame.origin.x,		NSMaxY(textureFrame));
+		glTexCoord2f(lowerRight[0], lowerRight[1]); glVertex2i(	NSMaxX(textureFrame),		NSMaxY(textureFrame));
+		glTexCoord2f(upperRight[0], upperRight[1]); glVertex2i(	NSMaxX(textureFrame),		textureFrame.origin.y);
 		glEnd();
 		glDisable(CVOpenGLTextureGetTarget(texture));
 		
