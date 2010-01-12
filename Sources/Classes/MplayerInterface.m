@@ -749,7 +749,7 @@ static NSArray* statusNames;
 /************************************************************************************/
 - (void) pause
 {
-	[self sendCommand:@"pause" withOSD:MISurpressCommandOutputNever andPausing:MICommandPausingNone];
+	[self sendToMplayersInput:@"pause\n"];
 }
 /************************************************************************************/
 - (void) seek:(float)seconds mode:(int)aMode
@@ -1063,11 +1063,10 @@ static NSArray* statusNames;
 	BOOL quietCommand = (osdMode == MISurpressCommandOutputAlways || (osdMode == MISurpressCommandOutputConditionally && osdLevel == 1));
 	
 	if (quietCommand && !osdSilenced) {
-		[Debug log:ASL_LEVEL_DEBUG withMessage:@"osd 0 (%@, %i, %i)\n",[aCommands objectAtIndex:0], osdMode, osdLevel];
 		[self sendToMplayersInput:@"pausing_keep osd 0\n"];
 		osdSilenced = YES;
 		
-	} else if (!quietCommand) {
+	} else if (!quietCommand && osdSilenced) {
 		[self sendToMplayersInput:[NSString stringWithFormat:@"pausing_keep osd %d\n", [self mplayerOSDLevel]]];
 		osdSilenced = NO;
 	}
@@ -1108,7 +1107,6 @@ static NSArray* statusNames;
 
 - (void)reactivateOsd {
 	
-	[Debug log:ASL_LEVEL_DEBUG withMessage:@"osd %d\n", [self mplayerOSDLevel]];
 	[self sendToMplayersInput:[NSString stringWithFormat:@"pausing_keep osd %d\n", [self mplayerOSDLevel]]];
 	osdSilenced = NO;
 }
