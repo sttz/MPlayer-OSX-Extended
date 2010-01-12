@@ -20,19 +20,21 @@
 #define		WSM_FIT_SCREEN	2
 #define		WSM_FIT_WIDTH	3
 
+enum {
+	MPEScaleModeZoomToFit,
+	MPEScaleModeZoomToFill,
+	MPEScaleModeStertchToFill
+};
+typedef NSUInteger MPEVideoScaleMode;
+
 @interface VideoOpenGLView : NSOpenGLView <MPlayerVideoRenderereDelegateProtocol>
 {
 	MPlayerVideoRenderer *renderer;
 	
-	bool isFullscreen;
-	bool switchingToFullscreen;
-	bool switchingInProgress;
-	bool isClosing;
-	bool useFullscreen;
-	bool isOntop;
-	bool isPlaying;
-	bool keepAspect;
-	bool panScan;
+	BOOL isFullscreen;
+	BOOL switchingToFullscreen;
+	BOOL switchingInProgress;
+	BOOL isOntop;
 	NSString *buffer_name;
 	
 	CGLContextObj ctx;
@@ -43,7 +45,8 @@
 	float org_video_aspect;
 	
 	// video size mode
-	int videoSizeMode;
+	int windowSizeMode;
+	MPEVideoScaleMode videoScaleMode;
 	// zoom factor
 	float zoomFactor;
 	// fit width
@@ -67,8 +70,6 @@
 	IBOutlet NSMenuItem* PanScanMenuItem;	
 	// other controllers outlets
 	IBOutlet id playerController;
-	
-	NSThread *renderThread;
 	
 	IBOutlet NSWindow *fcControlWindow;
 	IBOutlet PlayerFullscreenWindow* fullscreenWindow;
@@ -94,8 +95,7 @@
 - (void) updateOntop;
 - (void) setAspectRatio:(float)aspect;
 - (void) setAspectRatioFromPreferences;
-- (void) toggleKeepAspect;
-- (void) togglePanScan;
+- (void) setVideoScaleMode:(MPEVideoScaleMode)scaleMode;
 
 // Event
 - (void) mouseDown: (NSEvent *) theEvent;

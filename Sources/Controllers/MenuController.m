@@ -123,14 +123,9 @@
 }
 
 
-- (IBAction) toggleKeepAspect:(NSMenuItem *)sender
+- (IBAction) setVideoScaleMode:(NSMenuItem *)sender
 {
-	[[[appController playerController] videoOpenGLView] toggleKeepAspect];
-}
-
-- (IBAction) togglePanScan:(NSMenuItem *)sender
-{
-	[[[appController playerController] videoOpenGLView] togglePanScan];
+	[[[appController playerController] videoOpenGLView] setVideoScaleMode:[sender tag]];
 }
 
 - (IBAction) originalAspect:(NSMenuItem *)sender

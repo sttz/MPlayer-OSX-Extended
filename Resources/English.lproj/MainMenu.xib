@@ -12,6 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="1582"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -746,7 +747,7 @@
 											<bool key="EncodedWithXMLCoder">YES</bool>
 											<object class="NSMenuItem" id="277199025">
 												<reference key="NSMenu" ref="24467971"/>
-												<string key="NSTitle">Keep</string>
+												<string key="NSTitle">Zoom to Fit</string>
 												<string key="NSKeyEquiv"/>
 												<int key="NSKeyEquivModMask">1048576</int>
 												<int key="NSMnemonicLoc">2147483647</int>
@@ -754,14 +755,25 @@
 												<reference key="NSOnImage" ref="118746331"/>
 												<reference key="NSMixedImage" ref="280660191"/>
 											</object>
-											<object class="NSMenuItem" id="236617444">
+											<object class="NSMenuItem" id="803428905">
 												<reference key="NSMenu" ref="24467971"/>
-												<string key="NSTitle">Pan-Scan</string>
+												<string key="NSTitle">Zoom to Fill</string>
 												<string key="NSKeyEquiv"/>
 												<int key="NSKeyEquivModMask">1048576</int>
 												<int key="NSMnemonicLoc">2147483647</int>
 												<reference key="NSOnImage" ref="118746331"/>
 												<reference key="NSMixedImage" ref="280660191"/>
+												<int key="NSTag">1</int>
+											</object>
+											<object class="NSMenuItem" id="236617444">
+												<reference key="NSMenu" ref="24467971"/>
+												<string key="NSTitle">Stretch to Fill</string>
+												<string key="NSKeyEquiv"/>
+												<int key="NSKeyEquivModMask">1048576</int>
+												<int key="NSMnemonicLoc">2147483647</int>
+												<reference key="NSOnImage" ref="118746331"/>
+												<reference key="NSMixedImage" ref="280660191"/>
+												<int key="NSTag">2</int>
 											</object>
 											<object class="NSMenuItem" id="477747889">
 												<reference key="NSMenu" ref="24467971"/>
@@ -2688,22 +2700,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">toggleKeepAspect:</string>
-						<reference key="source" ref="847214199"/>
-						<reference key="destination" ref="277199025"/>
-					</object>
-					<int key="connectionID">19375</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">togglePanScan:</string>
-						<reference key="source" ref="847214199"/>
-						<reference key="destination" ref="236617444"/>
-					</object>
-					<int key="connectionID">19376</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">originalAspect:</string>
 						<reference key="source" ref="847214199"/>
 						<reference key="destination" ref="1038818498"/>
@@ -2901,22 +2897,6 @@
 						<reference key="destination" ref="993460538"/>
 					</object>
 					<int key="connectionID">19461</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">keepAspectMenuItem</string>
-						<reference key="source" ref="847214199"/>
-						<reference key="destination" ref="277199025"/>
-					</object>
-					<int key="connectionID">19462</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">panScanMenuItem</string>
-						<reference key="source" ref="847214199"/>
-						<reference key="destination" ref="236617444"/>
-					</object>
-					<int key="connectionID">19463</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -3410,6 +3390,70 @@
 						<reference key="destination" ref="935798517"/>
 					</object>
 					<int key="connectionID">19595</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="803428905"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="803428905"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19597</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">setVideoScaleMode:</string>
+						<reference key="source" ref="847214199"/>
+						<reference key="destination" ref="236617444"/>
+					</object>
+					<int key="connectionID">19599</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">setVideoScaleMode:</string>
+						<reference key="source" ref="847214199"/>
+						<reference key="destination" ref="803428905"/>
+					</object>
+					<int key="connectionID">19600</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">setVideoScaleMode:</string>
+						<reference key="source" ref="847214199"/>
+						<reference key="destination" ref="277199025"/>
+					</object>
+					<int key="connectionID">19601</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">stretchToFillMenuItem</string>
+						<reference key="source" ref="847214199"/>
+						<reference key="destination" ref="236617444"/>
+					</object>
+					<int key="connectionID">19602</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">zoomToFillMenuItem</string>
+						<reference key="source" ref="847214199"/>
+						<reference key="destination" ref="803428905"/>
+					</object>
+					<int key="connectionID">19603</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">zoomToFitMenuItem</string>
+						<reference key="source" ref="847214199"/>
+						<reference key="destination" ref="277199025"/>
+					</object>
+					<int key="connectionID">19604</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -4500,6 +4544,7 @@
 							<reference ref="277199025"/>
 							<reference ref="236617444"/>
 							<reference ref="371882796"/>
+							<reference ref="803428905"/>
 						</object>
 						<reference key="parent" ref="209748131"/>
 					</object>
@@ -4897,6 +4942,11 @@
 						<reference key="object" ref="773467784"/>
 						<reference key="parent" ref="911038990"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">19596</int>
+						<reference key="object" ref="803428905"/>
+						<reference key="parent" ref="24467971"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -5219,6 +5269,8 @@
 					<string>19590.IBPluginDependency</string>
 					<string>19591.IBPluginDependency</string>
 					<string>19593.IBPluginDependency</string>
+					<string>19596.IBPluginDependency</string>
+					<string>19596.ImportedFromIB2</string>
 					<string>1983.IBPluginDependency</string>
 					<string>1983.ImportedFromIB2</string>
 					<string>1984.IBPluginDependency</string>
@@ -5405,7 +5457,7 @@
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
-					<string>{{736, 738}, {132, 243}}</string>
+					<string>{{736, 718}, {156, 263}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -5661,6 +5713,8 @@
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<boolean value="YES"/>
 					<string>{{589, 798}, {221, 203}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
@@ -5766,7 +5820,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">19595</int>
+			<int key="maxID">19604</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -6062,20 +6116,18 @@
 							<string>seekByTag:</string>
 							<string>setAspectFromMenu:</string>
 							<string>setSizeFromMenu:</string>
+							<string>setVideoScaleMode:</string>
 							<string>skipToChapterFromMenu:</string>
 							<string>skipToNext:</string>
 							<string>skipToPrevious:</string>
 							<string>stepFrame:</string>
 							<string>stop:</string>
 							<string>takeScreenshot:</string>
-							<string>toggleKeepAspect:</string>
 							<string>toggleLoop:</string>
-							<string>togglePanScan:</string>
 							<string>togglePlaylistWindow:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
@@ -6114,17 +6166,19 @@
 							<string>audioStreamMenu</string>
 							<string>chapterMenu</string>
 							<string>fullscreenMenu</string>
-							<string>keepAspectMenuItem</string>
 							<string>loopMenuItem</string>
-							<string>panScanMenuItem</string>
 							<string>playMenuItem</string>
+							<string>stretchToFillMenuItem</string>
 							<string>subtitleStreamMenu</string>
 							<string>toggleMuteMenuItem</string>
 							<string>videoStreamMenu</string>
+							<string>zoomToFillMenuItem</string>
+							<string>zoomToFitMenuItem</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>AppController</string>
+							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
@@ -6600,18 +6654,7 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>Aspect16to9MenuItem</string>
-							<string>Aspect185to1MenuItem</string>
-							<string>Aspect239to1MenuItem</string>
-							<string>Aspect3to2MenuItem</string>
-							<string>Aspect4to3MenuItem</string>
-							<string>Aspect5to3MenuItem</string>
-							<string>CustomAspectMenuItem</string>
-							<string>DoubleSizeMenuItem</string>
-							<string>HalfSizeMenuItem</string>
 							<string>KeepAspectMenuItem</string>
-							<string>NormalSizeMenuItem</string>
-							<string>OriginalAspectMenuItem</string>
 							<string>PanScanMenuItem</string>
 							<string>fcControlWindow</string>
 							<string>fullscreenWindow</string>
@@ -6619,17 +6662,6 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
 							<string>NSWindow</string>

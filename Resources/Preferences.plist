@@ -41,6 +41,8 @@
 			<key>MPECustomAspectRatioValue</key>
 			<real>1.6</real>
 		</dict>
+		<key>MPEScaleMode</key>
+		<integer>0</integer>
 		<key>MPEFont</key>
 		<string>Myriad Pro</string>
 		<key>MPEFontStyle</key>

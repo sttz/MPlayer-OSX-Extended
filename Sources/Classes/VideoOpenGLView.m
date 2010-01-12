@@ -12,6 +12,8 @@
 #import "PreferencesController2.h"
 #import "Preferences.h"
 
+#import "CocoaAdditions.h"
+
 static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 
 @implementation VideoOpenGLView
@@ -21,22 +23,10 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	if (!(self = [super initWithCoder:aDecoder]))
 		return nil;
 	
-	isFullscreen = NO;
-	isOntop = NO;
-	keepAspect = YES;
-	panScan = NO;
-	isPlaying = NO;
-	
 	zoomFactor = 1;
 	
 	// Choose buffer name and pass it on the way to mplayer
 	buffer_name = [[NSString stringWithFormat:@"mplayerosx-%i", [[NSProcessInfo processInfo] processIdentifier]] retain];
-	
-	// Watch for aspect ratio changes
-	[PREFS addObserver:self
-			forKeyPath:MPEAspectRatio
-			   options:0
-			   context:nil];
 	
 	return self;
 }
@@ -47,6 +37,18 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	[renderer setDelegate:self];
 	
 	ctx = [[self openGLContext] CGLContextObj];
+	
+	// Watch for aspect ratio changes
+	[PREFS addObserver:self
+			forKeyPath:MPEAspectRatio
+			   options:0
+			   context:nil];
+	
+	// Watch for scale mode changes
+	[PREFS addObserver:self
+			forKeyPath:MPEScaleMode
+			   options:(NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew)
+			   context:nil];
 }
 
 - (void) dealloc
@@ -310,11 +312,11 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 		fitFactor = screen_size.width / video_size.width;
 	
 	// Fit to specific width
-	if (videoSizeMode == WSM_FIT_WIDTH)
+	if (windowSizeMode == WSM_FIT_WIDTH)
 		zoomFactor = fitWidth / video_size.width;
 	
 	// Limit factor
-	if (videoSizeMode == WSM_FIT_SCREEN || zoomFactor > fitFactor)
+	if (windowSizeMode == WSM_FIT_SCREEN || zoomFactor > fitFactor)
 		zoomFactor = fitFactor;
 	
 	// Apply size
@@ -338,37 +340,30 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 */
 - (NSRect) videoFrame
 {
-	NSRect frame = [self bounds];
+	NSRect displayFrame = [self bounds];
+	NSRect videoFrame = displayFrame;
 	
-	uint32_t d_width;
-	uint32_t d_height;
+	// Display frame is video frame for stretch to fill
+	if (videoScaleMode == MPEScaleModeStertchToFill)
+		return videoFrame;
 	
-	if (panScan) {
-		d_width = frame.size.height*video_aspect;
-		d_height = frame.size.height;
-	} else {
-		d_width = video_size.height*video_aspect;
-		d_height = video_size.height;
-	}
+	// Video is taller than display frame if aspect is smaller -> Fit height
+	BOOL fitHeight = (video_aspect < (displayFrame.size.width / displayFrame.size.height));
 	
-	NSRect textureFrame = frame;
+	// Reverse for zoom to fill
+	if (videoScaleMode == MPEScaleModeZoomToFill)
+		fitHeight = !fitHeight;
 	
-	if (keepAspect)	{
-		//set video frame coordinate
-		float aspectX = (float)((float)frame.size.width/(float)d_width);
-		float aspectY = (float)((float)(frame.size.height)/(float)d_height);
-		int padding = 0;
-		
-		if (((d_height*aspectX)>(frame.size.height)) || panScan) {
-			padding = (frame.size.width - d_width*aspectY)/2;
-			textureFrame = NSMakeRect(padding, 0, d_width*aspectY+padding, d_height*aspectY);
-		} else {
-			padding = ((frame.size.height) - d_height*aspectX)/2;
-			textureFrame = NSMakeRect(0, padding, d_width*aspectX, d_height*aspectX+padding);
-		}
-	}
+	if (fitHeight)
+		videoFrame.size.width = videoFrame.size.height * video_aspect;
+	else
+		videoFrame.size.height = videoFrame.size.width * (1 / video_aspect);
 	
-	return textureFrame;
+	// Center video
+	videoFrame.origin.x = (displayFrame.size.width - videoFrame.size.width) / 2;
+	videoFrame.origin.y = (displayFrame.size.height - videoFrame.size.height) / 2;
+	
+	return videoFrame;
 }
 
 /*
@@ -392,11 +387,6 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 			selector: @selector(finishClosing) 
 			name: @"MIFullscreenSwitchDone"
 			object: self];
-		
-		[self performSelector:@selector(toggleFullscreen)
-					 onThread:renderThread 
-				   withObject:nil
-				waitUntilDone:NO];
 		
 		return;
 	}
@@ -433,11 +423,11 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
  */
 - (void) setWindowSizeMode:(int)mode withValue:(float)val
 {
-	videoSizeMode = mode;
+	windowSizeMode = mode;
 	
-	if (videoSizeMode == WSM_SCALE)
+	if (windowSizeMode == WSM_SCALE)
 		zoomFactor = val;
-	else if (videoSizeMode == WSM_FIT_WIDTH)
+	else if (windowSizeMode == WSM_FIT_WIDTH)
 		fitWidth = val;
 	
 	// do not apply if not playing
@@ -445,17 +435,12 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 		return;
 	
 	// exit fullscreen first and finish with callback
-	if(isFullscreen) {
+	if (isFullscreen) {
 		
 		[[NSNotificationCenter defaultCenter] addObserver: self
 			selector: @selector(resizeView) 
 			name: @"MIFullscreenSwitchDone"
 			object: self];
-		
-		[self performSelector:@selector(toggleFullscreen)
-					 onThread:renderThread 
-				   withObject:nil
-				waitUntilDone:NO];
 		
 	} else
 		// not in fullscreen: resize now
@@ -487,7 +472,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 }
 
 /*
-	View changed: synchronized call to the render thread
+	View changed: synchronized call to the renderer
  */
 - (void) reshape
 {
@@ -507,27 +492,18 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 }
 
 /*
-	Toggle keep aspect state
+	Set video scale mode
 */
-- (void) toggleKeepAspect
+- (void) setVideoScaleMode:(MPEVideoScaleMode)scaleMode
 {
-	keepAspect = !keepAspect;
+	MenuController *menuController = [[AppController sharedController] menuController];
+	[menuController->zoomToFitMenuItem     setState:(scaleMode == MPEScaleModeZoomToFit)];
+	[menuController->zoomToFillMenuItem	   setState:(scaleMode == MPEScaleModeZoomToFill)];
+	[menuController->stretchToFillMenuItem setState:(scaleMode == MPEScaleModeStertchToFill)];
 	
-	[[[AppController sharedController] menuController]->keepAspectMenuItem setState:keepAspect];
+	videoScaleMode = scaleMode;
 	
-	[self reshapeAndResize];
-}
-
-/*
-	Toggle panscan state
-*/
-- (void) togglePanScan
-{
-	panScan = !panScan;
-	
-	[[[AppController sharedController] menuController]->panScanMenuItem setState:panScan];
-	
-	[self reshapeAndResize];
+	[self reshape];
 }
 
 /*
@@ -559,6 +535,8 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 {
 	if ([keyPath isEqualToString:MPEAspectRatio])
 		[self setAspectRatioFromPreferences];
+	else if ([keyPath isEqualToString:MPEScaleMode])
+		[self setVideoScaleMode:[change integerForKey:NSKeyValueChangeNewKey]];
 }
 
 /*

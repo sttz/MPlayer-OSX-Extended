@@ -76,6 +76,7 @@ extern NSString* const MPEPlaylistOpen;
 extern NSString* const MPEPlaylistPlayMode;
 extern NSString* const MPEPostprocessingFilter;
 extern NSString* const MPERenderSubtitlesFirst;
+extern NSString* const MPEScaleMode;
 extern NSString* const MPEScreenshotSaveLocation;
 extern NSString* const MPESelectedBinary;
 extern NSString* const MPESelectedPreferencesSection;

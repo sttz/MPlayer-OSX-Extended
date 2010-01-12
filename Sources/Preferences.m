@@ -75,6 +75,7 @@ NSString* const MPEPlaylistOpen                       = @"MPEPlaylistOpen";
 NSString* const MPEPlaylistPlayMode                   = @"MPEPlaylistPlayMode";
 NSString* const MPEPostprocessingFilter               = @"MPEPostprocessingFilter";
 NSString* const MPERenderSubtitlesFirst               = @"MPERenderSubtitlesFirst";
+NSString* const MPEScaleMode                          = @"MPEScaleMode";
 NSString* const MPEScreenshotSaveLocation             = @"MPEScreenshotSaveLocation";
 NSString* const MPESelectedBinary                     = @"MPESelectedBinary";
 NSString* const MPESelectedPreferencesSection         = @"MPESelectedPreferencesSection";
