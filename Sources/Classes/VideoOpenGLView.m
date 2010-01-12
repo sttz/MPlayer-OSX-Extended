@@ -43,355 +43,38 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 
 - (void) awakeFromNib
 {
-	//renderer = [[MPlayerVideoRenderer alloc] initWithContext:[self openGLContext] andConnectionName:buffer_name];
-	//[renderer setDelegate:self];
+	renderer = [[MPlayerVideoRenderer alloc] initWithContext:[self openGLContext] andConnectionName:buffer_name];
+	[renderer setDelegate:self];
 	
-	renderThread = [[NSThread alloc] initWithTarget:self selector:@selector(threadMain) object:nil];
-	[renderThread start];
+	ctx = [[self openGLContext] CGLContextObj];
 }
 
 - (void) dealloc
 {
 	[buffer_name release];
-	[renderThread release];
 	[renderer release];
 	
 	[super dealloc];
 }
-
-/*
- 
- METHODS IN SEPARATE THREAD
- 
- */
-
-- (void)threadMain
-{
-	NSAutoreleasePool * pool = [NSAutoreleasePool new];
-	
-	NSRunLoop* myRunLoop = [NSRunLoop currentRunLoop];
-	
-	GLint swapInterval = 1;
-	
-	[[self openGLContext] setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
-	
-	//setup server connection for mplayer
-	NSConnection *serverConnection=[NSConnection defaultConnection];
-    [serverConnection setRootObject:self];
-    [serverConnection registerName:buffer_name];
-	
-	[myRunLoop run];
-	
-	[pool release];
-}
-
-/*
-	Initialize playback with size, depth and aspect
- */
-- (int) startWithWidth: (int)width withHeight: (int)height withBytes: (int)bytes withAspect: (int)aspect
-{
-	
-	CVReturn error = kCVReturnSuccess;
-
-	image_width = width;
-	image_height = height;
-	image_bytes = bytes;
-	image_aspect = aspect;
-	image_aspect = image_aspect/100;
-	org_image_aspect = image_aspect;
-	
-	isPlaying = YES;
-	
-	shm_fd = shm_open([buffer_name UTF8String], O_RDONLY, S_IRUSR);
-	if (shm_fd == -1)
-	{
-		[Debug log:ASL_LEVEL_ERR withMessage:@"mplayergui: shm_open failed"];
-		return 0;
-	}
-	
-	image_data = mmap(NULL, image_width*image_height*image_bytes,
-					  PROT_READ, MAP_SHARED, shm_fd, 0);
-	
-	if (image_data == MAP_FAILED)
-	{
-		[Debug log:ASL_LEVEL_ERR withMessage:@"mplayergui: mmap failed"];
-		return 0;
-	}
-	 
-	image_buffer = malloc(image_width*image_height*image_bytes);
-	
-	//Setup CoreVideo Texture
-	error = CVPixelBufferCreateWithBytes( NULL, image_width, image_height, kYUVSPixelFormat, image_buffer, image_width*image_bytes, NULL, NULL, NULL, &currentFrameBuffer);
-	if(error != kCVReturnSuccess)
-		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to create Pixel Buffer (%d)", error];
-	
-	error = CVOpenGLTextureCacheCreate(NULL, 0, [[self openGLContext] CGLContextObj], [[self pixelFormat] CGLPixelFormatObj], 0, &textureCache);
-	if(error != kCVReturnSuccess)
-		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to create OpenGL texture Cache (%d)", error];
-	
-	// Start OpenGLView in GUI
-	[self performSelectorOnMainThread:@selector(startOpenGLView) withObject:nil waitUntilDone:NO];
-	
-	[self adaptSize];
-	
-	if(isFullscreen)
-		[[self openGLContext] setView:[fullscreenWindow contentView]];
-	
-	return 1;
-}
-
-/* 
-	Stop Playback
- */
-- (void) stop;
-{
-	isPlaying = NO;
-	
-	//make sure we destroy the shared buffer
-	if (munmap(image_data, image_width*image_height*image_bytes) == -1)
-		[Debug log:ASL_LEVEL_ERR withMessage:@"munmap failed"];
-	
-	close(shm_fd);
-	
-	CVOpenGLTextureCacheRelease(textureCache);
-	CVPixelBufferRelease(currentFrameBuffer);
-	
-	free(image_buffer);
-}
-
-/*
-	Toggle Between Windowed & Fullscreen Mode
-	1: Let the main thread switch the gui
-	2: Main thread calls back to adapt opengl context
- */
-- (void) toggleFullscreen
-{
-	
-	// wait until finished before switching again
-	if (switchingInProgress)
-		return;
-	switchingInProgress = YES;
-	
-	// Keep state in two variables to animate rect properly
-	if(!isFullscreen)
-	{
-		switchingToFullscreen = YES;
-	}
-	else
-	{
-		switchingToFullscreen = NO;
-		isFullscreen = NO;
-		//[self clear];
-	}
-	
-	[self performSelectorOnMainThread:@selector(toggleFullscreenWindow) withObject:nil waitUntilDone:NO];
-}
-
-- (void) finishToggleFullscreen
-{
-	
-	if(switchingToFullscreen)
-	{
-		isFullscreen = YES;
-	}
-	else
-	{
-		[[self openGLContext] setView:self];
-	}
-	
-	[self adaptSize];
-	switchingInProgress = NO;
-	
-	// Message the main thread that switching is done
-	[self performSelectorOnMainThread:@selector(toggleFullscreenEnded) withObject:nil waitUntilDone:NO];
-}
-
-/*
-	Setup OpenGL
-*/
-- (void)prepareOpenGL
-{
-	//setup gl
-	glEnable(GL_BLEND); 
-	glDisable(GL_DEPTH_TEST);
-	glDepthMask(GL_FALSE);
-	glDisable(GL_CULL_FACE);
-
-	[self adaptSize];
-}
-
-/*
-	Update frame buffer and render
-*/ 
-- (void) render
-{
-	memcpy(image_buffer, image_data, image_width*image_height*image_bytes);
-	[self doRender];
-}
-
-/*
-	Render buffered frame
-*/ 
-- (void) doRender
-{
-	CVReturn error = kCVReturnSuccess;
-	glClear(GL_COLOR_BUFFER_BIT);
-	
-	if(isPlaying)
-	{
-		CVOpenGLTextureRef texture;
-		
-		error = CVOpenGLTextureCacheCreateTextureFromImage (NULL, textureCache,  currentFrameBuffer,  0, &texture);
-		
-		//If there is no texture, clear
-		if((error != kCVReturnSuccess) || !isPlaying)
-		{
-			glClearColor(0,0,0,0);
-			glFlush();
-		}
-		else
-		{
-			//Render Video Texture
-			CVOpenGLTextureGetCleanTexCoords(texture, lowerLeft, lowerRight, upperRight, upperLeft);
-			
-			glEnable(CVOpenGLTextureGetTarget(texture));
-			glBindTexture(CVOpenGLTextureGetTarget(texture), CVOpenGLTextureGetName(texture));
-		
-			glColor3f(1,1,1);
-			glBegin(GL_QUADS);
-			glTexCoord2f(upperLeft[0], upperLeft[1]); glVertex2i(	textureFrame.origin.x,		textureFrame.origin.y);
-			glTexCoord2f(lowerLeft[0], lowerLeft[1]); glVertex2i(	textureFrame.origin.x,		textureFrame.size.height);
-			glTexCoord2f(lowerRight[0], lowerRight[1]); glVertex2i(	textureFrame.size.width,	textureFrame.size.height);
-			glTexCoord2f(upperRight[0], upperRight[1]); glVertex2i(	textureFrame.size.width,	textureFrame.origin.y);
-			glEnd();
-			glDisable(CVOpenGLTextureGetTarget(texture));
-		
-			glFlush();
-		}
-		
-		CVOpenGLTextureRelease(texture);
-	}
-	else
-	{
-		glClearColor(0,0,0,0);
-		glFlush();
-	}
-}
-
-/*
-	clear background
-*/
-- (void) clear
-{
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClearColor(0,0,0,0);
-	glFlush();
-	[[self openGLContext] flushBuffer];
-}
-
-/*
-	reshape OpenGL viewport
-*/ 
-- (void)adaptSize
-{
-	
-	//asl_log(NULL, NULL, ASL_LEVEL_ERR, "adaptSizeT");
-	NSRect frame;
-	uint32_t d_width;
-	uint32_t d_height;
-	float aspectX;
-	float aspectY;
-	int padding = 0;
-	
-	if(isFullscreen)
-		frame = [[fullscreenWindow contentView] bounds];
-	else
-		frame = [self bounds];
-	
-	if(panScan)
-	{
-		d_width = frame.size.height*image_aspect;
-		d_height = frame.size.height;
-	}
-	else
-	{
-		d_width = image_height*image_aspect;
-		d_height = image_height;
-	}
-	
-	//Setup OpenGL Viewport
-	glViewport(0, 0, frame.size.width, frame.size.height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0, frame.size.width, frame.size.height, 0, -1.0, 1.0);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	if(keepAspect)
-	{
-		//set video frame coordinate
-		aspectX = (float)((float)frame.size.width/(float)d_width);
-		aspectY = (float)((float)(frame.size.height)/(float)d_height);
-		
-		if( ((d_height*aspectX)>(frame.size.height)) || panScan)
-		{
-			padding = (frame.size.width - d_width*aspectY)/2;
-			textureFrame = NSMakeRect(padding, 0, d_width*aspectY+padding, d_height*aspectY);
-		}
-		else
-		{
-			padding = ((frame.size.height) - d_height*aspectX)/2;
-			textureFrame = NSMakeRect(0, padding, d_width*aspectX, d_height*aspectX+padding);
-		}
-	}
-	else
-	{
-		textureFrame =  frame;
-	}
-}
-
-
-
-/*
-	Update method, called in main thread and forwareded to render thread
- */
-- (void) updateInThread
-{
-	[[self openGLContext] update];
-}
-
-/*
-	DrawRect method, called in main thread and forwareded to render thread
- */
-- (void) drawRectInThread
-{
-	[self doRender];
-}
-
-/*
- 
- METHODS IN MAIN THREAD
- 
- */
 
 - (NSString *)bufferName
 {
 	return [[buffer_name retain] autorelease];
 }
 
-/*
-	Start OpenGL view
-*/
-- (void) startOpenGLView
-{
+- (void)startRenderingWithSize:(NSValue *)sizeValue {
+	
+	video_size = [sizeValue sizeValue];
+	video_aspect = org_video_aspect = video_size.width / video_size.height;
+	
 	// Aspect ratio
 	[self setAspectRatioFromPreferences];
 	
-    if(isFullscreen)
-	{
-		[fullscreenWindow makeKeyAndOrderFront:nil];
+    if (isFullscreen) {
 		
+		[fullscreenWindow makeKeyAndOrderFront:nil];
 		isFullscreen = YES;
+		
 	} else {
 		
 		[self resizeView];
@@ -399,21 +82,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
     
 	//Play in fullscreen
 	if ([PREFS integerForKey:MPEStartPlaybackDisplayType] == MPEStartPlaybackDisplayTypeFullscreen)
-		[self performSelector:@selector(toggleFullscreen)
-					 onThread:renderThread 
-				   withObject:nil
-				waitUntilDone:NO];
-}
-
-- (void)startRenderingWithSize:(NSArray *)size {
-	
-	image_width  = [[size objectAtIndex:0] unsignedIntValue];
-	image_height = [[size objectAtIndex:1] unsignedIntValue];
-	image_aspect = [[size objectAtIndex:2] floatValue];
-	org_image_aspect = image_aspect;
-	//image_aspect = (float)image_width/(float)image_height;
-	
-	[self startOpenGLView];
+		[self toggleFullscreen];
 }
 
 /*
@@ -427,8 +96,20 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 /*
 	Toggle fullscreen on the gui side
  */
-- (void) toggleFullscreenWindow
+- (void) toggleFullscreen
 {
+	// wait until finished before switching again
+	if (switchingInProgress)
+		return;
+	switchingInProgress = YES;
+	
+	if(!isFullscreen) {
+		switchingToFullscreen = YES;
+	} else {
+		switchingToFullscreen = NO;
+		isFullscreen = NO;
+	}
+	
 	int fullscreenId = [playerController fullscreenDeviceId];
 	NSRect screen_frame = [[[NSScreen screens] objectAtIndex:fullscreenId] frame];
 	/*screen_frame.origin.x = 500;
@@ -436,8 +117,8 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	screen_frame.size.width = 200;
 	screen_frame.size.height = 200;*/
 	
-	if(switchingToFullscreen)
-	{
+	if (switchingToFullscreen) {
+		
 		// hide menu and dock if on same screen
 		if (fullscreenId == 0)
 			SetSystemUIMode( kUIModeAllHidden, kUIOptionAutoShowMenuBar);
@@ -474,13 +155,13 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 		
 		// wait for animation to finish
 		if ([[AppController sharedController] animateInterface]) {
-			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreenWindowContinued) 
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishToggleFullscreen) 
 														 name:VVAnimationsDidEnd object:self];
 		} else
-			[self toggleFullscreenWindowContinued];
-	}
-	else
-	{
+			[self finishToggleFullscreen];
+	
+	} else {
+		
 		// apply old size to player window
 		NSRect win_frame = [[playerController playerWindow] frame];
 		win_frame.size = old_win_size;
@@ -504,17 +185,14 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 		
 		// wait for animation to finish
 		if ([[AppController sharedController] animateInterface]) {
-			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleFullscreenWindowContinued) 
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishToggleFullscreen) 
 														 name:VVAnimationsDidEnd object:self];
 		} else
-			[self toggleFullscreenWindowContinued];
+			[self finishToggleFullscreen];
 	}
 }
 
-/*
-	Continue fullscreen toggle after switch animation
- */
-- (void) toggleFullscreenWindowContinued
+- (void) finishToggleFullscreen
 {
 	
 	if (switchingToFullscreen) {
@@ -537,24 +215,17 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 		dragStartPoint = NSZeroPoint;
 	}
 	
-	[self performSelector:@selector(finishToggleFullscreen)
-				 onThread:renderThread 
-			   withObject:nil
-			waitUntilDone:NO];
-	
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:VVAnimationsDidEnd object:nil];
-}
-
-
-/*
- Switching Fullscreen has ended
- */
-- (void) toggleFullscreenEnded
-{
-	[[NSNotificationCenter defaultCenter]
-		postNotificationName:@"MIFullscreenSwitchDone"
-		object:self
-		userInfo:nil];
+	
+	if (switchingToFullscreen)
+		isFullscreen = YES;
+	
+	[self reshape];
+	switchingInProgress = NO;
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"MIFullscreenSwitchDone"
+														object:self
+													  userInfo:nil];
 }
 
 /*
@@ -621,7 +292,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	if (isFullscreen)
 		return;
 	
-	if (image_width == 0 || image_height == 0)
+	if (video_size.width == 0 || video_size.height == 0)
 		return;
 	
 	NSRect win_frame = [[self window] frame];
@@ -633,26 +304,26 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	// Determine maximal scale factor to fit screen
 	screen_size = [[[playerController playerWindow] screen] visibleFrame].size;
 	
-	if (screen_size.width / screen_size.height > (float)image_width / (float)image_height)
-		fitFactor = screen_size.height / (float)image_height;
+	if (screen_size.width / screen_size.height > video_aspect)
+		fitFactor = screen_size.height / video_size.height;
 	else
-		fitFactor = screen_size.width / (float)image_width;
+		fitFactor = screen_size.width / video_size.width;
 	
 	// Fit to specific width
 	if (videoSizeMode == WSM_FIT_WIDTH)
-		zoomFactor = fitWidth / (float)image_width;
+		zoomFactor = fitWidth / video_size.width;
 	
 	// Limit factor
 	if (videoSizeMode == WSM_FIT_SCREEN || zoomFactor > fitFactor)
 		zoomFactor = fitFactor;
 	
 	// Apply size
-	win_frame.size.height += (image_height*zoomFactor) - mov_frame.size.height;
+	win_frame.size.height += (video_size.height*zoomFactor) - mov_frame.size.height;
 	
-	if(image_height*image_aspect*zoomFactor < minSize.width)
+	if(video_size.height*video_aspect*zoomFactor < minSize.width)
 		win_frame.size.width = minSize.width;
 	else
-		win_frame.size.width += image_height*image_aspect*zoomFactor - mov_frame.size.width;
+		win_frame.size.width += video_size.height*video_aspect*zoomFactor - mov_frame.size.width;
 	
 	[[self window] setFrame:win_frame display:YES animate:[[AppController sharedController] animateInterface]];
 	
@@ -660,6 +331,44 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	[[NSNotificationCenter defaultCenter] removeObserver:self
 		name: @"MIFullscreenSwitchDone"
 		object: self];
+}
+
+/*
+	Calculate bounds for video
+*/
+- (NSRect) videoFrame
+{
+	NSRect frame = [self bounds];
+	
+	uint32_t d_width;
+	uint32_t d_height;
+	
+	if (panScan) {
+		d_width = frame.size.height*video_aspect;
+		d_height = frame.size.height;
+	} else {
+		d_width = video_size.height*video_aspect;
+		d_height = video_size.height;
+	}
+	
+	NSRect textureFrame = frame;
+	
+	if (keepAspect)	{
+		//set video frame coordinate
+		float aspectX = (float)((float)frame.size.width/(float)d_width);
+		float aspectY = (float)((float)(frame.size.height)/(float)d_height);
+		int padding = 0;
+		
+		if (((d_height*aspectX)>(frame.size.height)) || panScan) {
+			padding = (frame.size.width - d_width*aspectY)/2;
+			textureFrame = NSMakeRect(padding, 0, d_width*aspectY+padding, d_height*aspectY);
+		} else {
+			padding = ((frame.size.height) - d_height*aspectX)/2;
+			textureFrame = NSMakeRect(0, padding, d_width*aspectX, d_height*aspectX+padding);
+		}
+	}
+	
+	return textureFrame;
 }
 
 /*
@@ -698,10 +407,8 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 
 - (void) finishClosing
 {
-	image_width = 0;
-	image_height = 0;
-	image_bytes = 0;
-	image_aspect = 0;
+	video_size = NSZeroSize;
+	video_aspect = org_video_aspect = 0;
 	
 	// close video view
 	NSRect frame = [[self window] frame];
@@ -734,7 +441,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 		fitWidth = val;
 	
 	// do not apply if not playing
-	if (!isPlaying)
+	if (video_size.width == 0)
 		return;
 	
 	// exit fullscreen first and finish with callback
@@ -753,14 +460,6 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	} else
 		// not in fullscreen: resize now
 		[self resizeView];
-}
-
-/*
-	Toggle ontop (sent by MPlayer)
-*/
-- (void) ontop
-{
-	// Let PlayerController handle ontop
 }
 
 /*
@@ -792,35 +491,18 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
  */
 - (void) reshape
 {
-	[self performSelector:@selector(adaptSize)
-				 onThread:renderThread 
-			   withObject:nil
-			waitUntilDone:NO];
-	
-	[renderer boundsDidChangeTo:[self bounds]];
+	[renderer boundsDidChangeTo:[self bounds] withVideoFrame:[self videoFrame]];
 }
 
 - (void) update
 {
-	[self performSelector:@selector(updateInThread)
-				 onThread:renderThread 
-			   withObject:nil
-			waitUntilDone:NO];
-	
-	if (renderer) {
-		CGLLockContext([[self openGLContext] CGLContextObj]);
-		[[self openGLContext] update];
-		CGLUnlockContext([[self openGLContext] CGLContextObj]);
-	}
+	CGLLockContext([[self openGLContext] CGLContextObj]);
+	[[self openGLContext] update];
+	CGLUnlockContext([[self openGLContext] CGLContextObj]);
 }
 
 - (void) drawRect: (NSRect) bounds
 {
-	[self performSelector:@selector(drawRectInThread)
-				 onThread:renderThread 
-			   withObject:nil
-			waitUntilDone:NO];
-	
 	[renderer redraw];
 }
 
@@ -867,7 +549,7 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 		else
 			[self setAspectRatio:aspectValue];
 	} else
-		[self setAspectRatio:org_image_aspect];
+		[self setAspectRatio:org_video_aspect];
 }
 
 /*
@@ -885,9 +567,9 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 - (void)setAspectRatio:(float)aspect
 {
 	if (aspect > 0)
-		image_aspect = aspect;
+		video_aspect = aspect;
 	else
-		image_aspect = org_image_aspect;
+		video_aspect = org_video_aspect;
 	
 	[self reshapeAndResize];
 }

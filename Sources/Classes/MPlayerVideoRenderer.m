@@ -56,6 +56,9 @@
 @implementation MPlayerVideoRenderer
 @synthesize delegate;
 
+/* Initialize class to render into openglContext and to communicate with MPlayer using
+ * name for the NSConnection and shared memory.
+ */
 - (id)initWithContext:(NSOpenGLContext *)openglContext andConnectionName:(NSString *)name {
 	
 	if (!(self = [super init]))
@@ -81,15 +84,21 @@
 	[super dealloc];
 }
 
-- (void)boundsDidChangeTo:(NSRect)bounds {
+/* Update OpenGL context and and video frame to bounds (display frame) and 
+ * frame (video frame).
+ */
+- (void)boundsDidChangeTo:(NSRect)bounds withVideoFrame:(NSRect)frame {
 	
 	CGLLockContext(ctx);
-	textureFrame = bounds;
+	textureFrame = frame;
+	displayFrame = bounds;
 	CGLUnlockContext(ctx);
 	
 	[self adaptSize];
 }
 
+/* Force a redraw of the current frame
+ */
 - (void)redraw {
 	
 	[self renderOpenGL];
@@ -101,6 +110,8 @@
 
 @implementation MPlayerVideoRenderer (PrivateMethods)
 
+/* Helper method to get a NSInvocation for a method of the MPlayerVideoRenderereDelegateProtocol.
+ */
 - (NSInvocation *)invocationForSelector:(SEL)selector {
 	
 	Protocol *proto = @protocol(MPlayerVideoRenderereDelegateProtocol);
@@ -113,6 +124,8 @@
 	return invoc;
 }
 
+/* Helper method to call the delegate on the main thread.
+ */
 - (void)callDelegateWithSelector:(SEL)selector andObject:(id)object {
 	
 	if (!delegate)
@@ -151,6 +164,8 @@
 	[pool release];
 }
 
+/* Method called by MPlayer when playback starts.
+ */
 - (int) startWithWidth:(int)width withHeight:(int)height withBytes:(int)bytes withAspect:(int)aspect {
 	
 	CVReturn error = kCVReturnSuccess;
@@ -201,17 +216,19 @@
 	
 	// Start OpenGLView in GUI
 	[self callDelegateWithSelector:@selector(startRenderingWithSize:)
-						 andObject:[NSArray arrayWithObjects:
-									[NSNumber numberWithUnsignedInt:image_width],
+						 andObject:[NSValue valueWithSize:NSMakeSize(image_width, image_height)]];
+						 /*andObject:[NSArray arrayWithObjects:
+									[NSNumber numberWithUnsignedInt:(image_height*image_aspect)],
 									[NSNumber numberWithUnsignedInt:image_height],
-									[NSNumber numberWithFloat:image_aspect],
-									nil]];
+									nil]];*/
 	
 	isRendering = YES;
 	
 	return 1;
 }
 
+/* Method called by MPlayer when playback stops.
+ */
 - (void) stop {
 	
 	isRendering = NO;
@@ -232,6 +249,8 @@
 	free(image_buffer);
 }
 
+/* Method called by MPlayer when a frame is ready and can be copied.
+ */
 - (void) render {
 	
 	memcpy(image_buffer, image_data, image_width*image_height*image_bytes);
@@ -284,10 +303,10 @@
 	CGLLockContext(ctx);
 	
 	//Setup OpenGL Viewport
-	glViewport(0, 0, textureFrame.size.width, textureFrame.size.height);
+	glViewport(0, 0, displayFrame.size.width, displayFrame.size.height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0, textureFrame.size.width, textureFrame.size.height, 0, -1.0, 1.0);
+	glOrtho(0, displayFrame.size.width, displayFrame.size.height, 0, -1.0, 1.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	

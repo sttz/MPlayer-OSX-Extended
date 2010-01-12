@@ -99,6 +99,7 @@
 		3A861DF11085153E00ADE9B9 /* system-file-manager.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DE31085153E00ADE9B9 /* system-file-manager.png */; };
 		3A861DF31085153E00ADE9B9 /* video-x-generic.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A861DE51085153E00ADE9B9 /* video-x-generic.png */; };
 		3A8AF31C10EE9697000961DE /* InspectorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A8AF31B10EE9697000961DE /* InspectorController.m */; };
+		3A8C18A910FA63510010942C /* MPlayerVideoRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A8C18A810FA63510010942C /* MPlayerVideoRenderer.m */; };
 		3A95F00B10BB28D80098BB38 /* iso-639-3.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A95F00A10BB28D80098BB38 /* iso-639-3.plist */; };
 		3AB2120C0EABE74900ACA509 /* PlayerFullscreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB2120B0EABE74900ACA509 /* PlayerFullscreenWindow.m */; };
 		3ABF85420EBFA084001FE779 /* FullscreenControls.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABF85410EBFA084001FE779 /* FullscreenControls.m */; };
@@ -279,6 +280,8 @@
 		3A861DE51085153E00ADE9B9 /* video-x-generic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "video-x-generic.png"; sourceTree = "<group>"; };
 		3A8AF31A10EE9697000961DE /* InspectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InspectorController.h; path = Sources/Controllers/InspectorController.h; sourceTree = "<group>"; };
 		3A8AF31B10EE9697000961DE /* InspectorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InspectorController.m; path = Sources/Controllers/InspectorController.m; sourceTree = "<group>"; };
+		3A8C18A710FA63510010942C /* MPlayerVideoRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPlayerVideoRenderer.h; path = Sources/Classes/MPlayerVideoRenderer.h; sourceTree = "<group>"; };
+		3A8C18A810FA63510010942C /* MPlayerVideoRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPlayerVideoRenderer.m; path = Sources/Classes/MPlayerVideoRenderer.m; sourceTree = "<group>"; };
 		3A95F00A10BB28D80098BB38 /* iso-639-3.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; name = "iso-639-3.plist"; path = "Resources/iso-639-3.plist"; sourceTree = "<group>"; };
 		3A96C9590E4E20B800B7B261 /* iso-639-3.tab */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "iso-639-3.tab"; path = "Resources/iso-639-3.tab"; sourceTree = "<group>"; };
 		3AB2120A0EABE74900ACA509 /* PlayerFullscreenWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerFullscreenWindow.h; path = Sources/Classes/PlayerFullscreenWindow.h; sourceTree = "<group>"; };
@@ -382,6 +385,8 @@
 				3A38D3C40E50E45A00C1E468 /* Debug.m */,
 				3A5F3FBB10C17AFA00C5B912 /* BinaryBundle.h */,
 				3A5F3FBC10C17AFA00C5B912 /* BinaryBundle.m */,
+				3A8C18A710FA63510010942C /* MPlayerVideoRenderer.h */,
+				3A8C18A810FA63510010942C /* MPlayerVideoRenderer.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -832,6 +837,7 @@
 				3AF0A9B110C4202D00A2D10E /* EqualizerController.m in Sources */,
 				3AC5E6CE10C947D9004ED0EC /* MenuController.m in Sources */,
 				3A8AF31C10EE9697000961DE /* InspectorController.m in Sources */,
+				3A8C18A910FA63510010942C /* MPlayerVideoRenderer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -917,6 +923,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -936,10 +943,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Sources/MPlayer OSX_Prefix.pch";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;

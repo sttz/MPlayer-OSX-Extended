@@ -20,19 +20,7 @@
 #define		WSM_FIT_SCREEN	2
 #define		WSM_FIT_WIDTH	3
 
-// MPlayer OS X VO Protocol
-@protocol MPlayerOSXVOProto
-- (int) startWithWidth: (bycopy int)width
-            withHeight: (bycopy int)height
-             withBytes: (bycopy int)bytes
-            withAspect: (bycopy int)aspect;
-- (void) stop;
-- (void) render;
-- (void) toggleFullscreen;
-- (void) ontop;
-@end
-
-@interface VideoOpenGLView : NSOpenGLView <MPlayerOSXVOProto, MPlayerVideoRenderereDelegateProtocol>
+@interface VideoOpenGLView : NSOpenGLView <MPlayerVideoRenderereDelegateProtocol>
 {
 	MPlayerVideoRenderer *renderer;
 	
@@ -47,23 +35,12 @@
 	bool panScan;
 	NSString *buffer_name;
 	
-	//CoreVideo
-	CVPixelBufferRef currentFrameBuffer;
-	CVOpenGLTextureCacheRef textureCache;
-	NSRect textureFrame;
-    GLfloat	lowerLeft[2]; 
-    GLfloat lowerRight[2]; 
-    GLfloat upperRight[2];
-    GLfloat upperLeft[2];
+	CGLContextObj ctx;
 	
 	//video texture
-	unsigned char *image_data;
-	unsigned char *image_buffer;
-	uint32_t image_width;
-	uint32_t image_height;
-	uint32_t image_bytes;
-	float image_aspect;
-	float org_image_aspect;
+	NSSize video_size;
+	float video_aspect;
+	float org_video_aspect;
 	
 	// video size mode
 	int videoSizeMode;
@@ -71,9 +48,6 @@
 	float zoomFactor;
 	// fit width
 	int fitWidth;
-	
-	//shared memory
-	int shm_fd;
 	
 	// fullscreen switching
 	NSSize old_win_size;
@@ -88,24 +62,9 @@
 	// animations
 	unsigned int runningAnimations;
 	
-	//struct shmid_ds shm_desc;
-	
 	//Movie menu outlets
-	IBOutlet NSMenuItem* HalfSizeMenuItem;
-	IBOutlet NSMenuItem* NormalSizeMenuItem;
-	IBOutlet NSMenuItem* DoubleSizeMenuItem;
-	//IBOutlet id FullScreenMenuItem;
 	IBOutlet NSMenuItem* KeepAspectMenuItem;
-	IBOutlet NSMenuItem* PanScanMenuItem;
-	IBOutlet NSMenuItem* OriginalAspectMenuItem;
-	IBOutlet NSMenuItem* Aspect4to3MenuItem;
-	IBOutlet NSMenuItem* Aspect3to2MenuItem;
-	IBOutlet NSMenuItem* Aspect5to3MenuItem;
-	IBOutlet NSMenuItem* Aspect16to9MenuItem;
-	IBOutlet NSMenuItem* Aspect185to1MenuItem;
-	IBOutlet NSMenuItem* Aspect239to1MenuItem;
-	IBOutlet NSMenuItem* CustomAspectMenuItem;
-	
+	IBOutlet NSMenuItem* PanScanMenuItem;	
 	// other controllers outlets
 	IBOutlet id playerController;
 	
@@ -116,35 +75,21 @@
 }
 
 // Render Thread methods
-- (void)threadMain;
-- (void)prepareOpenGL;
-- (int) startWithWidth: (int)width withHeight: (int)height withBytes: (int)bytes withAspect: (int)aspect;
-- (void) stop;
-- (void) render;
-- (void) doRender;
-- (void) clear;
-- (void) adaptSize;
 - (void) toggleFullscreen;
 - (void) finishToggleFullscreen;
-- (void) updateInThread;
-- (void) drawRectInThread;
 
 // Main Thread methods
 - (NSString *)bufferName;
-- (void) startOpenGLView;
 - (BOOL) isFullscreen;
-- (void) toggleFullscreenWindow;
-- (void) toggleFullscreenWindowContinued;
-- (void) toggleFullscreenEnded;
 - (void) blackScreensExcept:(int)fullscreenId;
 - (void) unblackScreens;
+- (NSRect) videoFrame;
 - (void) reshape;
 - (void) resizeView;
 - (void) reshapeAndResize;
 - (void) close;
 - (void) finishClosing;
 - (void) setWindowSizeMode:(int)mode withValue:(float)val;
-- (void) ontop;
 - (void) setOntop:(BOOL)ontop;
 - (void) updateOntop;
 - (void) setAspectRatio:(float)aspect;
@@ -152,7 +97,7 @@
 - (void) toggleKeepAspect;
 - (void) togglePanScan;
 
-//Event
+// Event
 - (void) mouseDown: (NSEvent *) theEvent;
 
 // Helper methods

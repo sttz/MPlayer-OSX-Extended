@@ -26,7 +26,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 @protocol MPlayerVideoRenderereDelegateProtocol <NSObject>
-- (void)startRenderingWithSize:(NSArray *)size;
+- (void)startRenderingWithSize:(NSValue *)size;
 @end
 
 
@@ -50,6 +50,7 @@
 	CVPixelBufferRef currentFrameBuffer;
 	CVOpenGLTextureCacheRef textureCache;
 	NSRect textureFrame;
+	NSRect displayFrame;
     GLfloat	lowerLeft[2]; 
     GLfloat lowerRight[2]; 
     GLfloat upperRight[2];
@@ -69,7 +70,7 @@
 
 - (id)initWithContext:(NSOpenGLContext *)ctx andConnectionName:(NSString *)name;
 
-- (void)boundsDidChangeTo:(NSRect)bounds;
+- (void)boundsDidChangeTo:(NSRect)bounds withVideoFrame:(NSRect)frame;
 - (void)redraw;
 
 @end
