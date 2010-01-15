@@ -73,4 +73,9 @@
 	
 	[cell release];
 }
+
+- (BOOL)acceptsFirstResponder
+{
+	return NO;
+}
 @end
