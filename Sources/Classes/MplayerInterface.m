@@ -341,6 +341,10 @@ static NSArray* statusNames;
 	if (numberOfThreads > MI_LAVC_MAX_THREADS)
 		numberOfThreads = MI_LAVC_MAX_THREADS;
 	
+	// temporary workaround for mpeg-issues: disable threads for main binary
+	if ([[cPrefs objectForKey:MPESelectedBinary] isEqualToString:@"ch.sttz.mplayerosx.extended.binaries.officialsvn"])
+		numberOfThreads = 1;
+	
 	// force using 32bit arch of binary
 	force32bitBinary = NO;
 	if (is64bitHost && [prefs boolForKey:MPEUse32bitBinaryon64bit]) {
