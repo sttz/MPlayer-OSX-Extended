@@ -5,9 +5,9 @@
 	<key>CFBundleName</key>
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleShortVersionString</key>
-	<string>rev13-test4</string>
+	<string>rev13-test5</string>
 	<key>CFBundleVersion</key>
-	<string>1304</string>
+	<string>1305</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIdentifier</key>
