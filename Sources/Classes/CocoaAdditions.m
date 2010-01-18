@@ -223,4 +223,16 @@
 @end
 
 
+@implementation NSMenu (MPEAdditions)
+
+- (void)setStateOfAllItemsTo:(NSInteger)itemState
+{
+	for (NSMenuItem *item in [self itemArray]) {
+		[item setState:itemState];
+	}
+}
+
+@end
+
+
 

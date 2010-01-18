@@ -63,3 +63,7 @@
 @interface Protocol (MPEAdditions)
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector isRequired:(BOOL)isRequiredMethod isInstanceMethod:(BOOL)isInstanceMethod;
 @end
+
+@interface NSMenu (MPEAdditions)
+- (void)setStateOfAllItemsTo:(NSInteger)itemState;
+@end
