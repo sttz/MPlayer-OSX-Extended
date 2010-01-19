@@ -216,11 +216,7 @@
 	
 	// Start OpenGLView in GUI
 	[self callDelegateWithSelector:@selector(startRenderingWithSize:)
-						 andObject:[NSValue valueWithSize:NSMakeSize(image_width, image_height)]];
-						 /*andObject:[NSArray arrayWithObjects:
-									[NSNumber numberWithUnsignedInt:(image_height*image_aspect)],
-									[NSNumber numberWithUnsignedInt:image_height],
-									nil]];*/
+						 andObject:[NSValue valueWithSize:NSMakeSize((image_height*image_aspect), image_height)]];
 	
 	isRendering = YES;
 	
