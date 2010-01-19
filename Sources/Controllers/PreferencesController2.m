@@ -598,6 +598,16 @@
 	return [[binaryBundles objectForKey:identifier] executablePath];
 }
 
+- (id) objectForInfoKey:(NSString *)keyName ofBinary:(NSString *)identifier
+{
+	if (![binaryInfo objectForKey:identifier]) {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Binary not found for identifier: %@",identifier];
+		return nil;
+	}
+	
+	return [[binaryInfo objectForKey:identifier] objectForKey:keyName];
+}
+
 - (SUUpdater *)createUpdaterForBundle:(NSBundle *)bundle whichUpdatesAutomatically:(BOOL)autoupdate
 {
 	SUUpdater *updater = [SUUpdater updaterForBundle:bundle];

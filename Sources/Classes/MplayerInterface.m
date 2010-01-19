@@ -311,6 +311,8 @@ static NSArray* statusNames;
 	NSMutableArray *audioFilters = [NSMutableArray array];
 	NSMutableArray *audioCodecsArr = [NSMutableArray array];
 	
+	PreferencesController2 *pc = [[AppController sharedController] preferencesController];
+	
 	// register/unregister observers for local values
 	if (item) {
 		if (playingItem && playingItem != item)
@@ -344,9 +346,9 @@ static NSArray* statusNames;
 	// force using 32bit arch of binary
 	force32bitBinary = NO;
 	if (is64bitHost && [prefs boolForKey:MPEUse32bitBinaryon64bit]) {
-		NSDictionary *binaryInfo = [[[AppController sharedController] preferencesController] binaryInfo];
-		NSDictionary *thisInfo = [binaryInfo objectForKey:[cPrefs objectForKey:MPESelectedBinary]];
-		if ([[thisInfo objectForKey:@"MPEBinaryArchs"] containsObject:@"i386"])
+		NSArray *arches = [pc objectForInfoKey:@"MPEBinaryArchs" 
+									  ofBinary:[cPrefs objectForKey:MPESelectedBinary]];
+		if ([arches containsObject:@"i386"])
 			force32bitBinary = YES;
 	}
 	
@@ -667,10 +669,15 @@ static NSArray* statusNames;
 	
 	// add yuy2 or scale filter filter
 	if ([cPrefs boolForKey:MPEUseYUY2VideoFilter]) {
-		// ass filter needs to in front of yuy2
-		if (![cPrefs boolForKey:MPERenderSubtitlesFirst])
-			[videoFilters addObject:@"ass"];
-		[videoFilters addObject:@"yuy2"];
+		// MPlayer-GIT builds don't usually have the yuy2 filter
+		BOOL hasFilter = [[pc objectForInfoKey:@"HasYUY2Filter" 
+									  ofBinary:[cPrefs stringForKey:MPESelectedBinary]] boolValue];
+		if (hasFilter) {
+			// ass filter needs to in front of yuy2
+			if (![cPrefs boolForKey:MPERenderSubtitlesFirst])
+				[videoFilters addObject:@"ass"];
+			[videoFilters addObject:@"yuy2"];
+		}
 	} else if ([cPrefs boolForKey:MPEVideoEqualizerEnabled])
 		[videoFilters addObject:@"scale"];
 	

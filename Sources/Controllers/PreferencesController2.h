@@ -93,6 +93,7 @@
 - (void) installBinary:(NSString *)path;
 - (NSString *) identifierForBinaryName:(NSString *)name;
 - (NSString *) pathForBinaryWithIdentifier:(NSString *)identifier;
+- (id) objectForInfoKey:(NSString *)keyName ofBinary:(NSString *)identifier;
 
 - (IBAction) requireRestart:(id)sender;
 - (IBAction) restartPlayback:(id)sender;
