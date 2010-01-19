@@ -27,6 +27,7 @@
 // *** Top-Level preferences keys
 extern NSString* const MPEAdvancedOptions;
 extern NSString* const MPEAnimateInterfaceTransitions;
+extern NSString* const MPEUseYUY2VideoFilter;
 extern NSString* const MPEAspectRatio;
 extern NSString* const MPEAudioDelay;
 extern NSString* const MPEAudioEqualizerEnabled;

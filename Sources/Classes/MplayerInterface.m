@@ -341,10 +341,6 @@ static NSArray* statusNames;
 	if (numberOfThreads > MI_LAVC_MAX_THREADS)
 		numberOfThreads = MI_LAVC_MAX_THREADS;
 	
-	// temporary workaround for mpeg-issues: disable threads for main binary
-	if ([[cPrefs objectForKey:MPESelectedBinary] isEqualToString:@"ch.sttz.mplayerosx.extended.binaries.officialsvn"])
-		numberOfThreads = 1;
-	
 	// force using 32bit arch of binary
 	force32bitBinary = NO;
 	if (is64bitHost && [prefs boolForKey:MPEUse32bitBinaryon64bit]) {
@@ -667,8 +663,16 @@ static NSArray* statusNames;
 	if ([cPrefs boolForKey:MPEVideoEqualizerEnabled]) {
 		[videoFilters addObject:[NSString stringWithFormat:@"eq2=%@",[EqualizerController eq2FilterValues]]];
 		[videoFilters addObject:[NSString stringWithFormat:@"hue=%@",[EqualizerController hueFilterValue]]];
-		[videoFilters addObject:@"scale"];
 	}
+	
+	// add yuy2 or scale filter filter
+	if ([cPrefs boolForKey:MPEUseYUY2VideoFilter]) {
+		// ass filter needs to in front of yuy2
+		if (![cPrefs boolForKey:MPERenderSubtitlesFirst])
+			[videoFilters addObject:@"ass"];
+		[videoFilters addObject:@"yuy2"];
+	} else if ([cPrefs boolForKey:MPEVideoEqualizerEnabled])
+		[videoFilters addObject:@"scale"];
 	
 	// add filter chain
 	if ([videoFilters count] > 0) {

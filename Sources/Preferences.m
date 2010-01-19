@@ -26,6 +26,7 @@
 
 NSString* const MPEAdvancedOptions                    = @"MPEAdvancedOptions";
 NSString* const MPEAnimateInterfaceTransitions        = @"MPEAnimateInterfaceTransitions";
+NSString* const MPEUseYUY2VideoFilter                 = @"MPEUseYUY2VideoFilter";
 NSString* const MPEAspectRatio                        = @"MPEAspectRatio";
 NSString* const MPEAudioDelay                         = @"MPEAudioDelay";
 NSString* const MPEAudioEqualizerEnabled              = @"MPEAudioEqualizerEnabled";

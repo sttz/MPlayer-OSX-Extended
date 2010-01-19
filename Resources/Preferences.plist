@@ -531,6 +531,8 @@
 		<array>
 			<string>fileAttributes</string>
 		</array>
+		<key>MPEUseYUY2VideoFilter</key>
+		<true/>
 	</dict>
 	<key>Constants</key>
 	<dict>
