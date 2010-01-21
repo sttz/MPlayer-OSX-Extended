@@ -33,6 +33,7 @@ NSString* const MPEAudioEqualizerEnabled              = @"MPEAudioEqualizerEnabl
 NSString* const MPEAudioEqualizerPresets              = @"MPEAudioEqualizerPresets";
 NSString* const MPEAudioEqualizerSelectedPreset       = @"MPEAudioEqualizerSelectedPreset";
 NSString* const MPEAudioEqualizerValues               = @"MPEAudioEqualizerValues";
+NSString* const MPEAudioItemRelativeVolume            = @"MPEAudioItemRelativeVolume";
 NSString* const MPEAudioMute                          = @"MPEAudioMute";
 NSString* const MPEAudioVolume                        = @"MPEAudioVolume";
 NSString* const MPEBS2BFilter                         = @"MPEBS2BFilter";

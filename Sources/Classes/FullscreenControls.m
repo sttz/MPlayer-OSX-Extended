@@ -207,7 +207,7 @@
 	}
 }
 
-- (void) interface:(MplayerInterface *)mi volumeUpdate:(NSNumber *)volume
+- (void) interface:(MplayerInterface *)mi volumeUpdate:(NSNumber *)volume isMuted:(NSNumber *)muted
 {
 	[fcVolumeSlider setFloatValue:[volume floatValue]];
 }

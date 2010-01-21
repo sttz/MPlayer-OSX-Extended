@@ -731,9 +731,12 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	}
 }
 /************************************************************************************/
-- (void) interface:(MplayerInterface *)mi volumeUpdate:(NSNumber *)volume
+- (void) interface:(MplayerInterface *)mi volumeUpdate:(NSNumber *)volume isMuted:(NSNumber *)muted
 {
-	[volumeSliderToolbar setFloatValue:[volume floatValue]];
+	if ([muted boolValue])
+		[volumeSliderToolbar setFloatValue:0];
+	else
+		[volumeSliderToolbar setFloatValue:[volume floatValue]];
 }
 /************************************************************************************/
 - (void) interface:(MplayerInterface *)mi timeUpdate:(NSNumber *)newTime

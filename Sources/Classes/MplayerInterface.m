@@ -119,8 +119,7 @@ static NSArray* statusNames;
 	
 	localPrefsToObserve = [[NSArray alloc] initWithObjects:
 						   MPELoopMovie,
-						   MPEAudioVolume,
-						   MPEAudioMute,
+						   MPEAudioItemRelativeVolume,
 						   MPEPlaybackSpeed,
 						   MPEAudioDelay,
 						   MPESubtitleDelay,
@@ -229,8 +228,9 @@ static NSArray* statusNames;
 	[self notifyClientsWithSelector:@selector(interface:timeUpdate:)
 						  andObject:[NSNumber numberWithFloat:mySeconds]];
 	// send initial volume update
-	[self notifyClientsWithSelector:@selector(interface:volumeUpdate:)
-						  andObject:[[playingItem prefs] objectForKey:MPEAudioVolume]];
+	[self notifyClientsWithSelector:@selector(interface:volumeUpdate:isMuted:)
+						  andObject:[NSNumber numberWithFloat:playerVolume]
+						  andObject:[NSNumber numberWithBool:playerMute]];
 }
 
 - (void) removeClient:(id<MplayerInterfaceClientProtocol>)client
@@ -613,10 +613,13 @@ static NSArray* statusNames;
 	}
 	
 	// set initial volume
-	if ([cPrefs objectForKey:MPEAudioVolume] && ![cPrefs boolForKey:MPEAudioMute]) {
+	if (!playerMute) {
+		float volume = playerVolume;
+		if ([cPrefs objectForKey:MPEAudioItemRelativeVolume])
+			volume *= [cPrefs floatForKey:MPEAudioItemRelativeVolume];
 		[params addObject:@"-volume"];
-		[params addObject:[NSString stringWithFormat:@"%.2f", [cPrefs floatForKey:MPEAudioVolume]]];	
-	} else if ([cPrefs boolForKey:MPEAudioMute]) {
+		[params addObject:[NSString stringWithFormat:@"%.2f", volume]];	
+	} else {
 		[params addObject:@"-volume"];
 		[params addObject:@"0"];
 	}
@@ -838,7 +841,7 @@ static NSArray* statusNames;
 	} else if ([keyPath isEqualToString:MPELoopMovie]) {
 		[self sendCommand:[NSString stringWithFormat:@"set_property loop %d",((int)[[playingItem prefs] boolForKey:MPELoopMovie] - 1)]];
 	
-	} else if ([keyPath isEqualToString:MPEAudioVolume] || [keyPath isEqualToString:MPEAudioMute]) {
+	} else if ([keyPath isEqualToString:MPEAudioItemRelativeVolume]) {
 		[self applyVolume];
 	
 	} else if ([keyPath isEqualToString:MPESubtitleScale]) {
@@ -891,23 +894,29 @@ static NSArray* statusNames;
 /************************************************************************************/
 - (void) applyVolume
 {
-	if ([[playingItem prefs] boolForKey:MPEAudioMute])
-		[self sendCommand:[NSString stringWithFormat:@"set_property mute %d",
-						   [[playingItem prefs] boolForKey:MPEAudioMute]]];
+	float volume = playerVolume;
+	
+	if ([[playingItem prefs] objectForKey:MPEAudioItemRelativeVolume])
+		volume *= [[playingItem prefs] floatForKey:MPEAudioItemRelativeVolume];
+	
+	if (playerMute)
+		[self sendCommand:[NSString stringWithFormat:@"set_property mute %d", playerMute]];
 	else
-		[self sendCommand:[NSString stringWithFormat:@"set_property volume %.2f",
-						   [[playingItem prefs] floatForKey:MPEAudioVolume]]];
+		[self sendCommand:[NSString stringWithFormat:@"set_property volume %.2f", volume]];
 	
 	// Inform clients of change
-	float volume = [[playingItem prefs] floatForKey:MPEAudioVolume];
-	if ([[playingItem prefs] boolForKey:MPEAudioMute])
-		volume = 0;
-	
-	[self notifyClientsWithSelector:@selector(interface:volumeUpdate:) 
-						  andObject:[NSNumber numberWithFloat:volume]];
+	[self notifyClientsWithSelector:@selector(interface:volumeUpdate:isMuted:) 
+						  andObject:[NSNumber numberWithFloat:volume]
+						  andObject:[NSNumber numberWithBool:playerMute]];
 }
 /************************************************************************************/
-
+- (void) setVolume:(float)volume isMuted:(BOOL)muted
+{
+	playerVolume = volume;
+	playerMute = muted;
+	
+	[self applyVolume];
+}
 /************************************************************************************/
 - (void) applySettingsWithRestart
 {

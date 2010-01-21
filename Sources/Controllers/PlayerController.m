@@ -75,6 +75,9 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	
 	// Load MPlayer interface
 	myPlayer = [MplayerInterface new];
+	// Set initial volume
+	[myPlayer setVolume:[PREFS floatForKey:MPEAudioVolume]
+				isMuted:[PREFS boolForKey:MPEAudioMute]];
 	
 	[myPlayer addClient:self];
 	
@@ -492,16 +495,12 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	
 	BOOL isMute = (volume == 0);
 	
-	if (movieInfo) {
-		if (isMute != [[movieInfo prefs] boolForKey:MPEAudioMute])
-			[[movieInfo prefs] setBool:isMute forKey:MPEAudioMute];
-		if (!isMute)
-			[[movieInfo prefs] setFloat:volume forKey:MPEAudioVolume];
-	}
+	[myPlayer setVolume:volume isMuted:isMute];
 	
-	[PREFS setBool:isMute forKey:MPEAudioMute];
-	if (volume > 0)
+	if (volume > 0 && volume != [PREFS floatForKey:MPEAudioVolume])
 		[PREFS setFloat:volume forKey:MPEAudioVolume];
+	if (isMute != [PREFS boolForKey:MPEAudioMute])
+		[PREFS setBool:isMute forKey:MPEAudioMute];
 }
 
 - (double)volume

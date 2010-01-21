@@ -30,7 +30,7 @@
 - (void) interface:(MplayerInterface *)mi streamUpate:(MovieInfo *)item;
 - (void) interface:(MplayerInterface *)mi hasSelectedStream:(NSNumber *)streamId ofType:(NSNumber *)type;
 - (void) interface:(MplayerInterface *)mi statsUpdate:(NSDictionary *)stats;
-- (void) interface:(MplayerInterface *)mi volumeUpdate:(NSNumber *)volume;
+- (void) interface:(MplayerInterface *)mi volumeUpdate:(NSNumber *)volume isMuted:(NSNumber *)muted;
 @end
 
 enum {
@@ -124,6 +124,10 @@ extern NSString* const MIStatsDroppedFramesKey;
 	// text
 	int osdLevel;
 	
+	// volume
+	float playerVolume;
+	BOOL playerMute;
+	
 	// properties
 	BOOL isPreflight;
 	
@@ -186,6 +190,7 @@ extern NSString* const MIStatsDroppedFramesKey;
 - (void) seek:(float)seconds mode:(int)aMode;
 - (void) seek:(float)seconds mode:(int)aMode force:(BOOL)forced;
 
+- (void) setVolume:(float)volume isMuted:(BOOL)muted;
 - (void) applyVolume;
 - (void) takeScreenshot;
 

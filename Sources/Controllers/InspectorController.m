@@ -237,6 +237,12 @@ static const float const collapsedSectionHeight = 20.0f;
 	[subtitleDelay performClick:self];
 }
 
+- (IBAction)resetAudioBoost:(id)sender
+{
+	[audioBoost setDoubleValue:1.0];
+	[audioBoost performClick:self];
+}
+
 - (void)dealloc
 {
 	[views release];

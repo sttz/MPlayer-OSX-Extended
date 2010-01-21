@@ -53,6 +53,7 @@
 	IBOutlet NSSlider *playbackSpeed;
 	IBOutlet NSSlider *audioDelay;
 	IBOutlet NSSlider *subtitleDelay;
+	IBOutlet NSSlider *audioBoost;
 }
 
 @property (nonatomic,readonly) NSWindow *window;
@@ -65,6 +66,7 @@
 - (IBAction)resetPlaybackSpeed:(id)sender;
 - (IBAction)resetAudioDelay:(id)sender;
 - (IBAction)resetSubtitleDelay:(id)sender;
+- (IBAction)resetAudioBoost:(id)sender;
 
 @end
 
