@@ -852,7 +852,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
         case kRemoteButtonVolume_Minus_Hold:
             // Trigger periodic method for hold duration
             appleRemoteHolding = pressedDown;
-			remoteHoldIncrement = 1;
+			remoteHoldIncrement = 0;
             if (pressedDown) {
                 NSNumber* buttonIdentifierNumber = [NSNumber numberWithInt:buttonIdentifier];
                 [self performSelector:@selector(executeHoldActionForRemoteButton:)
