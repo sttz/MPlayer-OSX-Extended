@@ -836,8 +836,8 @@ static NSArray* statusNames;
 		
 	} else if ([keyPath isEqualToString:MPEOSDLevel]) {
 		osdLevel = [[change objectForKey:NSKeyValueChangeNewKey] intValue];
-		[self sendCommand:[NSString stringWithFormat:@"set_property osdlevel %d",[self mplayerOSDLevel]]];
-		if (object == [playingItem prefs])
+		[self sendCommand:[NSString stringWithFormat:@"osd %d",[self mplayerOSDLevel]]];
+		if (object == [playingItem prefs] && osdLevel < 3)
 			[self sendCommand:[NSString stringWithFormat:@"osd_show_property_text 'OSD: %@'",
 							   [PreferencesController2 osdLevelDescriptionForLevel:osdLevel]]];
 		
@@ -852,21 +852,22 @@ static NSArray* statusNames;
 	
 	} else if ([keyPath isEqualToString:MPESubtitleScale]) {
 		float sub_scale = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
-		[self sendCommand:[NSString stringWithFormat:@"set_property sub_scale %f",sub_scale]
-				  withOSD:MISurpressCommandOutputAlways
-			   andPausing:MICommandPausingKeep];
+		[self sendCommand:[NSString stringWithFormat:@"set_property sub_scale %f",sub_scale]];
 	
 	} else if ([keyPath isEqualToString:MPEPlaybackSpeed]) {
-		[self sendCommand:[NSString stringWithFormat:@"set_property speed %f",[[change objectForKey:NSKeyValueChangeNewKey] floatValue]]];
+		float speed = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
+		[self sendCommand:[NSString stringWithFormat:@"speed_set %f",speed]
+				  withOSD:MISurpressCommandOutputNever andPausing:MICommandPausingKeep];
 	
 	} else if ([keyPath isEqualToString:MPEAudioDelay]) {
 		float delay = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
-		[self sendCommand:[NSString stringWithFormat:@"set_property audio_delay %f",delay]];
+		[self sendCommand:[NSString stringWithFormat:@"audio_delay %f 1",delay]
+				  withOSD:MISurpressCommandOutputNever andPausing:MICommandPausingKeep];
 		
 	} else if ([keyPath isEqualToString:MPESubtitleDelay]) {
 		float delay = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
-		[self sendCommand:[NSString stringWithFormat:@"set_property sub_delay %f",delay]];
-		
+		[self sendCommand:[NSString stringWithFormat:@"sub_delay %f 1",delay]
+				  withOSD:MISurpressCommandOutputNever andPausing:MICommandPausingKeep];
 	}
 }
 /************************************************************************************
