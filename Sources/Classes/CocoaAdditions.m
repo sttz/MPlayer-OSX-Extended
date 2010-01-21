@@ -232,6 +232,23 @@
 	}
 }
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED <= __MAC_OS_X_VERSION_10_5
+- (void)removeAllItems
+{
+	while ([self numberOfItems] > 0)
+		[self removeItemAtIndex:0];
+}
+#endif
+
+- (NSMenuItem *)itemWithRepresentedIntegerValue:(NSInteger)value
+{
+	for (NSMenuItem *item in [self itemArray]) {
+		if ([item representedObject] && [[item representedObject] integerValue] == value)
+			return item;
+	}
+	return nil;
+}
+
 @end
 
 

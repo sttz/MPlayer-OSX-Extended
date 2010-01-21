@@ -39,13 +39,12 @@ extern NSString* const MPEPlaybackStoppedNotification;
 	IBOutlet id timeTextField;
 	IBOutlet NSButton *playListButton;
 	IBOutlet VideoOpenGLView *videoOpenGLView;
-	IBOutlet id audioWindowMenu;
-	IBOutlet id subtitleWindowMenu;
-	IBOutlet id audioCycleButton;
-	IBOutlet id subtitleCycleButton;
 	IBOutlet id fullscreenButton;
-	IBOutlet id chapterWindowMenu;
-	IBOutlet id fullscreenWindowMenu;
+	IBOutlet NSMenuItem *videoWindowItem;
+	IBOutlet NSMenuItem *audioWindowItem;
+	IBOutlet NSMenuItem *subtitleWindowItem;
+	IBOutlet NSMenuItem *chapterWindowItem;
+	IBOutlet NSMenuItem *fullscreenWindowItem;
 	
 	// Fullscreen controls
 	IBOutlet FullscreenControls *fullScreenControls;
@@ -128,7 +127,6 @@ extern NSString* const MPEPlaybackStoppedNotification;
 - (IBAction)seekNext:(id)sender;
 - (IBAction)stop:(id)sender;
 - (IBAction)seekFromMenu:(NSMenuItem *)item;
-- (void)cleanUpAfterStop;
 - (IBAction)switchFullscreen:(id)sender;
 - (IBAction)takeScreenshot:(id)sender;
 - (void) setVolume:(double)volume;
@@ -174,7 +172,6 @@ extern NSString* const MPEPlaybackStoppedNotification;
 - (void)fillFullscreenMenu;
 - (void)fullscreenMenuAction:(id)sender;
 - (void)selectFullscreenDevice;
-- (void)menuWillOpen:(NSMenu *)menu;
 
 // notification observers
 - (void) appShouldTerminate;

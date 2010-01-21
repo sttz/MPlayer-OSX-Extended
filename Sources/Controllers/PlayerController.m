@@ -102,6 +102,17 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 			   options:NSKeyValueObservingOptionInitial
 			   context:nil];
 	
+	// register for fullscreen device changes
+	[PREFS addObserver:self
+			forKeyPath:MPEGoToFullscreenOn
+			   options:0
+			   context:nil];
+	
+	[PREFS addObserver:self
+			forKeyPath:MPEFullscreenDisplayNumber
+			   options:0
+			   context:nil];
+	
 	return self;
 }
 
@@ -388,7 +399,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 {
 	[self stop:nil];
 	playingFromPlaylist = NO;
-	[self cleanUpAfterStop];
+	[videoOpenGLView close];
 }
 
 /************************************************************************************/
@@ -762,13 +773,6 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 }
 
 /************************************************************************************/
-- (void)cleanUpAfterStop {
-	
-	[videoOpenGLView close];
-	[self clearStreamMenus];
-	[self clearChapterMenu];
-}
-/************************************************************************************/
 - (void) executeHoldActionForRemoteButton:(NSNumber*)buttonIdentifierNumber
 {
     if(appleRemoteHolding)
@@ -929,173 +933,136 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 - (void)clearStreamMenus {
 	
 	NSMenuItem *parentMenu;
-	NSMenu *menu;
 	int j;
 	
-	for (j = 0; j < 3; j++) {
+	for (j = 0; j < 6; j++) {
 		
 		switch (j) {
 			case 0:
 				parentMenu = menuController->videoStreamMenu;
-				menu = [parentMenu submenu];
 				break;
 			case 1:
 				parentMenu = menuController->audioStreamMenu;
-				menu = [parentMenu submenu];
-				[audioCycleButton setEnabled:NO];
-				
 				break;
 			case 2:
-				parentMenu = menuController->subtitleStreamMenu;
-				menu = [parentMenu submenu];
-				[subtitleCycleButton setEnabled:NO];
-				
+				parentMenu = menuController->subtitleStreamMenu;			
+				break;
+			case 3:
+				parentMenu = videoWindowItem;
+				break;
+			case 4:
+				parentMenu = audioWindowItem;
+				break;
+			case 5:
+				parentMenu = subtitleWindowItem;
 				break;
 		}
 		
 		[parentMenu setEnabled:NO];
-		
-		while ([menu numberOfItems] > 0) {
-			[menu removeItemAtIndex:0];
-		}
-		
+		[[parentMenu submenu] removeAllItems];
 	}
 	
 }
 /************************************************************************************/
 - (void)fillStreamMenus {
 	
-	if (movieInfo != nil) {
+	// clear menus
+	[self clearStreamMenus];
+	
+	if (!movieInfo)
+		return;
+	
+	NSEnumerator *streams;
+	NSMenu *menu;
+	
+	// video stream menu
+	if ([movieInfo videoStreamCount] > 0) {
 		
-		// clear menus
-		[self clearStreamMenus];
+		streams = [movieInfo getVideoStreamsEnumerator];
+		menu = [menuController->videoStreamMenu submenu];
 		
-		// video stream menu
-		NSEnumerator *en = [movieInfo getVideoStreamsEnumerator];
-		NSNumber *key;
-		NSMenu *menu = [menuController->videoStreamMenu submenu];
-		NSMenuItem* newItem;
-		BOOL hasItems = NO;
-		
-		while ((key = [en nextObject])) {
-			newItem = [[NSMenuItem alloc]
-					   initWithTitle:[movieInfo descriptionForVideoStream:[key intValue]]
-					   action:@selector(videoMenuAction:)
-					   keyEquivalent:@""];
-			[newItem setRepresentedObject:key];
-			if ([movieInfo videoStreamCount] == 1)
-				[newItem setState:NSOnState];
-			[menu addItem:newItem];
-			[newItem release];
+		for (NSNumber *streamId in streams) {
+			NSMenuItem *item = [menu addItemWithTitle:[movieInfo descriptionForVideoStream:[streamId intValue]]
+											   action:@selector(videoMenuAction:)
+										keyEquivalent:@""];
+			[item setRepresentedObject:streamId];
 		}
 		
-		hasItems = ([menu numberOfItems] > 0);
-		[menuController->videoStreamMenu setEnabled:hasItems];
+		[videoWindowItem setSubmenu:[[menu copy] autorelease]];
 		
-		// audio stream menu
-		en = [movieInfo getAudioStreamsEnumerator];
+		[menuController->videoStreamMenu setEnabled:YES];
+		[videoWindowItem setEnabled:YES];
+	}
+	
+	// audio stream menu
+	if ([movieInfo audioStreamCount] > 0) {
+		
+		streams = [movieInfo getAudioStreamsEnumerator];
 		menu = [menuController->audioStreamMenu submenu];
 		
-		while ((key = [en nextObject])) {
-			newItem = [[NSMenuItem alloc]
-					   initWithTitle:[movieInfo descriptionForAudioStream:[key intValue]]
-					   action:@selector(audioMenuAction:)
-					   keyEquivalent:@""];
-			[newItem setRepresentedObject:key];
-			if ([movieInfo audioStreamCount] == 1)
-				[newItem setState:NSOnState];
-			[menu addItem:newItem];
-			[newItem release];
+		for (NSNumber *streamId in streams) {
+			NSMenuItem *item = [menu addItemWithTitle:[movieInfo descriptionForAudioStream:[streamId intValue]]
+											   action:@selector(audioMenuAction:)
+										keyEquivalent:@""];
+			[item setRepresentedObject:streamId];
 		}
 		
-		if ([menu numberOfItems] > 0) {
-			
-			// Copy menu for window popup
-			NSMenu *other = [menu copy];
-			newItem = [[NSMenuItem alloc]
-					   initWithTitle:@""
-					   action:NULL
-					   keyEquivalent:@""];
-			[other insertItem:newItem atIndex:0];
-			[newItem release];
-			
-			[audioWindowMenu setMenu:other];
-			[other release];
-
-		}
+		[audioWindowItem setSubmenu:[[menu copy] autorelease]];
 		
-		hasItems = ([menu numberOfItems] > 0);
-		[menuController->audioStreamMenu setEnabled:hasItems];
-		[audioWindowMenu setEnabled:hasItems];
-		[audioCycleButton setEnabled:([menu numberOfItems] > 1)];
+		[menuController->audioStreamMenu setEnabled:YES];
+		[audioWindowItem setEnabled:YES];
+	}
+	
+	// subtitle stream menu
+	if ([movieInfo subtitleCountForType:SubtitleTypeAll]) {
 		
-		// subtitle stream menu
 		menu = [menuController->subtitleStreamMenu submenu];
 		
-		// Add "disabled" item
-		newItem = [[NSMenuItem alloc]
-				   initWithTitle:@"Disabled"
-				   action:NULL
-				   keyEquivalent:@""];
-		[newItem setRepresentedObject:[NSArray arrayWithObjects: [NSNumber numberWithInt:SubtitleTypeDemux], 
-									   [NSNumber numberWithInt:-1], nil]];
-		[newItem setAction:@selector(subtitleMenuAction:)];
-		if ([movieInfo subtitleCountForType:SubtitleTypeAll] == 0)
-			[newItem setState:NSOnState];
-		[menu addItem:newItem];
-		[newItem release];
+		// add "disabled" item
+		NSMenuItem *item = [menu addItemWithTitle:@"Disabled"
+							   action:@selector(subtitleMenuAction:)
+						keyEquivalent:@""];
+		[item setRepresentedObject:[NSArray arrayWithObjects:
+									[NSNumber numberWithInt:SubtitleTypeDemux], 
+									[NSNumber numberWithInt:-1],
+									nil]];
 		
-		if ([movieInfo subtitleCountForType:SubtitleTypeDemux] > 0 || [movieInfo subtitleCountForType:SubtitleTypeFile] > 0)
-			[menu addItem:[NSMenuItem separatorItem]];
-		
-		// demux subtitles
-		en = [movieInfo getSubtitleStreamsEnumeratorForType:SubtitleTypeDemux];
-		
-		while ((key = [en nextObject])) {
-			newItem = [[NSMenuItem alloc]
-					   initWithTitle:[movieInfo descriptionForSubtitleStream:[key intValue] andType:SubtitleTypeDemux]
-					   action:@selector(subtitleMenuAction:)
-					   keyEquivalent:@""];
-			[newItem setRepresentedObject:[NSArray arrayWithObjects: [NSNumber numberWithInt:SubtitleTypeDemux], key, nil]];
-			[menu addItem:newItem];
-			[newItem release];
-		}
-		
-		if ([movieInfo subtitleCountForType:SubtitleTypeDemux] > 0 && [movieInfo subtitleCountForType:SubtitleTypeFile] > 0)
-			[menu addItem:[NSMenuItem separatorItem]];
-		
-		// file subtitles
-		en = [movieInfo getSubtitleStreamsEnumeratorForType:SubtitleTypeFile];
-		
-		while ((key = [en nextObject])) {
-			newItem = [[NSMenuItem alloc]
-					   initWithTitle:[movieInfo descriptionForSubtitleStream:[key intValue] andType:SubtitleTypeFile]
-					   action:@selector(subtitleMenuAction:)
-					   keyEquivalent:@""];
-			[newItem setRepresentedObject:[NSArray arrayWithObjects: [NSNumber numberWithInt:SubtitleTypeFile], key, nil]];
-			[menu addItem:newItem];
-			[newItem release];
-		}
-		
-		if ([menu numberOfItems] > 0) {
+		// subtitle stream types
+		SubtitleType type;
+		int i;
+		for (i = 0; i < 3; i++) {
 			
-			// Copy menu for window popup
-			NSMenu *other = [menu copy];
-			newItem = [[NSMenuItem alloc]
-					   initWithTitle:@""
-					   action:NULL
-					   keyEquivalent:@""];
-			[other insertItem:newItem atIndex:0];
-			[newItem release];
+			switch (i) {
+				case 0:
+					type = SubtitleTypeDemux;
+					break;
+				case 1:
+					type = SubtitleTypeFile;
+					break;
+			}
 			
-			[subtitleWindowMenu setMenu:other];
-			[other release];
+			if ([movieInfo subtitleCountForType:type] == 0)
+				continue;
+			
+			[menu addItem:[NSMenuItem separatorItem]];
+			
+			streams = [movieInfo getSubtitleStreamsEnumeratorForType:type];
+			
+			for (NSNumber *streamId in streams) {
+				NSMenuItem *item = [menu addItemWithTitle:[movieInfo descriptionForSubtitleStream:[streamId intValue] andType:type]
+												   action:@selector(subtitleMenuAction:)
+											keyEquivalent:@""];
+				[item setRepresentedObject:[NSArray arrayWithObjects:
+											[NSNumber numberWithInt:type], 
+											streamId,
+											nil]];
+			}
 		}
 		
-		hasItems = ([menu numberOfItems] > 0);
-		[menuController->subtitleStreamMenu setEnabled:hasItems];
-		[subtitleWindowMenu setEnabled:hasItems];
-		[subtitleCycleButton setEnabled:([menu numberOfItems] > 1)];
+		[subtitleWindowItem setSubmenu:[[menu copy] autorelease]];
+		
+		[menuController->subtitleStreamMenu setEnabled:YES];
+		[subtitleWindowItem setEnabled:YES];
 	}
 }
 /************************************************************************************/
@@ -1217,56 +1184,39 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 - (void)newVideoStreamId:(int)streamId {
 	
 	[[menuController->videoStreamMenu submenu] setStateOfAllItemsTo:NSOffState];
-	videoStreamId = -1;
+	[[videoWindowItem submenu] setStateOfAllItemsTo:NSOffState];
+	videoStreamId = streamId;
 	
 	if (streamId != -1) {
 		
-		videoStreamId = streamId;
+		NSMenuItem *item = [[videoWindowItem submenu] itemWithRepresentedIntegerValue:streamId];
+		[item setState:NSOnState];
 		
-		int index = -1;
-		for (NSMenuItem *item in [[menuController->videoStreamMenu submenu] itemArray]) {
-			NSNumber *itemId = [item representedObject];
-			if (itemId && [itemId intValue] == streamId) {
-				index = [[menuController->videoStreamMenu submenu] indexOfItem:item];
-				break;
-			}
-		}
-		
-		if (index != -1)
-			[[[menuController->videoStreamMenu submenu] itemAtIndex:index] setState:NSOnState];
+		item = [[menuController->videoStreamMenu submenu] itemWithRepresentedIntegerValue:streamId];
+		[item setState:NSOnState];
 	}
 }
 
 - (void)newAudioStreamId:(int)streamId {
 	
 	[[menuController->audioStreamMenu submenu] setStateOfAllItemsTo:NSOffState];
-	[[audioWindowMenu menu] setStateOfAllItemsTo:NSOffState];
-	audioStreamId = -1;
+	[[audioWindowItem submenu] setStateOfAllItemsTo:NSOffState];
+	audioStreamId = streamId;
 	
 	if (streamId != -1) {
 		
-		audioStreamId = streamId;
+		NSMenuItem *item = [[audioWindowItem submenu] itemWithRepresentedIntegerValue:streamId];
+		[item setState:NSOnState];
 		
-		int index = -1;
-		for (NSMenuItem *item in [[menuController->audioStreamMenu submenu] itemArray]) {
-			NSNumber *itemId = [item representedObject];
-			if (itemId && [itemId intValue] == streamId) {
-				index = [[menuController->audioStreamMenu submenu] indexOfItem:item];
-				break;
-			}
-		}
-		
-		if (index != -1) {
-			[[[menuController->audioStreamMenu submenu] itemAtIndex:index] setState:NSOnState];
-			[[[audioWindowMenu menu] itemAtIndex:(index+1)] setState:NSOnState];
-		}
+		item = [[menuController->audioStreamMenu submenu] itemWithRepresentedIntegerValue:streamId];
+		[item setState:NSOnState];
 	}
 }
 
 - (void)newSubtitleStreamId:(int)streamId forType:(SubtitleType)type {
 	
 	[[menuController->subtitleStreamMenu submenu] setStateOfAllItemsTo:NSOffState];
-	[[subtitleWindowMenu menu] setStateOfAllItemsTo:NSOffState];
+	[[subtitleWindowItem submenu] setStateOfAllItemsTo:NSOffState];
 	subtitleDemuxStreamId = -1; subtitleFileStreamId = -1;
 	
 	if (streamId != -1) {
@@ -1289,68 +1239,46 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		
 		if (index != -1) {
 			[[[menuController->subtitleStreamMenu submenu] itemAtIndex:index] setState:NSOnState];
-			[[[subtitleWindowMenu menu] itemAtIndex:(index+1)] setState:NSOnState];
+			[[[subtitleWindowItem submenu] itemAtIndex:index] setState:NSOnState];
 		}
 	
 	} else {
 		
 		[[[menuController->subtitleStreamMenu submenu] itemAtIndex:0] setState:NSOnState];
-		[[[subtitleWindowMenu menu] itemAtIndex:1] setState:NSOnState];
+		[[[subtitleWindowItem submenu] itemAtIndex:0] setState:NSOnState];
 	}
 }
 /************************************************************************************/
 - (void)clearChapterMenu {
 	
 	[menuController->chapterMenu setEnabled:NO];
-	[chapterWindowMenu setEnabled:NO];
+	[chapterWindowItem setEnabled:NO];
 	
-	while ([[menuController->chapterMenu submenu] numberOfItems] > 0) {
-		[[menuController->chapterMenu submenu] removeItemAtIndex:0];
-	}
-	while ([[chapterWindowMenu menu] numberOfItems] > 1) {
-		[[chapterWindowMenu menu] removeItemAtIndex:1];
-	}
+	[[menuController->chapterMenu submenu] removeAllItems];
+	[[chapterWindowItem submenu] removeAllItems];
 }
 /************************************************************************************/
 - (void)fillChapterMenu {
 	
-	if (movieInfo != nil) {
+	[self clearChapterMenu];
+	
+	if (movieInfo && [movieInfo chapterCount] > 0) {
 		
-		[self clearChapterMenu];
-		
-		// video stream menu
-		NSEnumerator *en = [movieInfo getChaptersEnumerator];
-		NSNumber *key;
+		NSEnumerator *chapters = [movieInfo getChaptersEnumerator];
 		NSMenu *menu = [menuController->chapterMenu submenu];
-		NSMenuItem* newItem;
 		
-		while ((key = [en nextObject])) {
-			newItem = [[NSMenuItem alloc]
-					   initWithTitle:[NSString stringWithFormat:@"%d: %@", [key intValue]+1, [movieInfo nameForChapter:[key intValue]]]
-					   action:@selector(chapterMenuAction:)
-					   keyEquivalent:@""];
-			[newItem setRepresentedObject:key];
-			[menu addItem:newItem];
-			[newItem release];
+		for (NSNumber *chapterId in chapters) {
+			int cid = [chapterId intValue];
+			NSMenuItem *item = [menu addItemWithTitle:[NSString stringWithFormat:@"%d: %@", cid+1, [movieInfo nameForChapter:cid]]
+											   action:@selector(chapterMenuAction:)
+										keyEquivalent:@""];
+			[item setRepresentedObject:chapterId];
 		}
 		
-		if ([menu numberOfItems] > 0) {
-			
-			// Copy menu for window popup
-			NSMenu *other = [menu copy];
-			newItem = [[NSMenuItem alloc]
-					   initWithTitle:@"C"
-					   action:NULL
-					   keyEquivalent:@""];
-			[other insertItem:newItem atIndex:0];
-			[newItem release];
-			
-			[chapterWindowMenu setMenu:other];
-			[other release];
-		}
+		[chapterWindowItem setSubmenu:[[menu copy] autorelease]];
 		
-		[chapterWindowMenu setEnabled:([menu numberOfItems] > 1)];
-		[menuController->chapterMenu setEnabled:([menu numberOfItems] > 0)];
+		[chapterWindowItem setEnabled:YES];
+		[menuController->chapterMenu setEnabled:YES];
 	}
 }
 /************************************************************************************/
@@ -1360,8 +1288,11 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 }
 /************************************************************************************/
 - (void)selectChapterForTime:(float)seconds {
-	//[Debug log:ASL_LEVEL_ERR withMessage:@"selectChapterForTime"];
+	
 	if (movieInfo && [movieInfo chapterCount] > 0) {
+		
+		[[menuController->chapterMenu submenu] setStateOfAllItemsTo:NSOffState];
+		[[chapterWindowItem submenu] setStateOfAllItemsTo:NSOffState];
 		
 		NSEnumerator *en = [movieInfo getChaptersEnumerator];
 		NSNumber *key;
@@ -1381,22 +1312,13 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 			
 			int index = [[menuController->chapterMenu submenu] indexOfItemWithRepresentedObject:bestKey];
 			
-			if (index != -1 && [[[menuController->chapterMenu submenu] itemAtIndex:index] state] != NSOnState) {
-				
-				[[menuController->chapterMenu submenu] setStateOfAllItemsTo:NSOffState];
-				[[chapterWindowMenu menu] setStateOfAllItemsTo:NSOffState];
-				
+			if (index != -1) {
 				[[[menuController->chapterMenu submenu] itemAtIndex:index] setState:NSOnState];
-				[[[chapterWindowMenu menu] itemAtIndex:(index+1)] setState:NSOnState];
+				[[[chapterWindowItem submenu] itemAtIndex:index] setState:NSOnState];
 				currentChapter = [bestKey intValue];
 			}
 			return;
-			
-		} else {
-			[[menuController->chapterMenu submenu] setStateOfAllItemsTo:NSOffState];
-			[[chapterWindowMenu menu] setStateOfAllItemsTo:NSOffState];
 		}
-		
 	}
 	
 	currentChapter = 0;
@@ -1409,14 +1331,10 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 - (void)clearFullscreenMenu {
 	
 	[menuController->fullscreenMenu setEnabled:NO];
-	[fullscreenWindowMenu setEnabled:NO];
+	[fullscreenWindowItem setEnabled:NO];
 	
-	while ([[menuController->fullscreenMenu submenu] numberOfItems] > 0) {
-		[[menuController->fullscreenMenu submenu] removeItemAtIndex:0];
-	}
-	while ([[fullscreenWindowMenu menu] numberOfItems] > 0) {
-		[[fullscreenWindowMenu menu] removeItemAtIndex:0];
-	}
+	[[menuController->fullscreenMenu submenu] removeAllItems];
+	[[fullscreenWindowItem submenu] removeAllItems];
 }
 /************************************************************************************/
 - (void)fillFullscreenMenu {
@@ -1424,64 +1342,39 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	[self clearFullscreenMenu];
 	
 	NSMenu *menu = [menuController->fullscreenMenu submenu];
-	[menu setDelegate:self];
-	NSMenuItem *newItem;
 	NSArray *screens = [NSScreen screens];
+	NSMenuItem *item;
 	
 	// Add entry for auto option (-2)
-	newItem = [[NSMenuItem alloc]
-			   initWithTitle:@"Automatic"
-			   action:@selector(fullscreenMenuAction:)
-			   keyEquivalent:@""];
-	[newItem setRepresentedObject:[NSNumber numberWithInt:-2]];
-	[menu addItem:newItem];
-	[newItem release];
+	item = [menu addItemWithTitle:@"Selected from preferences"
+						   action:@selector(fullscreenMenuAction:)
+					keyEquivalent:@""];
+	[item setRepresentedObject:[NSNumber numberWithInt:-2]];
 	
 	// Add entry for same screen option (-1)
-	newItem = [[NSMenuItem alloc]
-			   initWithTitle:@"Same screen as player window"
-			   action:@selector(fullscreenMenuAction:)
-			   keyEquivalent:@""];
-	[newItem setRepresentedObject:[NSNumber numberWithInt:-1]];
-	[menu addItem:newItem];
-	[newItem release];
+	item = [menu addItemWithTitle:@"Same screen as player window"
+						   action:@selector(fullscreenMenuAction:)
+					keyEquivalent:@""];
+	[item setRepresentedObject:[NSNumber numberWithInt:-1]];
 	
 	[menu addItem:[NSMenuItem separatorItem]];
 	
 	// Add screens
 	int i;
 	for (i=0; i < [screens count]; i++) {
-		
-		newItem = [[NSMenuItem alloc]
-				   initWithTitle:[NSString stringWithFormat:@"Screen %d: %.0fx%.0f", (i+1), [[screens objectAtIndex:i] frame].size.width, [[screens objectAtIndex:i] frame].size.height]
-				   action:@selector(fullscreenMenuAction:)
-				   keyEquivalent:@""];
-		[newItem setRepresentedObject:[NSNumber numberWithInt:i]];
-		
-		if (fullscreenDeviceId < 0)
-			[newItem setEnabled:NO];
-		
-		[menu addItem:newItem];
-		[newItem release];
+		item = [menu addItemWithTitle:[NSString stringWithFormat:@"Screen %d: %.0fx%.0f", 
+									   (i+1), 
+									   [[screens objectAtIndex:i] frame].size.width, 
+									   [[screens objectAtIndex:i] frame].size.height]
+							   action:@selector(fullscreenMenuAction:)
+						keyEquivalent:@""];
+		[item setRepresentedObject:[NSNumber numberWithInt:i]];
 	}
 	
-	if ([menu numberOfItems] > 0) {
-		
-		// Copy menu for window popup
-		NSMenu *other = [[menu copy] autorelease];
-		[other setDelegate:self];
-		newItem = [[NSMenuItem alloc]
-				   initWithTitle:@""
-				   action:NULL
-				   keyEquivalent:@""];
-		[other insertItem:newItem atIndex:0];
-		[newItem release];
-		
-		[fullscreenWindowMenu setMenu:other];
-	}
+	[fullscreenWindowItem setSubmenu:[[menu copy] autorelease]];
 	
-	[menuController->fullscreenMenu setEnabled:([menu numberOfItems] > 0)];
-	[fullscreenWindowMenu setEnabled:([menu numberOfItems] > 0)];
+	[menuController->fullscreenMenu setEnabled:YES];
+	[fullscreenWindowItem setEnabled:YES];
 }
 /************************************************************************************/
 - (void)fullscreenMenuAction:(id)sender {
@@ -1498,7 +1391,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 - (void)selectFullscreenDevice {
 	
 	[[menuController->fullscreenMenu submenu] setStateOfAllItemsTo:NSOffState];
-	[[fullscreenWindowMenu menu] setStateOfAllItemsTo:NSOffState];
+	[[fullscreenWindowItem submenu] setStateOfAllItemsTo:NSOffState];
 	
 	// index of currently selected device
 	int index = [[menuController->fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:[self fullscreenDeviceId]]];
@@ -1506,7 +1399,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	
 	if (index != -1) {
 		[[[menuController->fullscreenMenu submenu] itemAtIndex:index] setState:state];
-		[[[fullscreenWindowMenu menu] itemAtIndex:(index+1)] setState:state];
+		[[[fullscreenWindowItem submenu] itemAtIndex:index] setState:state];
 	}
 	
 	// select auto entry
@@ -1515,7 +1408,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		int index = [[menuController->fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-2]];
 		
 		[[[menuController->fullscreenMenu submenu] itemAtIndex:index] setState:NSOnState];
-		[[[fullscreenWindowMenu menu] itemAtIndex:(index+1)] setState:NSOnState];
+		[[[fullscreenWindowItem submenu] itemAtIndex:index] setState:NSOnState];
 	
 		// same entry implicit selection
 		if ([PREFS integerForKey:MPEGoToFullscreenOn] == MPEGoToFullscreenOnSameScreen) {
@@ -1523,7 +1416,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 			int index = [[menuController->fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-1]];
 			
 			[[[menuController->fullscreenMenu submenu] itemAtIndex:index] setState:NSMixedState];
-			[[[fullscreenWindowMenu menu] itemAtIndex:(index+1)] setState:NSMixedState];
+			[[[fullscreenWindowItem submenu] itemAtIndex:index] setState:NSMixedState];
 		}
 	}
 	
@@ -1533,7 +1426,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		int index = [[menuController->fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-1]];
 		
 		[[[menuController->fullscreenMenu submenu] itemAtIndex:index] setState:NSOnState];
-		[[[fullscreenWindowMenu menu] itemAtIndex:(index+1)] setState:NSOnState];
+		[[[fullscreenWindowItem submenu] itemAtIndex:index] setState:NSOnState];
 	}
 }
 /************************************************************************************/
@@ -1544,11 +1437,6 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		fullscreenDeviceId = [PREFS integerForKey:MPEFullscreenDisplayNumber];
 	// Rebuild menu and select current id
 	[self fillFullscreenMenu];
-	[self selectFullscreenDevice];
-}
-/************************************************************************************/
-- (void)menuWillOpen:(NSMenu *)menu
-{
 	[self selectFullscreenDevice];
 }
 /************************************************************************************
@@ -1576,6 +1464,9 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 {
 	if ([keyPath isEqualToString:MPEWindowOnTopMode])
 		[self updateWindowOnTop];
+	
+	else if ([keyPath isEqualToString:MPEGoToFullscreenOn] || [keyPath isEqualToString:MPEFullscreenDisplayNumber])
+		[self selectFullscreenDevice];
 }
 /************************************************************************************/
 - (void) interface:(MPlayerInterface *)mi hasChangedStateTo:(NSNumber *)statenumber fromState:(NSNumber *)oldstatenumber
@@ -1627,11 +1518,8 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 			[timeTextField setStringValue:@"00:00:00"];
 			[fullscreenButton setEnabled:NO];
 			// Disable stream menus
-			[menuController->videoStreamMenu setEnabled:NO];
-			[menuController->audioStreamMenu setEnabled:NO];
-			[menuController->subtitleStreamMenu setEnabled:NO];
-			[audioWindowMenu setEnabled:NO];
-			[subtitleWindowMenu setEnabled:NO];
+			[self clearStreamMenus];
+			[self clearChapterMenu];
 			// Release Sleep assertion
 			IOPMAssertionRelease(sleepAssertionId);	
 		// Running
@@ -1685,7 +1573,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 					[self stopFromPlaylist];
 			// Regular play mode
 			} else
-				[self cleanUpAfterStop];
+				[videoOpenGLView close];
 		// Next item already waiting, don't clean up
 		} else
 			continuousPlayback = NO;

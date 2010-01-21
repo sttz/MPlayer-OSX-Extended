@@ -66,4 +66,8 @@
 
 @interface NSMenu (MPEAdditions)
 - (void)setStateOfAllItemsTo:(NSInteger)itemState;
+#if __MAC_OS_X_VERSION_MIN_REQUIRED <= __MAC_OS_X_VERSION_10_5
+- (void)removeAllItems;
+#endif
+- (NSMenuItem *)itemWithRepresentedIntegerValue:(NSInteger)value;
 @end
