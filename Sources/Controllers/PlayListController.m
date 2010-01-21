@@ -137,8 +137,8 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
     [playListWindow setToolbar:toolbar];
 	
 	//display if playlist was opened on last quit
-	if ([PREFS boolForKey:MPEPlaylistOpen]) 
-		[self displayWindow:nil];
+	if ([PREFS boolForKey:MPEPlaylistOpen])
+		[self performSelector:@selector(displayWindow:) withObject:nil afterDelay:0];
 	
 	// Load playlist
 	myData = [[NSMutableArray alloc] init];
@@ -157,13 +157,10 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 
 - (IBAction) toggleWindow:(id)sender
 {
-	if ([playListWindow isVisible]) {
+	if ([playListWindow isVisible])
 		[playListWindow close];
-		[[playerController playerInterface] removeClient:self];
-	} else {
+	else
 		[playListWindow makeKeyAndOrderFront:self];
-		[[playerController playerInterface] addClient:self];
-	}
 }
 
 /************************************************************************************
@@ -356,7 +353,6 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	}
 	
 	// play the next item if it is set to do so
-	NSLog(@"playing next playlist index %d",theIndex);
 	if (theIndex >= 0)
 		[playerController playItem:[self itemAtIndex:theIndex] fromPlaylist:YES];
 	else
@@ -769,12 +765,14 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 - (void)windowWillClose:(NSNotification *)aNotification
 {
 	[playListWindow orderOut:nil];
+	[[playerController playerInterface] removeClient:self];
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)notification
 {
 	if ([self selectedItem])
 		[[AppController sharedController] setMovieInfoProvider:self];
+	[[playerController playerInterface] addClient:self];
 }
 
 /*
