@@ -777,11 +777,11 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
         {
 			// Right: Seek forward
 			case kRemoteButtonRight_Hold:
-				[self seek:10*pow(2,remoteHoldIncrement) mode:MISeekingModeRelative];
+				[self seek:[PREFS floatForKey:MPERemoteSeekBase]*pow(2,remoteHoldIncrement) mode:MISeekingModeRelative];
 				break;
 			// Left: Seek back
             case kRemoteButtonLeft_Hold:
-				[self seek:-10*pow(2,remoteHoldIncrement) mode:MISeekingModeRelative];
+				[self seek:-[PREFS floatForKey:MPERemoteSeekBase]*pow(2,remoteHoldIncrement) mode:MISeekingModeRelative];
 				break;
 			// Volume+: Increase volume
             case kRemoteButtonVolume_Plus_Hold:
@@ -832,14 +832,14 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 			if (movieInfo && [movieInfo chapterCount] > 0)
 				[self seekNext:nil];
 			else
-				[self seek:[PREFS floatForKey:MPESeekStepLarge] mode:MISeekingModeRelative];
+				[self seek:[PREFS floatForKey:MPERemoteSkipStep] mode:MISeekingModeRelative];
             break;
 		// Left: Skip backward
         case kRemoteButtonLeft:
             if (movieInfo && [movieInfo chapterCount] > 0)
 				[self seekPrevious:nil];
 			else
-				[self seek:-[PREFS floatForKey:MPESeekStepLarge] mode:MISeekingModeRelative];
+				[self seek:-[PREFS floatForKey:MPERemoteSkipStep] mode:MISeekingModeRelative];
             break;
 		// Menu: Switch fullscreen
         case kRemoteButtonMenu:

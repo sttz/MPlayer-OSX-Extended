@@ -99,6 +99,8 @@ extern NSString* const MPEWindowOnTopMode;
 extern NSString* const MPEFullscreenControlsHideTimeout;
 extern NSString* const MPEFullscreenControlsSensitivity;
 extern NSString* const MPEPreflightNumInstances;
+extern NSString* const MPERemoteSeekBase;
+extern NSString* const MPERemoteSkipStep;
 extern NSString* const MPEScrollWheelSeekMultiple;
 extern NSString* const MPESeekStepLarge;
 extern NSString* const MPESeekStepMedium;

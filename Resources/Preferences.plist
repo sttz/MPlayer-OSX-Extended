@@ -542,6 +542,10 @@
 		<integer>200</integer>
 		<key>MPEPreflightNumInstances</key>
 		<integer>4</integer>
+		<key>MPERemoteSeekBase</key>
+		<integer>5</integer>
+		<key>MPERemoteSkipStep</key>
+		<integer>60</integer>
 		<key>MPEScrollWheelSeekMultiple</key>
 		<integer>10</integer>
 		<key>MPESeekStepLarge</key>
