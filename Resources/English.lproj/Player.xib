@@ -21,7 +21,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="278"/>
+			<integer value="219"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -688,7 +688,7 @@
 						<object class="NSButton" id="219527198">
 							<reference key="NSNextResponder" ref="774858533"/>
 							<int key="NSvFlags">289</int>
-							<string key="NSFrame">{{479, 7}, {29, 19}}</string>
+							<string key="NSFrame">{{478, 7}, {29, 19}}</string>
 							<reference key="NSSuperview" ref="774858533"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="656123341">
@@ -720,7 +720,7 @@
 						<object class="NSButton" id="101250520">
 							<reference key="NSNextResponder" ref="774858533"/>
 							<int key="NSvFlags">289</int>
-							<string key="NSFrame">{{451, 7}, {28, 19}}</string>
+							<string key="NSFrame">{{450, 7}, {28, 19}}</string>
 							<reference key="NSSuperview" ref="774858533"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="86984741">
@@ -783,16 +783,24 @@
 						<object class="NSPopUpButton" id="665830500">
 							<reference key="NSNextResponder" ref="774858533"/>
 							<int key="NSvFlags">289</int>
-							<string key="NSFrame">{{514, 4}, {32, 25}}</string>
+							<string key="NSFrame">{{511, 5}, {39, 24}}</string>
 							<reference key="NSSuperview" ref="774858533"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSPopUpButtonCell" key="NSCell" id="797380891">
-								<int key="NSCellFlags">71433792</int>
-								<int key="NSCellFlags2">167905280</int>
-								<reference key="NSSupport" ref="26"/>
+								<int key="NSCellFlags">71433728</int>
+								<int key="NSCellFlags2">167772160</int>
+								<object class="NSFont" key="NSSupport" id="1069853337">
+									<string key="NSName">LucidaGrande</string>
+									<double key="NSSize">13</double>
+									<int key="NSfFlags">1044</int>
+								</object>
 								<reference key="NSControlView" ref="665830500"/>
-								<int key="NSButtonFlags">-2034089729</int>
-								<int key="NSButtonFlags2">163</int>
+								<int key="NSButtonFlags">-2044182273</int>
+								<int key="NSButtonFlags2">2</int>
+								<object class="NSCustomResource" key="NSAlternateImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">options_on</string>
+								</object>
 								<string key="NSAlternateContents"/>
 								<string key="NSKeyEquivalent"/>
 								<int key="NSPeriodicDelay">400</int>
@@ -807,7 +815,7 @@
 									<int key="NSState">1</int>
 									<object class="NSCustomResource" key="NSImage">
 										<string key="NSClassName">NSImage</string>
-										<string key="NSResourceName">NSActionTemplate</string>
+										<string key="NSResourceName">options_off</string>
 									</object>
 									<object class="NSCustomResource" key="NSOnImage" id="960824354">
 										<string key="NSClassName">NSImage</string>
@@ -930,18 +938,12 @@
 											</object>
 										</object>
 									</object>
-									<object class="NSFont" key="NSMenuFont" id="1069853337">
-										<string key="NSName">LucidaGrande</string>
-										<double key="NSSize">13</double>
-										<int key="NSfFlags">1044</int>
-									</object>
+									<reference key="NSMenuFont" ref="1069853337"/>
 								</object>
-								<int key="NSSelectedIndex">1</int>
 								<bool key="NSPullDown">YES</bool>
-								<int key="NSPreferredEdge">1</int>
+								<int key="NSPreferredEdge">2</int>
 								<bool key="NSUsesItemFromMenu">YES</bool>
 								<bool key="NSAltersState">YES</bool>
-								<int key="NSArrowPosition">2</int>
 							</object>
 						</object>
 					</object>
@@ -2232,7 +2234,6 @@
 						<reference key="object" ref="774858533"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="981082951"/>
 							<reference ref="463806336"/>
 							<reference ref="642848838"/>
 							<reference ref="1045597929"/>
@@ -2242,6 +2243,7 @@
 							<reference ref="505932026"/>
 							<reference ref="312690941"/>
 							<reference ref="665830500"/>
+							<reference ref="981082951"/>
 						</object>
 						<reference key="parent" ref="7096723"/>
 					</object>
@@ -2644,6 +2646,7 @@
 					<string>218.windowTemplate.hasMinSize</string>
 					<string>218.windowTemplate.minSize</string>
 					<string>219.IBPluginDependency</string>
+					<string>219.IBUserGuides</string>
 					<string>219.ImportedFromIB2</string>
 					<string>22.IBPluginDependency</string>
 					<string>220.CustomClassName</string>
@@ -2857,14 +2860,17 @@
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{200, 410}, {565, 367}}</string>
+					<string>{{248, 432}, {565, 367}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{200, 410}, {565, 367}}</string>
+					<string>{{248, 432}, {565, 367}}</string>
 					<boolean value="YES"/>
 					<boolean value="NO"/>
 					<boolean value="YES"/>
 					<string>{475, 54}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableArray">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+					</object>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>VideoOpenGLView</string>
