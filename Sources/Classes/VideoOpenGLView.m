@@ -557,14 +557,24 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 */
 - (void) mouseDown: (NSEvent *) theEvent
 {
-	if ([theEvent clickCount] == 2)
+	if ([theEvent clickCount] == 2) {
 		[playerController switchFullscreen: self];
 	
-	// save start for dragging window
-	NSRect windowFrame = [[self window] frame];
-	dragStartPoint = [[self window] convertBaseToScreen:[theEvent locationInWindow]];
-	dragStartPoint.x -= windowFrame.origin.x;
-	dragStartPoint.y -= windowFrame.origin.y;
+	} else {
+		// save start for dragging window
+		NSRect windowFrame = [[self window] frame];
+		dragStartPoint = [[self window] convertBaseToScreen:[theEvent locationInWindow]];
+		dragStartPoint.x -= windowFrame.origin.x;
+		dragStartPoint.y -= windowFrame.origin.y;
+	}
+}
+
+/*
+	Show contextual menu
+ */
+- (NSMenu *)menuForEvent:(NSEvent *)theEvent
+{
+	return [playerController contextMenu];
 }
 
 /*

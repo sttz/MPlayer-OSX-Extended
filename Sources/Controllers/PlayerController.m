@@ -1439,6 +1439,13 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	[self fillFullscreenMenu];
 	[self selectFullscreenDevice];
 }
+/************************************************************************************/
+- (NSMenu *)contextMenu
+{
+	NSMenu *context = [[[fullscreenWindowItem menu] copy] autorelease];
+	[context removeItemAtIndex:0];
+	return context;
+}
 /************************************************************************************
  NOTIFICATION OBSERVERS
  ************************************************************************************/
