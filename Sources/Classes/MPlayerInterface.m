@@ -727,6 +727,10 @@ static NSArray* statusNames;
 	if ([cPrefs floatForKey:MPEStartTime] > 0) {
 		[params addObject:@"-ss"];
 		[params addObject:[NSString stringWithFormat:@"%1.1f",[cPrefs floatForKey:MPEStartTime]]];
+	// seek after a restart
+	} else if (mySeconds > 0) {
+		[params addObject:@"-ss"];
+		[params addObject:[NSString stringWithFormat:@"%1.1f",mySeconds]];
 	}
 	
 	// additional parameters
@@ -1297,6 +1301,7 @@ static NSArray* statusNames;
 		if (!restartingPlayer && state > MIStateError)
 			[self setState:MIStateStopped];
 		
+		mySeconds = 0;
 		restartingPlayer = NO;
 		isRunning = NO;
 	}
@@ -1573,6 +1578,7 @@ static NSArray* statusNames;
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"MIFinishedParsing"
 																object:self];
 			
+			mySeconds = 0;
 			restartingPlayer = NO;
 			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithFormat:@"Exited with state %d and reason %@",newState,exitType]];
 			continue;							// continue on next line

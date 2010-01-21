@@ -138,8 +138,8 @@ extern NSString* const MIStatsDroppedFramesKey;
 	BOOL playing;
 	BOOL movieOpen;
 	
-	//beta
 	float mySeconds;
+	float restartTime;
 	
 	// statistics
 	BOOL myUpdateStatistics;
