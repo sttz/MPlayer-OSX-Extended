@@ -1,5 +1,5 @@
 /*
- *  MplayerInterface.m
+ *  MPlayerInterface.m
  *  MPlayer OS X
  *
  *  Created by Jan Volf
@@ -7,7 +7,7 @@
  *  Copyright (c) 2003 Jan Volf. All rights reserved.
  */
 
-#import "MplayerInterface.h"
+#import "MPlayerInterface.h"
 #import "RegexKitLite.h"
 #import <sys/sysctl.h>
 
@@ -97,12 +97,12 @@ static NSArray* localPrefsToObserve;
 // String names for states
 static NSArray* statusNames;
 
-@implementation MplayerInterface
+@implementation MPlayerInterface
 @synthesize playing, movieOpen, state, stateMask;
 
 + (void)initialize
 {
-	if (self != [MplayerInterface class])
+	if (self != [MPlayerInterface class])
 		return;
 	
 	parseRunLoopModes = [[NSArray alloc] initWithObjects:
@@ -219,7 +219,7 @@ static NSArray* statusNames;
 	buffer_name = [name retain];
 }
 /************************************************************************************/
-- (void) addClient:(id<MplayerInterfaceClientProtocol>)client
+- (void) addClient:(id<MPlayerInterfaceClientProtocol>)client
 {
 	if ([clients containsObject:client])
 		return;
@@ -239,14 +239,14 @@ static NSArray* statusNames;
 									isMuted:[NSNumber numberWithBool:playerMute]];
 }
 
-- (void) removeClient:(id<MplayerInterfaceClientProtocol>)client
+- (void) removeClient:(id<MPlayerInterfaceClientProtocol>)client
 {
 	[clients removeObject:client];
 }
 
 - (void) notifyClientsWithSelector:(SEL)selector andObject:(id)object
 {
-	for (id<MplayerInterfaceClientProtocol> client in clients) {
+	for (id<MPlayerInterfaceClientProtocol> client in clients) {
 		if (client && [client respondsToSelector:selector]) {
 			[client performSelector:selector withObject:self withObject:object];
 		}
@@ -255,7 +255,7 @@ static NSArray* statusNames;
 
 - (void) notifyClientsWithSelector:(SEL)selector andObject:(id)object andObject:(id)otherObject
 {
-	NSMethodSignature *sig = [@protocol(MplayerInterfaceClientProtocol) methodSignatureForSelector:selector
+	NSMethodSignature *sig = [@protocol(MPlayerInterfaceClientProtocol) methodSignatureForSelector:selector
 																						isRequired:NO
 																				  isInstanceMethod:YES];
 	NSInvocation *performer = [NSInvocation invocationWithMethodSignature:sig];
@@ -265,7 +265,7 @@ static NSArray* statusNames;
 	[performer setArgument:&object atIndex:3];
 	[performer setArgument:&otherObject atIndex:4];
 	
-	for (id<MplayerInterfaceClientProtocol> client in clients) {
+	for (id<MPlayerInterfaceClientProtocol> client in clients) {
 		if (client && [client respondsToSelector:selector]) {
 			[performer invokeWithTarget:client];
 		}

@@ -27,7 +27,7 @@
 
 #import "AppController.h"
 #import "MovieInfo.h"
-#import "MplayerInterface.h"
+#import "MPlayerInterface.h"
 
 #import "Preferences.h"
 #import "CocoaAdditions.h"

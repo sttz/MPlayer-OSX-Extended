@@ -26,7 +26,7 @@
 
 #import "AppController.h"
 
-#import "MplayerInterface.h"
+#import "MPlayerInterface.h"
 
 #import "Preferences.h"
 #import "CocoaAdditions.h"
@@ -43,7 +43,7 @@ static NSMutableArray *busyPreflightInstances;
 + (void) preflightNextItem;
 + (void) preflightFinished:(NSNotification *)notification;
 + (void) preflightFailed:(NSNotification *)notification;
-+ (void) requeuePreflightInstance:(MplayerInterface*)inst;
++ (void) requeuePreflightInstance:(MPlayerInterface*)inst;
 @end
 
 
@@ -75,7 +75,7 @@ static NSMutableArray *busyPreflightInstances;
 	if ([freePreflightInstances count] == 0) {
 		// Create new instances on-demand
 		if ([busyPreflightInstances count] < [PREFS integerForKey:MPEPreflightNumInstances]) {
-			MplayerInterface *newInstance = [[MplayerInterface new] autorelease];
+			MPlayerInterface *newInstance = [[MPlayerInterface new] autorelease];
 			[freePreflightInstances addObject:newInstance];
 			// Listen for end of preflight
 			[[NSNotificationCenter defaultCenter] addObserver:self
@@ -97,7 +97,7 @@ static NSMutableArray *busyPreflightInstances;
 	[preflightQueue removeObjectAtIndex:0];
 	
 	// Dequeue a free instance and add it to the busy queue
-	MplayerInterface *inst = [freePreflightInstances objectAtIndex:0];
+	MPlayerInterface *inst = [freePreflightInstances objectAtIndex:0];
 	[busyPreflightInstances addObject:inst];
 	[freePreflightInstances removeObjectAtIndex:0];
 	
@@ -113,14 +113,14 @@ static NSMutableArray *busyPreflightInstances;
 
 + (void) preflightFailed:(NSNotification *)notification {
 	
-	MplayerInterface *inst = (MplayerInterface *)[notification object];
+	MPlayerInterface *inst = (MPlayerInterface *)[notification object];
 	[Debug log:ASL_LEVEL_ERR withMessage:@"Preflight failed for '%@'",[[inst info] filename]];
 	
 	[self requeuePreflightInstance:inst];
 	[self preflightNextItem];
 }
 
-+ (void) requeuePreflightInstance:(MplayerInterface*)inst {
++ (void) requeuePreflightInstance:(MPlayerInterface*)inst {
 	
 	[freePreflightInstances addObject:inst];
 	[busyPreflightInstances removeObject:inst];

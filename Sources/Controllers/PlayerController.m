@@ -74,7 +74,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	menuController = [[AppController sharedController] menuController];
 	
 	// Load MPlayer interface
-	myPlayer = [MplayerInterface new];
+	myPlayer = [MPlayerInterface new];
 	
 	[myPlayer addClient:self];
 	
@@ -407,7 +407,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 }
 
 /************************************************************************************/
-- (MplayerInterface *)playerInterface
+- (MPlayerInterface *)playerInterface
 {
 	return myPlayer;
 }
@@ -1579,7 +1579,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		[self updateWindowOnTop];
 }
 /************************************************************************************/
-- (void) interface:(MplayerInterface *)mi hasChangedStateTo:(NSNumber *)statenumber fromState:(NSNumber *)oldstatenumber
+- (void) interface:(MPlayerInterface *)mi hasChangedStateTo:(NSNumber *)statenumber fromState:(NSNumber *)oldstatenumber
 {	
 	MIState state = [statenumber unsignedIntValue];
 	unsigned int stateMask = (1<<state);
@@ -1696,13 +1696,13 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	}
 }
 /************************************************************************************/
-- (void) interface:(MplayerInterface *)mi streamUpate:(MovieInfo *)item
+- (void) interface:(MPlayerInterface *)mi streamUpate:(MovieInfo *)item
 {
 	[self fillStreamMenus];
 }
 
 /************************************************************************************/
-- (void) interface:(MplayerInterface *)mi hasSelectedStream:(NSNumber *)streamId ofType:(NSNumber *)type
+- (void) interface:(MPlayerInterface *)mi hasSelectedStream:(NSNumber *)streamId ofType:(NSNumber *)type
 {
 	// Streams
 	if ([type intValue] == MPEStreamTypeVideo)
@@ -1719,7 +1719,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 }
 
 /************************************************************************************/
-- (void) interface:(MplayerInterface *)mi timeUpdate:(NSNumber *)newTime
+- (void) interface:(MPlayerInterface *)mi timeUpdate:(NSNumber *)newTime
 {
 	
 #if __MAC_OS_X_VERSION_MIN_REQUIRED <= __MAC_OS_X_VERSION_10_5

@@ -139,7 +139,7 @@
 	
 }
 
-- (void) interface:(MplayerInterface *)mi hasChangedStateTo:(NSNumber *)statenumber fromState:(NSNumber *)oldstatenumber
+- (void) interface:(MPlayerInterface *)mi hasChangedStateTo:(NSNumber *)statenumber fromState:(NSNumber *)oldstatenumber
 {	
 	MIState state = [statenumber unsignedIntValue];
 	unsigned int stateMask = (1<<state);
@@ -207,12 +207,12 @@
 	}
 }
 
-- (void) interface:(MplayerInterface *)mi volumeUpdate:(NSNumber *)volume isMuted:(NSNumber *)muted
+- (void) interface:(MPlayerInterface *)mi volumeUpdate:(NSNumber *)volume isMuted:(NSNumber *)muted
 {
 	[fcVolumeSlider setFloatValue:[volume floatValue]];
 }
 
-- (void) interface:(MplayerInterface *)mi timeUpdate:(NSNumber *)newTime
+- (void) interface:(MPlayerInterface *)mi timeUpdate:(NSNumber *)newTime
 {
 	float seconds = [newTime floatValue];
 	

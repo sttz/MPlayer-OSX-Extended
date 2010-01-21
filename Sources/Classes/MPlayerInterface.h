@@ -1,5 +1,5 @@
 /*
- *  MplayerInterface.h
+ *  MPlayerInterface.h
  *  MPlayer OS X
  *
  *	version 1.1
@@ -21,16 +21,16 @@
 
 #import "Debug.h"
 
-@class MplayerInterface;
+@class MPlayerInterface;
 
-@protocol MplayerInterfaceClientProtocol <NSObject>
+@protocol MPlayerInterfaceClientProtocol <NSObject>
 @optional
-- (void) interface:(MplayerInterface *)mi hasChangedStateTo:(NSNumber *)newState fromState:(NSNumber *)oldState;
-- (void) interface:(MplayerInterface *)mi timeUpdate:(NSNumber *)newTime;
-- (void) interface:(MplayerInterface *)mi streamUpate:(MovieInfo *)item;
-- (void) interface:(MplayerInterface *)mi hasSelectedStream:(NSNumber *)streamId ofType:(NSNumber *)type;
-- (void) interface:(MplayerInterface *)mi statsUpdate:(NSDictionary *)stats;
-- (void) interface:(MplayerInterface *)mi volumeUpdate:(NSNumber *)volume isMuted:(NSNumber *)muted;
+- (void) interface:(MPlayerInterface *)mi hasChangedStateTo:(NSNumber *)newState fromState:(NSNumber *)oldState;
+- (void) interface:(MPlayerInterface *)mi timeUpdate:(NSNumber *)newTime;
+- (void) interface:(MPlayerInterface *)mi streamUpate:(MovieInfo *)item;
+- (void) interface:(MPlayerInterface *)mi hasSelectedStream:(NSNumber *)streamId ofType:(NSNumber *)type;
+- (void) interface:(MPlayerInterface *)mi statsUpdate:(NSDictionary *)stats;
+- (void) interface:(MPlayerInterface *)mi volumeUpdate:(NSNumber *)volume isMuted:(NSNumber *)muted;
 @end
 
 enum {
@@ -98,7 +98,7 @@ extern NSString* const MIStatsCacheUsageKey;
 extern NSString* const MIStatsAVSyncKey;
 extern NSString* const MIStatsDroppedFramesKey;
 
-@interface MplayerInterface : NSObject
+@interface MPlayerInterface : NSObject
 {	
 	// Properties
 	// file paths
@@ -174,8 +174,8 @@ extern NSString* const MIStatsDroppedFramesKey;
 @property (nonatomic,readonly) MIState state;
 @property (nonatomic,readonly) unsigned int stateMask;
 
-- (void) addClient:(id<MplayerInterfaceClientProtocol>)client;
-- (void) removeClient:(id<MplayerInterfaceClientProtocol>)client;
+- (void) addClient:(id<MPlayerInterfaceClientProtocol>)client;
+- (void) removeClient:(id<MPlayerInterfaceClientProtocol>)client;
 - (void) notifyClientsWithSelector:(SEL)selector andObject:(id)object;
 - (void) notifyClientsWithSelector:(SEL)selector andObject:(id)object andObject:(id)otherObject;
 

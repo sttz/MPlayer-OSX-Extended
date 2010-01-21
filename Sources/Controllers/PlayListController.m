@@ -675,7 +675,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 /************************************************************************************
  NOTIFICATION HANDLERS
  ************************************************************************************/
-- (void) interface:(MplayerInterface *)mi hasChangedStateTo:(NSNumber *)statenumber fromState:(NSNumber *)oldstatenumber
+- (void) interface:(MPlayerInterface *)mi hasChangedStateTo:(NSNumber *)statenumber fromState:(NSNumber *)oldstatenumber
 {	
 	MIState state = [statenumber unsignedIntValue];
 	unsigned int stateMask = (1<<state);
@@ -731,7 +731,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	}
 }
 /************************************************************************************/
-- (void) interface:(MplayerInterface *)mi volumeUpdate:(NSNumber *)volume isMuted:(NSNumber *)muted
+- (void) interface:(MPlayerInterface *)mi volumeUpdate:(NSNumber *)volume isMuted:(NSNumber *)muted
 {
 	if ([muted boolValue])
 		[volumeSliderToolbar setFloatValue:0];
@@ -739,7 +739,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 		[volumeSliderToolbar setFloatValue:[volume floatValue]];
 }
 /************************************************************************************/
-- (void) interface:(MplayerInterface *)mi timeUpdate:(NSNumber *)newTime
+- (void) interface:(MPlayerInterface *)mi timeUpdate:(NSNumber *)newTime
 {
 	float seconds = [newTime floatValue];
 	

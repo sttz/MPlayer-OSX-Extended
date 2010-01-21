@@ -46,7 +46,7 @@
 		377E0348085E3ED500D64A26 /* volume0.png in Resources */ = {isa = PBXBuildFile; fileRef = 377E032A085E3ED500D64A26 /* volume0.png */; };
 		377E034A085E3ED500D64A26 /* volume2.png in Resources */ = {isa = PBXBuildFile; fileRef = 377E032C085E3ED500D64A26 /* volume2.png */; };
 		377E034B085E3ED500D64A26 /* volume3.png in Resources */ = {isa = PBXBuildFile; fileRef = 377E032D085E3ED500D64A26 /* volume3.png */; };
-		377E036F085E480E00D64A26 /* MplayerInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E036A085E480E00D64A26 /* MplayerInterface.m */; };
+		377E036F085E480E00D64A26 /* MPlayerInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E036A085E480E00D64A26 /* MPlayerInterface.m */; };
 		377E0371085E480E00D64A26 /* ScrubbingBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E036E085E480E00D64A26 /* ScrubbingBar.m */; };
 		377E037D085E482B00D64A26 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E0374085E482B00D64A26 /* AppController.m */; };
 		377E037E085E482B00D64A26 /* PlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 377E0376085E482B00D64A26 /* PlayerController.m */; };
@@ -240,8 +240,8 @@
 		377E032A085E3ED500D64A26 /* volume0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = volume0.png; path = Resources/Graphics/volume0.png; sourceTree = "<group>"; };
 		377E032C085E3ED500D64A26 /* volume2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = volume2.png; path = Resources/Graphics/volume2.png; sourceTree = "<group>"; };
 		377E032D085E3ED500D64A26 /* volume3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = volume3.png; path = Resources/Graphics/volume3.png; sourceTree = "<group>"; };
-		377E0369085E480E00D64A26 /* MplayerInterface.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = MplayerInterface.h; path = Sources/Classes/MplayerInterface.h; sourceTree = "<group>"; };
-		377E036A085E480E00D64A26 /* MplayerInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MplayerInterface.m; path = Sources/Classes/MplayerInterface.m; sourceTree = "<group>"; };
+		377E0369085E480E00D64A26 /* MPlayerInterface.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = MPlayerInterface.h; path = Sources/Classes/MPlayerInterface.h; sourceTree = "<group>"; };
+		377E036A085E480E00D64A26 /* MPlayerInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPlayerInterface.m; path = Sources/Classes/MPlayerInterface.m; sourceTree = "<group>"; };
 		377E036D085E480E00D64A26 /* ScrubbingBar.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ScrubbingBar.h; path = Sources/Classes/ScrubbingBar.h; sourceTree = "<group>"; };
 		377E036E085E480E00D64A26 /* ScrubbingBar.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ScrubbingBar.m; path = Sources/Classes/ScrubbingBar.m; sourceTree = "<group>"; };
 		377E0373085E482B00D64A26 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AppController.h; path = Sources/Controllers/AppController.h; sourceTree = "<group>"; };
@@ -441,8 +441,8 @@
 				3A0E8A4C0EBF9F91003A2F66 /* Interface */,
 				3A71C9FE10BEBB7800C810F4 /* CocoaAdditions.h */,
 				3A71C9FF10BEBB7800C810F4 /* CocoaAdditions.m */,
-				377E0369085E480E00D64A26 /* MplayerInterface.h */,
-				377E036A085E480E00D64A26 /* MplayerInterface.m */,
+				377E0369085E480E00D64A26 /* MPlayerInterface.h */,
+				377E036A085E480E00D64A26 /* MPlayerInterface.m */,
 				3A0943270E44F8E300E6753F /* MovieInfo.h */,
 				3A0943280E44F8E300E6753F /* MovieInfo.m */,
 				3A09436A0E45043000E6753F /* LanguageCodes.h */,
@@ -953,7 +953,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
-				377E036F085E480E00D64A26 /* MplayerInterface.m in Sources */,
+				377E036F085E480E00D64A26 /* MPlayerInterface.m in Sources */,
 				377E0371085E480E00D64A26 /* ScrubbingBar.m in Sources */,
 				377E037D085E482B00D64A26 /* AppController.m in Sources */,
 				377E037E085E482B00D64A26 /* PlayerController.m in Sources */,

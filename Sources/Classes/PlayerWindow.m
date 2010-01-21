@@ -1,7 +1,7 @@
 #import "PlayerWindow.h"
 
 #import "PlayerController.h"
-#import "MplayerInterface.h"
+#import "MPlayerInterface.h"
 
 #import "Preferences.h"
 

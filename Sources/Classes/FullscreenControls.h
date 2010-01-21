@@ -25,9 +25,9 @@
 #import <Cocoa/Cocoa.h>
 #import "PlayerController.h"
 
-#import "MplayerInterface.h"
+#import "MPlayerInterface.h"
 
-@interface FullscreenControls : NSWindow <MplayerInterfaceClientProtocol> {
+@interface FullscreenControls : NSWindow <MPlayerInterfaceClientProtocol> {
 	
 	IBOutlet id fcWindow;
 	IBOutlet NSButton *fcPlayButton;

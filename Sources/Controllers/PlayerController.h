@@ -4,7 +4,7 @@
  *
  *	Description:
  *		Controller for player controls, status box and statistics panel on side of UI
- *	and for MplayerInterface on side of data
+ *	and for MPlayerInterface on side of data
  *
  *  Created by Jan Volf
  *	<javol@seznam.cz>
@@ -14,7 +14,7 @@
 #import <Cocoa/Cocoa.h>
 #include <IOKit/pwr_mgt/IOPMLib.h>
 
-#import "MplayerInterface.h"
+#import "MPlayerInterface.h"
 #import "VideoOpenGLView.h"
 
 @class PlayListController, MenuController;
@@ -22,7 +22,7 @@
 
 extern NSString* const MPEPlaybackStoppedNotification;
 
-@interface PlayerController : NSObject <MplayerInterfaceClientProtocol, MovieInfoProvider>
+@interface PlayerController : NSObject <MPlayerInterfaceClientProtocol, MovieInfoProvider>
 {
 	// Shorthand to menu controller
 	MenuController *menuController;
@@ -51,7 +51,7 @@ extern NSString* const MPEPlaybackStoppedNotification;
 	IBOutlet FullscreenControls *fullScreenControls;
 	
 	// properties
-	MplayerInterface *myPlayer;
+	MPlayerInterface *myPlayer;
 	
 	// actual movie parametters
 	MovieInfo *movieInfo;
@@ -90,7 +90,7 @@ extern NSString* const MPEPlaybackStoppedNotification;
 @property (nonatomic,readonly) PlayListController *playListController;
 
 @property (nonatomic,readonly) BOOL isFullscreen;
-@property (nonatomic,readonly,getter=player) MplayerInterface* myPlayer;
+@property (nonatomic,readonly,getter=player) MPlayerInterface* myPlayer;
 @property (nonatomic,readonly) VideoOpenGLView* videoOpenGLView;
 
 @property (nonatomic,retain) MovieInfo *movieInfo;
@@ -115,7 +115,7 @@ extern NSString* const MPEPlaybackStoppedNotification;
 
 // misc
 - (void) setMovieSize;
-- (MplayerInterface *)playerInterface;
+- (MPlayerInterface *)playerInterface;
 
 // player control actions
 - (IBAction)playPause:(id)sender;

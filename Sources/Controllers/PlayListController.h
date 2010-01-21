@@ -13,7 +13,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-#import "MplayerInterface.h"
+#import "MPlayerInterface.h"
 
 #define kDefaultTextSize		13
 #define kSmallerTextSize		11
@@ -21,7 +21,7 @@
 @class MovieInfo, ScrubbingBar;
 @protocol MovieInfoProvider;
 
-@interface PlayListController : NSObject <MplayerInterfaceClientProtocol, MovieInfoProvider>
+@interface PlayListController : NSObject <MPlayerInterfaceClientProtocol, MovieInfoProvider>
 {
     // controllers outlets
 	IBOutlet id playerController;
