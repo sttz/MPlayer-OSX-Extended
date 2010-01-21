@@ -94,10 +94,10 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 							pathForResource:@"play_mode_2"
 							ofType:@"png"]];
 	
-	playImageOn = [[NSImage imageNamed:@"play_button_on"] retain];
-	playImageOff = [[NSImage imageNamed:@"play_button_off"] retain];
-	pauseImageOn = [[NSImage imageNamed:@"pause_button_on"] retain];
-	pauseImageOff = [[NSImage imageNamed:@"pause_button_off"] retain];
+	playImageOn = [[NSImage imageNamed:@"pl_play_button_on"] retain];
+	playImageOff = [[NSImage imageNamed:@"pl_play_button_off"] retain];
+	pauseImageOn = [[NSImage imageNamed:@"pl_pause_button_on"] retain];
+	pauseImageOff = [[NSImage imageNamed:@"pl_pause_button_off"] retain];
 	
 	// set play mode
 	if ([PREFS objectForKey:MPEPlaylistPlayMode])

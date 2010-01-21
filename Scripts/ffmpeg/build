@@ -23,6 +23,7 @@ else
 	
 	# Load default config
 	target_system="i386"
+	all_targets=( "x86_64" "i386" "ppc" )
 	
 	# Build directories
 	build_dirs=( libavutil libavcodec libavformat libpostproc libswscale ) 
@@ -44,6 +45,8 @@ fi
 # **************************************************** #
 # *** SETUP
 
+targets=( "x86_64" "i386" "ppc" "ppcg3" "all" )
+
 no_clean=0
 no_configure=0
 no_build=0
@@ -54,12 +57,14 @@ configure_only=0
 build_only=0
 install_only=0
 
+all_options=""
+
 # **************************************************** #
 # *** OPTION PARSING
 
 usage() {
 cat << EOF
-Usage: $0 [options] [x86_64|i386|ppc|ppcg3]
+Usage: $0 [options] [x86_64|i386|ppc|ppcg3|all]
 
 General options:
     -h, --help                  display this help
@@ -84,45 +89,66 @@ Headers and configure flags will be set accordingly.
 EOF
 }
 
+is_valid_arch() {
+	for i in "${targets[@]}"; do
+		if [ "$i" = "$1" ] ; then
+			return 0
+		fi
+	done 
+	return 1
+}
+
 # Parse command line
 while [ -n "$1" ]; do
-	case $1 in
-		x86_64 | i386 | ppc | ppcg3 )	target_system=$1
-								;;
+	if is_valid_arch "$1"; then
+		target_system=$1
+	else
+		case $1 in
+			-u | --update )			do_update=1
+									;;
 		
-		-u | --update )			do_update=1
-								;;
+			--no-clean )			no_clean=1
+									;;
+			--no-configure )		no_configure=1
+									;;
+			--no-build )			no_build=1
+									;;
+			--no-install )			no_install=1
+									;;
 		
-		--no-clean )			no_clean=1
-								;;
-		--no-configure )		no_configure=1
-								;;
-		--no-build )			no_build=1
-								;;
-		--no-install )			no_install=1
-								;;
+			--clean-only )			clean_only=1
+									;;
+			--configure-only )		configure_only=1
+									;;
+			--build-only )			build_only=1
+									;;
+			--install-only )		install_only=1
+									;;
 		
-		--clean-only )			clean_only=1
-								;;
-		--configure-only )		configure_only=1
-								;;
-		--build-only )			build_only=1
-								;;
-		--install-only )		install_only=1
-								;;
-		
-		-q | --quiet )			quiet=1
-								;;
-		-qq | --really-quiet )	really_quiet=1
-								;;
-		-h | --help )			usage
-								exit
-								;;
-		* )						usage
-								exit 1
-	esac
+			-q | --quiet )			quiet=1
+									;;
+			-qq | --really-quiet )	really_quiet=1
+									;;
+			-h | --help )			usage
+									exit
+									;;
+			* )						usage
+									exit 1
+		esac
+		all_options="$all_options $1"
+	fi
 	shift
 done
+
+# Build all arches
+if [ "$target_system" = "all" ]; then
+	
+	for arch in "${all_targets[@]}"; do
+		$0 $arch $all_options || exit $?
+	done
+	
+	exit
+fi
 
 # Quiet string
 if [ $quiet -eq 1 -o $really_quiet -eq 1 ]; then
@@ -176,11 +202,14 @@ fi
 # Apply --no-STEP options
 if [[ $no_clean == 1 ]]; then
 	do_clean=0
-elif [[ $no_configure == 1 ]]; then
+fi
+if [[ $no_configure == 1 ]]; then
 	do_configure=0
-elif [[ $no_build == 1 ]]; then
+fi
+if [[ $no_build == 1 ]]; then
 	do_build=0
-elif [[ $no_install == 1 ]]; then
+fi
+if [[ $no_install == 1 ]]; then
 	do_install=0
 fi
 
@@ -233,6 +262,7 @@ echo "	CFLAGS: $CFLAGS"
 echo "	CXXFLAGS: $CXXFLAGS"
 echo "	LDFLAGS: $LDFLAGS"
 echo "	configure options: $config_opts"
+echo "	enabled steps: clean $do_clean, update: $do_update, configure: $do_configure, build: $do_build, install: $do_install"
 echo ""
 
 # **************************************************** #

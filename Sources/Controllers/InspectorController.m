@@ -34,7 +34,7 @@
 
 static const float const firstSectionTopOffset  = 40.0f;
 
-static const float const collapsedSectionHeight = 21.0f;
+static const float const collapsedSectionHeight = 20.0f;
 
 @implementation InspectorController
 @synthesize window;

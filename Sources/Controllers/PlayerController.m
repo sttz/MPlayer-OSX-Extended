@@ -112,8 +112,8 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		return;
 	
 	// resize window
-	[playerWindow setContentMinSize:NSMakeSize(450, 78)]; // Temp workaround for IB always forgetting the min-size
-	[playerWindow setContentSize:[playerWindow contentMinSize] ];
+	//[playerWindow setContentMinSize:NSMakeSize(450, 78)]; // Temp workaround for IB always forgetting the min-size
+	[playerWindow setContentSize:[playerWindow contentMinSize]];
 	
 	// register for notification on clicking progress bar
 	[[NSNotificationCenter defaultCenter] addObserver: self
