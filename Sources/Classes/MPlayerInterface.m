@@ -789,6 +789,9 @@ static NSArray* statusNames;
 	else if (aMode == MISeekingModeAbsolute)
 		mySeconds = seconds;
 	
+	if (mySeconds < 0)
+		mySeconds = 0;
+	
 	if (stateMask & MIStateCanSeekMask || forced) {
 		
 		// Don't use pausing_keep with seek to detect when MPlayer is playing
