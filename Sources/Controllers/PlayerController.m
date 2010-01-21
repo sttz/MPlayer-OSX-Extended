@@ -75,9 +75,6 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	
 	// Load MPlayer interface
 	myPlayer = [MplayerInterface new];
-	// Set initial volume
-	[myPlayer setVolume:[PREFS floatForKey:MPEAudioVolume]
-				isMuted:[PREFS boolForKey:MPEAudioMute]];
 	
 	[myPlayer addClient:self];
 	
@@ -117,6 +114,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	// resize window
 	//[playerWindow setContentMinSize:NSMakeSize(450, 78)]; // Temp workaround for IB always forgetting the min-size
 	[playerWindow setContentSize:[playerWindow contentMinSize]];
+	[playerWindow makeFirstResponder:playerWindow];
 	
 	// register for notification on clicking progress bar
 	[[NSNotificationCenter defaultCenter] addObserver: self
