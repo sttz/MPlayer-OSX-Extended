@@ -573,18 +573,17 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 /************************************************************************************/
 - (IBAction)playPause:(id)sender
 {
-	if ([myPlayer state] > MIStateStopped) {
-		[myPlayer pause];				// if playing pause/unpause
+	if ([myPlayer state] > MIStateStopped)
+		[myPlayer pause];
 		
-	}
-	else 
-	{
+	else {
 		// set the item to play
 		if ([playListController indexOfSelectedItem] < 0)
 			[playListController selectItemAtIndex:0];
 		
 		// play the items
-		[self playItem:(MovieInfo *)[playListController selectedItem]];
+		if ([playListController selectedItem])
+			[self playItem:(MovieInfo *)[playListController selectedItem]];
 	}
 	[playListController updateView];
 }
