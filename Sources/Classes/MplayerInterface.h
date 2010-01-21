@@ -171,7 +171,8 @@ extern NSString* const MIStatsDroppedFramesKey;
 @property (nonatomic,getter=isPlaying) BOOL playing;
 @property (nonatomic,getter=isMovieOpen) BOOL movieOpen;
 
-@property (nonatomic) MIState state;
+@property (nonatomic,readonly) MIState state;
+@property (nonatomic,readonly) unsigned int stateMask;
 
 - (void) addClient:(id<MplayerInterfaceClientProtocol>)client;
 - (void) removeClient:(id<MplayerInterfaceClientProtocol>)client;

@@ -98,7 +98,7 @@ static NSArray* localPrefsToObserve;
 static NSArray* statusNames;
 
 @implementation MplayerInterface
-@synthesize playing, movieOpen, state;
+@synthesize playing, movieOpen, state, stateMask;
 
 + (void)initialize
 {
@@ -161,7 +161,9 @@ static NSArray* statusNames;
 	osdLevel = 1;
 
 	myLastUpdate = [NSDate timeIntervalSinceReferenceDate];
-		
+	
+	stateMask = (1<<state);
+	
 	// Disable MPlayer AppleRemote code unconditionally, as it causing problems 
 	// when MPlayer runs in background only and we provide our own AR implementation.
 	disableAppleRemote = YES;
@@ -219,18 +221,22 @@ static NSArray* statusNames;
 /************************************************************************************/
 - (void) addClient:(id<MplayerInterfaceClientProtocol>)client
 {
+	if ([clients containsObject:client])
+		return;
+	
 	[clients addObject:client];
+	
 	// send initial state update
-	[self notifyClientsWithSelector:@selector(interface:hasChangedStateTo:fromState:)
-						  andObject:[NSNumber numberWithUnsignedInt:state]
-						  andObject:[NSNumber numberWithUnsignedInt:MIStateInitializing]];
+	if ([client respondsToSelector:@selector(interface:hasChangedStateTo:fromState:)])
+		[client interface:self hasChangedStateTo:[NSNumber numberWithUnsignedInt:state] 
+									   fromState:[NSNumber numberWithUnsignedInt:MIStateInitializing]];
 	// send initial time update
-	[self notifyClientsWithSelector:@selector(interface:timeUpdate:)
-						  andObject:[NSNumber numberWithFloat:mySeconds]];
+	if ([client respondsToSelector:@selector(interface:timeUpdate:)])
+		[client interface:self timeUpdate:[NSNumber numberWithFloat:mySeconds]];
 	// send initial volume update
-	[self notifyClientsWithSelector:@selector(interface:volumeUpdate:isMuted:)
-						  andObject:[NSNumber numberWithFloat:playerVolume]
-						  andObject:[NSNumber numberWithBool:playerMute]];
+	if ([client respondsToSelector:@selector(interface:volumeUpdate:isMuted:)])
+		[client interface:self volumeUpdate:[NSNumber numberWithFloat:playerVolume]
+									isMuted:[NSNumber numberWithBool:playerMute]];
 }
 
 - (void) removeClient:(id<MplayerInterfaceClientProtocol>)client

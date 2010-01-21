@@ -324,7 +324,6 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 /************************************************************************************/
 - (void)playItem:(MovieInfo *)anItem fromPlaylist:(BOOL)fromPlaylist
 {
-	NSLog(@"playItem:%@ fromPlaylist:%d",anItem,fromPlaylist);
 	playingFromPlaylist = fromPlaylist;
 	
 	// re-open player window for internal video
@@ -333,15 +332,13 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	
 	// prepare player
 	// stops mplayer if it is running
-	if ([myPlayer isRunning]) {
+	if (!([myPlayer stateMask] & MIStateStoppedMask)) {
 		continuousPlayback = YES;	// don't close view
 		saveTime = NO;		// don't save time
-		[myPlayer stop];
-		[playListController updateView];
 	}
-	
-	NSLog(@"playItem:fromPlaylist:%d continuous:%d",playingFromPlaylist,continuousPlayback);
-	
+	if ([myPlayer isRunning])
+		[myPlayer stop];
+		
 	if (![anItem fileIsValid]) {
 		NSRunAlertPanel(NSLocalizedString(@"Error",nil), [NSString stringWithFormat:
 				NSLocalizedString(@"File or URL %@ could not be found.",nil), [anItem filename]],
