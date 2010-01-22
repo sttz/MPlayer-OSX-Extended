@@ -134,6 +134,10 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	// resize window
 	[playerWindow setContentSize:[playerWindow contentMinSize]];
 	
+	int offset = (playerNum == 0 ? 0 : 50);
+	[playerWindow setFrameOrigin:NSMakePoint([playerWindow frame].origin.x + offset,
+											 [playerWindow frame].origin.y - offset)];
+	
 	// register for notification on clicking progress bar
 	[[NSNotificationCenter defaultCenter] addObserver: self
 			selector: @selector(progresBarClicked:)
