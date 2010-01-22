@@ -166,12 +166,12 @@
 
 - (IBAction) openPlayerWindow:(NSMenuItem *)sender
 {
-	[[appController playerController] displayWindow:sender];
+	[[appController firstPlayerController] displayWindow:sender];
 }
 
 - (IBAction) togglePlaylistWindow:(NSMenuItem *)sender
 {
-	[[[appController playerController] playListController] displayWindow:sender];
+	[[[appController firstPlayerController] playListController] displayWindow:sender];
 }
 
 

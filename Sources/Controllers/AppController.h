@@ -83,9 +83,10 @@ PlayListController, MenuController, InspectorController, MovieInfo;
 - (NSUserDefaults *) preferences;
 - (NSArray *) preferencesRequiringRestart;
 
-- (void) registerPlayer:(PlayerController *)player;
+- (NSUInteger) registerPlayer:(PlayerController *)player;
 - (void) removePlayer:(PlayerController *)player;
 - (void) openNewPlayerWindow:(id)sender;
+- (PlayerController *) firstPlayerController;
 
 - (void) restart;
 

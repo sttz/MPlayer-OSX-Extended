@@ -95,7 +95,7 @@ static AppController *instance = nil;
 
 - (PlayListController *) playListController
 {
-	return [[self playerController] playListController];
+	return [[self firstPlayerController] playListController];
 }
 
 - (EqualizerController *)equalizerController
@@ -140,20 +140,27 @@ static AppController *instance = nil;
 	[NSApp terminate:self];
 }
 /************************************************************************************/
-- (void) registerPlayer:(PlayerController *)player
+- (NSUInteger) registerPlayer:(PlayerController *)player
 {
 	[players addObject:player];
+	return ([players count]-1);
 }
 
 - (void) removePlayer:(PlayerController *)player
 {
-	[players removeObject:player];
+	if ([players indexOfObject:player] != 0)
+		[players removeObject:player];
 }
 
 - (void) openNewPlayerWindow:(id)sender
 {
 	[NSBundle loadNibNamed:@"Player" owner:self];
 	[[players lastObject] displayWindow:self];
+}
+
+- (PlayerController *) firstPlayerController
+{
+	return [players objectAtIndex:0];
 }
 
 /************************************************************************************
@@ -234,7 +241,7 @@ static AppController *instance = nil;
 					setObject:[[[thePanel filenames] objectAtIndex:i]
 					stringByDeletingLastPathComponent]
 					forKey:MPEDefaultDirectory];
-			[[[self playerController] playListController] appendItem:item];
+			[[[self firstPlayerController] playListController] appendItem:item];
 		}
     }
 }
@@ -602,14 +609,14 @@ static AppController *instance = nil;
 	NSEnumerator *e = [filenames objectEnumerator];
 	NSString *filename;
 	
-	[[[self playerController] playListController] displayWindow:self];
+	[[[self firstPlayerController] playListController] displayWindow:self];
 	
 	// add files to playlist
 	while (filename = [e nextObject]) {
 		// Only add movie files
 		if ([self isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]) {
 			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:filename];
-			[[[self playerController] playListController] appendItem:item];
+			[[[self firstPlayerController] playListController] appendItem:item];
 		}
 	}
 	

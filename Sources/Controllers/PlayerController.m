@@ -124,7 +124,12 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	if (playListController)
 		return;
 	
-	[[AppController sharedController] registerPlayer:self];
+	NSUInteger playerNum = [[AppController sharedController] registerPlayer:self];
+	
+	// Load playlist controller for first player window
+	if (playerNum == 0)
+		[NSBundle loadNibNamed:@"Playlist" owner:self];
+	[self updatePlaylistButton:nil];
 	
 	// resize window
 	[playerWindow setContentSize:[playerWindow contentMinSize]];
@@ -154,10 +159,6 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	
 	// Pass buffer name to interface
 	[myPlayer setBufferName:[videoOpenGLView bufferName]];
-	
-	// Load playlist controller
-	[NSBundle loadNibNamed:@"Playlist" owner:self];
-	[self updatePlaylistButton:nil];
 	
 	// Keep track if playlist window is open
 	[[NSNotificationCenter defaultCenter] addObserver:self
@@ -398,7 +399,10 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 
 - (void) updatePlaylistButton:(NSNotification *)notification
 {
-	[playListButton setState:[[playListController window] isVisible]];
+	if (playListController)
+		[playListButton setState:[[playListController window] isVisible]];
+	else
+		[playListButton setEnabled:NO];
 }
 
 /************************************************************************************/
