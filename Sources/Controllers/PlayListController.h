@@ -18,7 +18,7 @@
 #define kDefaultTextSize		13
 #define kSmallerTextSize		11
 
-@class MovieInfo, ScrubbingBar;
+@class MovieInfo, ScrubbingBar, TimestampTextField;
 @protocol MovieInfoProvider;
 
 @interface PlayListController : NSObject <MPlayerInterfaceClientProtocol, MovieInfoProvider>
@@ -73,7 +73,7 @@
 	IBOutlet NSButton *nextButtonToolbar;
 	IBOutlet NSButton *prevButtonToolbar;
 	IBOutlet ScrubbingBar *scrubbingBarToolbar;
-	IBOutlet NSTextField *timeTextFieldToolbar;
+	IBOutlet TimestampTextField *timeTextFieldToolbar;
 	IBOutlet NSSlider *volumeSliderToolbar;
 	
 	MovieInfo *currentMovieInfo;

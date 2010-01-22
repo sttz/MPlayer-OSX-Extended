@@ -13,6 +13,8 @@
 #import "AppController.h"
 
 #import "ScrubbingBar.h"
+#import "TimestampTextField.h"
+
 #import "MovieInfo.h"
 #import "Preferences.h"
 #import "CocoaAdditions.h"
@@ -701,7 +703,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	if (!!(stateMask & MIStateStoppedMask) != !!(oldStateMask & MIStateStoppedMask)) {
 		// Stopped
 		if (stateMask & MIStateStoppedMask) {
-			[timeTextFieldToolbar setStringValue:@"00:00:00"];
+			[timeTextFieldToolbar setTimestamptWithCurrentTime:0 andTotalTime:0];
 		// Running
 		} else {
 			
@@ -748,8 +750,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	else
 		[scrubbingBarToolbar setDoubleValue:0];
 	
-	int iseconds = (int)seconds;
-	[timeTextFieldToolbar setStringValue:[NSString stringWithFormat:@"%02d:%02d:%02d", iseconds/3600,(iseconds%3600)/60,iseconds%60]];
+	[timeTextFieldToolbar setTimestamptWithCurrentTime:seconds andTotalTime:[[playerController movieInfo] length]];
 }
 /************************************************************************************/
 - (void)appShouldTerminate

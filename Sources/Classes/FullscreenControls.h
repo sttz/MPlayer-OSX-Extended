@@ -27,13 +27,15 @@
 
 #import "MPlayerInterface.h"
 
+@class TimestampTextField;
+
 @interface FullscreenControls : NSWindow <MPlayerInterfaceClientProtocol> {
 	
 	IBOutlet id fcWindow;
 	IBOutlet NSButton *fcPlayButton;
     IBOutlet id fcVolumeSlider;
 	IBOutlet id fcScrubbingBar;
-	IBOutlet id fcTimeTextField;
+	IBOutlet TimestampTextField *fcTimeTextField;
 	IBOutlet id fcAudioCycleButton;
 	IBOutlet id fcSubtitleCycleButton;
 	IBOutlet id fcFullscreenButton;

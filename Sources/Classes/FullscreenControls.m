@@ -27,6 +27,7 @@
 #import "Debug.h"
 
 #import "ScrubbingBar.h"
+#import "TimestampTextField.h"
 
 @implementation FullscreenControls
 @synthesize beingDragged;
@@ -172,7 +173,7 @@
 		// Stopped
 		if (stateMask & MIStateStoppedMask) {
 			// Update interface
-			[fcTimeTextField setStringValue:@"00:00:00"];
+			[fcTimeTextField setTimestamptWithCurrentTime:0 andTotalTime:0];
 			[fcFullscreenButton setEnabled:NO];
 			// Disable stream buttons
 			[fcAudioCycleButton setEnabled:NO];
@@ -221,8 +222,7 @@
 	else
 		[fcScrubbingBar setDoubleValue:0];
 	
-	int iseconds = (int)seconds;
-	[fcTimeTextField setStringValue:[NSString stringWithFormat:@"%02d:%02d:%02d", iseconds/3600,(iseconds%3600)/60,iseconds%60]];
+	[fcTimeTextField setTimestamptWithCurrentTime:seconds andTotalTime:[[playerController movieInfo] length]];
 }
 
 - (void) dealloc

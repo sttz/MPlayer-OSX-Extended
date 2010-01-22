@@ -22,6 +22,7 @@
 #import "VideoOpenGLView.h"
 #import "VolumeSlider.h"
 #import "ScrubbingBar.h"
+#import "TimestampTextField.h"
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED <= __MAC_OS_X_VERSION_10_5
 // used for preventing screensaver on leopard
@@ -1536,7 +1537,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		if (stateMask & MIStateStoppedMask) {
 			// Update interface
 			[playerWindow setTitle:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]];
-			[timeTextField setStringValue:@"00:00:00"];
+			[timeTextField setTimestamptWithCurrentTime:0 andTotalTime:0];
 			[fullscreenButton setEnabled:NO];
 			// Disable stream menus
 			[self clearStreamMenus];
@@ -1665,7 +1666,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	else
 		[scrubbingBar setDoubleValue:0];
 	
-	[timeTextField setStringValue:[NSString stringWithFormat:@"%02d:%02d:%02d", seconds/3600,(seconds%3600)/60,seconds%60]];
+	[timeTextField setTimestamptWithCurrentTime:seconds andTotalTime:[movieInfo length]];
 }
 
 /************************************************************************************/

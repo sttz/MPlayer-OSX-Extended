@@ -134,6 +134,7 @@
 		3A8AF31C10EE9697000961DE /* InspectorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A8AF31B10EE9697000961DE /* InspectorController.m */; };
 		3A8C18A910FA63510010942C /* MPlayerVideoRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A8C18A810FA63510010942C /* MPlayerVideoRenderer.m */; };
 		3A95F00B10BB28D80098BB38 /* iso-639-3.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A95F00A10BB28D80098BB38 /* iso-639-3.plist */; };
+		3A9FB0231109F87700EF2AC3 /* TimestampTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9FB0221109F87700EF2AC3 /* TimestampTextField.m */; };
 		3AB2120C0EABE74900ACA509 /* PlayerFullscreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB2120B0EABE74900ACA509 /* PlayerFullscreenWindow.m */; };
 		3ABF85420EBFA084001FE779 /* FullscreenControls.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABF85410EBFA084001FE779 /* FullscreenControls.m */; };
 		3ABF86580EBFAD06001FE779 /* FullscreenControlsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABF86570EBFAD06001FE779 /* FullscreenControlsView.m */; };
@@ -354,6 +355,8 @@
 		3A8C18A810FA63510010942C /* MPlayerVideoRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPlayerVideoRenderer.m; path = Sources/Classes/MPlayerVideoRenderer.m; sourceTree = "<group>"; };
 		3A95F00A10BB28D80098BB38 /* iso-639-3.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; name = "iso-639-3.plist"; path = "Resources/iso-639-3.plist"; sourceTree = "<group>"; };
 		3A96C9590E4E20B800B7B261 /* iso-639-3.tab */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "iso-639-3.tab"; path = "Resources/iso-639-3.tab"; sourceTree = "<group>"; };
+		3A9FB0211109F87700EF2AC3 /* TimestampTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimestampTextField.h; path = Sources/Classes/TimestampTextField.h; sourceTree = "<group>"; };
+		3A9FB0221109F87700EF2AC3 /* TimestampTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TimestampTextField.m; path = Sources/Classes/TimestampTextField.m; sourceTree = "<group>"; };
 		3AB2120A0EABE74900ACA509 /* PlayerFullscreenWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerFullscreenWindow.h; path = Sources/Classes/PlayerFullscreenWindow.h; sourceTree = "<group>"; };
 		3AB2120B0EABE74900ACA509 /* PlayerFullscreenWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlayerFullscreenWindow.m; path = Sources/Classes/PlayerFullscreenWindow.m; sourceTree = "<group>"; };
 		3ABF85400EBFA084001FE779 /* FullscreenControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FullscreenControls.h; path = Sources/Classes/FullscreenControls.h; sourceTree = "<group>"; };
@@ -609,6 +612,8 @@
 				3AFE25300EC0FA29009FFEC5 /* FullscreenControlsScrubbingBar.m */,
 				3A81882E10B2FB8300AB1E07 /* LanguageTokenFieldDelegate.h */,
 				3A81882F10B2FB8300AB1E07 /* LanguageTokenFieldDelegate.m */,
+				3A9FB0211109F87700EF2AC3 /* TimestampTextField.h */,
+				3A9FB0221109F87700EF2AC3 /* TimestampTextField.m */,
 			);
 			name = Interface;
 			sourceTree = "<group>";
@@ -994,6 +999,7 @@
 				3A86AE9B1107427600963C25 /* NSColor+BWAdditions.m in Sources */,
 				3A86AEA2110743F900963C25 /* BWAddRegularBottomBar.m in Sources */,
 				3A7A60B41108A26B00371851 /* PlaylistScrubbingBar.m in Sources */,
+				3A9FB0231109F87700EF2AC3 /* TimestampTextField.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -17,7 +17,7 @@
 #import "MPlayerInterface.h"
 #import "VideoOpenGLView.h"
 
-@class PlayListController, MenuController;
+@class PlayListController, MenuController, TimestampTextField;
 @protocol MovieInfoProvider;
 
 extern NSString* const MPEPlaybackStoppedNotification;
@@ -36,7 +36,7 @@ extern NSString* const MPEPlaybackStoppedNotification;
     IBOutlet id volumeSlider;
 	IBOutlet id volumeButton;
 	IBOutlet id scrubbingBar;
-	IBOutlet id timeTextField;
+	IBOutlet TimestampTextField *timeTextField;
 	IBOutlet NSButton *playListButton;
 	IBOutlet VideoOpenGLView *videoOpenGLView;
 	IBOutlet id fullscreenButton;
