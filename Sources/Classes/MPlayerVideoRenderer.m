@@ -196,6 +196,7 @@
 	image_buffer = malloc(image_width*image_height*image_bytes);
 	
 	CGLLockContext(ctx);
+	[context makeCurrentContext];
 	
 	// Setup gl
 	glEnable(GL_BLEND); 
@@ -256,6 +257,7 @@
 - (void)renderOpenGL {
 	
 	CGLLockContext(ctx);
+	[context makeCurrentContext];
 	
 	CVReturn error = kCVReturnSuccess;
 	CVOpenGLTextureRef texture;
@@ -297,6 +299,7 @@
 - (void)adaptSize {
 	
 	CGLLockContext(ctx);
+	[context makeCurrentContext];
 	
 	//Setup OpenGL Viewport
 	glViewport(0, 0, displayFrame.size.width, displayFrame.size.height);

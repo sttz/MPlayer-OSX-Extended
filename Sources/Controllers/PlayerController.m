@@ -124,8 +124,9 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	if (playListController)
 		return;
 	
+	[[AppController sharedController] registerPlayer:self];
+	
 	// resize window
-	//[playerWindow setContentMinSize:NSMakeSize(450, 78)]; // Temp workaround for IB always forgetting the min-size
 	[playerWindow setContentSize:[playerWindow contentMinSize]];
 	
 	// register for notification on clicking progress bar
@@ -1725,6 +1726,9 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		name: @"MIVideoViewClosed"
 		object: videoOpenGLView];
 	
+	if ([[AppController sharedController] playerController] == self)
+		[[AppController sharedController] setPlayerController:nil];
+	
 	[playerWindow close];
 }
 
@@ -1732,6 +1736,9 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 {
 	if (movieInfo && [[AppController sharedController] movieInfoProvider] != self)
 		[[AppController sharedController] setMovieInfoProvider:self];
+	
+	if ([[AppController sharedController] playerController] != self)
+		[[AppController sharedController] setPlayerController:self];
 }
 
 

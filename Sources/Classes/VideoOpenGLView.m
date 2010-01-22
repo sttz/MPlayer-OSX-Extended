@@ -16,6 +16,8 @@
 
 static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 
+static unsigned int videoViewId;
+
 @implementation VideoOpenGLView
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -26,7 +28,9 @@ static NSString *VVAnimationsDidEnd = @"VVAnimationsDidEnd";
 	zoomFactor = 1;
 	
 	// Choose buffer name and pass it on the way to mplayer
-	buffer_name = [[NSString stringWithFormat:@"mplayerosx-%i", [[NSProcessInfo processInfo] processIdentifier]] retain];
+	buffer_name = [[NSString stringWithFormat:@"mplayerosx-%i-%u", 
+					[[NSProcessInfo processInfo] processIdentifier], 
+					videoViewId++] retain];
 	
 	return self;
 }

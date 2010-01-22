@@ -28,7 +28,6 @@ PlayListController, MenuController, InspectorController, MovieInfo;
 {
     // controller outlets
 	IBOutlet MenuController *menuController;
-	IBOutlet PlayerController *playerController;
 	IBOutlet EqualizerController *equalizerController;
 	IBOutlet InspectorController *inspectorController;
 		
@@ -60,11 +59,15 @@ PlayListController, MenuController, InspectorController, MovieInfo;
 	IBOutlet PreferencesController2 *preferencesController;
 	NSDictionary *preferencesSpecs;
 	
+	// Player controllers
+	PlayerController *playerController;
+	NSMutableArray *players;
+	
 	id<MovieInfoProvider> movieInfoProvider;
 }
 
 @property (nonatomic,readonly) MenuController *menuController;
-@property (nonatomic,readonly) PlayerController *playerController;
+@property (nonatomic,retain) PlayerController *playerController;
 @property (nonatomic,readonly) PreferencesController2 *preferencesController;
 @property (nonatomic,readonly) PlayListController *playListController;
 @property (nonatomic,readonly) InspectorController *inspectorController;
@@ -80,8 +83,12 @@ PlayListController, MenuController, InspectorController, MovieInfo;
 - (NSUserDefaults *) preferences;
 - (NSArray *) preferencesRequiringRestart;
 
+- (void) registerPlayer:(PlayerController *)player;
+- (void) removePlayer:(PlayerController *)player;
+- (void) openNewPlayerWindow:(id)sender;
+
 - (void) restart;
-	
+
 // actions
 - (IBAction) openFile:(id)sender;
 - (IBAction) addToPlaylist:(id)sender;
@@ -113,7 +120,6 @@ PlayListController, MenuController, InspectorController, MovieInfo;
 //beta
 //- (NSString *) saveDialogForTypes:(NSArray *)typeList;
 - (NSString *) openDialogForFolders:(NSArray *)typeList;
-
 
 // delegate methods
 - (void) applicationDidBecomeActive:(NSNotification *)aNotification;

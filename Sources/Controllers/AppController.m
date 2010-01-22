@@ -35,9 +35,22 @@ static AppController *instance = nil;
 /************************************************************************************
  INITIALIZATION
  ************************************************************************************/
+- (id)init
+{
+	if ((self = [super init])) {
+		
+		players = [NSMutableArray new];
+		
+		// save instance for sharedController
+		instance = self;
+	}
+	return self;
+}
+
 - (void)dealloc
 {
 	[preferencesSpecs release];
+	[players dealloc];
 	
 	[super dealloc];
 }
@@ -58,9 +71,6 @@ static AppController *instance = nil;
 	// make sure initialization is not repeated
 	if (preferencesSpecs)
 		return;
-	
-	// save instance for sharedController
-	instance = self;
 	
 	// create preferences and register application factory presets
 	NSString *specFilePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"Preferences.plist"];
@@ -85,7 +95,7 @@ static AppController *instance = nil;
 
 - (PlayListController *) playListController
 {
-	return [playerController playListController];
+	return [[self playerController] playListController];
 }
 
 - (EqualizerController *)equalizerController
@@ -129,6 +139,23 @@ static AppController *instance = nil;
 	
 	[NSApp terminate:self];
 }
+/************************************************************************************/
+- (void) registerPlayer:(PlayerController *)player
+{
+	[players addObject:player];
+}
+
+- (void) removePlayer:(PlayerController *)player
+{
+	[players removeObject:player];
+}
+
+- (void) openNewPlayerWindow:(id)sender
+{
+	[NSBundle loadNibNamed:@"Player" owner:self];
+	[[players lastObject] displayWindow:self];
+}
+
 /************************************************************************************
  ACTIONS
  ************************************************************************************/
@@ -146,7 +173,7 @@ static AppController *instance = nil;
 		NSString *binary = [preferencesController identifierFromSelectionInView];
 		if (binary)
 			[[item prefs] setObject:binary forKey:MPESelectedBinary];
-		[playerController playItem:item];
+		[[self playerController] playItem:item];
 	}
 }
 //BETA//////////////////////////////////////////////////////////////////////////////////
@@ -170,7 +197,7 @@ static AppController *instance = nil;
 				forKey:MPEDefaultDirectory];
 		if ([self isDVD:theDir]) {
 			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:theDir];
-			[playerController playItem:item];
+			[[self playerController] playItem:item];
 		}
 		else {
 			NSRunAlertPanel(NSLocalizedString(@"Error",nil),
@@ -207,7 +234,7 @@ static AppController *instance = nil;
 					setObject:[[[thePanel filenames] objectAtIndex:i]
 					stringByDeletingLastPathComponent]
 					forKey:MPEDefaultDirectory];
-			[[playerController playListController] appendItem:item];
+			[[[self playerController] playListController] appendItem:item];
 		}
     }
 }
@@ -216,7 +243,7 @@ static AppController *instance = nil;
 {
 	if ([NSApp runModalForWindow:locationPanel] == 1) {
 		MovieInfo *item = [MovieInfo movieInfoWithPathToFile:[locationBox stringValue]];
-		[playerController playItem:item];
+		[[self playerController] playItem:item];
 	}
 }
 
@@ -229,7 +256,7 @@ static AppController *instance = nil;
 		NSString *encoding = nil;
 		if ([openSubtitleEncoding selectedTag] > -1)
 			encoding = [openSubtitleEncoding titleOfSelectedItem];
-		[playerController loadExternalSubtitleFile:theFile withEncoding:encoding];
+		[[self playerController] loadExternalSubtitleFile:theFile withEncoding:encoding];
 	}
 }
 
@@ -239,7 +266,7 @@ static AppController *instance = nil;
 {
 	if ([NSApp runModalForWindow:video_tsPanel] == 1) {
 		MovieInfo *item = [MovieInfo movieInfoWithPathToFile:[video_tsBox stringValue]];
-		[playerController playItem:item];
+		[[self playerController] playItem:item];
 	}
 }
 
@@ -321,8 +348,8 @@ static AppController *instance = nil;
 - (IBAction) closeWindow:(id)sender {
 	
 	if ([NSApp keyWindow]) {
-		if ([NSApp keyWindow] == playerWindow && [playerController isRunning])
-			[playerController stop:self];
+		if ([NSApp keyWindow] == playerWindow && [[self playerController] isRunning])
+			[[self playerController] stop:self];
 		else
 			[[NSApp keyWindow] performClose:self];
 	}
@@ -550,11 +577,11 @@ static AppController *instance = nil;
 		else if ([self isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]
 				 || [self isDVD:filename]) {
 			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:filename];
-			[playerController playItem:item];
+			[[self playerController] playItem:item];
 		// load subtitles while playing
-		} else if ([playerController isRunning]
+		} else if ([[self playerController] isRunning]
 				   && [self isExtension:[filename pathExtension] ofType:MP_DIALOG_SUBTITLES]) {
-			[playerController loadExternalSubtitleFile:filename withEncoding:nil];
+			[[self playerController] loadExternalSubtitleFile:filename withEncoding:nil];
 		}
 		return YES;
 	}
@@ -575,14 +602,14 @@ static AppController *instance = nil;
 	NSEnumerator *e = [filenames objectEnumerator];
 	NSString *filename;
 	
-	[[playerController playListController] displayWindow:self];
+	[[[self playerController] playListController] displayWindow:self];
 	
 	// add files to playlist
 	while (filename = [e nextObject]) {
 		// Only add movie files
 		if ([self isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]) {
 			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:filename];
-			[[playerController playListController] appendItem:item];
+			[[[self playerController] playListController] appendItem:item];
 		}
 	}
 	
@@ -594,7 +621,7 @@ static AppController *instance = nil;
 	NSString *url = [[event paramDescriptorForKeyword:keyDirectObject] stringValue];
 	
 	MovieInfo *item = [MovieInfo movieInfoWithPathToFile:url];
-	[playerController playItem:item];
+	[[self playerController] playItem:item];
 }
 /************************************************************************************/
 - (void) applicationDidBecomeActive:(NSNotification *)aNotification
@@ -639,7 +666,7 @@ static AppController *instance = nil;
 - (BOOL) validateMenuItem:(NSMenuItem *)aMenuItem
 {
 	if ([aMenuItem action] == @selector(openSubtitle:))
-		return [playerController isRunning];
+		return [[self playerController] isRunning];
 	return YES;
 }
 /******************************************************************************/
@@ -655,7 +682,7 @@ static AppController *instance = nil;
 	// enable apple remote support
 	appleRemote = [[AppleRemote alloc] init];
 	[appleRemote setClickCountEnabledButtons: kRemoteButtonPlay];
-	[appleRemote setDelegate: playerController];
+	[appleRemote setDelegate: [self playerController]];
 	
 	// set sparkle feed url for prereleases
 	[self setSparkleFeed];
@@ -665,7 +692,7 @@ static AppController *instance = nil;
 		return;
 	
 	// show main window if we won't be moved
-	[playerController displayWindow:self];
+	[[players lastObject] displayWindow:self];
 	
 	// only initialize fontconfig if not moving and player window is loaded
 	[preferencesController loadFonts];

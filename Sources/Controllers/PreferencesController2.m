@@ -565,10 +565,8 @@
 		}
 		
 		// Make binary the default if the user wished it
-		if ([binaryInstallDefaultCheckbox state] == NSOnState) {
-			NSLog(@"make binary new default: %@",identifier);
+		if ([binaryInstallDefaultCheckbox state] == NSOnState)
 			[PREFS setObject:identifier forKey:MPESelectedBinary];
-		}
 	}
 	
 	// Rescan binaries to load it
