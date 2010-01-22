@@ -63,6 +63,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	audioStreamId = -1;
 	subtitleDemuxStreamId = -1;
 	subtitleFileStreamId = -1;
+	subtitleVobStreamId = -1;
 	
 	// load images
 	playImageOn = [[NSImage imageNamed:@"play_button_on"] retain];
@@ -461,6 +462,8 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		[myPlayer sendCommand:[NSString stringWithFormat:@"set_property sub_demux %i",subtitleDemuxStreamId]];
 	if (subtitleFileStreamId >= 0)
 		[myPlayer sendCommand:[NSString stringWithFormat:@"set_property sub_file %i",subtitleFileStreamId]];
+	if (subtitleVobStreamId >= 0)
+		[myPlayer sendCommand:[NSString stringWithFormat:@"set_property sub_vob %i",subtitleVobStreamId]];
 }
 
 /************************************************************************************
@@ -1037,6 +1040,9 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 					type = SubtitleTypeDemux;
 					break;
 				case 1:
+					type = SubtitleTypeVob;
+					break;
+				case 2:
 					type = SubtitleTypeFile;
 					break;
 			}
@@ -1086,17 +1092,22 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	
 	if ([[props objectAtIndex:1] intValue] == -1)
 		[myPlayer sendCommands:[NSArray arrayWithObjects:@"set_property sub_source -1",
-				@"get_property sub_demux",@"get_property sub_file",
+				@"get_property sub_demux",@"get_property sub_file",@"get_property sub_vob",
 				nil]];
 	else if ([[props objectAtIndex:0] intValue] == SubtitleTypeDemux)
 		[myPlayer sendCommands:[NSArray arrayWithObjects:
 				[NSString stringWithFormat:@"set_property sub_demux %d",[[props objectAtIndex:1] intValue]],
 				@"get_property sub_demux",
 				nil]];
-	else
+	else if ([[props objectAtIndex:0] intValue] == SubtitleTypeFile)
 		[myPlayer sendCommands:[NSArray arrayWithObjects:
 				[NSString stringWithFormat:@"set_property sub_file %d",[[props objectAtIndex:1] intValue]],
 				@"get_property sub_file",
+				nil]];
+	else
+		[myPlayer sendCommands:[NSArray arrayWithObjects:
+				[NSString stringWithFormat:@"set_property sub_vob %d",[[props objectAtIndex:1] intValue]],
+				@"get_property sub_vob",
 				nil]];
 	
 }
@@ -1121,7 +1132,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	
 	[myPlayer sendCommands:[NSArray arrayWithObjects:
 							@"sub_select",
-							@"get_property sub_demux",@"get_property sub_file",
+							@"get_property sub_demux",@"get_property sub_file",@"get_property sub_vob",
 							nil]
 				   withOSD:(showOSD ? MISurpressCommandOutputNever : MISurpressCommandOutputConditionally)
 				andPausing:MICommandPausingKeep];
@@ -1217,14 +1228,16 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	
 	[[menuController->subtitleStreamMenu submenu] setStateOfAllItemsTo:NSOffState];
 	[[subtitleWindowItem submenu] setStateOfAllItemsTo:NSOffState];
-	subtitleDemuxStreamId = -1; subtitleFileStreamId = -1;
+	subtitleDemuxStreamId = -1; subtitleFileStreamId = -1; subtitleVobStreamId = -1;
 	
 	if (streamId != -1) {
 		
 		if (type == SubtitleTypeFile)
 			subtitleFileStreamId = streamId;
-		else
+		else if (type == SubtitleTypeDemux)
 			subtitleDemuxStreamId = streamId;
+		else
+			subtitleVobStreamId = streamId;
 		
 		int index = -1;
 		for (NSMenuItem *item in [[menuController->subtitleStreamMenu submenu] itemArray]) {
@@ -1491,7 +1504,8 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		// Request the selected streams
 		[myPlayer sendCommands:[NSArray arrayWithObjects:
 								@"get_property switch_video",@"get_property switch_audio",
-								@"get_property sub_demux",@"get_property sub_file",nil]];
+								@"get_property sub_demux",@"get_property sub_file",
+								@"get_property sub_vob",nil]];
 	}
 	
 	// Change of Play/Pause state
@@ -1602,14 +1616,17 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	if ([type intValue] == MPEStreamTypeVideo)
 		[self newVideoStreamId:[streamId intValue]];
 	
-	if ([type intValue] == MPEStreamTypeAudio)
+	else if ([type intValue] == MPEStreamTypeAudio)
 		[self newAudioStreamId:[streamId intValue]];
 	
-	if ([type intValue] == MPEStreamTypeSubtitleDemux)
+	else if ([type intValue] == MPEStreamTypeSubtitleDemux)
 		[self newSubtitleStreamId:[streamId intValue] forType:SubtitleTypeDemux];
 	
-	if ([type intValue] == MPEStreamTypeSubtitleFile)
+	else if ([type intValue] == MPEStreamTypeSubtitleFile)
 		[self newSubtitleStreamId:[streamId intValue] forType:SubtitleTypeFile];
+	
+	else if ([type intValue] == MPEStreamTypeSubtitleVob)
+		[self newSubtitleStreamId:[streamId intValue] forType:SubtitleTypeVob];
 }
 
 /************************************************************************************/

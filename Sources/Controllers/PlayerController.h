@@ -62,6 +62,7 @@ extern NSString* const MPEPlaybackStoppedNotification;
 	int audioStreamId;
 	int subtitleDemuxStreamId;
 	int subtitleFileStreamId;
+	int subtitleVobStreamId;
 	
 	// preferences
 	int fullscreenDeviceId;

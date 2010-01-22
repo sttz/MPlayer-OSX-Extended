@@ -173,6 +173,8 @@ externalSubtitles, captureStats, playbackStats, player;
 		subtitle = [NSMutableDictionary new];
 	if (!subfile)
 		subfile  = [NSMutableDictionary new];
+	if (!subvob)
+		subvob  = [NSMutableDictionary new];
 	if (!chapter)
 		chapter  = [NSMutableDictionary new];
 	
@@ -215,6 +217,7 @@ externalSubtitles, captureStats, playbackStats, player;
 	[audio release];
 	[subtitle release];
 	[subfile release];
+	[subvob release];
 	[chapter release];
 	
 	[externalSubtitles release];
@@ -514,7 +517,7 @@ externalSubtitles, captureStats, playbackStats, player;
 -(unsigned int)subtitleCountForType:(SubtitleType)type {
 	
 	if (type == SubtitleTypeAll)
-		return ([subtitle count] + [subfile count]);
+		return ([subtitle count] + [subfile count] + [subvob count]);
 	else
 		return [[self subDictForType:type] count];
 }
@@ -543,6 +546,8 @@ externalSubtitles, captureStats, playbackStats, player;
 		return subtitle;
 	else if (type == SubtitleTypeFile)
 		return subfile;
+	else if (type == SubtitleTypeVob)
+		return subvob;
 	else
 		return nil;
 }
@@ -592,6 +597,7 @@ static NSString* const MPEMovieInfoVideoStreamsKey         = @"MPEMovieInfoVideo
 static NSString* const MPEMovieInfoAudioStreamsKey         = @"MPEMovieInfoAudioStreams";
 static NSString* const MPEMovieInfoSubtitleDemuxStreamsKey = @"MPEMovieInfoSubtitleDemuxStreams";
 static NSString* const MPEMovieInfoSubtitleFileStreamsKey  = @"MPEMovieInfoSubtitleFileStreams";
+static NSString* const MPEMovieInfoSubtitleVobStreamsKey   = @"MPEMovieInfoSubtitleVobStreamsKey";
 static NSString* const MPEMovieInfoChapterStreamsKey       = @"MPEMovieInfoChapterStreams";
 static NSString* const MPEMovieInfoExternalSubtitlesKey    = @"MPEMovieInfoExternalSubtitles";
 static NSString* const MPEMovieInfoLocalSettingsKey        = @"MPEMovieInfoLocalSettings";
@@ -638,6 +644,8 @@ static NSString* const MPEMovieInfoMovieLengthKey          = @"MPEMovieInfoMovie
 		[dict setObject:subtitle forKey:MPEMovieInfoSubtitleDemuxStreamsKey];
 	if ([subfile count] > 0)
 		[dict setObject:subfile forKey:MPEMovieInfoSubtitleFileStreamsKey];
+	if ([subvob count] > 0)
+		[dict setObject:subvob forKey:MPEMovieInfoSubtitleVobStreamsKey];
 	if ([chapter count] > 0)
 		[dict setObject:chapter forKey:MPEMovieInfoChapterStreamsKey];
 	
@@ -701,6 +709,7 @@ static NSString* const MPEMovieInfoMovieLengthKey          = @"MPEMovieInfoMovie
 	audio    = [[dict mutableDictionaryForKey:MPEMovieInfoAudioStreamsKey] retain];
 	subtitle = [[dict mutableDictionaryForKey:MPEMovieInfoSubtitleDemuxStreamsKey] retain];
 	subfile  = [[dict mutableDictionaryForKey:MPEMovieInfoSubtitleFileStreamsKey] retain];
+	subvob   = [[dict mutableDictionaryForKey:MPEMovieInfoSubtitleVobStreamsKey] retain];
 	chapter  = [[dict mutableDictionaryForKey:MPEMovieInfoChapterStreamsKey] retain];
 	
 	externalSubtitles = [[dict mutableArrayForKey:MPEMovieInfoExternalSubtitlesKey] retain];

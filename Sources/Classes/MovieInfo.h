@@ -32,6 +32,7 @@ enum {
 	SubtitleTypeAll   = -1,
 	SubtitleTypeDemux = 0,
 	SubtitleTypeFile  = 1,
+	SubtitleTypeVob   = 2,
 };
 typedef NSInteger SubtitleType;
 
@@ -39,7 +40,8 @@ enum {
 	MPEStreamTypeVideo,
 	MPEStreamTypeAudio,
 	MPEStreamTypeSubtitleDemux,
-	MPEStreamTypeSubtitleFile
+	MPEStreamTypeSubtitleFile,
+	MPEStreamTypeSubtitleVob,
 };
 typedef NSUInteger MPEStreamType;
 
@@ -60,6 +62,8 @@ typedef NSUInteger MPEStreamType;
 	NSMutableDictionary *subtitle;
 	// Subtitle file streams
 	NSMutableDictionary *subfile;
+	// Subtitle vob streams
+	NSMutableDictionary *subvob;
 	// Chapter Streams
 	NSMutableDictionary *chapter;
 	

@@ -1616,6 +1616,11 @@ static NSArray* statusNames;
 				streamType = MPEStreamTypeSubtitleFile;
 			}
 			
+			if ([idName isEqualToString:@"sub_vob"]) {
+				isStreamSelection = YES;
+				streamType = MPEStreamTypeSubtitleVob;
+			}
+			
 			if (isStreamSelection) {
 				[self notifyClientsWithSelector:@selector(interface:hasSelectedStream:ofType:)
 									  andObject:[NSNumber numberWithInt:[idValue intValue]]
@@ -1675,6 +1680,16 @@ static NSArray* statusNames;
 				if ([streamInfoName isEqualToString:@"LANG"]) {
 					
 					[playingItem setSubtitleStreamLanguage:streamInfoValue forId:streamId andType:SubtitleTypeDemux];
+					continue;
+				}
+			}
+			
+			// subtitle vob streams
+			if ([streamType isEqualToString:@"VSID"]) {
+				
+				if ([streamInfoName isEqualToString:@"LANG"]) {
+					
+					[playingItem setSubtitleStreamLanguage:streamInfoValue forId:streamId andType:SubtitleTypeVob];
 					continue;
 				}
 			}
@@ -1825,6 +1840,13 @@ static NSArray* statusNames;
 			
 			if ([idName isEqualToString:@"FILE_SUB_FILENAME"]) {
 				[playingItem setSubtitleStreamName:[idValue lastPathComponent] forId:subtitleFileId andType:SubtitleTypeFile];
+				continue;
+			}
+			
+			// subtitle vob streams
+			if ([idName isEqualToString:@"VOBSUB_ID"]) {
+				[playingItem newSubtitleStream:[idValue intValue] forType:SubtitleTypeVob];
+				streamsHaveChanged = YES;
 				continue;
 			}
 			
