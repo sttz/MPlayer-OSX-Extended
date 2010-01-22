@@ -95,6 +95,7 @@
 - (NSString *) pathForBinaryWithIdentifier:(NSString *)identifier;
 - (id) objectForInfoKey:(NSString *)keyName ofBinary:(NSString *)identifier;
 
+- (void) playersHaveChanged:(NSNotification *)notification;
 - (IBAction) requireRestart:(id)sender;
 - (IBAction) restartPlayback:(id)sender;
 

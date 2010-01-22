@@ -118,7 +118,15 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(requireRestart:)
 												 name:MPEPlaybackStoppedNotification
-											   object:[[AppController sharedController] playerController]];
+											   object:[[AppController sharedController] firstPlayerController]];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(playersHaveChanged:)
+												 name:MPENewPlayerOpenedNotification
+											   object:[AppController sharedController]];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(playersHaveChanged:)
+												 name:MPEPlayerClosedNotification
+											   object:[AppController sharedController]];
 }
 
 - (void) dealloc
@@ -133,6 +141,22 @@
 	[viewTags release];
 	
 	[super dealloc];
+}
+
+- (void) playersHaveChanged:(NSNotification *)notification
+{
+	PlayerController *player = [[notification userInfo] objectForKey:MPEPlayerNotificationPlayerControllerKey];
+	
+	if ([notification name] == MPENewPlayerOpenedNotification) {
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(requireRestart:)
+													 name:MPEPlaybackStoppedNotification
+												   object:player];
+	} else {
+		[[NSNotificationCenter defaultCenter] removeObserver:self
+														name:MPEPlaybackStoppedNotification
+													  object:player];
+	}
 }
 
 - (IBAction) switchView:(NSToolbarItem*)sender
@@ -217,7 +241,14 @@
  */
 - (IBAction) requireRestart:(id)sender
 {
-	BOOL restart = [[[AppController sharedController] playerController] changesRequireRestart];
+	BOOL restart = NO;
+	
+	for (PlayerController *player in [[AppController sharedController] players]) {
+		if ([player changesRequireRestart]) {
+			restart = YES;
+			break;
+		}
+	}
 	
 	if (restart	&& !restartIsRequired) {
 		[[[self window] contentView] addSubview:restartView];
@@ -236,7 +267,11 @@
 	[restartView removeFromSuperview];
 	[self loadView:currentViewName];
 	
-	[[[AppController sharedController] playerController] applyChangesWithRestart:YES];
+	for (PlayerController *player in [[AppController sharedController] players]) {
+		if ([player changesRequireRestart])
+			[player applyChangesWithRestart:YES];
+	}
+	
 	restartIsRequired = NO;
 }
 
@@ -699,7 +734,7 @@
 		[cacheStatusIndicator setUsesThreadedAnimation:YES];
 		[cacheStatusIndicator startAnimation:self];
 		[NSApp beginSheet:cacheStatusWindow
-		   modalForWindow:[[[AppController sharedController] playerController] playerWindow] 
+		   modalForWindow:[[[AppController sharedController] firstPlayerController] playerWindow] 
 			modalDelegate:nil 
 		   didEndSelector:nil 
 			  contextInfo:nil];

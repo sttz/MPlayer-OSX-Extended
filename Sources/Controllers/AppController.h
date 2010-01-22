@@ -19,6 +19,10 @@
 #define MP_DIALOG_VIDEO		2
 #define MP_DIALOG_SUBTITLES 3
 
+extern NSString* const MPENewPlayerOpenedNotification;
+extern NSString* const MPEPlayerClosedNotification;
+extern NSString* const MPEPlayerNotificationPlayerControllerKey;
+
 @class AppleRemote, PlayerController, PreferencesController2, EqualizerController,
 PlayListController, MenuController, InspectorController, MovieInfo;
 
@@ -72,6 +76,8 @@ PlayListController, MenuController, InspectorController, MovieInfo;
 @property (nonatomic,readonly) PlayListController *playListController;
 @property (nonatomic,readonly) InspectorController *inspectorController;
 - (EqualizerController *)equalizerController;
+
+@property (nonatomic,readonly) NSArray *players;
 
 @property (readonly) NSMenu *aspectMenu;
 

@@ -27,8 +27,12 @@
 #import "PFMoveApplication.h"
 #import "RegexKitLite.h"
 
+NSString* const MPENewPlayerOpenedNotification           = @"MPENewPlayerOpenedNotification";
+NSString* const MPEPlayerClosedNotification              = @"MPEPlayerClosedNotification";
+NSString* const MPEPlayerNotificationPlayerControllerKey = @"MPEPlayerNotificationPlayerControllerKey";
+
 @implementation AppController
-@synthesize playerController, preferencesController, menuController, aspectMenu, movieInfoProvider;
+@synthesize playerController, preferencesController, menuController, aspectMenu, movieInfoProvider, players;
 
 static AppController *instance = nil;
 
@@ -143,13 +147,30 @@ static AppController *instance = nil;
 - (NSUInteger) registerPlayer:(PlayerController *)player
 {
 	[players addObject:player];
+	
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
+						  player,MPEPlayerNotificationPlayerControllerKey,
+						  nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:MPENewPlayerOpenedNotification
+														object:self
+													  userInfo:info];
+	
 	return ([players count]-1);
 }
 
 - (void) removePlayer:(PlayerController *)player
 {
-	if ([players indexOfObject:player] != 0)
-		[players removeObject:player];
+	if ([players indexOfObject:player] == 0)
+		return;
+	
+	[players removeObject:player];
+	
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
+						  player,MPEPlayerNotificationPlayerControllerKey,
+						  nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:MPEPlayerClosedNotification
+														object:self
+													  userInfo:info];
 }
 
 - (void) openNewPlayerWindow:(id)sender
