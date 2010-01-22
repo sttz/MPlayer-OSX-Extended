@@ -33,6 +33,8 @@ typedef NSUInteger MPETimestampDisplayType;
 
 @interface TimestampTextField : NSTextField {
 	MPETimestampDisplayType displayType;
+	float lastCurrentTime;
+	float lastTotalTime;
 }
 @property (nonatomic) MPETimestampDisplayType displayType;
 - (void)setTimestamptWithCurrentTime:(float)currentTime andTotalTime:(float)totalTime;

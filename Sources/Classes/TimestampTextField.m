@@ -28,19 +28,19 @@
 @implementation TimestampTextField
 @synthesize displayType;
 
-- (void)setTimestamptWithCurrentTime:(float)currentTime andTotalTime:(float)totalTime
+- (void)updateTimestamp
 {
-	if (currentTime == 0) {
+	if (lastCurrentTime == 0) {
 		[self setStringValue:@"00:00:00"];
 		return;
 	}
 	
-	if (displayType == MPETimestampRemaining && (totalTime == 0 || currentTime > totalTime)) {
+	if (displayType == MPETimestampRemaining && (lastTotalTime == 0 || lastCurrentTime > lastTotalTime)) {
 		[self setStringValue:@"-xx:xx:xx"];
 		return;
 	}
 	
-	if (displayType == MPETimestampTotal && totalTime == 0) {
+	if (displayType == MPETimestampTotal && lastTotalTime == 0) {
 		[self setStringValue:@"xx:xx:xx"];
 		return;
 	}
@@ -48,11 +48,11 @@
 	float seconds;
 	
 	if (displayType == MPETimestampRemaining)
-		seconds = currentTime - totalTime;
+		seconds = lastCurrentTime - lastTotalTime;
 	else if (displayType == MPETimestampTotal)
-		seconds = totalTime;
+		seconds = lastTotalTime;
 	else
-		seconds = currentTime;
+		seconds = lastCurrentTime;
 	
 	int iseconds = (int)seconds;
 	
@@ -65,11 +65,20 @@
 	[self setStringValue:timestamp];
 }
 
+- (void)setTimestamptWithCurrentTime:(float)currentTime andTotalTime:(float)totalTime
+{
+	lastCurrentTime = currentTime;
+	lastTotalTime = totalTime;
+	[self updateTimestamp];
+}
+
 - (void)mouseDown:(NSEvent *)theEvent
 {
 	displayType++;
 	if (displayType > MPETimestampTotal)
 		displayType = 0;
+	
+	[self updateTimestamp];
 	
 	[super mouseDown:theEvent];
 }
