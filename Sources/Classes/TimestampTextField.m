@@ -58,7 +58,7 @@
 	
 	NSString *timestamp = [NSString stringWithFormat:@"%0*.0f:%02d:%02d", 
 						   seconds < 0 ? 3 : 2,
-						   seconds/3600,
+						   floorf(fabsf(seconds)/3600) * (seconds >= 0 ? 1 : -1),
 						   (abs(iseconds)%3600)/60,
 						   (abs(iseconds)%60)];
 	
