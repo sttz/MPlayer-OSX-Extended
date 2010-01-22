@@ -103,6 +103,7 @@ PlayListController, MenuController, InspectorController, MovieInfo;
 - (NSArray *) getExtensionsForType:(int)type;
 - (NSArray *) typeExtensionsForName:(NSString *)typeName;
 - (BOOL) isExtension:(NSString *)theExt ofType:(int)type;
+- (BOOL) isDVD:(NSString *)path;
 
 // misc methods
 - (NSString *) openDialogForType:(int)type;

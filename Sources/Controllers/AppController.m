@@ -25,6 +25,7 @@
 
 #import "AppleRemote.h"
 #import "PFMoveApplication.h"
+#import "RegexKitLite.h"
 
 @implementation AppController
 @synthesize playerController, preferencesController, menuController, aspectMenu, movieInfoProvider;
@@ -167,7 +168,7 @@ static AppController *instance = nil;
 		[[NSUserDefaults standardUserDefaults]
 				setObject:[theDir stringByDeletingLastPathComponent]
 				forKey:MPEDefaultDirectory];
-		if ([[theDir lastPathComponent] isEqualToString:@"VIDEO_TS"]) {
+		if ([self isDVD:theDir]) {
 			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:theDir];
 			[playerController playItem:item];
 		}
@@ -373,6 +374,22 @@ static AppController *instance = nil;
 	return NO;
 }
 
+// return YES if the path is a dvd-folder (either named "VIDEO_TS" or containing a "VIDEO_TS.IFO" file)
+- (BOOL) isDVD:(NSString *)path
+{
+	BOOL isDirectory;
+	if (![[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDirectory] || !isDirectory)
+		return NO;
+	
+	if ([[path lastPathComponent] isMatchedByRegex:@"(?i)^VIDEO_TS$"])
+		return YES;
+	
+	if ([[NSFileManager defaultManager] fileExistsAtPath:[path stringByAppendingPathComponent:@"VIDEO_TS.IFO"]])
+		return YES;
+	
+	return NO;
+}
+
 /************************************************************************************
  MISC METHODS
  ************************************************************************************/
@@ -530,7 +547,8 @@ static AppController *instance = nil;
 		if ([[filename pathExtension] isEqualToString:@"mpBinaries"])
 			[preferencesController installBinary:filename];
 		// create an item from it and play it
-		else if ([self isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]) {
+		else if ([self isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]
+				 || [self isDVD:filename]) {
 			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:filename];
 			[playerController playItem:item];
 		// load subtitles while playing

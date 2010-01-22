@@ -233,6 +233,9 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 								 ofType:MP_DIALOG_MEDIA])
 						return NSDragOperationCopy; //its a movie file, good
 					
+					if ([[AppController sharedController] isDVD:[propertyList objectAtIndex:i]])
+						return NSDragOperationCopy; // video_ts folder
+					
 					if ([self isRunning] && [[AppController sharedController] 
 												isExtension:[[propertyList objectAtIndex:i] pathExtension] 
 													 ofType:MP_DIALOG_SUBTITLES])
@@ -277,7 +280,8 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 			{
 				// Open if a media file or if forced with the command key
 				if ([sender draggingSourceOperationMask] == NSDragOperationGeneric || 
-						[[AppController sharedController] isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]) {
+						[[AppController sharedController] isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA] ||
+						[[AppController sharedController] isDVD:filename]) {
 					// create an item from it and play it
 					MovieInfo *item = [MovieInfo movieInfoWithPathToFile:filename];
 					[self playItem:item];
