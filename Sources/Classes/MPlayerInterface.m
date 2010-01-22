@@ -1745,7 +1745,7 @@ static NSArray* statusNames;
 			
 			// filename
 			if ([idName isEqualToString:@"FILENAME"]) {
-				[playingItem setFilename:idValue];
+				// ignore
 				continue;
 			}
 			
