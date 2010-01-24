@@ -125,6 +125,7 @@ static NSArray* statusNames;
 						   MPEAudioDelay,
 						   MPESubtitleDelay,
 						   MPEOSDLevel,
+						   MPEAudioEqualizerValues,
 						   MPEVideoEqualizerValues,
 						   MPEDropFrames,
 						   MPESubtitleScale,
@@ -835,6 +836,10 @@ static NSArray* statusNames;
 	} else if ([keyPath isEqualToString:MPEVideoEqualizerValues]) {
 		[self applyVideoEqualizer];
 	
+	} else if ([keyPath isEqualToString:MPEAudioEqualizerValues]) {
+		[self sendCommand:[NSString stringWithFormat:@"af_eq_set_bands %@",
+						   [EqualizerController equalizerFilterValues]]];
+		
 	} else if ([keyPath isEqualToString:MPELoopMovie]) {
 		[self sendCommand:[NSString stringWithFormat:@"set_property loop %d",((int)[[playingItem prefs] boolForKey:MPELoopMovie] - 1)]];
 	
