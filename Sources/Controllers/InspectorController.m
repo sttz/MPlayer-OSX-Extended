@@ -150,10 +150,9 @@ static const float const collapsedSectionHeight = 20.0f;
 	for (NSString *name in sectionOrder) {
 		NSView *section = [views objectForKey:name];
 		float height = [section frame].size.height;
-		float width  = [section frame].size.width;
 		
 		[section setFrame:NSMakeRect(0, viewHeight - topOffset - height, 
-									 width, height)];
+									 [[section superview] frame].size.width, height)];
 		
 		if (section == sender) {
 			float newOriginY = [[scroller contentView] bounds].origin.y + (height - lastSectionHeight);
