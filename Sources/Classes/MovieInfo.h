@@ -45,7 +45,7 @@ enum {
 };
 typedef NSUInteger MPEStreamType;
 
-@class PlayerController;
+@class PlayerController, LocalUserDefaults;
 
 @interface MovieInfo : NSObject {
 	
@@ -71,7 +71,7 @@ typedef NSUInteger MPEStreamType;
 	NSMutableArray *externalSubtitles;
 	
 	// Local settings
-	NSMutableDictionary *prefs;
+	LocalUserDefaults *prefs;
 	
 	// name
 	NSString *title;
@@ -160,7 +160,7 @@ typedef NSUInteger MPEStreamType;
 @property (nonatomic) unsigned int audioChannels; 
 
 // local preferences
-@property (nonatomic, readonly) NSMutableDictionary *prefs;
+@property (nonatomic, readonly) LocalUserDefaults *prefs;
 
 // playback statistics
 @property (nonatomic) BOOL captureStats;

@@ -2,17 +2,18 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">10B504</string>
-		<string key="IBDocument.InterfaceBuilderVersion">732</string>
-		<string key="IBDocument.AppKitVersion">1038.2</string>
-		<string key="IBDocument.HIToolboxVersion">437.00</string>
+		<string key="IBDocument.SystemVersion">10C540</string>
+		<string key="IBDocument.InterfaceBuilderVersion">740</string>
+		<string key="IBDocument.AppKitVersion">1038.25</string>
+		<string key="IBDocument.HIToolboxVersion">458.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">732</string>
+			<string key="NS.object.0">740</string>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="70"/>
+			<integer value="71"/>
+			<integer value="275"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -39,6 +40,11 @@
 				<string key="NSClassName">NSApplication</string>
 			</object>
 			<object class="NSUserDefaultsController" id="52681469">
+				<object class="NSMutableArray" key="NSDeclaredKeys">
+					<bool key="EncodedWithXMLCoder">YES</bool>
+					<string>values.MPEAudioEqualizerSelectedPreset</string>
+					<string>MPEAudioEqualizerSelectedPreset</string>
+				</object>
 				<bool key="NSSharedInstance">YES</bool>
 			</object>
 			<object class="NSCustomObject" id="840004156">
@@ -369,6 +375,9 @@
 					<string>MPEVideoEqualizerGamma</string>
 					<string>MPEVideoEqualizerHue</string>
 					<string>MPEVideoEqualizerSaturation</string>
+					<object class="NSMutableString">
+						<characters key="NS.bytes">currentMovieInfo.prefs.MPEVideoEqualizerValues.MPEVideoEqualizerBrightness</characters>
+					</object>
 				</object>
 				<bool key="NSEditable">YES</bool>
 				<object class="_NSManagedProxy" key="_NSManagedProxy"/>
@@ -392,7 +401,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{63, 128}, {19, 160}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSSliderCell" key="NSCell" id="828637887">
 								<int key="NSCellFlags">67239424</int>
@@ -414,7 +422,6 @@
 							<int key="NSvFlags">12</int>
 							<string key="NSFrame">{{12, 304}, {364, 5}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<string key="NSOffsets">{0, 0}</string>
 							<object class="NSTextFieldCell" key="NSTitleCell">
 								<int key="NSCellFlags">67239424</int>
@@ -437,7 +444,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{127, 320}, {132, 14}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="1036822327">
 								<int key="NSCellFlags">68288064</int>
@@ -454,7 +460,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{20, 318}, {102, 17}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="487784963">
 								<int key="NSCellFlags">67239424</int>
@@ -475,7 +480,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{94, 128}, {19, 160}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSSliderCell" key="NSCell" id="610734464">
 								<int key="NSCellFlags">67239424</int>
@@ -497,7 +501,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{125, 128}, {19, 160}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSSliderCell" key="NSCell" id="939688539">
 								<int key="NSCellFlags">67239424</int>
@@ -519,7 +522,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{156, 128}, {19, 160}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSSliderCell" key="NSCell" id="951930880">
 								<int key="NSCellFlags">67239424</int>
@@ -541,7 +543,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{187, 128}, {19, 160}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSSliderCell" key="NSCell" id="295138019">
 								<int key="NSCellFlags">67239424</int>
@@ -563,7 +564,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{218, 128}, {19, 160}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSSliderCell" key="NSCell" id="924336198">
 								<int key="NSCellFlags">67239424</int>
@@ -585,7 +585,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{249, 128}, {19, 160}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSSliderCell" key="NSCell" id="867664196">
 								<int key="NSCellFlags">67239424</int>
@@ -607,7 +606,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{280, 128}, {19, 160}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSSliderCell" key="NSCell" id="323226421">
 								<int key="NSCellFlags">67239424</int>
@@ -629,7 +627,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{311, 128}, {19, 160}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSSliderCell" key="NSCell" id="913444829">
 								<int key="NSCellFlags">67239424</int>
@@ -651,7 +648,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{342, 128}, {19, 160}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSSliderCell" key="NSCell" id="481631712">
 								<int key="NSCellFlags">67239424</int>
@@ -673,7 +669,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{24, 277}, {34, 11}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="1054833450">
 								<int key="NSCellFlags">68288064</int>
@@ -694,7 +689,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{25, 129}, {33, 11}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="210124737">
 								<int key="NSCellFlags">68288064</int>
@@ -711,7 +705,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{17, 203}, {41, 11}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="1028960560">
 								<int key="NSCellFlags">68288064</int>
@@ -728,7 +721,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{55, 113}, {33, 11}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="117914512">
 								<int key="NSCellFlags">68288064</int>
@@ -745,7 +737,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{87, 113}, {33, 11}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="25164771">
 								<int key="NSCellFlags">68288064</int>
@@ -762,7 +753,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{114, 113}, {40, 11}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="297907898">
 								<int key="NSCellFlags">68288064</int>
@@ -779,7 +769,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{145, 113}, {40, 11}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="852080321">
 								<int key="NSCellFlags">68288064</int>
@@ -796,7 +785,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{176, 113}, {40, 11}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="597268272">
 								<int key="NSCellFlags">68288064</int>
@@ -813,7 +801,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{207, 113}, {40, 11}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="840711419">
 								<int key="NSCellFlags">68288064</int>
@@ -830,7 +817,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{238, 113}, {40, 11}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="708824534">
 								<int key="NSCellFlags">68288064</int>
@@ -847,7 +833,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{269, 113}, {40, 11}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="434226806">
 								<int key="NSCellFlags">68288064</int>
@@ -864,7 +849,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{300, 113}, {40, 11}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="659503510">
 								<int key="NSCellFlags">68288064</int>
@@ -881,7 +865,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{331, 113}, {40, 11}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="532411882">
 								<int key="NSCellFlags">68288064</int>
@@ -898,7 +881,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{17, 79}, {41, 14}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="390652797">
 								<int key="NSCellFlags">68288064</int>
@@ -915,7 +897,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{60, 74}, {250, 22}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSPopUpButtonCell" key="NSCell" id="547329847">
 								<int key="NSCellFlags">-2076049856</int>
@@ -989,7 +970,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{315, 75}, {23, 22}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="947495981">
 								<int key="NSCellFlags">-2080244224</int>
@@ -1014,7 +994,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{337, 75}, {23, 22}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="586218775">
 								<int key="NSCellFlags">-2080244224</int>
@@ -1039,7 +1018,6 @@
 							<int key="NSvFlags">12</int>
 							<string key="NSFrame">{{12, 54}, {364, 5}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<string key="NSOffsets">{0, 0}</string>
 							<object class="NSTextFieldCell" key="NSTitleCell">
 								<int key="NSCellFlags">67239424</int>
@@ -1062,7 +1040,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{204, 12}, {162, 32}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="831324711">
 								<int key="NSCellFlags">604110336</int>
@@ -1083,7 +1060,6 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{63, 22}, {142, 14}}</string>
 							<reference key="NSSuperview" ref="933362331"/>
-							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="710608243">
 								<int key="NSCellFlags">68288064</int>
@@ -1098,7 +1074,6 @@
 					</object>
 					<string key="NSFrameSize">{388, 348}</string>
 					<reference key="NSSuperview"/>
-					<reference key="NSWindow"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
@@ -1118,6 +1093,7 @@
 					<string>MPEAudioEqualizer4kHz</string>
 					<string>MPEAudioEqualizer8kHz</string>
 					<string>MPEAudioEqualizer16kHz</string>
+					<string>movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizer31Hz</string>
 				</object>
 				<bool key="NSEditable">YES</bool>
 				<object class="_NSManagedProxy" key="_NSManagedProxy"/>
@@ -1181,102 +1157,6 @@
 			<object class="NSMutableArray" key="connectionRecords">
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: values.MPEVideoEqualizerEnabled</string>
-						<reference key="source" ref="285436030"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="285436030"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled: values.MPEVideoEqualizerEnabled</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">values.MPEVideoEqualizerEnabled</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">100</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: values.MPEVideoEqualizerEnabled</string>
-						<reference key="source" ref="526145369"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="526145369"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled: values.MPEVideoEqualizerEnabled</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">values.MPEVideoEqualizerEnabled</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">104</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: values.MPEVideoEqualizerEnabled</string>
-						<reference key="source" ref="758574719"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="758574719"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled: values.MPEVideoEqualizerEnabled</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">values.MPEVideoEqualizerEnabled</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">107</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: values.MPEVideoEqualizerEnabled</string>
-						<reference key="source" ref="1029629842"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="1029629842"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled: values.MPEVideoEqualizerEnabled</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">values.MPEVideoEqualizerEnabled</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">111</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: values.MPEVideoEqualizerEnabled</string>
-						<reference key="source" ref="946318545"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="946318545"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled: values.MPEVideoEqualizerEnabled</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">values.MPEVideoEqualizerEnabled</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">115</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: values.MPEVideoEqualizerEnabled</string>
-						<reference key="source" ref="791185659"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="791185659"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled: values.MPEVideoEqualizerEnabled</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">values.MPEVideoEqualizerEnabled</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">125</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">videoEqualizerWindow</string>
 						<reference key="source" ref="840004156"/>
@@ -1302,122 +1182,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.MPEVideoEqualizerContrast</string>
-						<reference key="source" ref="526145369"/>
-						<reference key="destination" ref="1039088765"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="526145369"/>
-							<reference key="NSDestination" ref="1039088765"/>
-							<string key="NSLabel">value: selection.MPEVideoEqualizerContrast</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.MPEVideoEqualizerContrast</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">250</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.MPEVideoEqualizerGamma</string>
-						<reference key="source" ref="758574719"/>
-						<reference key="destination" ref="1039088765"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="758574719"/>
-							<reference key="NSDestination" ref="1039088765"/>
-							<string key="NSLabel">value: selection.MPEVideoEqualizerGamma</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.MPEVideoEqualizerGamma</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">252</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.MPEVideoEqualizerHue</string>
-						<reference key="source" ref="1029629842"/>
-						<reference key="destination" ref="1039088765"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="1029629842"/>
-							<reference key="NSDestination" ref="1039088765"/>
-							<string key="NSLabel">value: selection.MPEVideoEqualizerHue</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.MPEVideoEqualizerHue</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">255</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.MPEVideoEqualizerSaturation</string>
-						<reference key="source" ref="946318545"/>
-						<reference key="destination" ref="1039088765"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="946318545"/>
-							<reference key="NSDestination" ref="1039088765"/>
-							<string key="NSLabel">value: selection.MPEVideoEqualizerSaturation</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.MPEVideoEqualizerSaturation</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">257</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: values.MPEVideoEqualizerEnabled</string>
-						<reference key="source" ref="33480127"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="33480127"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">value: values.MPEVideoEqualizerEnabled</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">values.MPEVideoEqualizerEnabled</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">271</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.MPEVideoEqualizerBrightness</string>
-						<reference key="source" ref="285436030"/>
-						<reference key="destination" ref="1039088765"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="285436030"/>
-							<reference key="NSDestination" ref="1039088765"/>
-							<string key="NSLabel">value: selection.MPEVideoEqualizerBrightness</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.MPEVideoEqualizerBrightness</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">272</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">contentObject: values.MPEVideoEqualizerValues</string>
-						<reference key="source" ref="1039088765"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="1039088765"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">contentObject: values.MPEVideoEqualizerValues</string>
-							<string key="NSBinding">contentObject</string>
-							<string key="NSKeyPath">values.MPEVideoEqualizerValues</string>
-							<object class="NSDictionary" key="NSOptions">
-								<string key="NS.key.0">NSHandlesContentAsCompoundValue</string>
-								<boolean value="YES" key="NS.object.0"/>
-							</object>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">273</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
 						<string key="label">contentObject: values.MPEAudioEqualizerValues</string>
 						<reference key="source" ref="892535914"/>
 						<reference key="destination" ref="52681469"/>
@@ -1435,342 +1199,6 @@
 						</object>
 					</object>
 					<int key="connectionID">285</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: values.MPEAudioEqualizerEnabled</string>
-						<reference key="source" ref="478958681"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="478958681"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled: values.MPEAudioEqualizerEnabled</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">values.MPEAudioEqualizerEnabled</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">293</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: values.MPEAudioEqualizerEnabled</string>
-						<reference key="source" ref="757064467"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="757064467"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">value: values.MPEAudioEqualizerEnabled</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">values.MPEAudioEqualizerEnabled</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">294</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.MPEAudioEqualizer31Hz</string>
-						<reference key="source" ref="478958681"/>
-						<reference key="destination" ref="892535914"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="478958681"/>
-							<reference key="NSDestination" ref="892535914"/>
-							<string key="NSLabel">value: selection.MPEAudioEqualizer31Hz</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.MPEAudioEqualizer31Hz</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">297</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: values.MPEAudioEqualizerEnabled</string>
-						<reference key="source" ref="200116357"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="200116357"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled: values.MPEAudioEqualizerEnabled</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">values.MPEAudioEqualizerEnabled</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">301</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.MPEAudioEqualizer62Hz</string>
-						<reference key="source" ref="200116357"/>
-						<reference key="destination" ref="892535914"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="200116357"/>
-							<reference key="NSDestination" ref="892535914"/>
-							<string key="NSLabel">value: selection.MPEAudioEqualizer62Hz</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.MPEAudioEqualizer62Hz</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">302</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: values.MPEAudioEqualizerEnabled</string>
-						<reference key="source" ref="196322227"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="196322227"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled: values.MPEAudioEqualizerEnabled</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">values.MPEAudioEqualizerEnabled</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">305</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.MPEAudioEqualizer125Hz</string>
-						<reference key="source" ref="196322227"/>
-						<reference key="destination" ref="892535914"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="196322227"/>
-							<reference key="NSDestination" ref="892535914"/>
-							<string key="NSLabel">value: selection.MPEAudioEqualizer125Hz</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.MPEAudioEqualizer125Hz</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">307</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: values.MPEAudioEqualizerEnabled</string>
-						<reference key="source" ref="338596858"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="338596858"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled: values.MPEAudioEqualizerEnabled</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">values.MPEAudioEqualizerEnabled</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">311</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.MPEAudioEqualizer250Hz</string>
-						<reference key="source" ref="338596858"/>
-						<reference key="destination" ref="892535914"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="338596858"/>
-							<reference key="NSDestination" ref="892535914"/>
-							<string key="NSLabel">value: selection.MPEAudioEqualizer250Hz</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.MPEAudioEqualizer250Hz</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">312</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: values.MPEAudioEqualizerEnabled</string>
-						<reference key="source" ref="349732394"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="349732394"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled: values.MPEAudioEqualizerEnabled</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">values.MPEAudioEqualizerEnabled</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">315</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.MPEAudioEqualizer500Hz</string>
-						<reference key="source" ref="349732394"/>
-						<reference key="destination" ref="892535914"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="349732394"/>
-							<reference key="NSDestination" ref="892535914"/>
-							<string key="NSLabel">value: selection.MPEAudioEqualizer500Hz</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.MPEAudioEqualizer500Hz</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">317</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: values.MPEAudioEqualizerEnabled</string>
-						<reference key="source" ref="1040586958"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="1040586958"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled: values.MPEAudioEqualizerEnabled</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">values.MPEAudioEqualizerEnabled</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">320</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.MPEAudioEqualizer1kHz</string>
-						<reference key="source" ref="1040586958"/>
-						<reference key="destination" ref="892535914"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="1040586958"/>
-							<reference key="NSDestination" ref="892535914"/>
-							<string key="NSLabel">value: selection.MPEAudioEqualizer1kHz</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.MPEAudioEqualizer1kHz</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">322</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: values.MPEAudioEqualizerEnabled</string>
-						<reference key="source" ref="119470454"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="119470454"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled: values.MPEAudioEqualizerEnabled</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">values.MPEAudioEqualizerEnabled</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">326</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.MPEAudioEqualizer2kHz</string>
-						<reference key="source" ref="119470454"/>
-						<reference key="destination" ref="892535914"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="119470454"/>
-							<reference key="NSDestination" ref="892535914"/>
-							<string key="NSLabel">value: selection.MPEAudioEqualizer2kHz</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.MPEAudioEqualizer2kHz</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">327</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: values.MPEAudioEqualizerEnabled</string>
-						<reference key="source" ref="243177765"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="243177765"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled: values.MPEAudioEqualizerEnabled</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">values.MPEAudioEqualizerEnabled</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">330</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.MPEAudioEqualizer4kHz</string>
-						<reference key="source" ref="243177765"/>
-						<reference key="destination" ref="892535914"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="243177765"/>
-							<reference key="NSDestination" ref="892535914"/>
-							<string key="NSLabel">value: selection.MPEAudioEqualizer4kHz</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.MPEAudioEqualizer4kHz</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">332</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: values.MPEAudioEqualizerEnabled</string>
-						<reference key="source" ref="662668213"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="662668213"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled: values.MPEAudioEqualizerEnabled</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">values.MPEAudioEqualizerEnabled</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">336</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.MPEAudioEqualizer8kHz</string>
-						<reference key="source" ref="662668213"/>
-						<reference key="destination" ref="892535914"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="662668213"/>
-							<reference key="NSDestination" ref="892535914"/>
-							<string key="NSLabel">value: selection.MPEAudioEqualizer8kHz</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.MPEAudioEqualizer8kHz</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">337</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: values.MPEAudioEqualizerEnabled</string>
-						<reference key="source" ref="484246923"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="484246923"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled: values.MPEAudioEqualizerEnabled</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">values.MPEAudioEqualizerEnabled</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">341</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.MPEAudioEqualizer16kHz</string>
-						<reference key="source" ref="484246923"/>
-						<reference key="destination" ref="892535914"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="484246923"/>
-							<reference key="NSDestination" ref="892535914"/>
-							<string key="NSLabel">value: selection.MPEAudioEqualizer16kHz</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.MPEAudioEqualizer16kHz</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">342</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -1803,22 +1231,6 @@
 						</object>
 					</object>
 					<int key="connectionID">385</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: values.MPEAudioEqualizerEnabled</string>
-						<reference key="source" ref="731608029"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="731608029"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled: values.MPEAudioEqualizerEnabled</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">values.MPEAudioEqualizerEnabled</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">387</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -1977,46 +1389,6 @@
 					<int key="connectionID">516</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: values.MPEAudioEqualizerSelectedPreset</string>
-						<reference key="source" ref="734166809"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector" id="780691205">
-							<reference key="NSSource" ref="734166809"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled: values.MPEAudioEqualizerSelectedPreset</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">values.MPEAudioEqualizerSelectedPreset</string>
-							<object class="NSDictionary" key="NSOptions">
-								<string key="NS.key.0">NSValueTransformerName</string>
-								<string key="NS.object.0">NSIsNil</string>
-							</object>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">519</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: values.MPEAudioEqualizerSelectedPreset</string>
-						<reference key="source" ref="572104501"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector" id="362928774">
-							<reference key="NSSource" ref="572104501"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled: values.MPEAudioEqualizerSelectedPreset</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">values.MPEAudioEqualizerSelectedPreset</string>
-							<object class="NSDictionary" key="NSOptions">
-								<string key="NS.key.0">NSValueTransformerName</string>
-								<string key="NS.object.0">NSIsNotNil</string>
-							</object>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">522</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">removeAudioPreset:</string>
 						<reference key="source" ref="840004156"/>
@@ -2066,15 +1438,455 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled2: values.MPEAudioEqualizerEnabled</string>
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+						<reference key="source" ref="285436030"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="285436030"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">542</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+						<reference key="source" ref="526145369"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="526145369"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">544</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+						<reference key="source" ref="758574719"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="758574719"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">546</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+						<reference key="source" ref="1029629842"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1029629842"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">548</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+						<reference key="source" ref="946318545"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="946318545"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">550</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+						<reference key="source" ref="791185659"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="791185659"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">552</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+						<reference key="source" ref="33480127"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="33480127"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">554</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo</string>
+						<reference key="source" ref="33480127"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="33480127"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSIsNotNil</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">557</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">contentObject: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerValues</string>
+						<reference key="source" ref="1039088765"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1039088765"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">contentObject: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerValues</string>
+							<string key="NSBinding">contentObject</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerValues</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSHandlesContentAsCompoundValue</string>
+								<boolean value="YES" key="NS.object.0"/>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">581</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerValues.MPEVideoEqualizerBrightness</string>
+						<reference key="source" ref="285436030"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="285436030"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerValues.MPEVideoEqualizerBrightness</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerValues.MPEVideoEqualizerBrightness</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">584</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerValues.MPEVideoEqualizerContrast</string>
+						<reference key="source" ref="526145369"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="526145369"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerValues.MPEVideoEqualizerContrast</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerValues.MPEVideoEqualizerContrast</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">586</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerValues.MPEVideoEqualizerGamma</string>
+						<reference key="source" ref="758574719"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="758574719"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerValues.MPEVideoEqualizerGamma</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerValues.MPEVideoEqualizerGamma</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">588</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerValues.MPEVideoEqualizerHue</string>
+						<reference key="source" ref="1029629842"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1029629842"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerValues.MPEVideoEqualizerHue</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerValues.MPEVideoEqualizerHue</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">590</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerValues.MPEVideoEqualizerSaturation</string>
+						<reference key="source" ref="946318545"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="946318545"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerValues.MPEVideoEqualizerSaturation</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEVideoEqualizerValues.MPEVideoEqualizerSaturation</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">593</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+						<reference key="source" ref="757064467"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="757064467"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">595</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+						<reference key="source" ref="478958681"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="478958681"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">597</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+						<reference key="source" ref="200116357"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="200116357"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">599</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+						<reference key="source" ref="196322227"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="196322227"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">601</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+						<reference key="source" ref="338596858"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="338596858"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">603</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+						<reference key="source" ref="349732394"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="349732394"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">605</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+						<reference key="source" ref="1040586958"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1040586958"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">607</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+						<reference key="source" ref="119470454"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="119470454"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">609</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+						<reference key="source" ref="243177765"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="243177765"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">611</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+						<reference key="source" ref="662668213"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="662668213"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">613</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+						<reference key="source" ref="484246923"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="484246923"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">615</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+						<reference key="source" ref="731608029"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="731608029"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">617</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+						<reference key="source" ref="734166809"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector" id="555811039">
+							<reference key="NSSource" ref="734166809"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">632</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled2: values.MPEAudioEqualizerSelectedPreset</string>
 						<reference key="source" ref="734166809"/>
 						<reference key="destination" ref="52681469"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="734166809"/>
 							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled2: values.MPEAudioEqualizerEnabled</string>
+							<string key="NSLabel">enabled2: values.MPEAudioEqualizerSelectedPreset</string>
 							<string key="NSBinding">enabled2</string>
-							<string key="NSKeyPath">values.MPEAudioEqualizerEnabled</string>
+							<string key="NSKeyPath">values.MPEAudioEqualizerSelectedPreset</string>
 							<object class="NSDictionary" key="NSOptions">
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSArray" key="dict.sortedKeys">
@@ -2083,6 +1895,7 @@
 									<string>NSNoSelectionPlaceholder</string>
 									<string>NSNotApplicablePlaceholder</string>
 									<string>NSNullPlaceholder</string>
+									<string>NSValueTransformerName</string>
 								</object>
 								<object class="NSMutableArray" key="dict.values">
 									<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2090,25 +1903,42 @@
 									<integer value="-1"/>
 									<integer value="-1"/>
 									<integer value="-1"/>
+									<string>NSIsNil</string>
 								</object>
 							</object>
-							<reference key="NSPreviousConnector" ref="780691205"/>
+							<reference key="NSPreviousConnector" ref="555811039"/>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">535</int>
+					<int key="connectionID">633</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled2: values.MPEAudioEqualizerEnabled</string>
+						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+						<reference key="source" ref="572104501"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector" id="308754133">
+							<reference key="NSSource" ref="572104501"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">642</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled2: values.MPEAudioEqualizerSelectedPreset</string>
 						<reference key="source" ref="572104501"/>
 						<reference key="destination" ref="52681469"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="572104501"/>
 							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled2: values.MPEAudioEqualizerEnabled</string>
+							<string key="NSLabel">enabled2: values.MPEAudioEqualizerSelectedPreset</string>
 							<string key="NSBinding">enabled2</string>
-							<string key="NSKeyPath">values.MPEAudioEqualizerEnabled</string>
+							<string key="NSKeyPath">values.MPEAudioEqualizerSelectedPreset</string>
 							<object class="NSDictionary" key="NSOptions">
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSArray" key="dict.sortedKeys">
@@ -2117,6 +1947,7 @@
 									<string>NSNoSelectionPlaceholder</string>
 									<string>NSNotApplicablePlaceholder</string>
 									<string>NSNullPlaceholder</string>
+									<string>NSValueTransformerName</string>
 								</object>
 								<object class="NSMutableArray" key="dict.values">
 									<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2124,13 +1955,174 @@
 									<integer value="-1"/>
 									<integer value="-1"/>
 									<integer value="-1"/>
+									<string>NSIsNotNil</string>
 								</object>
 							</object>
-							<reference key="NSPreviousConnector" ref="362928774"/>
+							<reference key="NSPreviousConnector" ref="308754133"/>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">537</int>
+					<int key="connectionID">643</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer31Hz</string>
+						<reference key="source" ref="478958681"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="478958681"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer31Hz</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer31Hz</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">648</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer62Hz</string>
+						<reference key="source" ref="200116357"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="200116357"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer62Hz</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer62Hz</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">650</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer125Hz</string>
+						<reference key="source" ref="196322227"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="196322227"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer125Hz</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer125Hz</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">652</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer250Hz</string>
+						<reference key="source" ref="338596858"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="338596858"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer250Hz</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer250Hz</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">654</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer500Hz</string>
+						<reference key="source" ref="349732394"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="349732394"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer500Hz</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer500Hz</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">656</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer1kHz</string>
+						<reference key="source" ref="1040586958"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1040586958"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer1kHz</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer1kHz</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">658</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer2kHz</string>
+						<reference key="source" ref="119470454"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="119470454"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer2kHz</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer2kHz</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">660</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer4kHz</string>
+						<reference key="source" ref="243177765"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="243177765"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer4kHz</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer4kHz</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">662</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer8kHz</string>
+						<reference key="source" ref="662668213"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="662668213"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer8kHz</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer8kHz</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">664</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer16kHz</string>
+						<reference key="source" ref="484246923"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="484246923"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer16kHz</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerValues.MPEAudioEqualizer16kHz</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">666</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -3093,9 +3085,9 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{96, 210}, {388, 348}}</string>
+					<string>{{661, 260}, {388, 348}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{96, 210}, {388, 348}}</string>
+					<string>{{661, 260}, {388, 348}}</string>
 					<boolean value="NO"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3174,9 +3166,9 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{203, 297}, {276, 236}}</string>
+					<string>{{582, 194}, {276, 236}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{203, 297}, {276, 236}}</string>
+					<string>{{582, 194}, {276, 236}}</string>
 					<boolean value="NO"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3212,7 +3204,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">537</int>
+			<int key="maxID">666</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3229,30 +3221,20 @@
 							<string>applyVIDEO_TSLocation:</string>
 							<string>cancelLocation:</string>
 							<string>cancelVIDEO_TSLocation:</string>
-							<string>chooseCustomAspectRatio:</string>
 							<string>closeWindow:</string>
 							<string>displayLogWindow:</string>
-							<string>displayPlayList:</string>
-							<string>openAudioEqualizer:</string>
-							<string>openCustomAspectRatioChooser:</string>
 							<string>openFile:</string>
 							<string>openHomepage:</string>
 							<string>openLicenseAndCredits:</string>
 							<string>openLocation:</string>
-							<string>openPreferences:</string>
+							<string>openNewPlayerWindow:</string>
 							<string>openSubtitle:</string>
 							<string>openVIDEO_TS:</string>
-							<string>openVideoEqualizer:</string>
 							<string>showFilesChanged:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>NSButton</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3277,16 +3259,16 @@
 							<string>closeMenuItem</string>
 							<string>customAspectMenuItem</string>
 							<string>equalizerController</string>
+							<string>inspectorController</string>
 							<string>locationBox</string>
 							<string>locationPanel</string>
+							<string>menuController</string>
+							<string>movieInfoProvider</string>
 							<string>openFileSettings</string>
 							<string>openSubtitleEncoding</string>
 							<string>openSubtitleSettings</string>
-							<string>playListController</string>
-							<string>playerController</string>
 							<string>playerWindow</string>
 							<string>preferencesController</string>
-							<string>theApp</string>
 							<string>video_tsBox</string>
 							<string>video_tsPanel</string>
 							<string>video_tsbutton</string>
@@ -3297,16 +3279,16 @@
 							<string>id</string>
 							<string>NSMenuItem</string>
 							<string>EqualizerController</string>
+							<string>InspectorController</string>
 							<string>id</string>
+							<string>id</string>
+							<string>MenuController</string>
 							<string>id</string>
 							<string>NSView</string>
 							<string>NSPopUpButton</string>
 							<string>NSView</string>
 							<string>id</string>
-							<string>PlayerController</string>
-							<string>id</string>
 							<string>PreferencesController2</string>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3370,15 +3352,180 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">FullscreenControls</string>
-					<string key="superclassName">NSWindow</string>
+					<string key="className">InspectorController</string>
+					<string key="superclassName">NSObject</string>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>positionSections:</string>
+							<string>resetAudioBoost:</string>
+							<string>resetAudioDelay:</string>
+							<string>resetPlaybackSpeed:</string>
+							<string>resetSubtitleDelay:</string>
+							<string>toggleSection:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+						</object>
+					</object>
 					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">playerController</string>
-						<string key="NS.object.0">PlayerController</string>
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>audioBoost</string>
+							<string>audioDelay</string>
+							<string>container</string>
+							<string>fileAttributesSection</string>
+							<string>fileAttributesTriangle</string>
+							<string>playbackSettingsSection</string>
+							<string>playbackSettingsTriangle</string>
+							<string>playbackSpeed</string>
+							<string>scroller</string>
+							<string>statisticsSection</string>
+							<string>statisticsTriangle</string>
+							<string>subtitleDelay</string>
+							<string>window</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>NSSlider</string>
+							<string>NSSlider</string>
+							<string>NSView</string>
+							<string>NSView</string>
+							<string>NSButton</string>
+							<string>NSView</string>
+							<string>NSButton</string>
+							<string>NSSlider</string>
+							<string>NSScrollView</string>
+							<string>NSView</string>
+							<string>NSButton</string>
+							<string>NSSlider</string>
+							<string>NSWindow</string>
+						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Sources/Classes/FullscreenControls.h</string>
+						<string key="minorKey">Sources/Controllers/InspectorController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">MenuController</string>
+					<string key="superclassName">NSObject</string>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>addToPlaylist:</string>
+							<string>decreaseVolume:</string>
+							<string>fullScreen:</string>
+							<string>increaseVolume:</string>
+							<string>muteVolume:</string>
+							<string>openAudioEqualizer:</string>
+							<string>openCustomAspectChooser:</string>
+							<string>openInspector:</string>
+							<string>openLog:</string>
+							<string>openPlayerWindow:</string>
+							<string>openPreferences:</string>
+							<string>openVideoEqualizer:</string>
+							<string>originalAspect:</string>
+							<string>playPause:</string>
+							<string>playlistNext:</string>
+							<string>playlistPrevious:</string>
+							<string>seekByTag:</string>
+							<string>setAspectFromMenu:</string>
+							<string>setSizeFromMenu:</string>
+							<string>setVideoScaleMode:</string>
+							<string>skipToChapterFromMenu:</string>
+							<string>skipToNext:</string>
+							<string>skipToPrevious:</string>
+							<string>stepFrame:</string>
+							<string>stop:</string>
+							<string>takeScreenshot:</string>
+							<string>toggleLoop:</string>
+							<string>togglePlaylistWindow:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>appController</string>
+							<string>audioStreamMenu</string>
+							<string>chapterMenu</string>
+							<string>fullscreenMenu</string>
+							<string>loopMenuItem</string>
+							<string>playMenuItem</string>
+							<string>stretchToFillMenuItem</string>
+							<string>subtitleStreamMenu</string>
+							<string>toggleMuteMenuItem</string>
+							<string>videoStreamMenu</string>
+							<string>zoomToFillMenuItem</string>
+							<string>zoomToFitMenuItem</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>AppController</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Sources/Controllers/MenuController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSMenu</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="712651493">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Sources/Classes/CocoaAdditions.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -3390,278 +3537,7 @@
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Sources/Classes/CocoaAdditions.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">PlayListController</string>
-					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>cancelPreflight:</string>
-							<string>changePlayMode:</string>
-							<string>displayItemSettings:</string>
-							<string>displayWindow:</string>
-							<string>doubleClick:</string>
-							<string>playNext:</string>
-							<string>playPrevious:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>filenameBox</string>
-							<string>playListButton</string>
-							<string>playListCount</string>
-							<string>playListTable</string>
-							<string>playListWindow</string>
-							<string>playModeButton</string>
-							<string>playNextMenuItem</string>
-							<string>playPreviousMenuItem</string>
-							<string>playerController</string>
-							<string>playerNextToolbarView</string>
-							<string>playerPlayToolbarView</string>
-							<string>playerPrevToolbarView</string>
-							<string>playerScrubToolbarView</string>
-							<string>playerStopToolbarView</string>
-							<string>playerVolumeToolbarView</string>
-							<string>preflightBusy</string>
-							<string>preflightPanel</string>
-							<string>progressBar</string>
-							<string>settingsButton</string>
-							<string>settingsController</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>NSView</string>
-							<string>NSView</string>
-							<string>NSView</string>
-							<string>NSView</string>
-							<string>NSView</string>
-							<string>NSView</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Sources/Controllers/PlayListController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">PlayerController</string>
-					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>audioMenuAction:</string>
-							<string>changeVolume:</string>
-							<string>chapterMenuAction:</string>
-							<string>closeWindowNow:</string>
-							<string>cycleAudioStreams:</string>
-							<string>cycleSubtitleStreams:</string>
-							<string>decreaseVolume:</string>
-							<string>displayStats:</string>
-							<string>displayWindow:</string>
-							<string>fullscreenMenuAction:</string>
-							<string>increaseVolume:</string>
-							<string>playPause:</string>
-							<string>seekBack:</string>
-							<string>seekFwd:</string>
-							<string>seekNext:</string>
-							<string>seekPrevious:</string>
-							<string>stop:</string>
-							<string>subtitleMenuAction:</string>
-							<string>switchFullscreen:</string>
-							<string>takeScreenshot:</string>
-							<string>toggleMute:</string>
-							<string>videoMenuAction:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>audioCycleButton</string>
-							<string>audioStreamMenu</string>
-							<string>audioWindowMenu</string>
-							<string>chapterMenu</string>
-							<string>chapterWindowMenu</string>
-							<string>fcAudioCycleButton</string>
-							<string>fcFullscreenButton</string>
-							<string>fcPlayButton</string>
-							<string>fcScrubbingBar</string>
-							<string>fcSubtitleCycleButton</string>
-							<string>fcTimeTextField</string>
-							<string>fcVolumeSlider</string>
-							<string>fcWindow</string>
-							<string>fullscreenButton</string>
-							<string>fullscreenMenu</string>
-							<string>fullscreenWindowMenu</string>
-							<string>playButton</string>
-							<string>playButtonToolbar</string>
-							<string>playListButton</string>
-							<string>playListController</string>
-							<string>playMenuItem</string>
-							<string>playerWindow</string>
-							<string>scrubbingBar</string>
-							<string>scrubbingBarToolbar</string>
-							<string>settingsController</string>
-							<string>skipBeginningMenuItem</string>
-							<string>skipEndMenuItem</string>
-							<string>statsAVsyncBox</string>
-							<string>statsCPUUsageBox</string>
-							<string>statsCacheUsageBox</string>
-							<string>statsDroppedBox</string>
-							<string>statsPanel</string>
-							<string>statsPostProcBox</string>
-							<string>statsStatusBox</string>
-							<string>stopMenuItem</string>
-							<string>subtitleCycleButton</string>
-							<string>subtitleStreamMenu</string>
-							<string>subtitleWindowMenu</string>
-							<string>timeTextField</string>
-							<string>timeTextFieldToolbar</string>
-							<string>toggleMuteMenu</string>
-							<string>videoOpenGLView</string>
-							<string>videoStreamMenu</string>
-							<string>volumeButton</string>
-							<string>volumeButtonToolbar</string>
-							<string>volumeSlider</string>
-							<string>volumeSliderToolbar</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>NSButton</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>NSButton</string>
-							<string>NSButton</string>
-							<string>id</string>
-							<string>PlayListController</string>
-							<string>id</string>
-							<string>NSWindow</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>VideoOpenGLView</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Sources/Controllers/PlayerController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">PlayerFullscreenWindow</string>
-					<string key="superclassName">PlayerWindow</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">fullscreenControls</string>
-						<string key="NS.object.0">FullscreenControls</string>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Sources/Classes/PlayerFullscreenWindow.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">PlayerWindow</string>
-					<string key="superclassName">NSWindow</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">playerController</string>
-						<string key="NS.object.0">PlayerController</string>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Sources/Classes/PlayerWindow.h</string>
-					</object>
+					<reference key="sourceIdentifier" ref="712651493"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">PreferencesController2</string>
@@ -3672,6 +3548,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>changeFont:</string>
 							<string>checkForUpdates:</string>
+							<string>chooseCustomAspectRatio:</string>
 							<string>requireRestart:</string>
 							<string>restartPlayback:</string>
 							<string>selectBinary:</string>
@@ -3684,6 +3561,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSPopUpButton</string>
 							<string>id</string>
+							<string>NSButton</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3717,6 +3595,7 @@
 							<string>fullscreenSelectionMatrix</string>
 							<string>generalView</string>
 							<string>mplayerView</string>
+							<string>osdLevelPopUp</string>
 							<string>restartView</string>
 							<string>textView</string>
 							<string>videoView</string>
@@ -3743,6 +3622,7 @@
 							<string>NSMatrix</string>
 							<string>NSView</string>
 							<string>NSView</string>
+							<string>NSPopUpButton</string>
 							<string>NSView</string>
 							<string>NSView</string>
 							<string>NSView</string>
@@ -3751,74 +3631,6 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Sources/Controllers/PreferencesController2.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">VideoOpenGLView</string>
-					<string key="superclassName">NSOpenGLView</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>MovieMenuAction:</string>
-							<string>setAspectRatioFromMenu:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>NSMenuItem</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>Aspect16to9MenuItem</string>
-							<string>Aspect185to1MenuItem</string>
-							<string>Aspect239to1MenuItem</string>
-							<string>Aspect3to2MenuItem</string>
-							<string>Aspect4to3MenuItem</string>
-							<string>Aspect5to3MenuItem</string>
-							<string>CustomAspectMenuItem</string>
-							<string>DoubleSizeMenuItem</string>
-							<string>HalfSizeMenuItem</string>
-							<string>KeepAspectMenuItem</string>
-							<string>NormalSizeMenuItem</string>
-							<string>OriginalAspectMenuItem</string>
-							<string>PanScanMenuItem</string>
-							<string>fcControlWindow</string>
-							<string>fullscreenWindow</string>
-							<string>playListController</string>
-							<string>playerController</string>
-							<string>settingsController</string>
-							<string>threadProto</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>NSWindow</string>
-							<string>PlayerFullscreenWindow</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Sources/Classes/VideoOpenGLView.h</string>
 					</object>
 				</object>
 			</object>
@@ -4264,14 +4076,6 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">NSOpenGLView</string>
-					<string key="superclassName">NSView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">AppKit.framework/Headers/NSOpenGLView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
 					<string key="className">NSPanel</string>
 					<string key="superclassName">NSWindow</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -4316,6 +4120,14 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">AppKit.framework/Headers/NSResponder.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSScrollView</string>
+					<string key="superclassName">NSView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSScrollView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

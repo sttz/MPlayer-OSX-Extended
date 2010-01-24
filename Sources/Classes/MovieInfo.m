@@ -27,6 +27,7 @@
 #import "AppController.h"
 
 #import "MPlayerInterface.h"
+#import "LocalUserDefaults.h"
 
 #import "Preferences.h"
 #import "CocoaAdditions.h"
@@ -182,7 +183,7 @@ externalSubtitles, captureStats, playbackStats, player;
 		externalSubtitles = [NSMutableArray new];
 	
 	if (!prefs)
-		prefs    = [NSMutableDictionary new];
+		prefs    = [LocalUserDefaults new];
 	
 	[self addObserver:self
 		   forKeyPath:@"filename" 
@@ -632,8 +633,8 @@ static NSString* const MPEMovieInfoMovieLengthKey          = @"MPEMovieInfoMovie
 	// General dictionaries
 	if ([info count] > 0)
 		[dict setObject:info forKey:MPEMovieInfoGeneralInformationKey];
-	if ([prefs count] > 0)
-		[dict setObject:prefs forKey:MPEMovieInfoLocalSettingsKey];
+	if ([[prefs localDefaults] count] > 0)
+		[dict setObject:[prefs localDefaults] forKey:MPEMovieInfoLocalSettingsKey];
 	
 	// Stream dictionaries
 	if ([video count] > 0)
@@ -702,7 +703,7 @@ static NSString* const MPEMovieInfoMovieLengthKey          = @"MPEMovieInfoMovie
 	
 	// General dictionaries
 	info     = [[dict mutableDictionaryForKey:MPEMovieInfoGeneralInformationKey] retain];
-	prefs    = [[dict mutableDictionaryForKey:MPEMovieInfoLocalSettingsKey] retain];
+	prefs    = [[LocalUserDefaults alloc] initWithLocalDefaults:[dict dictionaryForKey:MPEMovieInfoLocalSettingsKey]];
 	
 	// Stream dictionaries
 	video    = [[dict mutableDictionaryForKey:MPEMovieInfoVideoStreamsKey] retain];

@@ -150,6 +150,7 @@
 		3ADA70980FED843800F7AFB9 /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADA70940FED843800F7AFB9 /* libfontconfig.1.dylib */; };
 		3ADA70990FED843800F7AFB9 /* libfreetype.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADA70950FED843800F7AFB9 /* libfreetype.6.dylib */; };
 		3ADA709A0FED843800F7AFB9 /* libiconv.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADA70960FED843800F7AFB9 /* libiconv.2.dylib */; };
+		3ADD73B2110B9DB100568830 /* LocalUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ADD73B1110B9DB100568830 /* LocalUserDefaults.m */; };
 		3AE612370EC08130009F2F12 /* fc_scrub_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AE612290EC08130009F2F12 /* fc_scrub_bg.png */; };
 		3AE612380EC08130009F2F12 /* fc_srub_bar.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AE6122A0EC08130009F2F12 /* fc_srub_bar.png */; };
 		3AE612390EC08130009F2F12 /* fc_fast_rewind.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AE6122B0EC08130009F2F12 /* fc_fast_rewind.png */; };
@@ -376,6 +377,8 @@
 		3ADA70940FED843800F7AFB9 /* libfontconfig.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfontconfig.1.dylib; path = "build/Release/MPlayer OSX Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/lib/libfontconfig.1.dylib"; sourceTree = "<group>"; };
 		3ADA70950FED843800F7AFB9 /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.6.dylib; path = "build/Release/MPlayer OSX Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/lib/libfreetype.6.dylib"; sourceTree = "<group>"; };
 		3ADA70960FED843800F7AFB9 /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = "build/Release/MPlayer OSX Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/lib/libiconv.2.dylib"; sourceTree = "<group>"; };
+		3ADD73B0110B9DB100568830 /* LocalUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LocalUserDefaults.h; path = Sources/Classes/LocalUserDefaults.h; sourceTree = "<group>"; };
+		3ADD73B1110B9DB100568830 /* LocalUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LocalUserDefaults.m; path = Sources/Classes/LocalUserDefaults.m; sourceTree = "<group>"; };
 		3AE612290EC08130009F2F12 /* fc_scrub_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fc_scrub_bg.png; path = Resources/Graphics/fc_scrub_bg.png; sourceTree = "<group>"; };
 		3AE6122A0EC08130009F2F12 /* fc_srub_bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fc_srub_bar.png; path = Resources/Graphics/fc_srub_bar.png; sourceTree = "<group>"; };
 		3AE6122B0EC08130009F2F12 /* fc_fast_rewind.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fc_fast_rewind.png; path = Resources/Graphics/fc_fast_rewind.png; sourceTree = "<group>"; };
@@ -460,6 +463,8 @@
 				3A5F3FBC10C17AFA00C5B912 /* BinaryBundle.m */,
 				3A8C18A710FA63510010942C /* MPlayerVideoRenderer.h */,
 				3A8C18A810FA63510010942C /* MPlayerVideoRenderer.m */,
+				3ADD73B0110B9DB100568830 /* LocalUserDefaults.h */,
+				3ADD73B1110B9DB100568830 /* LocalUserDefaults.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1000,6 +1005,7 @@
 				3A86AEA2110743F900963C25 /* BWAddRegularBottomBar.m in Sources */,
 				3A7A60B41108A26B00371851 /* PlaylistScrubbingBar.m in Sources */,
 				3A9FB0231109F87700EF2AC3 /* TimestampTextField.m in Sources */,
+				3ADD73B2110B9DB100568830 /* LocalUserDefaults.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

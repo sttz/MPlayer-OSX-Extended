@@ -16,6 +16,7 @@
 #import "EqualizerController.h"
 #import "Preferences.h"
 #import "CocoaAdditions.h"
+#import "LocalUserDefaults.h"
 
 #import <objc/runtime.h>
 
@@ -124,6 +125,9 @@ static NSArray* statusNames;
 						   MPEAudioDelay,
 						   MPESubtitleDelay,
 						   MPEOSDLevel,
+						   MPEVideoEqualizerValues,
+						   MPEDropFrames,
+						   MPESubtitleScale,
 						   nil];
 	
 	statusNames = [[NSArray alloc] initWithObjects:
@@ -169,7 +173,7 @@ static NSArray* statusNames;
 	disableAppleRemote = YES;
 	
 	// Watch for framedrop changes
-	[PREFS addObserver:self
+	/*[PREFS addObserver:self
 			forKeyPath:MPEDropFrames
 			   options:NSKeyValueObservingOptionNew
 			   context:nil];
@@ -180,17 +184,11 @@ static NSArray* statusNames;
 			   options:NSKeyValueObservingOptionNew
 			   context:nil];
 	
-	// Watch for video equalizer changes
-	[PREFS addObserver:self
-			forKeyPath:MPEVideoEqualizerValues
-			   options:NSKeyValueObservingOptionNew
-			   context:nil];
-	
 	// Watch for subtitle size changes
 	[PREFS addObserver:self
 			forKeyPath:MPESubtitleScale
 			   options:NSKeyValueObservingOptionNew
-			   context:nil];
+			   context:nil];*/
 	
 	return self;
 }
@@ -305,6 +303,8 @@ static NSArray* statusNames;
 	
 	[playingItem release];
 	playingItem = nil;
+	[localPrefs release];
+	localPrefs = nil;
 }
 
 /************************************************************************************
@@ -332,15 +332,14 @@ static NSArray* statusNames;
 	prefs = [[PREFS dictionaryRepresentation] copy];
 	
 	// copy local preferences
-	if (item) {
-		[localPrefs release];
-		localPrefs = [[item prefs] copy];
-	}
+	[localPrefs release];
+	localPrefs = [[[playingItem prefs] localDefaults] copy];
 	
 	// combine global and local preferences
-	NSMutableDictionary *cPrefs = [NSMutableDictionary dictionary];
+	LocalUserDefaults *cPrefs = [playingItem prefs];
+	/*NSMutableDictionary *cPrefs = [NSMutableDictionary dictionary];
 	[cPrefs addEntriesFromDictionary:prefs];
-	[cPrefs addEntriesFromDictionary:localPrefs];
+	[cPrefs addEntriesFromDictionary:localPrefs];*/
 	
 	// Detect number of cores/cpus
 	size_t len = sizeof(numberOfThreads);
@@ -892,7 +891,7 @@ static NSArray* statusNames;
 /************************************************************************************/
 - (void) applyVideoEqualizer
 {
-	NSDictionary *values = [PREFS objectForKey:MPEVideoEqualizerValues];
+	NSDictionary *values = [[playingItem prefs] objectForKey:MPEVideoEqualizerValues];
 	int value;
 	
 	for (NSString *key in videoEqualizerCommands) {
@@ -956,7 +955,7 @@ static NSArray* statusNames;
 	// Set binary path
 	[myPathToPlayer release];
 	myPathToPlayer = [[[[AppController sharedController] preferencesController] 
-					   pathForBinaryWithIdentifier:[PREFS objectForKey:MPESelectedBinary]] retain];
+					   pathForBinaryWithIdentifier:[[playingItem prefs] objectForKey:MPESelectedBinary]] retain];
 	
 	// run mplayer for identify
 	[self runMplayerWithParams:[NSMutableArray arrayWithObjects:
@@ -1036,12 +1035,13 @@ static NSArray* statusNames;
 		return NO;
 	
 	NSArray *requiresRestart = [[AppController sharedController] preferencesRequiringRestart];
+	NSDictionary *currentPrefs = [[playingItem prefs] localDefaults];
 	
 	BOOL different = NO;
 	for (NSString *option in requiresRestart) {
 		// check if option has changed
 		id op1 = [localPrefs objectForKey:option];
-		id op2 = [[playingItem prefs] objectForKey:option];
+		id op2 = [currentPrefs objectForKey:option];
 		if (op1 == nil && op2 == nil)
 			continue;
 		if (!op1 || ![op1 isEqual:op2]) {

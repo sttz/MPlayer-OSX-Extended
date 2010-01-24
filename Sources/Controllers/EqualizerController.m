@@ -25,6 +25,7 @@
 #import "PlayerController.h"
 
 #import "Preferences.h"
+#import "MovieInfo.h"
 
 #import "CocoaAdditions.h"
 
@@ -33,24 +34,31 @@
 - (void) awakeFromNib
 {
 	// Listen to enabling/disabling of equalizer
-	[PREFS addObserver:self
-		    forKeyPath:MPEVideoEqualizerEnabled
-			   options:0 
-			   context:nil];
-	[PREFS addObserver:self
-			forKeyPath:MPEAudioEqualizerEnabled 
-			   options:0
-			   context:nil];
+	NSString *localPrefsPath = @"movieInfoProvider.currentMovieInfo.prefs.";
+	[[AppController sharedController] addObserver:self
+									   forKeyPath:[localPrefsPath stringByAppendingString:MPEVideoEqualizerEnabled]
+										  options:0 
+										  context:nil];
+	[[AppController sharedController] addObserver:self
+									   forKeyPath:[localPrefsPath stringByAppendingString:MPEAudioEqualizerEnabled]
+										  options:0
+										  context:nil];
+	
+	
 	
 	// Select current preset (no object: custom preset)
-	if ([PREFS objectForKey:MPEAudioEqualizerSelectedPreset])
-		[presetSelectionPopUp selectItemWithTitle:[PREFS objectForKey:MPEAudioEqualizerSelectedPreset]];
+	MovieInfo *info = [AppController sharedController].movieInfoProvider.currentMovieInfo;
+	if ([info.prefs objectForKey:MPEAudioEqualizerSelectedPreset])
+		[presetSelectionPopUp selectItemWithTitle:[info.prefs objectForKey:MPEAudioEqualizerSelectedPreset]];
+	else
+		[presetSelectionPopUp selectItemWithTag:0];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-	if ([keyPath isEqualToString:MPEVideoEqualizerEnabled]
-		|| [keyPath isEqualToString:MPEAudioEqualizerEnabled])
+	MovieInfo *info = [AppController sharedController].movieInfoProvider.currentMovieInfo;
+	if (([keyPath hasSuffix:MPEVideoEqualizerEnabled] || [keyPath hasSuffix:MPEAudioEqualizerEnabled])
+		&& [[[info player] player] localChangesNeedRestart])
 		[self applyWithRestart:self];
 }
 
@@ -67,12 +75,14 @@
 
 - (IBAction) resetVideoEqualizer:(id)sender
 {
-	[PREFS removeObjectForKey:MPEVideoEqualizerValues];
+	MovieInfo *info = [AppController sharedController].movieInfoProvider.currentMovieInfo;
+	[info.prefs removeObjectForKey:MPEVideoEqualizerValues];
 }
 
 + (NSString *)eq2FilterValues
 {
-	NSDictionary *eqValues = [PREFS objectForKey:MPEVideoEqualizerValues];
+	MovieInfo *info = [AppController sharedController].movieInfoProvider.currentMovieInfo;
+	NSDictionary *eqValues = [info.prefs objectForKey:MPEVideoEqualizerValues];
 	NSMutableArray *values = [NSMutableArray array];
 	float value;
 	
@@ -103,7 +113,8 @@
 
 + (NSString *)hueFilterValue
 {
-	float value = [[PREFS objectForKey:MPEVideoEqualizerValues] floatForKey:MPEVideoEqualizerHue];
+	MovieInfo *info = [AppController sharedController].movieInfoProvider.currentMovieInfo;
+	float value = [[info.prefs objectForKey:MPEVideoEqualizerValues] floatForKey:MPEVideoEqualizerHue];
 	return [NSString stringWithFormat:@"%.2f",(value*1.8f)];
 }
 
@@ -114,7 +125,8 @@
 
 - (IBAction) resetAudioEqualizer:(id)sender
 {
-	[PREFS removeObjectForKey:MPEAudioEqualizerValues];
+	MovieInfo *info = [AppController sharedController].movieInfoProvider.currentMovieInfo;
+	[info.prefs removeObjectForKey:MPEAudioEqualizerValues];
 }
 
 - (IBAction) changePreset:(NSPopUpButton *)sender
@@ -126,8 +138,9 @@
 	NSDictionary *preset = [[PREFS objectForKey:MPEAudioEqualizerPresets] objectForKey:presetName];
 	
 	if (preset) {
-		[PREFS setObject:preset forKey:MPEAudioEqualizerValues];
-		[PREFS setObject:presetName forKey:MPEAudioEqualizerSelectedPreset];
+		MovieInfo *info = [AppController sharedController].movieInfoProvider.currentMovieInfo;
+		[info.prefs setObject:preset forKey:MPEAudioEqualizerValues];
+		[info.prefs setObject:presetName forKey:MPEAudioEqualizerSelectedPreset];
 		
 		[self setAudioEqualizerDirty];
 	}
@@ -136,7 +149,9 @@
 - (IBAction) changeAudioValue:(NSSlider *)sender
 {
 	[presetSelectionPopUp selectItemWithTag:0];
-	[PREFS removeObjectForKey:MPEAudioEqualizerSelectedPreset];
+	
+	MovieInfo *info = [AppController sharedController].movieInfoProvider.currentMovieInfo;
+	[info.prefs removeObjectForKey:MPEAudioEqualizerSelectedPreset];
 	
 	[self setAudioEqualizerDirty];
 }
@@ -156,6 +171,7 @@
 	[presetNameField becomeFirstResponder];
 	
 	if ([alert runModal] == NSAlertFirstButtonReturn) {
+		MovieInfo *info = [AppController sharedController].movieInfoProvider.currentMovieInfo;
 		NSMutableDictionary *presets = [[[PREFS objectForKey:MPEAudioEqualizerPresets] mutableCopy] autorelease];
 		NSString *name = [presetNameField stringValue];
 		// Generate a name if none was given or is already taken
@@ -169,10 +185,10 @@
 				newName = [NSString stringWithFormat:@"%@ %d",name,num++];
 			name = newName;
 		}
-		[presets setObject:[PREFS objectForKey:MPEAudioEqualizerValues] forKey:name];
+		[presets setObject:[info.prefs objectForKey:MPEAudioEqualizerValues] forKey:name];
 		[PREFS setObject:presets forKey:MPEAudioEqualizerPresets];
 		// Select new preset
-		[PREFS setObject:name forKey:MPEAudioEqualizerSelectedPreset];
+		[info.prefs setObject:name forKey:MPEAudioEqualizerSelectedPreset];
 		[presetSelectionPopUp selectItemWithTitle:name];
 	}
 }
@@ -183,7 +199,8 @@
 	[presets removeObjectForKey:[[presetSelectionPopUp selectedItem] title]];
 	[PREFS setObject:presets forKey:MPEAudioEqualizerPresets];
 	// Reset selection to custom preset
-	[PREFS removeObjectForKey:MPEAudioEqualizerSelectedPreset];
+	MovieInfo *info = [AppController sharedController].movieInfoProvider.currentMovieInfo;
+	[info.prefs removeObjectForKey:MPEAudioEqualizerSelectedPreset];
 }
 
 - (void) setAudioEqualizerDirty
@@ -208,7 +225,8 @@
 						  nil];
 	NSMutableArray *parts = [NSMutableArray array];
 	
-	NSDictionary *values = [PREFS objectForKey:MPEAudioEqualizerValues];
+	MovieInfo *info = [AppController sharedController].movieInfoProvider.currentMovieInfo;
+	NSDictionary *values = [info.prefs objectForKey:MPEAudioEqualizerValues];
 	
 	for (NSString *arg in arguments)
 		[parts addObject:[NSString stringWithFormat:@"%.2f",[values floatForKey:arg]]];
