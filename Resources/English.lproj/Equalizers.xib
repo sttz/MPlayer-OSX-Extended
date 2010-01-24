@@ -1865,7 +1865,7 @@
 						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
 						<reference key="source" ref="734166809"/>
 						<reference key="destination" ref="1001"/>
-						<object class="NSNibBindingConnector" key="connector" id="555811039">
+						<object class="NSNibBindingConnector" key="connector" id="17231590">
 							<reference key="NSSource" ref="734166809"/>
 							<reference key="NSDestination" ref="1001"/>
 							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
@@ -1878,46 +1878,10 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled2: values.MPEAudioEqualizerSelectedPreset</string>
-						<reference key="source" ref="734166809"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="734166809"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled2: values.MPEAudioEqualizerSelectedPreset</string>
-							<string key="NSBinding">enabled2</string>
-							<string key="NSKeyPath">values.MPEAudioEqualizerSelectedPreset</string>
-							<object class="NSDictionary" key="NSOptions">
-								<bool key="EncodedWithXMLCoder">YES</bool>
-								<object class="NSArray" key="dict.sortedKeys">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<string>NSMultipleValuesPlaceholder</string>
-									<string>NSNoSelectionPlaceholder</string>
-									<string>NSNotApplicablePlaceholder</string>
-									<string>NSNullPlaceholder</string>
-									<string>NSValueTransformerName</string>
-								</object>
-								<object class="NSMutableArray" key="dict.values">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<integer value="-1"/>
-									<integer value="-1"/>
-									<integer value="-1"/>
-									<integer value="-1"/>
-									<string>NSIsNil</string>
-								</object>
-							</object>
-							<reference key="NSPreviousConnector" ref="555811039"/>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">633</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
 						<string key="label">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
 						<reference key="source" ref="572104501"/>
 						<reference key="destination" ref="1001"/>
-						<object class="NSNibBindingConnector" key="connector" id="308754133">
+						<object class="NSNibBindingConnector" key="connector" id="1042643781">
 							<reference key="NSSource" ref="572104501"/>
 							<reference key="NSDestination" ref="1001"/>
 							<string key="NSLabel">enabled: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerEnabled</string>
@@ -1927,42 +1891,6 @@
 						</object>
 					</object>
 					<int key="connectionID">642</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled2: values.MPEAudioEqualizerSelectedPreset</string>
-						<reference key="source" ref="572104501"/>
-						<reference key="destination" ref="52681469"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="572104501"/>
-							<reference key="NSDestination" ref="52681469"/>
-							<string key="NSLabel">enabled2: values.MPEAudioEqualizerSelectedPreset</string>
-							<string key="NSBinding">enabled2</string>
-							<string key="NSKeyPath">values.MPEAudioEqualizerSelectedPreset</string>
-							<object class="NSDictionary" key="NSOptions">
-								<bool key="EncodedWithXMLCoder">YES</bool>
-								<object class="NSArray" key="dict.sortedKeys">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<string>NSMultipleValuesPlaceholder</string>
-									<string>NSNoSelectionPlaceholder</string>
-									<string>NSNotApplicablePlaceholder</string>
-									<string>NSNullPlaceholder</string>
-									<string>NSValueTransformerName</string>
-								</object>
-								<object class="NSMutableArray" key="dict.values">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<integer value="-1"/>
-									<integer value="-1"/>
-									<integer value="-1"/>
-									<integer value="-1"/>
-									<string>NSIsNotNil</string>
-								</object>
-							</object>
-							<reference key="NSPreviousConnector" ref="308754133"/>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">643</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -2123,6 +2051,78 @@
 						</object>
 					</object>
 					<int key="connectionID">666</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled2: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerSelectedPreset</string>
+						<reference key="source" ref="734166809"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="734166809"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled2: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerSelectedPreset</string>
+							<string key="NSBinding">enabled2</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerSelectedPreset</string>
+							<object class="NSDictionary" key="NSOptions">
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSArray" key="dict.sortedKeys">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>NSMultipleValuesPlaceholder</string>
+									<string>NSNoSelectionPlaceholder</string>
+									<string>NSNotApplicablePlaceholder</string>
+									<string>NSNullPlaceholder</string>
+									<string>NSValueTransformerName</string>
+								</object>
+								<object class="NSMutableArray" key="dict.values">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<integer value="-1"/>
+									<integer value="-1"/>
+									<integer value="-1"/>
+									<integer value="-1"/>
+									<string>NSIsNil</string>
+								</object>
+							</object>
+							<reference key="NSPreviousConnector" ref="17231590"/>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">669</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled2: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerSelectedPreset</string>
+						<reference key="source" ref="572104501"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="572104501"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled2: movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerSelectedPreset</string>
+							<string key="NSBinding">enabled2</string>
+							<string key="NSKeyPath">movieInfoProvider.currentMovieInfo.prefs.MPEAudioEqualizerSelectedPreset</string>
+							<object class="NSDictionary" key="NSOptions">
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSArray" key="dict.sortedKeys">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>NSMultipleValuesPlaceholder</string>
+									<string>NSNoSelectionPlaceholder</string>
+									<string>NSNotApplicablePlaceholder</string>
+									<string>NSNullPlaceholder</string>
+									<string>NSValueTransformerName</string>
+								</object>
+								<object class="NSMutableArray" key="dict.values">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<integer value="-1"/>
+									<integer value="-1"/>
+									<integer value="-1"/>
+									<integer value="-1"/>
+									<string>NSIsNotNil</string>
+								</object>
+							</object>
+							<reference key="NSPreviousConnector" ref="1042643781"/>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">671</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -3204,7 +3204,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">666</int>
+			<int key="maxID">671</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

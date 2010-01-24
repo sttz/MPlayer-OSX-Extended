@@ -41,6 +41,7 @@
 
 - (void) openAudioEqualizer;
 - (IBAction) resetAudioEqualizer:(id)sender;
+- (void)selectAudioEqualizerPreset;
 - (IBAction) changePreset:(NSPopUpButton *)sender;
 - (IBAction) changeAudioValue:(NSSlider *)sender;
 - (IBAction) addAudioPreset:(NSButton *)sender;

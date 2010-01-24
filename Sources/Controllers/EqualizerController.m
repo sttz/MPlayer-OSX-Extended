@@ -43,23 +43,41 @@
 									   forKeyPath:[localPrefsPath stringByAppendingString:MPEAudioEqualizerEnabled]
 										  options:0
 										  context:nil];
+	[[AppController sharedController] addObserver:self
+									   forKeyPath:[localPrefsPath stringByAppendingString:MPEAudioEqualizerSelectedPreset]
+										  options:0
+										  context:nil];
 	
-	
-	
+	[self selectAudioEqualizerPreset];
+}
+
+- (void)selectAudioEqualizerPreset
+{
 	// Select current preset (no object: custom preset)
 	MovieInfo *info = [AppController sharedController].movieInfoProvider.currentMovieInfo;
-	if ([info.prefs objectForKey:MPEAudioEqualizerSelectedPreset])
-		[presetSelectionPopUp selectItemWithTitle:[info.prefs objectForKey:MPEAudioEqualizerSelectedPreset]];
-	else
-		[presetSelectionPopUp selectItemWithTag:0];
+	NSString *title = [info.prefs objectForKey:MPEAudioEqualizerSelectedPreset];
+	
+	if (title)
+		if ([presetSelectionPopUp itemWithTitle:title]) {
+			[presetSelectionPopUp selectItemWithTitle:title];
+			return;
+		} else
+			// Reset removed preset
+			[[info prefs] removeObjectForKey:MPEAudioEqualizerSelectedPreset];
+	
+	[presetSelectionPopUp selectItemWithTag:0];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
 	MovieInfo *info = [AppController sharedController].movieInfoProvider.currentMovieInfo;
+	
 	if (([keyPath hasSuffix:MPEVideoEqualizerEnabled] || [keyPath hasSuffix:MPEAudioEqualizerEnabled])
 		&& [[[info player] player] localChangesNeedRestart])
 		[self applyWithRestart:self];
+	
+	else if ([keyPath hasSuffix:MPEAudioEqualizerSelectedPreset])
+		[self selectAudioEqualizerPreset];
 }
 
 - (IBAction) applyWithRestart:(id)sender
