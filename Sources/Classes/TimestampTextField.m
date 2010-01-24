@@ -30,8 +30,13 @@
 
 - (void)updateTimestamp
 {
-	if (lastCurrentTime == 0) {
+	if (displayType == MPETimestampCurrent && lastCurrentTime == 0) {
 		[self setStringValue:@"00:00:00"];
+		return;
+	}
+	
+	if (displayType == MPETimestampRemaining && lastCurrentTime == 0) {
+		[self setStringValue:@"-00:00:00"];
 		return;
 	}
 	
