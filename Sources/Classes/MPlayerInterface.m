@@ -128,6 +128,7 @@ static NSArray* statusNames;
 						   MPEVideoEqualizerValues,
 						   MPEDropFrames,
 						   MPESubtitleScale,
+						   MPESubtitleItemRelativeScale,
 						   nil];
 	
 	statusNames = [[NSArray alloc] initWithObjects:
@@ -171,24 +172,6 @@ static NSArray* statusNames;
 	// Disable MPlayer AppleRemote code unconditionally, as it causing problems 
 	// when MPlayer runs in background only and we provide our own AR implementation.
 	disableAppleRemote = YES;
-	
-	// Watch for framedrop changes
-	/*[PREFS addObserver:self
-			forKeyPath:MPEDropFrames
-			   options:NSKeyValueObservingOptionNew
-			   context:nil];
-	
-	// Watch for osd level changes
-	[PREFS addObserver:self
-			forKeyPath:MPEOSDLevel
-			   options:NSKeyValueObservingOptionNew
-			   context:nil];
-	
-	// Watch for subtitle size changes
-	[PREFS addObserver:self
-			forKeyPath:MPESubtitleScale
-			   options:NSKeyValueObservingOptionNew
-			   context:nil];*/
 	
 	return self;
 }
@@ -476,8 +459,11 @@ static NSArray* statusNames;
 	
 	// subtitles scale
 	if ([cPrefs floatForKey:MPESubtitleScale] > 0) {
+		float scale = [cPrefs floatForKey:MPESubtitleScale];
+		if ([cPrefs objectForKey:MPESubtitleItemRelativeScale])
+			scale *= [cPrefs floatForKey:MPESubtitleItemRelativeScale];
 		[params addObject:@"-ass-font-scale"];
-		[params addObject:[NSString stringWithFormat:@"%.3f",[cPrefs floatForKey:MPESubtitleScale]]];
+		[params addObject:[NSString stringWithFormat:@"%.3f",scale]];
 	}
 	
 	// embedded fonts
@@ -855,8 +841,10 @@ static NSArray* statusNames;
 	} else if ([keyPath isEqualToString:MPEAudioItemRelativeVolume]) {
 		[self applyVolume];
 	
-	} else if ([keyPath isEqualToString:MPESubtitleScale]) {
+	} else if ([keyPath isEqualToString:MPESubtitleScale] || [keyPath isEqualToString:MPESubtitleItemRelativeScale]) {
 		float sub_scale = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
+		if ([[playingItem prefs] objectForKey:MPESubtitleItemRelativeScale])
+			sub_scale *= [[playingItem prefs] floatForKey:MPESubtitleItemRelativeScale];
 		[self sendCommand:[NSString stringWithFormat:@"set_property sub_scale %f",sub_scale]];
 	
 	} else if ([keyPath isEqualToString:MPEPlaybackSpeed]) {

@@ -243,6 +243,12 @@ static const float const collapsedSectionHeight = 20.0f;
 	[audioBoost performClick:self];
 }
 
+- (IBAction)resetSubtitleScale:(id)sender
+{
+	[subtitleScale setDoubleValue:1.0];
+	[subtitleScale performClick:self];
+}
+
 - (void)dealloc
 {
 	[views release];
@@ -257,7 +263,7 @@ static const float const collapsedSectionHeight = 20.0f;
 
 
 
-@implementation PlaybackSpeedTransfomer
+@implementation MultiplicatorTransformer100Fold
 
 + (Class)transformedValueClass
 {
@@ -279,9 +285,9 @@ static const float const collapsedSectionHeight = 20.0f;
 	float speed = [speedNumber floatValue];
 	
 	if (speed <= 1.0)
-		return [NSNumber numberWithFloat:(speed*100)];
+		return [NSNumber numberWithFloat:(speed*self.scale)];
 	else
-		return [NSNumber numberWithFloat:(speed+99)];
+		return [NSNumber numberWithFloat:(speed+(self.scale-1))];
 
 }
 
@@ -294,11 +300,14 @@ static const float const collapsedSectionHeight = 20.0f;
 	
 	float sliderValue = [sliderNumber floatValue];
 	
-	if (sliderValue <= 100.0)
-		return [NSNumber numberWithFloat:(sliderValue/100)];
+	if (sliderValue <= self.scale)
+		return [NSNumber numberWithFloat:(sliderValue/self.scale)];
 	else
-		return [NSNumber numberWithFloat:(sliderValue-99)];
+		return [NSNumber numberWithFloat:(sliderValue-(self.scale-1))];
+}
+
+- (float)scale {
+	return 100.0;
 }
 
 @end
-

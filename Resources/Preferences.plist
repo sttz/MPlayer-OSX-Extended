@@ -589,6 +589,8 @@
 		<string>MPESelectedBinary</string>
 		<string>MPEUse32bitBinaryon64bit</string>
 		<string>MPEAdvancedOptions</string>
+		<string>MPEVideoEqualizerEnabled</string>
+		<string>MPEAudioEqualizerEnabled</string>
 	</array>
 </dict>
 </plist>

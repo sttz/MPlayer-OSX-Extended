@@ -54,6 +54,7 @@
 	IBOutlet NSSlider *audioDelay;
 	IBOutlet NSSlider *subtitleDelay;
 	IBOutlet NSSlider *audioBoost;
+	IBOutlet NSSlider *subtitleScale;
 }
 
 @property (nonatomic,readonly) NSWindow *window;
@@ -67,8 +68,10 @@
 - (IBAction)resetAudioDelay:(id)sender;
 - (IBAction)resetSubtitleDelay:(id)sender;
 - (IBAction)resetAudioBoost:(id)sender;
+- (IBAction)resetSubtitleScale:(id)sender;
 
 @end
 
-@interface PlaybackSpeedTransfomer : NSValueTransformer { }
+@interface MultiplicatorTransformer100Fold : NSValueTransformer { }
+- (float)scale;
 @end

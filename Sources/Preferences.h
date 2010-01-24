@@ -86,6 +86,7 @@ extern NSString* const MPEStartPlaybackDisplayType;
 extern NSString* const MPEStartTime;
 extern NSString* const MPESubtitleBorderColor;
 extern NSString* const MPESubtitleDelay;
+extern NSString* const MPESubtitleItemRelativeScale;
 extern NSString* const MPESubtitleScale;
 extern NSString* const MPESubtitleTextColor;
 extern NSString* const MPETextEncoding;

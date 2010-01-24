@@ -85,6 +85,7 @@ NSString* const MPEStartPlaybackDisplayType           = @"MPEStartPlaybackDispla
 NSString* const MPEStartTime                          = @"MPEStartTime";
 NSString* const MPESubtitleBorderColor                = @"MPESubtitleBorderColor";
 NSString* const MPESubtitleDelay                      = @"MPESubtitleDelay";
+NSString* const MPESubtitleItemRelativeScale          = @"MPESubtitleItemRelativeScale";
 NSString* const MPESubtitleScale                      = @"MPESubtitleScale";
 NSString* const MPESubtitleTextColor                  = @"MPESubtitleTextColor";
 NSString* const MPETextEncoding                       = @"MPETextEncoding";
