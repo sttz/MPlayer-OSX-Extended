@@ -1766,6 +1766,8 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	[menuController->toggleMuteMenuItem setState:NSOffState];
 	
 	[menuController->playMenuItem setTitle:@"Play"];
+	
+	appleRemoteHolding = NO;
 }
 
 - (BOOL) isCurrentPlayer
