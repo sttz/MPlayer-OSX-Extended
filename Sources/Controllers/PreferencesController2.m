@@ -286,14 +286,10 @@
 		binaryUpdaters = [NSMutableDictionary new];
 	}
 	
-	NSString *binPath;
+	NSString *binPath = [AppController userApplicationSupportDirectoryPath];
 	
-	// First scan the users' application support directory
-	NSArray *results = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,
-														   NSUserDomainMask, YES);
-	
-	if ([results count] > 0) {
-		binPath = [[results objectAtIndex:0] stringByAppendingPathComponent:@"MPlayer OSX Extended/Binaries"];
+	if (binPath) {
+		binPath = [binPath stringByAppendingPathComponent:@"MPlayer OSX Extended/Binaries"];
 		if ([[NSFileManager defaultManager] fileExistsAtPath:binPath])
 			[self loadBinariesFromDirectory:binPath];
 	}

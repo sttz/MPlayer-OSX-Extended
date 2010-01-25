@@ -84,6 +84,7 @@ PlayListController, MenuController, InspectorController, MovieInfo;
 @property (nonatomic,retain) id<MovieInfoProvider> movieInfoProvider;
 
 + (AppController *) sharedController;
++ (NSString *) userApplicationSupportDirectoryPath;
 
 // app's interface
 - (NSUserDefaults *) preferences;

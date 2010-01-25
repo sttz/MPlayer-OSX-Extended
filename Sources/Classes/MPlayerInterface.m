@@ -1210,10 +1210,15 @@ static NSArray* statusNames;
 	// get current environment and make appropriate changes
 	env = [[[NSProcessInfo processInfo] environment] mutableCopy];
 	[env autorelease];
+	
 	// enable bind-at-launch behavior for dyld to use DLL codecs
     [env setObject:@"1" forKey:@"DYLD_BIND_AT_LAUNCH"];
     // set fontconfig path
 	[env setObject:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"fonts"] forKey:@"FONTCONFIG_PATH"];
+	// set mplayer home
+	NSString *appSupport = [AppController userApplicationSupportDirectoryPath];
+	[env setObject:[appSupport stringByAppendingPathComponent:@"MPlayer OSX Extended/MPlayer"] forKey:@"MPLAYER_HOME"];
+	
 	// Apply environment variables
 	[myMplayerTask setEnvironment:env];
 
@@ -1245,6 +1250,7 @@ static NSArray* statusNames;
 	[self setState:MIStateInitializing];
 	
 	[Debug log:ASL_LEVEL_INFO withMessage:@"Path to fontconfig: %@", [[myMplayerTask environment] objectForKey:@"FONTCONFIG_PATH"]];
+	[Debug log:ASL_LEVEL_INFO withMessage:@"Path to MPlayer home: %@", [[myMplayerTask environment] objectForKey:@"MPLAYER_HOME"]];
 }
 /************************************************************************************/
 - (void)sendToMplayersInput:(NSString *)aCommand

@@ -106,9 +106,9 @@
 	
 	value = [eqValues floatForKey:MPEVideoEqualizerGamma];
 	if (value < 0)
-		value = 0.123f + 0.777f * (100.0f + value)/100.0f;
+		value = 0.123f + 0.777f * (110.0f + value)/110.0f;
 	else
-		value = 1.0f + 9.0f * (value/100.0f);
+		value = 1.0f + 9.0f * (value/110.0f);
 	[values addObject:[NSString stringWithFormat:@"%.2f",value]];
 	
 	value = [eqValues floatForKey:MPEVideoEqualizerContrast];

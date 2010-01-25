@@ -740,5 +740,15 @@ static AppController *instance = nil;
 	else
 		[Debug log:ASL_LEVEL_ERR withMessage:@"No feed URL found for automatic updates."];
 }
-
+/******************************************************************************/
++ (NSString *) userApplicationSupportDirectoryPath
+{
+	NSArray *results = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,
+														   NSUserDomainMask, YES);
+	if ([results count] > 0)
+		return [results objectAtIndex:0];
+	else
+		return nil;
+}
+/******************************************************************************/
 @end
