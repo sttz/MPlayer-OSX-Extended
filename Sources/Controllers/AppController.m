@@ -184,6 +184,19 @@ static AppController *instance = nil;
 	return [players objectAtIndex:0];
 }
 
+- (void) setPlayerController:(PlayerController *)player
+{
+	if (playerController) {
+		[playerController playerWillResignCurrentPlayer];
+		[playerController release];
+	}
+	
+	playerController = [player retain];
+	[playerController playerDidBecomeCurrentPlayer];
+	
+	[appleRemote setDelegate:playerController];
+}
+
 /************************************************************************************
  ACTIONS
  ************************************************************************************/
@@ -710,7 +723,6 @@ static AppController *instance = nil;
 	// enable apple remote support
 	appleRemote = [[AppleRemote alloc] init];
 	[appleRemote setClickCountEnabledButtons: kRemoteButtonPlay];
-	[appleRemote setDelegate: [self playerController]];
 	
 	// set sparkle feed url for prereleases
 	[self setSparkleFeed];

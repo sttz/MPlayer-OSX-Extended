@@ -72,6 +72,13 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	pauseImageOn = [[NSImage imageNamed:@"pause_button_on"] retain];
 	pauseImageOff = [[NSImage imageNamed:@"pause_button_off"] retain];
 	
+	// create menus
+	videoStreamsMenu     = [NSMenu new];
+	audioStreamsMenu     = [NSMenu new];
+	subtitleStreamsMenu  = [NSMenu new];
+	chaptersMenu         = [NSMenu new];
+	fullscreenDeviceMenu = [NSMenu new];
+	
 	// Save reference to menu controller
 	menuController = [[AppController sharedController] menuController];
 	
@@ -199,6 +206,12 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	[playImageOff release];
 	[pauseImageOn release];
 	[pauseImageOff release];
+	
+	[videoStreamsMenu release];
+	[audioStreamsMenu release];
+	[subtitleStreamsMenu release];
+	[chaptersMenu release];
+	[fullscreenDeviceMenu release];
 	
 	[super dealloc];
 }
@@ -553,7 +566,8 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	[volumeButton setImage:volumeImage];
 	[volumeButton setNeedsDisplay:YES];
 	
-	[menuController->toggleMuteMenuItem setState:(volume == 0)];
+	if ([self isCurrentPlayer])
+		[menuController->toggleMuteMenuItem setState:(volume == 0)];
 }
 
 // Volume change action from sliders
@@ -638,6 +652,8 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 
 - (void) updateLoopStatus
 {
+	if (![self isCurrentPlayer]) return;
+	
 	if (movieInfo && [[movieInfo prefs] boolForKey:MPELoopMovie])
 		[menuController->loopMenuItem setState:NSOnState];
 	else
@@ -949,6 +965,8 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 /************************************************************************************/
 - (void)clearStreamMenus {
 	
+	if (![self isCurrentPlayer]) return;
+	
 	NSMenuItem *parentMenu;
 	int j;
 	
@@ -976,18 +994,23 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		}
 		
 		[parentMenu setEnabled:NO];
-		[[parentMenu submenu] removeAllItems];
 	}
 	
 }
 /************************************************************************************/
 - (void)fillStreamMenus {
 	
+	if (![self isCurrentPlayer]) return;
+	
 	// clear menus
 	[self clearStreamMenus];
 	
 	if (!movieInfo)
 		return;
+	
+	[videoStreamsMenu removeAllItems];
+	[audioStreamsMenu removeAllItems];
+	[subtitleStreamsMenu removeAllItems];
 	
 	NSEnumerator *streams;
 	NSMenu *menu;
@@ -996,7 +1019,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	if ([movieInfo videoStreamCount] > 0) {
 		
 		streams = [movieInfo getVideoStreamsEnumerator];
-		menu = [menuController->videoStreamMenu submenu];
+		menu = videoStreamsMenu;
 		
 		for (NSNumber *streamId in streams) {
 			NSMenuItem *item = [menu addItemWithTitle:[movieInfo descriptionForVideoStream:[streamId intValue]]
@@ -1005,6 +1028,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 			[item setRepresentedObject:streamId];
 		}
 		
+		[menuController->videoStreamMenu setSubmenu:videoStreamsMenu];
 		[videoWindowItem setSubmenu:[[menu copy] autorelease]];
 		
 		[menuController->videoStreamMenu setEnabled:YES];
@@ -1015,7 +1039,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	if ([movieInfo audioStreamCount] > 0) {
 		
 		streams = [movieInfo getAudioStreamsEnumerator];
-		menu = [menuController->audioStreamMenu submenu];
+		menu = audioStreamsMenu;
 		
 		for (NSNumber *streamId in streams) {
 			NSMenuItem *item = [menu addItemWithTitle:[movieInfo descriptionForAudioStream:[streamId intValue]]
@@ -1024,6 +1048,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 			[item setRepresentedObject:streamId];
 		}
 		
+		[menuController->audioStreamMenu setSubmenu:audioStreamsMenu];
 		[audioWindowItem setSubmenu:[[menu copy] autorelease]];
 		
 		[menuController->audioStreamMenu setEnabled:YES];
@@ -1033,7 +1058,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	// subtitle stream menu
 	if ([movieInfo subtitleCountForType:SubtitleTypeAll]) {
 		
-		menu = [menuController->subtitleStreamMenu submenu];
+		menu = subtitleStreamsMenu;
 		
 		// add "disabled" item
 		NSMenuItem *item = [menu addItemWithTitle:@"Disabled"
@@ -1079,6 +1104,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 			}
 		}
 		
+		[menuController->subtitleStreamMenu setSubmenu:subtitleStreamsMenu];
 		[subtitleWindowItem setSubmenu:[[menu copy] autorelease]];
 		
 		[menuController->subtitleStreamMenu setEnabled:YES];
@@ -1208,7 +1234,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 /************************************************************************************/
 - (void)newVideoStreamId:(int)streamId {
 	
-	[[menuController->videoStreamMenu submenu] setStateOfAllItemsTo:NSOffState];
+	[videoStreamsMenu setStateOfAllItemsTo:NSOffState];
 	[[videoWindowItem submenu] setStateOfAllItemsTo:NSOffState];
 	videoStreamId = streamId;
 	
@@ -1217,14 +1243,14 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		NSMenuItem *item = [[videoWindowItem submenu] itemWithRepresentedIntegerValue:streamId];
 		[item setState:NSOnState];
 		
-		item = [[menuController->videoStreamMenu submenu] itemWithRepresentedIntegerValue:streamId];
+		item = [videoStreamsMenu itemWithRepresentedIntegerValue:streamId];
 		[item setState:NSOnState];
 	}
 }
 
 - (void)newAudioStreamId:(int)streamId {
 	
-	[[menuController->audioStreamMenu submenu] setStateOfAllItemsTo:NSOffState];
+	[audioStreamsMenu setStateOfAllItemsTo:NSOffState];
 	[[audioWindowItem submenu] setStateOfAllItemsTo:NSOffState];
 	audioStreamId = streamId;
 	
@@ -1233,14 +1259,14 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		NSMenuItem *item = [[audioWindowItem submenu] itemWithRepresentedIntegerValue:streamId];
 		[item setState:NSOnState];
 		
-		item = [[menuController->audioStreamMenu submenu] itemWithRepresentedIntegerValue:streamId];
+		item = [audioStreamsMenu itemWithRepresentedIntegerValue:streamId];
 		[item setState:NSOnState];
 	}
 }
 
 - (void)newSubtitleStreamId:(int)streamId forType:(SubtitleType)type {
 	
-	[[menuController->subtitleStreamMenu submenu] setStateOfAllItemsTo:NSOffState];
+	[subtitleStreamsMenu setStateOfAllItemsTo:NSOffState];
 	[[subtitleWindowItem submenu] setStateOfAllItemsTo:NSOffState];
 	subtitleDemuxStreamId = -1; subtitleFileStreamId = -1; subtitleVobStreamId = -1;
 	
@@ -1254,45 +1280,47 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 			subtitleVobStreamId = streamId;
 		
 		int index = -1;
-		for (NSMenuItem *item in [[menuController->subtitleStreamMenu submenu] itemArray]) {
+		for (NSMenuItem *item in [subtitleStreamsMenu itemArray]) {
 			NSArray *arr = [item representedObject];
 			if (arr && [arr count] == 2 
 				&& [[arr objectAtIndex:0] intValue] == type
 				&& [[arr objectAtIndex:1] intValue] == streamId) {
-				index = [[menuController->subtitleStreamMenu submenu] indexOfItem:item];
+				index = [subtitleStreamsMenu indexOfItem:item];
 				break;
 			}
 		}
 		
 		if (index != -1) {
-			[[[menuController->subtitleStreamMenu submenu] itemAtIndex:index] setState:NSOnState];
+			[[subtitleStreamsMenu itemAtIndex:index] setState:NSOnState];
 			[[[subtitleWindowItem submenu] itemAtIndex:index] setState:NSOnState];
 		}
 	
 	} else {
 		
-		[[[menuController->subtitleStreamMenu submenu] itemAtIndex:0] setState:NSOnState];
+		[[subtitleStreamsMenu itemAtIndex:0] setState:NSOnState];
 		[[[subtitleWindowItem submenu] itemAtIndex:0] setState:NSOnState];
 	}
 }
 /************************************************************************************/
 - (void)clearChapterMenu {
 	
+	if (![self isCurrentPlayer]) return;
+	
 	[menuController->chapterMenu setEnabled:NO];
 	[chapterWindowItem setEnabled:NO];
-	
-	[[menuController->chapterMenu submenu] removeAllItems];
-	[[chapterWindowItem submenu] removeAllItems];
 }
 /************************************************************************************/
 - (void)fillChapterMenu {
 	
+	if (![self isCurrentPlayer]) return;
+	
 	[self clearChapterMenu];
+	[chaptersMenu removeAllItems];
 	
 	if (movieInfo && [movieInfo chapterCount] > 0) {
 		
 		NSEnumerator *chapters = [movieInfo getChaptersEnumerator];
-		NSMenu *menu = [menuController->chapterMenu submenu];
+		NSMenu *menu = chaptersMenu;
 		
 		for (NSNumber *chapterId in chapters) {
 			int cid = [chapterId intValue];
@@ -1302,6 +1330,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 			[item setRepresentedObject:chapterId];
 		}
 		
+		[menuController->chapterMenu setSubmenu:chaptersMenu];
 		[chapterWindowItem setSubmenu:[[menu copy] autorelease]];
 		
 		[chapterWindowItem setEnabled:YES];
@@ -1318,7 +1347,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	
 	if (movieInfo && [movieInfo chapterCount] > 0) {
 		
-		[[menuController->chapterMenu submenu] setStateOfAllItemsTo:NSOffState];
+		[chaptersMenu setStateOfAllItemsTo:NSOffState];
 		[[chapterWindowItem submenu] setStateOfAllItemsTo:NSOffState];
 		
 		NSEnumerator *en = [movieInfo getChaptersEnumerator];
@@ -1337,10 +1366,10 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		
 		if (bestKey) {
 			
-			int index = [[menuController->chapterMenu submenu] indexOfItemWithRepresentedObject:bestKey];
+			int index = [chaptersMenu indexOfItemWithRepresentedObject:bestKey];
 			
 			if (index != -1) {
-				[[[menuController->chapterMenu submenu] itemAtIndex:index] setState:NSOnState];
+				[[chaptersMenu itemAtIndex:index] setState:NSOnState];
 				[[[chapterWindowItem submenu] itemAtIndex:index] setState:NSOnState];
 				currentChapter = [bestKey intValue];
 			}
@@ -1357,18 +1386,20 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 /************************************************************************************/
 - (void)clearFullscreenMenu {
 	
+	if (![self isCurrentPlayer]) return;
+	
 	[menuController->fullscreenMenu setEnabled:NO];
 	[fullscreenWindowItem setEnabled:NO];
-	
-	[[menuController->fullscreenMenu submenu] removeAllItems];
-	[[fullscreenWindowItem submenu] removeAllItems];
 }
 /************************************************************************************/
 - (void)fillFullscreenMenu {
 	
-	[self clearFullscreenMenu];
+	if (![self isCurrentPlayer]) return;
 	
-	NSMenu *menu = [menuController->fullscreenMenu submenu];
+	[self clearFullscreenMenu];
+	[fullscreenDeviceMenu removeAllItems];
+	
+	NSMenu *menu = fullscreenDeviceMenu;
 	NSArray *screens = [NSScreen screens];
 	NSMenuItem *item;
 	
@@ -1398,6 +1429,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		[item setRepresentedObject:[NSNumber numberWithInt:i]];
 	}
 	
+	[menuController->fullscreenMenu setSubmenu:fullscreenDeviceMenu];
 	[fullscreenWindowItem setSubmenu:[[menu copy] autorelease]];
 	
 	[menuController->fullscreenMenu setEnabled:YES];
@@ -1417,32 +1449,32 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 /************************************************************************************/
 - (void)selectFullscreenDevice {
 	
-	[[menuController->fullscreenMenu submenu] setStateOfAllItemsTo:NSOffState];
+	[fullscreenDeviceMenu setStateOfAllItemsTo:NSOffState];
 	[[fullscreenWindowItem submenu] setStateOfAllItemsTo:NSOffState];
 	
 	// index of currently selected device
-	int index = [[menuController->fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:[self fullscreenDeviceId]]];
+	int index = [fullscreenDeviceMenu indexOfItemWithRepresentedObject:[NSNumber numberWithInt:[self fullscreenDeviceId]]];
 	int state = (fullscreenDeviceId < 0) ? NSMixedState : NSOnState;
 	
 	if (index != -1) {
-		[[[menuController->fullscreenMenu submenu] itemAtIndex:index] setState:state];
+		[[fullscreenDeviceMenu itemAtIndex:index] setState:state];
 		[[[fullscreenWindowItem submenu] itemAtIndex:index] setState:state];
 	}
 	
 	// select auto entry
 	if (fullscreenDeviceId == -2) {
 		
-		int index = [[menuController->fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-2]];
+		int index = [fullscreenDeviceMenu indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-2]];
 		
-		[[[menuController->fullscreenMenu submenu] itemAtIndex:index] setState:NSOnState];
+		[[fullscreenDeviceMenu itemAtIndex:index] setState:NSOnState];
 		[[[fullscreenWindowItem submenu] itemAtIndex:index] setState:NSOnState];
 	
 		// same entry implicit selection
 		if ([PREFS integerForKey:MPEGoToFullscreenOn] == MPEGoToFullscreenOnSameScreen) {
 			
-			int index = [[menuController->fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-1]];
+			int index = [fullscreenDeviceMenu indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-1]];
 			
-			[[[menuController->fullscreenMenu submenu] itemAtIndex:index] setState:NSMixedState];
+			[[fullscreenDeviceMenu itemAtIndex:index] setState:NSMixedState];
 			[[[fullscreenWindowItem submenu] itemAtIndex:index] setState:NSMixedState];
 		}
 	}
@@ -1450,9 +1482,9 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	// select same entry
 	if (fullscreenDeviceId == -1) {
 		
-		int index = [[menuController->fullscreenMenu submenu] indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-1]];
+		int index = [fullscreenDeviceMenu indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-1]];
 		
-		[[[menuController->fullscreenMenu submenu] itemAtIndex:index] setState:NSOnState];
+		[[fullscreenDeviceMenu itemAtIndex:index] setState:NSOnState];
 		[[[fullscreenWindowItem submenu] itemAtIndex:index] setState:NSOnState];
 	}
 }
@@ -1529,13 +1561,15 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 			// Update interface
 			[playButton setImage:pauseImageOff];
 			[playButton setAlternateImage:pauseImageOn];
-			[menuController->playMenuItem setTitle:@"Pause"];
+			if ([self isCurrentPlayer])
+				[menuController->playMenuItem setTitle:@"Pause"];
 		// Pausing
 		} else if (stateMask & MIStatePPPausedMask) {
 			// Update interface
 			[playButton setImage:playImageOff];
 			[playButton setAlternateImage:playImageOn];
-			[menuController->playMenuItem setTitle:@"Play"];
+			if ([self isCurrentPlayer])
+				[menuController->playMenuItem setTitle:@"Play"];
 			
 		}
 		
@@ -1710,6 +1744,36 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	return YES;
 }
 /************************************************************************************/
+- (void) playerDidBecomeCurrentPlayer
+{
+	[self fillStreamMenus];
+	[self fillChapterMenu];
+	[self fillFullscreenMenu];
+	
+	[self updateLoopStatus];
+	[menuController->toggleMuteMenuItem setState:(self.volume == 0)];
+	
+	[menuController->playMenuItem setTitle:([myPlayer isPlaying] ? @"Pause" : @"Play")];
+}
+
+- (void) playerWillResignCurrentPlayer
+{
+	[self clearStreamMenus];
+	[self clearChapterMenu];
+	[self clearFullscreenMenu];
+	
+	[menuController->loopMenuItem setState:NSOffState];
+	[menuController->toggleMuteMenuItem setState:NSOffState];
+	
+	[menuController->playMenuItem setTitle:@"Play"];
+}
+
+- (BOOL) isCurrentPlayer
+{
+	return ([[AppController sharedController] playerController] == self);
+}
+
+/************************************************************************************/
 // executes when window is closed
 - (BOOL)windowShouldClose:(id)sender
 {
@@ -1724,7 +1788,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	} else
 		closeNow = YES;
 	
-	if ([[AppController sharedController] playerController] == self)
+	if ([self isCurrentPlayer])
 		[[AppController sharedController] setPlayerController:nil];
 	
 	[self stop:nil];
@@ -1745,7 +1809,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	if (movieInfo && [[AppController sharedController] movieInfoProvider] != self)
 		[[AppController sharedController] setMovieInfoProvider:self];
 	
-	if ([[AppController sharedController] playerController] != self)
+	if (![self isCurrentPlayer])
 		[[AppController sharedController] setPlayerController:self];
 }
 

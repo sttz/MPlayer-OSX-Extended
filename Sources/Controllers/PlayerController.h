@@ -46,6 +46,13 @@ extern NSString* const MPEPlaybackStoppedNotification;
 	IBOutlet NSMenuItem *chapterWindowItem;
 	IBOutlet NSMenuItem *fullscreenWindowItem;
 	
+	// Menus
+	NSMenu *videoStreamsMenu;
+	NSMenu *audioStreamsMenu;
+	NSMenu *subtitleStreamsMenu;
+	NSMenu *chaptersMenu;
+	NSMenu *fullscreenDeviceMenu;
+	
 	// Fullscreen controls
 	IBOutlet FullscreenControls *fullScreenControls;
 	
@@ -180,6 +187,10 @@ extern NSString* const MPEPlaybackStoppedNotification;
 - (void) progresBarClicked:(NSNotification *)notification;
 - (void) updatePlayerWindow;
 - (void) mplayerCrashed:(NSNotification *)notification;
+
+- (BOOL) isCurrentPlayer;
+- (void) playerDidBecomeCurrentPlayer;
+- (void) playerWillResignCurrentPlayer;
 
 // window delegate methods
 - (BOOL)windowShouldZoom:(NSWindow *)sender toFrame:(NSRect)newFrame;

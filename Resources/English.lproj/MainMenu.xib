@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="24"/>
+			<integer value="19219"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -3472,6 +3472,22 @@
 					</object>
 					<int key="connectionID">19606</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: playerController.player.movieOpen</string>
+						<reference key="source" ref="207953085"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="207953085"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19608</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -5845,7 +5861,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">19606</int>
+			<int key="maxID">19608</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -6067,10 +6083,12 @@
 							<string>resetAudioDelay:</string>
 							<string>resetPlaybackSpeed:</string>
 							<string>resetSubtitleDelay:</string>
+							<string>resetSubtitleScale:</string>
 							<string>toggleSection:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -6095,6 +6113,7 @@
 							<string>statisticsSection</string>
 							<string>statisticsTriangle</string>
 							<string>subtitleDelay</string>
+							<string>subtitleScale</string>
 							<string>window</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -6110,6 +6129,7 @@
 							<string>NSScrollView</string>
 							<string>NSView</string>
 							<string>NSButton</string>
+							<string>NSSlider</string>
 							<string>NSSlider</string>
 							<string>NSWindow</string>
 						</object>
