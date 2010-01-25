@@ -25,6 +25,10 @@
 #import <Cocoa/Cocoa.h>
 #import <objc/Protocol.h>
 
+@interface NSString (MPEAdditions)
+- (NSComparisonResult)numericSearchCompare:(NSString *)aString;
+@end
+
 @interface NSNumber (MPEAdditions)
 - (NSString *) humanReadableSizeStringValue;
 @end

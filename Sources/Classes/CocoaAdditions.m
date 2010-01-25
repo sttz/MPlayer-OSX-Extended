@@ -25,6 +25,16 @@
 #import "CocoaAdditions.h"
 #import <AppKit/NSView.h>
 
+@implementation NSString (MPEAdditions)
+
+- (NSComparisonResult)numericSearchCompare:(NSString *)aString
+{
+	return [self compare:aString options:NSNumericSearch];
+}
+
+@end
+
+
 @implementation NSNumber (MPEAdditions)
 
 - (NSString *) humanReadableSizeStringValue

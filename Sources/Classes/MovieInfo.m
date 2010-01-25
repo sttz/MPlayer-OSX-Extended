@@ -393,17 +393,17 @@ externalSubtitles, captureStats, playbackStats, player;
 
 -(void)newVideoStream:(unsigned int)streamId {
 	
-	[video setObject:@"" forKey:[NSNumber numberWithUnsignedInt:streamId]];
+	[video setObject:@"" forKey:[NSString stringWithFormat:@"%u",streamId]];
 }
 
 -(void)setVideoStreamName:(NSString *)streamName forId:(unsigned int)streamId {
 	
-	[video setObject:streamName forKey:[NSNumber numberWithUnsignedInt:streamId]];
+	[video setObject:streamName forKey:[NSString stringWithFormat:@"%u",streamId]];
 }
 
 -(NSString *)videoNameForStream:(unsigned int)streamId {
 	
-	return [video objectForKey:[NSNumber numberWithUnsignedInt:streamId]];
+	return [video objectForKey:[NSString stringWithFormat:@"%u",streamId]];
 }
 
 -(unsigned int)videoStreamCount {
@@ -414,7 +414,7 @@ externalSubtitles, captureStats, playbackStats, player;
 -(NSEnumerator *)getVideoStreamsEnumerator {
 	
 	//return [video keyEnumerator];
-	return [[[video allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] objectEnumerator];
+	return [[[video allKeys] sortedArrayUsingSelector:@selector(numericSearchCompare:)] objectEnumerator];
 }
 
 -(NSString *)descriptionForVideoStream:(unsigned int)streamId {
@@ -429,18 +429,18 @@ externalSubtitles, captureStats, playbackStats, player;
 
 -(void)newAudioStream:(unsigned int)streamId {
 	
-	[audio setObject:[NSMutableArray arrayWithObjects:@"", @"", @"", nil] forKey:[NSNumber numberWithUnsignedInt:streamId]];
+	[audio setObject:[NSMutableArray arrayWithObjects:@"", @"", @"", nil] forKey:[NSString stringWithFormat:@"%u",streamId]];
 }
 
 -(void)setAudioStreamName:(NSString *)streamName forId:(unsigned int)streamId {
 	
-	[[audio objectForKey:[NSNumber numberWithUnsignedInt:streamId]] replaceObjectAtIndex:0 withObject:streamName];
+	[[audio objectForKey:[NSString stringWithFormat:@"%u",streamId]] replaceObjectAtIndex:0 withObject:streamName];
 }
 
 -(void)setAudioStreamLanguage:(NSString *)streamLanguage forId:(unsigned int)streamId {
 	
-	[[audio objectForKey:[NSNumber numberWithUnsignedInt:streamId]] replaceObjectAtIndex:1 withObject:streamLanguage];
-	[[audio		objectForKey:[NSNumber numberWithUnsignedInt:streamId]] 
+	[[audio objectForKey:[NSString stringWithFormat:@"%u",streamId]] replaceObjectAtIndex:1 withObject:streamLanguage];
+	[[audio		objectForKey:[NSString stringWithFormat:@"%u",streamId]] 
 		replaceObjectAtIndex:2 
 				  withObject:[[LanguageCodes sharedInstance] resolveCode:streamLanguage]];
 }
@@ -448,17 +448,17 @@ externalSubtitles, captureStats, playbackStats, player;
 -(void)addAudioStream:(unsigned int)streamId withName:(NSString *)streamName andLanguage:(NSString *)lang {
 	
 	[audio setObject:[NSMutableArray arrayWithObjects:streamName, lang, [[LanguageCodes sharedInstance] resolveCode:lang], nil] 
-			  forKey:[NSNumber numberWithUnsignedInt:streamId]];
+			  forKey:[NSString stringWithFormat:@"%u",streamId]];
 }
 
 -(NSString *)audioNameForStream:(unsigned int)streamId {
 	
-	return [[audio objectForKey:[NSNumber numberWithUnsignedInt:streamId]] objectAtIndex:0];
+	return [[audio objectForKey:[NSString stringWithFormat:@"%u",streamId]] objectAtIndex:0];
 }
 
 -(NSString *)audioLanguageForStream:(unsigned int)streamId {
 	
-	return [[audio objectForKey:[NSNumber numberWithUnsignedInt:streamId]] objectAtIndex:2];
+	return [[audio objectForKey:[NSString stringWithFormat:@"%u",streamId]] objectAtIndex:2];
 }
 
 -(unsigned int)audioStreamCount {
@@ -468,7 +468,7 @@ externalSubtitles, captureStats, playbackStats, player;
 
 -(NSEnumerator *)getAudioStreamsEnumerator {
 	
-	return [[[audio allKeys] sortedArrayUsingSelector:@selector(compare:)] objectEnumerator];
+	return [[[audio allKeys] sortedArrayUsingSelector:@selector(numericSearchCompare:)] objectEnumerator];
 	//return [audio keyEnumerator];
 }
 
@@ -488,29 +488,29 @@ externalSubtitles, captureStats, playbackStats, player;
 
 -(void)newSubtitleStream:(unsigned int)streamId forType:(SubtitleType)type {
 	
-	[[self subDictForType: type] setObject:[NSMutableArray arrayWithObjects:@"", @"", @"", nil] forKey:[NSNumber numberWithUnsignedInt:streamId]];
+	[[self subDictForType: type] setObject:[NSMutableArray arrayWithObjects:@"", @"", @"", nil] forKey:[NSString stringWithFormat:@"%u",streamId]];
 }
 
 -(void)setSubtitleStreamName:(NSString *)streamName forId:(unsigned int)streamId andType:(SubtitleType)type {
 	
-	[[[self subDictForType: type] objectForKey:[NSNumber numberWithUnsignedInt:streamId]] replaceObjectAtIndex:0 withObject:streamName];
+	[[[self subDictForType: type] objectForKey:[NSString stringWithFormat:@"%u",streamId]] replaceObjectAtIndex:0 withObject:streamName];
 }
 
 -(void)setSubtitleStreamLanguage:(NSString *)streamLanguage forId:(unsigned int)streamId andType:(SubtitleType)type {
 	
-	[[[self subDictForType: type] objectForKey:[NSNumber numberWithUnsignedInt:streamId]] replaceObjectAtIndex:1 withObject:streamLanguage];
-	[[[self subDictForType: type] objectForKey:[NSNumber numberWithUnsignedInt:streamId]] 
+	[[[self subDictForType: type] objectForKey:[NSString stringWithFormat:@"%u",streamId]] replaceObjectAtIndex:1 withObject:streamLanguage];
+	[[[self subDictForType: type] objectForKey:[NSString stringWithFormat:@"%u",streamId]] 
 			 replaceObjectAtIndex:2 withObject:[[LanguageCodes sharedInstance] resolveCode:streamLanguage]];
 }
 
 -(NSString *)subtitleNameForStream:(unsigned int)streamId andType:(SubtitleType)type {
 	
-	return [[[self subDictForType: type] objectForKey:[NSNumber numberWithUnsignedInt:streamId]] objectAtIndex:0];
+	return [[[self subDictForType: type] objectForKey:[NSString stringWithFormat:@"%u",streamId]] objectAtIndex:0];
 }
 
 -(NSString *)subtitleLanguageForStream:(unsigned int)streamId andType:(SubtitleType)type {
 	
-	return [[[self subDictForType: type] objectForKey:[NSNumber numberWithUnsignedInt:streamId]] objectAtIndex:2];
+	return [[[self subDictForType: type] objectForKey:[NSString stringWithFormat:@"%u",streamId]] objectAtIndex:2];
 }
 
 
@@ -525,7 +525,7 @@ externalSubtitles, captureStats, playbackStats, player;
 
 -(NSEnumerator *)getSubtitleStreamsEnumeratorForType:(SubtitleType)type {
 	
-	return [[[[self subDictForType: type] allKeys] sortedArrayUsingSelector:@selector(compare:)] objectEnumerator];
+	return [[[[self subDictForType: type] allKeys] sortedArrayUsingSelector:@selector(numericSearchCompare:)] objectEnumerator];
 	//return [[self subDictForType: type] keyEnumerator];
 }
 
@@ -557,27 +557,27 @@ externalSubtitles, captureStats, playbackStats, player;
 
 -(void)newChapter:(unsigned int)chapterId {
 	
-	[chapter setObject:[NSMutableArray arrayWithObjects:[NSNumber numberWithFloat:0.0], @"", nil] forKey:[NSNumber numberWithUnsignedInt:chapterId]];
+	[chapter setObject:[NSMutableArray arrayWithObjects:[NSNumber numberWithFloat:0.0], @"", nil] forKey:[NSString stringWithFormat:@"%u",chapterId]];
 }
 
 -(void)setChapterStartTime:(NSNumber *)startTime forId:(unsigned int)chapterId {
 	
-	[[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]] replaceObjectAtIndex:0 withObject:startTime];
+	[[chapter objectForKey:[NSString stringWithFormat:@"%u",chapterId]] replaceObjectAtIndex:0 withObject:startTime];
 }
 
 -(void)setChapterName:(NSString *)chapterName forId:(unsigned int)chapterId {
 	
-	[[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]] replaceObjectAtIndex:1 withObject:chapterName];
+	[[chapter objectForKey:[NSString stringWithFormat:@"%u",chapterId]] replaceObjectAtIndex:1 withObject:chapterName];
 }
 
 -(NSString *)nameForChapter:(unsigned int)chapterId {
 	
-	return [[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]] objectAtIndex:1];
+	return [[chapter objectForKey:[NSString stringWithFormat:@"%u",chapterId]] objectAtIndex:1];
 }
 
 -(float)startOfChapter:(unsigned int)chapterId {
 	
-	return [[[chapter objectForKey:[NSNumber numberWithUnsignedInt:chapterId]] objectAtIndex:0] floatValue];
+	return [[[chapter objectForKey:[NSString stringWithFormat:@"%u",chapterId]] objectAtIndex:0] floatValue];
 }
 
 
@@ -588,7 +588,7 @@ externalSubtitles, captureStats, playbackStats, player;
 
 -(NSEnumerator *)getChaptersEnumerator {
 	
-	return [[[chapter allKeys] sortedArrayUsingSelector:@selector(compare:)] objectEnumerator];
+	return [[[chapter allKeys] sortedArrayUsingSelector:@selector(numericSearchCompare:)] objectEnumerator];
 }
 
 // **************************************************** //
