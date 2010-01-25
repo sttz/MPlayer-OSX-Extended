@@ -95,6 +95,12 @@ static AppController *instance = nil;
 	
 	// pre-load language codes
 	[LanguageCodes sharedInstance];
+	
+	// register for sparkle feed changes
+	[PREFS addObserver:self
+			forKeyPath:MPECheckForUpdatesIncludesPrereleases
+			   options:0
+			   context:nil];
 }
 
 - (PlayListController *) playListController
@@ -738,11 +744,17 @@ static AppController *instance = nil;
 	[preferencesController loadFonts];
 }
 /******************************************************************************/
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if ([keyPath isEqualToString:MPECheckForUpdatesIncludesPrereleases])
+		[self setSparkleFeed];
+}
+/******************************************************************************/
 - (void) setSparkleFeed
 {
 	NSString *feed;
 	
-	if ([[self preferences] boolForKey:@"CheckForPrereleases"])
+	if ([[self preferences] boolForKey:MPECheckForUpdatesIncludesPrereleases])
 		feed = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"SUPrereleaseFeedURL"];
 	else
 		feed = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"SUFeedURL"];
