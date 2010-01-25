@@ -147,7 +147,7 @@ extern NSString* const MPEPlaybackStoppedNotification;
 - (IBAction)increaseVolume:(id)sender;
 - (IBAction)decreaseVolume:(id)sender;
 - (IBAction)toggleLoop:(id)sender;
-- (void)sendKeyEvent:(int)event;
+- (BOOL)handleKeyEvent:(NSEvent *)theEvent;
 
 - (void)goToChapter:(unsigned int)chapter;
 - (void)skipToNextChapter;

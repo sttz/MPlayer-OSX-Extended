@@ -10,4 +10,5 @@
 	
 	float scrollXAcc;
 }
+@property (readonly) PlayerController *playerController;
 @end

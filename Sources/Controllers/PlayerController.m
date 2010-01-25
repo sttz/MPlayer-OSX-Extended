@@ -33,6 +33,8 @@
 #endif
 #endif
 
+#import <Carbon/Carbon.h>
+
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
@@ -163,10 +165,6 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		
 	//setup drag & drop
 	[playerWindow registerForDraggedTypes:[NSArray arrayWithObjects: NSFilenamesPboardType, nil]];
-	
-	// fill fullscreen device menu
-	[self fillFullscreenMenu];
-	[self selectFullscreenDevice];
 	
 	// Pass buffer name to interface
 	[myPlayer setBufferName:[videoOpenGLView bufferName]];
@@ -1729,9 +1727,76 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	}
 }
 
-- (void)sendKeyEvent:(int)event
+// Handle additional keys not set as key equivalent
+- (BOOL)handleKeyEvent:(NSEvent *)theEvent
 {
-	[myPlayer sendCommand: [NSString stringWithFormat:@"key_down_event %d",event]];
+	BOOL keyHandled = NO;
+	
+	NSString *characters = [theEvent characters];
+	NSString *uCharacters = [theEvent charactersIgnoringModifiers];
+	
+	// Volume
+	if (keyHandled = [characters isEqualToString:@"m"])
+		[self toggleMute:self];
+	else if (keyHandled = ([characters isEqualToString:@"9"]
+						   || [uCharacters isEqualToString:@"/"]))
+		[self decreaseVolume:self];
+	else if (keyHandled = ([characters isEqualToString:@"0"]
+						   || [uCharacters isEqualToString:@"*"]))
+		[self increaseVolume:self];
+	
+	// All actions below need a playing item
+	if (![myPlayer isMovieOpen])
+		return keyHandled;
+	
+	// Fullscreen
+	if (keyHandled = [characters isEqualToString:@"f"])
+		[self switchFullscreen:self];
+	
+	// Playback
+	else if (keyHandled = [characters isEqualToString:@"q"])
+		[self stop:self];
+	else if (keyHandled = [characters isEqualToString:@"p"])
+		[self playPause:self];
+	else if (keyHandled = ([theEvent keyCode] == kVK_Return))
+		[self seekNext:self];
+	
+	// Cycle Streams
+	else if (keyHandled = [characters isEqualToString:@"j"])
+		[self cycleSubtitleStreamsWithOSD:YES];
+	else if (keyHandled = [characters isEqualToString:@"#"])
+		[self cycleAudioStreamsWithOSD:YES];
+	
+	// Cycle OSD
+	else if (keyHandled = [characters isEqualToString:@"o"])
+		[self cycleOSD:self];
+	
+	// Audio Delay
+	else if (keyHandled = ([characters isEqualToString:@"+"]
+						   || [characters isEqualToString:@"="]))
+		[self setAudioDelay:0.1 relative:YES];
+	else if (keyHandled = [characters isEqualToString:@"-"])
+		[self setAudioDelay:-0.1 relative:YES];
+	
+	// Subtitle Delay
+	else if (keyHandled = [characters isEqualToString:@"x"])
+		[self setSubtitleDelay:0.1 relative:YES];
+	else if (keyHandled = [characters isEqualToString:@"z"])
+		[self setSubtitleDelay:-0.1 relative:YES];
+	
+	// Playback Speed
+	else if (keyHandled = [characters isEqualToString:@"["])
+		[self setPlaybackSpeed:0.9091 multiply:YES];
+	else if (keyHandled = [characters isEqualToString:@"]"])
+		[self setPlaybackSpeed:1.1 multiply:YES];
+	else if (keyHandled = [characters isEqualToString:@"{"])
+		[self setPlaybackSpeed:0.5 multiply:YES];
+	else if (keyHandled = [characters isEqualToString:@"}"])
+		[self setPlaybackSpeed:2.0 multiply:YES];
+	else if (keyHandled = ([theEvent keyCode] == kVK_Delete))
+		[self setPlaybackSpeed:1.0 multiply:NO];
+	
+	return keyHandled;
 }
 
 /************************************************************************************
@@ -1750,6 +1815,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	[self fillChapterMenu];
 	[self fillFullscreenMenu];
 	
+	[self selectFullscreenDevice];
 	[self updateLoopStatus];
 	[menuController->toggleMuteMenuItem setState:(self.volume == 0)];
 	

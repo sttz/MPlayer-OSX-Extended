@@ -5,75 +5,12 @@
 
 #import "Preferences.h"
 
-#import <Carbon/Carbon.h>
-
 @implementation PlayerWindow
+@synthesize playerController;
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-	BOOL keyHandled = NO;
-	
-	NSString *characters = [theEvent characters];
-	NSString *uCharacters = [theEvent charactersIgnoringModifiers];
-	
-	// Handle additional keys not set as key equivalent
-	if (keyHandled = [characters isEqualToString:@"f"])
-		[playerController switchFullscreen:self];
-	
-	// Playback
-	else if (keyHandled = [characters isEqualToString:@"q"])
-		[playerController stop:self];
-	else if (keyHandled = [characters isEqualToString:@"p"])
-		[playerController playPause:self];
-	else if (keyHandled = ([theEvent keyCode] == kVK_Return))
-		[playerController seekNext:self];
-	
-	// Volume
-	else if (keyHandled = [characters isEqualToString:@"m"])
-		[playerController toggleMute:self];
-	else if (keyHandled = ([characters isEqualToString:@"9"]
-						   || [uCharacters isEqualToString:@"/"]))
-		[playerController decreaseVolume:self];
-	else if (keyHandled = ([characters isEqualToString:@"0"]
-						   || [uCharacters isEqualToString:@"*"]))
-		[playerController increaseVolume:self];
-	
-	// Cycle Streams
-	else if (keyHandled = [characters isEqualToString:@"j"])
-		[playerController cycleSubtitleStreamsWithOSD:YES];
-	else if (keyHandled = [characters isEqualToString:@"#"])
-		[playerController cycleAudioStreamsWithOSD:YES];
-	
-	// Cycle OSD
-	else if (keyHandled = [characters isEqualToString:@"o"])
-		[playerController cycleOSD:self];
-	
-	// Audio Delay
-	else if (keyHandled = ([characters isEqualToString:@"+"]
-						   || [characters isEqualToString:@"="]))
-		[playerController setAudioDelay:0.1 relative:YES];
-	else if (keyHandled = [characters isEqualToString:@"-"])
-		[playerController setAudioDelay:-0.1 relative:YES];
-	
-	// Subtitle Delay
-	else if (keyHandled = [characters isEqualToString:@"x"])
-		[playerController setSubtitleDelay:0.1 relative:YES];
-	else if (keyHandled = [characters isEqualToString:@"z"])
-		[playerController setSubtitleDelay:-0.1 relative:YES];
-	
-	// Playback Speed
-	else if (keyHandled = [characters isEqualToString:@"["])
-		[playerController setPlaybackSpeed:0.9091 multiply:YES];
-	else if (keyHandled = [characters isEqualToString:@"]"])
-		[playerController setPlaybackSpeed:1.1 multiply:YES];
-	else if (keyHandled = [characters isEqualToString:@"{"])
-		[playerController setPlaybackSpeed:0.5 multiply:YES];
-	else if (keyHandled = [characters isEqualToString:@"}"])
-		[playerController setPlaybackSpeed:2.0 multiply:YES];
-	else if (keyHandled = ([theEvent keyCode] == kVK_Delete))
-		[playerController setPlaybackSpeed:1.0 multiply:NO];
-	
-	if (!keyHandled)
+	if (![playerController handleKeyEvent:theEvent])
 		[super keyDown:theEvent];
 }
 
