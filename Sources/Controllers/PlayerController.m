@@ -1724,6 +1724,9 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	} else
 		closeNow = YES;
 	
+	if ([[AppController sharedController] playerController] == self)
+		[[AppController sharedController] setPlayerController:nil];
+	
 	[self stop:nil];
 	return closeNow;
 }
@@ -1734,10 +1737,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		name: @"MIVideoViewClosed"
 		object: videoOpenGLView];
 	
-	if ([[AppController sharedController] playerController] == self)
-		[[AppController sharedController] setPlayerController:nil];
-	
-	[playerWindow close];
+	[playerWindow performClose:self];
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)notification

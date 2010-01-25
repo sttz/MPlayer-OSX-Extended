@@ -134,14 +134,15 @@ static unsigned int videoViewId;
 		rect.origin = [[playerController playerWindow] convertBaseToScreen:rect.origin];
 		[fullscreenWindow setFrame:rect display:NO animate:NO];
 		
-		// save position and size for back transition
-		old_win_size = [[playerController playerWindow] frame].size;
-		old_view_frame = [self frame];
-		
 		[fullscreenWindow makeKeyAndOrderFront:nil];
 		[self updateOntop];
 		
 		[fullscreenWindow setFullscreen:YES];
+		
+		// Save current frame for back transition
+		old_view_frame = [self frame];
+		// save window size for back transition
+		old_win_size = [[playerController playerWindow] frame].size;
 		
 		// move view to fswin and redraw to avoid flicker
 		[fullscreenWindow setContentView:self];
@@ -149,7 +150,6 @@ static unsigned int videoViewId;
 		
 		[self setFrame:screen_frame onWindow:fullscreenWindow blocking:NO];
 		
-		// close video view
 		NSRect frame = [[playerController playerWindow] frame];
 		frame.size = [[playerController playerWindow] contentMinSize];
 		frame = [[playerController playerWindow] frameRectForContentRect:frame];
@@ -168,7 +168,11 @@ static unsigned int videoViewId;
 	
 	} else {
 		
-		// apply old size to player window
+		// unhide player window
+		if (![[playerController playerWindow] isVisible])
+			[[playerController playerWindow] orderWindow:NSWindowBelow
+											  relativeTo:[fullscreenWindow windowNumber]];
+		
 		NSRect win_frame = [[playerController playerWindow] frame];
 		win_frame.size = old_win_size;
 		
@@ -202,6 +206,10 @@ static unsigned int videoViewId;
 {
 	
 	if (switchingToFullscreen) {
+		
+		// hide player window
+		if ([[playerController playerWindow] screen] == [fullscreenWindow screen])
+			[[playerController playerWindow] orderOut:self];
 		
 		[fullscreenWindow startMouseTracking];
 		
@@ -385,7 +393,9 @@ static unsigned int videoViewId;
 - (void) close
 {
 	// exit fullscreen and close with callback
-	if(isFullscreen) {
+	if (isFullscreen) {
+		
+		[self toggleFullscreen];
 		
 		[[NSNotificationCenter defaultCenter] addObserver: self
 			selector: @selector(finishClosing) 
