@@ -88,6 +88,7 @@
 		3A638951108B953F00E90936 /* PFMoveApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A638950108B953F00E90936 /* PFMoveApplication.m */; };
 		3A638955108B95B000E90936 /* MoveApplication.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A638953108B95B000E90936 /* MoveApplication.strings */; };
 		3A638959108B95D300E90936 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A638958108B95D300E90936 /* Security.framework */; };
+		3A6BAE57110E333300ACEFA0 /* KeyRedirectButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A6BAE56110E333300ACEFA0 /* KeyRedirectButton.m */; };
 		3A6E433210A33AE400B0BDC3 /* PreferencesController2.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A6E433110A33AE400B0BDC3 /* PreferencesController2.m */; };
 		3A71CA0010BEBB7800C810F4 /* CocoaAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71C9FF10BEBB7800C810F4 /* CocoaAdditions.m */; };
 		3A780D0D10E11FED008E5AEC /* Inspector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A780D0B10E11FED008E5AEC /* Inspector.xib */; };
@@ -299,6 +300,8 @@
 		3A638950108B953F00E90936 /* PFMoveApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFMoveApplication.m; sourceTree = "<group>"; };
 		3A638954108B95B000E90936 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/MoveApplication.strings; sourceTree = "<group>"; };
 		3A638958108B95D300E90936 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		3A6BAE55110E333300ACEFA0 /* KeyRedirectButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KeyRedirectButton.h; path = Sources/Classes/KeyRedirectButton.h; sourceTree = "<group>"; };
+		3A6BAE56110E333300ACEFA0 /* KeyRedirectButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KeyRedirectButton.m; path = Sources/Classes/KeyRedirectButton.m; sourceTree = "<group>"; };
 		3A6E42DD10A320C800B0BDC3 /* fontconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fontconfig.h; path = Sources/External/fontconfig/fontconfig.h; sourceTree = "<group>"; };
 		3A6E433010A33AE400B0BDC3 /* PreferencesController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesController2.h; path = Sources/Controllers/PreferencesController2.h; sourceTree = "<group>"; };
 		3A6E433110A33AE400B0BDC3 /* PreferencesController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesController2.m; path = Sources/Controllers/PreferencesController2.m; sourceTree = "<group>"; };
@@ -619,6 +622,8 @@
 				3A81882F10B2FB8300AB1E07 /* LanguageTokenFieldDelegate.m */,
 				3A9FB0211109F87700EF2AC3 /* TimestampTextField.h */,
 				3A9FB0221109F87700EF2AC3 /* TimestampTextField.m */,
+				3A6BAE55110E333300ACEFA0 /* KeyRedirectButton.h */,
+				3A6BAE56110E333300ACEFA0 /* KeyRedirectButton.m */,
 			);
 			name = Interface;
 			sourceTree = "<group>";
@@ -1006,6 +1011,7 @@
 				3A7A60B41108A26B00371851 /* PlaylistScrubbingBar.m in Sources */,
 				3A9FB0231109F87700EF2AC3 /* TimestampTextField.m in Sources */,
 				3ADD73B2110B9DB100568830 /* LocalUserDefaults.m in Sources */,
+				3A6BAE57110E333300ACEFA0 /* KeyRedirectButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
