@@ -1127,12 +1127,12 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 }
 - (IBAction)cycleAudioStreams:(id)sender {
 	
-	[self cycleAudioStreamsWithOSD:NO];
+	[self cycleAudioStreamsWithOSD:YES];
 }
 - (void)cycleAudioStreamsWithOSD:(BOOL)showOSD {
 	
 	[myPlayer sendCommands:[NSArray arrayWithObjects:
-							@"set_property switch_audio -2",
+							@"switch_audio -2",
 							@"get_property switch_audio",
 							nil]
 				   withOSD:(showOSD ? MISurpressCommandOutputNever : MISurpressCommandOutputConditionally)
@@ -1140,7 +1140,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 }
 - (IBAction)cycleSubtitleStreams:(id)sender {
 	
-	[self cycleSubtitleStreamsWithOSD:NO];
+	[self cycleSubtitleStreamsWithOSD:YES];
 }
 - (void)cycleSubtitleStreamsWithOSD:(BOOL)showOSD {
 	

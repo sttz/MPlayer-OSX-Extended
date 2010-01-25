@@ -150,7 +150,7 @@
 	// First play after startup
 	if (state == MIStatePlaying && (oldStateMask & MIStateStartupMask)) {
 		[fcAudioCycleButton setEnabled:([[playerController playingItem] audioStreamCount] > 1)];
-		[fcSubtitleCycleButton setEnabled:([[playerController playingItem] subtitleCountForType:SubtitleTypeAll] > 1)];
+		[fcSubtitleCycleButton setEnabled:([[playerController playingItem] subtitleCountForType:SubtitleTypeAll] > 0)];
 	}
 	
 	// Change of Play/Pause state
