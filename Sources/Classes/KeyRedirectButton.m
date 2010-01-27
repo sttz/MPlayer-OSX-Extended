@@ -51,3 +51,29 @@
 }
 
 @end
+
+
+@implementation KeyRedirectPopUpButton
+
+- (void)keyDown:(NSEvent *)theEvent
+{
+	if (![[(PlayerWindow *)[self window] playerController] handleKeyEvent:theEvent])
+		[super keyDown:theEvent];
+}
+
+- (BOOL)acceptsFirstResponder
+{
+	return NO;
+}
+
+- (BOOL)refusesFirstResponder
+{
+	return YES;
+}
+
+- (BOOL)becomeFirstResponder
+{
+	return NO;
+}
+
+@end

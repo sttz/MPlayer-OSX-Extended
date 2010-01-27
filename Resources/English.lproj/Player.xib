@@ -2754,6 +2754,7 @@
 					<string>25.IBPluginDependency</string>
 					<string>26.IBPluginDependency</string>
 					<string>27.IBPluginDependency</string>
+					<string>276.CustomClassName</string>
 					<string>276.IBPluginDependency</string>
 					<string>277.IBPluginDependency</string>
 					<string>278.IBEditorWindowLastContentRect</string>
@@ -3037,6 +3038,7 @@ U2VlayAxMCBtaW51dGVzIGZvcndhcmQ</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>KeyRedirectPopUpButton</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{750, 317}, {135, 143}}</string>
@@ -3432,10 +3434,15 @@ U2VlayAxMCBtaW51dGVzIGZvcndhcmQ</string>
 				<object class="IBPartialClassDescription">
 					<string key="className">KeyRedirectButton</string>
 					<string key="superclassName">NSButton</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="600786067">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Sources/Classes/KeyRedirectButton.h</string>
 					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">KeyRedirectPopUpButton</string>
+					<string key="superclassName">NSPopUpButton</string>
+					<reference key="sourceIdentifier" ref="600786067"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">MenuController</string>

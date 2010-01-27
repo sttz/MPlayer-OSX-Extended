@@ -25,8 +25,9 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface KeyRedirectButton : NSButton {
+@interface KeyRedirectButton : NSButton { }
+@end
 
-}
 
+@interface KeyRedirectPopUpButton : NSPopUpButton {  }
 @end
