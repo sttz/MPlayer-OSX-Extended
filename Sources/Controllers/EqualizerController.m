@@ -105,25 +105,19 @@
 	float value;
 	
 	value = [eqValues floatForKey:MPEVideoEqualizerGamma];
-	if (value < 0)
-		value = 0.123f + 0.777f * (110.0f + value)/110.0f;
-	else
-		value = 1.0f + 9.0f * (value/110.0f);
+	value = exp(log(8.0f) * (value / 100.0f));
 	[values addObject:[NSString stringWithFormat:@"%.2f",value]];
 	
 	value = [eqValues floatForKey:MPEVideoEqualizerContrast];
-	value = (value + 100.0f)/100.0f;
+	value = (value + 100.0f) / 100.0f;
 	[values addObject:[NSString stringWithFormat:@"%.2f",value]];
 	
 	value = [eqValues floatForKey:MPEVideoEqualizerBrightness];
-	value = value/100.0f;
+	value = value / 100.0f;
 	[values addObject:[NSString stringWithFormat:@"%.2f",value]];
 	
 	value = [eqValues floatForKey:MPEVideoEqualizerSaturation];
-	if (value < 0)
-		value = (100.0f + value)/100.0f;
-	else
-		value = 1.0f + (value/100.f);
+	value = (value + 100.0f) / 100.0f;
 	[values addObject:[NSString stringWithFormat:@"%.2f",value]];
 	
 	return [values componentsJoinedByString:@":"];
