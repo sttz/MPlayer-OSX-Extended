@@ -1746,7 +1746,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		[self increaseVolume:self];
 	
 	// All actions below need a playing item
-	if (![myPlayer isMovieOpen])
+	if (keyHandled || ![myPlayer isMovieOpen])
 		return keyHandled;
 	
 	// Fullscreen
