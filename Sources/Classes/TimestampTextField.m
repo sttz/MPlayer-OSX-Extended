@@ -70,6 +70,12 @@
 	[self setStringValue:timestamp];
 }
 
+- (void)changeDisplayMode:(id)sender
+{
+	displayType = [sender tag];
+	[self updateTimestamp];
+}
+
 - (void)setTimestamptWithCurrentTime:(float)currentTime andTotalTime:(float)totalTime
 {
 	lastCurrentTime = currentTime;
@@ -86,6 +92,26 @@
 	[self updateTimestamp];
 	
 	[super mouseDown:theEvent];
+}
+
+- (NSMenu *)menuForEvent:(NSEvent *)theEvent
+{
+	NSMenu *context = [[NSMenu new] autorelease];
+	
+	NSMenuItem *item = [context addItemWithTitle:@"Show Time:"
+										  action:nil keyEquivalent:@""];
+	[item setEnabled:NO];
+	[item setTag:-1];
+	
+	[[context addItemWithTitle:@"Current"
+						action:@selector(changeDisplayMode:) keyEquivalent:@""] setTag:0];
+	[[context addItemWithTitle:@"Remaining"
+						action:@selector(changeDisplayMode:) keyEquivalent:@""] setTag:1];
+	[[context addItemWithTitle:@"Total"
+						action:@selector(changeDisplayMode:) keyEquivalent:@""] setTag:2];
+	[[context itemWithTag:displayType] setState:NSOnState];
+	
+	return context;
 }
 
 @end
