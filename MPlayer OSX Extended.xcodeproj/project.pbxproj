@@ -953,7 +953,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "set -o errexit\n\n# ***\n# Link Fontconfig dylib and depencies from binary to MPlayer OSX\n# ***\n\nextra_library_dir=\"$TARGET_BUILD_DIR/$CONTENTS_FOLDER_PATH/MacOS/lib\"\n\n# Create library directory\nif [ ! -d \"$extra_library_dir\" ]; then\n    mkdir \"$extra_library_dir\"\nfi\n\n# Switch to library directory\ncd \"$extra_library_dir\"\n\n# Link libraries\nln -sf ../../Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/lib/libfontconfig.1.dylib libfontconfig.1.dylib\nln -sf ../../Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/lib/libfreetype.6.dylib libfreetype.6.dylib\nln -sf ../../Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/lib/libiconv.2.dylib libiconv.2.dylib\nln -sf ../../Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/lib/libexpat.1.dylib libexpat.1.dylib";
+			shellScript = "set -o errexit\n\n# ***\n# Link Fontconfig dylib and depencies from binary to MPlayer OSX\n# ***\n\nextra_library_dir=\"$TARGET_BUILD_DIR/$CONTENTS_FOLDER_PATH/MacOS/lib\"\n\n# Create library directory\nif [ ! -d \"$extra_library_dir\" ]; then\n    mkdir \"$extra_library_dir\"\nfi\n\n# Switch to library directory\ncd \"$extra_library_dir\"\n\n# Link libraries\nrel_path=../../Resources/Binaries/mpextended.mpBinaries/Contents/mpextended.mpBinaries/Contents/MacOS/lib\n\nln -sf $rel_path/libfontconfig.1.dylib libfontconfig.1.dylib\nln -sf $rel_path/libfreetype.6.dylib libfreetype.6.dylib\nln -sf $rel_path/libiconv.2.dylib libiconv.2.dylib\nln -sf $rel_path/libexpat.1.dylib libexpat.1.dylib";
 		};
 		3A42DBC30EF5866600E9B2CE /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;

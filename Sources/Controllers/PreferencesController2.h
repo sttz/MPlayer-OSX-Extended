@@ -85,6 +85,7 @@
 
 - (void) scanBinaries;
 - (void) loadBinariesFromDirectory:(NSString *)path;
+- (void) loadBinaryAtPath:(NSString *)path withParent:(NSString *)parentIdentifier;
 - (void) unloadBinary:(NSString *)identifier withUpdater:(BOOL)updater;
 - (SUUpdater *)createUpdaterForBundle:(NSBundle *)bundle whichUpdatesAutomatically:(BOOL)autoupdate;
 - (NSComparisonResult) compareBinaryVersion:(NSDictionary *)b1 toBinary:(NSDictionary*)b2;
@@ -92,6 +93,7 @@
 - (BOOL) binaryHasCompatibleArch:(BinaryBundle *)bundle;
 - (void) installBinary:(NSString *)path;
 - (NSString *) identifierForBinaryName:(NSString *)name;
+- (NSString *) updateIdentifierForBinaryWithIdentifier:(NSString *)identifier;
 - (NSString *) pathForBinaryWithIdentifier:(NSString *)identifier;
 - (id) objectForInfoKey:(NSString *)keyName ofBinary:(NSString *)identifier;
 

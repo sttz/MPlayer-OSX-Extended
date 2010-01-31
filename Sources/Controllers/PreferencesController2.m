@@ -227,10 +227,11 @@
 - (IBAction) checkForUpdates:(id)sender
 {
 	NSDictionary *info = [[[binariesController selectedObjects] objectAtIndex:0] value];
-	SUUpdater *updater = [binaryUpdaters objectForKey:[info objectForKey:@"CFBundleIdentifier"]];
+	NSString *identifier = [self updateIdentifierForBinaryWithIdentifier:[info objectForKey:@"CFBundleIdentifier"]];
+	SUUpdater *updater = [binaryUpdaters objectForKey:identifier];
 	
 	if (!updater)
-		updater = [self createUpdaterForBundle:[binaryBundles objectForKey:[info objectForKey:@"CFBundleIdentifier"]]
+		updater = [self createUpdaterForBundle:[binaryBundles objectForKey:identifier]
 					 whichUpdatesAutomatically:NO];
 	
 	[updater checkForUpdates:sender];
@@ -316,81 +317,138 @@
 	for (NSString *file in files) {
 		if ([[file pathExtension] isEqualToString:@"mpBinaries"]) {
 			
-			NSString *bundlePath = [path stringByAppendingPathComponent:file];
-			BinaryBundle *binary = [[[BinaryBundle alloc] initWithPath:bundlePath] autorelease];
-			
-			if (!binary) {
-				[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to load bundle at path: %@",path];
-				continue;
-			}
-			
-			NSMutableDictionary *info = [[[binary infoDictionary] mutableCopy] autorelease];
-			NSString *bundleIdentifier = [binary bundleIdentifier];
-			
-			// Consider binaries with the same identifier as same
-			if ([binaryBundles objectForKey:bundleIdentifier]) {
-				// Unload older or incompatible bundle to load new one
-				if (![[binaryInfo objectForKey:@"MPEBinaryIsCompatible"] boolValue]
-					|| [self compareBinaryVersion:info toBinary:[binaryInfo objectForKey:bundleIdentifier]] == NSOrderedDescending) {
-					[Debug log:ASL_LEVEL_ERR withMessage:@"Ignoring older or incompatible version of a bundle found at '%@'.",[path stringByAppendingPathComponent:file]];
-					[self unloadBinary:bundleIdentifier withUpdater:YES];
-				// A newer one is aleady loaded, skip
-				} else
-					continue;
-			}
-			
-			NSArray *archs = [binary executableArchitectureStrings];
-			
-			// Join the architectures array for displaying in the GUI
-			[info setObject:archs forKey:@"MPEBinaryArchs"];
-			if ([archs count] > 0)
-				[info setObject:[archs componentsJoinedByString:@", "] forKey:@"MPEBinaryArchsString"];
-			else
-				[info setObject:@"???" forKey:@"MPEBinaryArchsString"];
-			
-			// Check binary architecture
-			BOOL archIsCompatible = [self binaryHasCompatibleArch:binary];
-			if (!archIsCompatible) {
-				// Set a string a color for the GUI
-				[info setObject:[NSString stringWithFormat:@"Not compatible: %@",
-								 [info objectForKey:@"MPEBinaryArchsString"]]
-						 forKey:@"MPEBinaryArchsString"];
-				[info setObject:[NSColor redColor] forKey:@"MPEArchStringTextColor"];
-			}
-			
-			// Save if binary has required minimum SVN-equivalent version
-			BOOL versionIsCompatible = [self binaryHasRequiredMinVersion:info];
-			if (!versionIsCompatible) {
-				// Set a string a color for the GUI
-				[info setObject:[NSString stringWithFormat:@"Not compatible: %@",
-								 [info objectForKey:@"CFBundleShortVersionString"]]
-						 forKey:@"CFBundleShortVersionString"];
-				[info setObject:[NSColor redColor] forKey:@"MPEVersionStringTextColor"];
-			}
-			
-			[info setObject:[NSNumber numberWithBool:(versionIsCompatible && archIsCompatible)] 
-					 forKey:@"MPEBinaryIsCompatible"];
-			
-			// Instantiate updater object if updates are enabled
-			if ([PREFS boolForKey:@"SUEnableAutomaticChecks"] && [info objectForKey:@"SUFeedURL"]
-				&& [[PREFS arrayForKey:MPEUpdateBinaries] containsObject:bundleIdentifier])
-				[self createUpdaterForBundle:binary whichUpdatesAutomatically:YES];
-			
-			[Debug log:ASL_LEVEL_INFO withMessage:@"Found binary %@ in %@",
-			 file,[[path stringByDeletingLastPathComponent] lastPathComponent]];
-			[binaryBundles setValue:binary forKey:bundleIdentifier];
-			[binaryInfo setValue:info forKey:bundleIdentifier];
+			[self loadBinaryAtPath:[path stringByAppendingPathComponent:file] withParent:nil];
 		}
 	}
 }
 
+- (void) loadBinaryAtPath:(NSString *)path withParent:(NSString *)parentIdentifier
+{
+	BinaryBundle *binary = [[[BinaryBundle alloc] initWithPath:path] autorelease];
+	
+	if (!binary) {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to load bundle at path: %@",path];
+		return;
+	}
+	
+	NSMutableDictionary *info = [[[binary infoDictionary] mutableCopy] autorelease];
+	NSString *bundleIdentifier = [binary bundleIdentifier];
+	
+	// Consider binaries with the same identifier as same
+	if ([binaryBundles objectForKey:bundleIdentifier]) {
+		NSDictionary *existing = [[binaryBundles objectForKey:bundleIdentifier] infoDictionary];
+		NSNumber *isCompatible = [existing objectForKey:@"MPEBinaryIsCompatible"];
+		// Unload older or incompatible bundle to load new one
+		if ((isCompatible && ![isCompatible boolValue])
+			|| [self compareBinaryVersion:info toBinary:existing] == NSOrderedDescending) {
+			[Debug log:ASL_LEVEL_ERR withMessage:@"Ignoring older or incompatible version of a bundle found at '%@'.",path];
+			[self unloadBinary:bundleIdentifier withUpdater:YES];
+			// A newer one is aleady loaded, skip
+		} else
+			return;
+	}
+	
+	// Check for container bundles
+	if ([info objectForKey:@"MPENestedBinaryBundles"]) {
+		
+		NSArray *nested = [info objectForKey:@"MPENestedBinaryBundles"];
+		
+		if (![nested isKindOfClass:[NSArray class]] || [nested count] == 0) {
+			[Debug log:ASL_LEVEL_ERR withMessage:@"Invalid or empty container bundle found at '%@'.",path];
+			return;
+		}
+		
+		// Instantiate updater object if updates are enabled
+		if ([PREFS boolForKey:@"SUEnableAutomaticChecks"] && [info objectForKey:@"SUFeedURL"]
+			&& [[PREFS arrayForKey:MPEUpdateBinaries] containsObject:bundleIdentifier])
+			[self createUpdaterForBundle:binary whichUpdatesAutomatically:YES];
+		
+		[Debug log:ASL_LEVEL_INFO withMessage:@"Found container bundle %@ in %@",
+		 [path lastPathComponent],[[path stringByDeletingLastPathComponent] lastPathComponent]];
+		[binaryBundles setValue:binary forKey:bundleIdentifier];
+		
+		// Load contained binaries
+		for (NSString *relativePath in nested)
+			[self loadBinaryAtPath:[path stringByAppendingPathComponent:relativePath] 
+						withParent:bundleIdentifier];
+		
+		return;
+	}
+	
+	// Save parent bundle identifier
+	if (parentIdentifier) {
+		[info setObject:parentIdentifier forKey:@"MPEParentBundleIdentifier"];
+		// Set dummy SUFeedURL for preferences section
+		[info setObject:@"dummy" forKey:@"SUFeedURL"];
+	// Only container bundles can update in nested bundles
+	} else if ([PREFS boolForKey:@"SUEnableAutomaticChecks"] && [info objectForKey:@"SUFeedURL"]
+				 && [[PREFS arrayForKey:MPEUpdateBinaries] containsObject:bundleIdentifier])
+		[self createUpdaterForBundle:binary whichUpdatesAutomatically:YES];
+	
+	NSArray *archs = [binary executableArchitectureStrings];
+	
+	// Join the architectures array for displaying in the GUI
+	[info setObject:archs forKey:@"MPEBinaryArchs"];
+	if ([archs count] > 0)
+		[info setObject:[archs componentsJoinedByString:@", "] forKey:@"MPEBinaryArchsString"];
+	else
+		[info setObject:@"???" forKey:@"MPEBinaryArchsString"];
+	
+	// Check binary architecture
+	BOOL archIsCompatible = [self binaryHasCompatibleArch:binary];
+	if (!archIsCompatible) {
+		// Set a string a color for the GUI
+		[info setObject:[NSString stringWithFormat:@"Not compatible: %@",
+						 [info objectForKey:@"MPEBinaryArchsString"]]
+				 forKey:@"MPEBinaryArchsString"];
+		[info setObject:[NSColor redColor] forKey:@"MPEArchStringTextColor"];
+	}
+	
+	// Save if binary has required minimum SVN-equivalent version
+	BOOL versionIsCompatible = [self binaryHasRequiredMinVersion:info];
+	if (!versionIsCompatible) {
+		// Set a string a color for the GUI
+		[info setObject:[NSString stringWithFormat:@"Not compatible: %@",
+						 [info objectForKey:@"CFBundleShortVersionString"]]
+				 forKey:@"CFBundleShortVersionString"];
+		[info setObject:[NSColor redColor] forKey:@"MPEVersionStringTextColor"];
+	}
+	
+	[info setObject:[NSNumber numberWithBool:(versionIsCompatible && archIsCompatible)] 
+			 forKey:@"MPEBinaryIsCompatible"];
+	
+	[Debug log:ASL_LEVEL_INFO withMessage:@"Found binary %@ in %@",
+	 [path lastPathComponent],[[path stringByDeletingLastPathComponent] lastPathComponent]];
+	[binaryBundles setValue:binary forKey:bundleIdentifier];
+	[binaryInfo setValue:info forKey:bundleIdentifier];
+}
+
 - (void) unloadBinary:(NSString *)identifier withUpdater:(BOOL)updater
 {
+	// Unload nested binaries
+	if (![binaryInfo objectForKey:identifier]) {
+		
+		// Find nested binaries
+		NSMutableArray *nestedIdentifiers = [NSMutableArray array];
+		
+		for (NSString *subIdent in binaryInfo) {
+			NSString *parent = [[binaryInfo objectForKey:subIdent] objectForKey:@"MPEParentBundleIdentifier"];
+			if (parent && [parent isEqualToString:identifier])
+				[nestedIdentifiers addObject:subIdent];
+		}
+		
+		// Unload them all
+		for (NSString *subIdent in nestedIdentifiers)
+			[self unloadBinary:subIdent withUpdater:updater];
+	
+	} else
+		[binaryInfo removeObjectForKey:identifier];
+	
 	// Invalidate bundle object
 	[[binaryBundles objectForKey:identifier] invalidateBinaryBundle];
 	// Remove bundle objects
 	[binaryBundles removeObjectForKey:identifier];
-	[binaryInfo    removeObjectForKey:identifier];
+	
 	if (updater)
 		[binaryUpdaters removeObjectForKey:identifier];
 }
@@ -483,10 +541,18 @@
 	if ([binaryBundles objectForKey:identifier]) {
 		
 		isNewBinary = NO;
+		NSDictionary *oldInfo;
+		if ([binaryInfo objectForKey:identifier])
+			oldInfo = [binaryInfo objectForKey:identifier];
+		else
+			oldInfo = [[binaryBundles objectForKey:identifier] infoDictionary];
 		
-		NSString *installedVersion = [[binaryInfo objectForKey:identifier] objectForKey:@"CFBundleVersion"];
+		NSLog(@"old: %@",oldInfo);
+		
+		NSString *installedVersion = [oldInfo objectForKey:@"CFBundleVersion"];
 		NSString *newVersion = [info objectForKey:@"CFBundleVersion"];
 		NSComparisonResult result = [installedVersion compare:newVersion options:NSNumericSearch];
+		NSLog(@"compare: %@ <-> %@ = %d",installedVersion,newVersion,result);
 		
 		// The versions are the same -> Reinstall?
 		if (result == NSOrderedSame) {
@@ -505,7 +571,7 @@
 				[NSString stringWithFormat:
 				 @"Do you want to upgrade the MPlayer binary '%@' from version %@ to %@?",
 				 [info objectForKey:@"CFBundleName"],
-				 [[binaryInfo objectForKey:identifier] objectForKey:@"CFBundleShortVersionString"],
+				 [oldInfo objectForKey:@"CFBundleShortVersionString"],
 				 [info objectForKey:@"CFBundleShortVersionString"]],
 				 @"Upgrade", @"Cancel", nil) == NSAlertAlternateReturn) return;
 		
@@ -516,7 +582,7 @@
 				[NSString stringWithFormat:
 				 @"A newer version of the MPlayer binary '%@' is already installed. Do you want to downgrade from version %@ to %@?",
 				 [info objectForKey:@"CFBundleName"],
-				 [[binaryInfo objectForKey:identifier] objectForKey:@"CFBundleShortVersionString"],
+				 [oldInfo objectForKey:@"CFBundleShortVersionString"],
 				 [info objectForKey:@"CFBundleShortVersionString"]],
 				 @"Cancel", @"Downgrade", nil) == NSAlertDefaultReturn) return;
 			
@@ -535,6 +601,7 @@
 														[info objectForKey:@"CFBundleName"]];
 		[alert setAccessoryView:binaryInstallOptions];
 		[binaryInstallUpdatesCheckbox setHidden:(![info objectForKey:@"SUFeedURL"])];
+		[binaryInstallDefaultCheckbox setHidden:(!![info objectForKey:@"MPENestedBinaryBundles"])];
 		
 		[binaryInstallUpdatesCheckbox setState:NSOnState];
 		[binaryInstallDefaultCheckbox setState:NSOnState];
@@ -596,7 +663,7 @@
 		}
 		
 		// Make binary the default if the user wished it
-		if ([binaryInstallDefaultCheckbox state] == NSOnState)
+		if (![binaryInstallDefaultCheckbox isHidden] && [binaryInstallDefaultCheckbox state] == NSOnState)
 			[PREFS setObject:identifier forKey:MPESelectedBinary];
 	}
 	
@@ -625,6 +692,17 @@
 	}
 	
 	return [[binaryBundles objectForKey:identifier] executablePath];
+}
+
+- (NSString *) updateIdentifierForBinaryWithIdentifier:(NSString *)identifier
+{
+	NSDictionary *info = [binaryInfo objectForKey:identifier];
+	
+	// Use update state parent bundle for nested bundles
+	if ([info objectForKey:@"MPEParentBundleIdentifier"])
+		return [info objectForKey:@"MPEParentBundleIdentifier"];
+	else
+		return [info objectForKey:@"CFBundleIdentifier"];
 }
 
 - (id) objectForInfoKey:(NSString *)keyName ofBinary:(NSString *)identifier
@@ -656,7 +734,7 @@
 {
 	NSString *identifier = [[binaryUpdaters allKeysForObject:updater] objectAtIndex:0];
 	
-	[self unloadBinary:identifier withUpdater:NO];
+	[self unloadBinary:identifier withUpdater:YES];
 	
 	[self scanBinaries];
 }
@@ -847,8 +925,10 @@
 		NSArray *selection = [binariesController selectedObjects];
 		BOOL state = NO;
 		if ([selection count] > 0) {
+			
 			NSDictionary *info = [[selection objectAtIndex:0] value];
-			NSString *identifier = [info objectForKey:@"CFBundleIdentifier"];
+			NSString *identifier = [self updateIdentifierForBinaryWithIdentifier:
+									[info objectForKey:@"CFBundleIdentifier"]];
 			state = [[PREFS arrayForKey:MPEUpdateBinaries] containsObject:identifier];
 		}
 		[binaryUpdateCheckbox setState:state];
@@ -858,7 +938,7 @@
 - (IBAction) setChecksForUpdates:(NSButton *)sender
 {
 	NSDictionary *info = [[[binariesController selectedObjects] objectAtIndex:0] value];
-	NSString *identifier = [info objectForKey:@"CFBundleIdentifier"];
+	NSString *identifier = [self updateIdentifierForBinaryWithIdentifier:[info objectForKey:@"CFBundleIdentifier"]];
 	
 	NSArray *updates = [PREFS arrayForKey:MPEUpdateBinaries];
 	NSMutableArray *newUpdates = nil;
