@@ -96,16 +96,20 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>flac</string>
 				<string>aac</string>
 				<string>ac3</string>
+				<string>aiff</string>
+				<string>ape</string>
+				<string>flac</string>
 				<string>m4a</string>
 				<string>mka</string>
 				<string>mp3</string>
 				<string>ogg</string>
 				<string>pcm</string>
+				<string>ra</string>
 				<string>vaw</string>
 				<string>waw</string>
+				<string>wav</string>
 				<string>wma</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
@@ -122,18 +126,27 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>m2ts</string>
 				<string>3gp</string>
 				<string>3iv</string>
 				<string>asf</string>
 				<string>avi</string>
+				<string>asf</string>
+				<string>bin</string>
 				<string>cpk</string>
 				<string>dat</string>
 				<string>divx</string>
+				<string>dv</string>
+				<string>dvr-ms</string>
 				<string>fli</string>
+				<string>flv</string>
 				<string>h264</string>
 				<string>i263</string>
+				<string>m1v</string>
+				<string>m2t</string>
+				<string>m2ts</string>
+				<string>m2v</string>
 				<string>m4v</string>
+				<string>mkv</string>
 				<string>mov</string>
 				<string>mp2</string>
 				<string>mp4</string>
@@ -141,13 +154,17 @@
 				<string>mpg</string>
 				<string>mpg2</string>
 				<string>mpg4</string>
-				<string>mkv</string>
+				<string>mpv</string>
+				<string>mqv</string>
 				<string>nut</string>
 				<string>nuv</string>
+				<string>nsv</string>
 				<string>ogg</string>
 				<string>ogm</string>
 				<string>ogv</string>
 				<string>qt</string>
+				<string>ram</string>
+				<string>rec</string>
 				<string>rm</string>
 				<string>rmvb</string>
 				<string>ts</string>
@@ -155,8 +172,6 @@
 				<string>vfw</string>
 				<string>vob</string>
 				<string>wmv</string>
-				<string>nsv</string>
-				<string>flv</string>
 				<string>*</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
@@ -175,6 +190,7 @@
 			<array>
 				<string>aqt</string>
 				<string>ass</string>
+				<string>idx</string>
 				<string>jss</string>
 				<string>rt</string>
 				<string>smi</string>
