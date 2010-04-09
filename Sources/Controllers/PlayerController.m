@@ -1856,8 +1856,10 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	} else
 		closeNow = YES;
 	
-	if ([self isCurrentPlayer])
+	if ([self isCurrentPlayer]) {
+		[[AppController sharedController] removePlayer:self];
 		[[AppController sharedController] setPlayerController:nil];
+	}
 	
 	[self stop:nil];
 	return closeNow;
