@@ -1193,7 +1193,7 @@ static NSArray* statusNames;
 			object:[[myMplayerTask standardError] fileHandleForReading]];
 	
 	// set working directory for screenshots
-	if (screenshotPath)
+	if (screenshotPath && [[NSFileManager defaultManager] fileExistsAtPath:screenshotPath])
 		[myMplayerTask setCurrentDirectoryPath:screenshotPath];
 	
 	// set launch path and params
