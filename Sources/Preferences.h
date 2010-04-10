@@ -97,8 +97,11 @@ extern NSString* const MPEVideoEqualizerEnabled;
 extern NSString* const MPEWindowOnTopMode;
 
 // *** Top-level constants keys
+extern NSString* const MPEAudioDelayStepSize;
 extern NSString* const MPEFullscreenControlsHideTimeout;
 extern NSString* const MPEFullscreenControlsSensitivity;
+extern NSString* const MPEPlaybackSpeedMultiplierSmall;
+extern NSString* const MPEPlaybackSpeedMultiplierBig;
 extern NSString* const MPEPreflightNumInstances;
 extern NSString* const MPERemoteSeekBase;
 extern NSString* const MPERemoteSkipStep;
@@ -106,6 +109,7 @@ extern NSString* const MPEScrollWheelSeekMultiple;
 extern NSString* const MPESeekStepLarge;
 extern NSString* const MPESeekStepMedium;
 extern NSString* const MPESeekStepSmall;
+extern NSString* const MPESubtitleDelayStepSize;
 extern NSString* const MPEVolumeStepSize;
 
 // *** MPECustomAspectRatio dictionary keys

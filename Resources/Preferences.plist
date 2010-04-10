@@ -536,10 +536,16 @@
 	</dict>
 	<key>Constants</key>
 	<dict>
+		<key>MPEAudioDelayStepSize</key>
+		<real>0.1</real>
 		<key>MPEFullscreenControlsHideTimeout</key>
 		<integer>3</integer>
 		<key>MPEFullscreenControlsSensitivity</key>
 		<integer>200</integer>
+		<key>MPEPlaybackSpeedMultiplierSmall</key>
+		<real>1.1</real>
+		<key>MPEPlaybackSpeedMultiplierBig</key>
+		<real>2</real>
 		<key>MPEPreflightNumInstances</key>
 		<integer>4</integer>
 		<key>MPERemoteSeekBase</key>
@@ -554,6 +560,8 @@
 		<integer>60</integer>
 		<key>MPESeekStepSmall</key>
 		<integer>10</integer>
+		<key>MPESubtitleDelayStepSize</key>
+		<real>0.1</real>
 		<key>MPEVolumeStepSize</key>
 		<integer>10</integer>
 	</dict>

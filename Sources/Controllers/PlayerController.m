@@ -1774,25 +1774,25 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	// Audio Delay
 	else if (keyHandled = ([characters isEqualToString:@"+"]
 						   || [characters isEqualToString:@"="]))
-		[self setAudioDelay:0.1 relative:YES];
+		[self setAudioDelay:[PREFS floatForKey:MPEAudioDelayStepSize] relative:YES];
 	else if (keyHandled = [characters isEqualToString:@"-"])
-		[self setAudioDelay:-0.1 relative:YES];
+		[self setAudioDelay:-[PREFS floatForKey:MPEAudioDelayStepSize] relative:YES];
 	
 	// Subtitle Delay
 	else if (keyHandled = [characters isEqualToString:@"x"])
-		[self setSubtitleDelay:0.1 relative:YES];
+		[self setSubtitleDelay:[PREFS floatForKey:MPESubtitleDelayStepSize] relative:YES];
 	else if (keyHandled = [characters isEqualToString:@"z"])
-		[self setSubtitleDelay:-0.1 relative:YES];
+		[self setSubtitleDelay:-[PREFS floatForKey:MPESubtitleDelayStepSize] relative:YES];
 	
 	// Playback Speed
 	else if (keyHandled = [characters isEqualToString:@"["])
-		[self setPlaybackSpeed:0.9091 multiply:YES];
+		[self setPlaybackSpeed:(1/[PREFS floatForKey:MPEPlaybackSpeedMultiplierSmall]) multiply:YES];
 	else if (keyHandled = [characters isEqualToString:@"]"])
-		[self setPlaybackSpeed:1.1 multiply:YES];
+		[self setPlaybackSpeed:[PREFS floatForKey:MPEPlaybackSpeedMultiplierSmall] multiply:YES];
 	else if (keyHandled = [characters isEqualToString:@"{"])
-		[self setPlaybackSpeed:0.5 multiply:YES];
+		[self setPlaybackSpeed:(1/[PREFS floatForKey:MPEPlaybackSpeedMultiplierBig]) multiply:YES];
 	else if (keyHandled = [characters isEqualToString:@"}"])
-		[self setPlaybackSpeed:2.0 multiply:YES];
+		[self setPlaybackSpeed:[PREFS floatForKey:MPEPlaybackSpeedMultiplierBig] multiply:YES];
 	else if (keyHandled = ([theEvent keyCode] == kVK_Delete))
 		[self setPlaybackSpeed:1.0 multiply:NO];
 	
