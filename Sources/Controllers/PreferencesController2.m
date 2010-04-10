@@ -90,6 +90,14 @@
 	// For subtitle colors we want to be able to select alpha
 	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES]; 
 	
+	// Check if custom screenshot path exists
+	if (![[NSFileManager defaultManager] fileExistsAtPath:[PREFS stringForKey:MPECustomScreenshotsSavePath]]) {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Screenshot save path '%@' doesn't exist anymore, using default location.",
+												[PREFS stringForKey:MPECustomScreenshotsSavePath]];
+		[PREFS removeObjectForKey:MPECustomScreenshotsSavePath];
+		[PREFS removeObjectForKey:MPEScreenshotSaveLocation];
+	}
+	
 	// If the user cancels out the screenshot path selection, 
 	// we need this to properly reset the menu
 	screenshotSavePathLastSelection = [PREFS integerForKey:MPEScreenshotSaveLocation];
