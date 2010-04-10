@@ -181,8 +181,12 @@ static AppController *instance = nil;
 
 - (void) openNewPlayerWindow:(id)sender
 {
-	[NSBundle loadNibNamed:@"Player" owner:self];
-	[[players lastObject] displayWindow:self];
+	if (![[[self firstPlayerController] playerWindow] isVisible])
+		[[self firstPlayerController] displayWindow:self];
+	else {
+		[NSBundle loadNibNamed:@"Player" owner:self];
+		[[players lastObject] displayWindow:self];
+	}
 }
 
 - (PlayerController *) firstPlayerController
