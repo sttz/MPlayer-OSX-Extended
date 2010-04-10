@@ -192,8 +192,8 @@ static AppController *instance = nil;
 
 - (void) setPlayerController:(PlayerController *)player
 {
-	if (playerController == [players objectAtIndex:0] && !player)
-		return;
+	if (!player)
+		player = [self firstPlayerController];
 	
 	if (playerController) {
 		[playerController playerWillResignCurrentPlayer];
