@@ -1570,10 +1570,6 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 				[menuController->playMenuItem setTitle:@"Play"];
 			
 		}
-		
-		// Update on-top
-		[self updateWindowOnTop];
-		
 	}
 	
 	// Change of Running/Stopped state
@@ -1648,6 +1644,9 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		[[NSNotificationCenter defaultCenter] postNotificationName:MPEPlaybackStoppedNotification
 															object:self];
 	}
+	
+	// Update on-top
+	[self updateWindowOnTop];
 }
 /************************************************************************************/
 - (void) interface:(MPlayerInterface *)mi streamUpate:(MovieInfo *)item
