@@ -933,6 +933,9 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 - (void)syncWindows:(BOOL)switchingToFullscreen
 {
 	// Make sure the player and fullscreen windows are on the same space
+	NSInteger playerLevel = [playerWindow level];
+	NSInteger fullsceenLevel = [fullScreenControls level];
+	
 	if (switchingToFullscreen) {
 		[playerWindow addChildWindow:[fullScreenControls window] ordered:NSWindowAbove];
 		[playerWindow removeChildWindow:[fullScreenControls window]];
@@ -940,6 +943,9 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		[[fullScreenControls window] addChildWindow:playerWindow ordered:NSWindowBelow];
 		[[fullScreenControls window] removeChildWindow:playerWindow];
 	}
+	
+	[playerWindow setLevel:playerLevel];
+	[fullScreenControls setLevel:fullsceenLevel];
 }
 /************************************************************************************/
 - (int) fullscreenDeviceId {
