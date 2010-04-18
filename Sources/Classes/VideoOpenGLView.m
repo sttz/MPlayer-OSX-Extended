@@ -127,7 +127,7 @@ static unsigned int videoViewId;
 		
 		// hide menu and dock if on same screen
 		if (fullscreenId == 0)
-			SetSystemUIMode( kUIModeAllHidden, kUIOptionAutoShowMenuBar);
+			SetSystemUIMode( kUIModeAllSuppressed, 0);
 		
 		// place fswin above video in player window
 		NSRect rect = [self frame];
@@ -278,14 +278,17 @@ static unsigned int videoViewId;
 			continue;
 		// when blacking the main screen, hide the menu bar and dock
 		if (i == 0)
-			SetSystemUIMode( kUIModeAllHidden, kUIOptionAutoShowMenuBar);
+			SetSystemUIMode( kUIModeAllSuppressed, 0);
 		
 		fs_rect = [[[NSScreen screens] objectAtIndex:i] frame];
 		fs_rect.origin = NSZeroPoint;
 		win = [[NSWindow alloc] initWithContentRect:fs_rect styleMask:NSBorderlessWindowMask 
 											backing:NSBackingStoreBuffered defer:NO screen:[[NSScreen screens] objectAtIndex:i]];
 		[win setBackgroundColor:[NSColor blackColor]];
-		[win setLevel:NSFloatingWindowLevel];
+		if ([PREFS boolForKey:MPEFullscreenBlockOthers])
+			[win setLevel:NSScreenSaverWindowLevel];
+		else
+			[win setLevel:NSModalPanelWindowLevel];
 		[win orderFront:nil];
 		
 		if ([[AppController sharedController] animateInterface])
@@ -494,14 +497,20 @@ static unsigned int videoViewId;
 */
 - (void) updateOntop
 {
-	if (![fullscreenWindow isVisible])
-		return;
-	if (isOntop) {
-		[fullscreenWindow setLevel:NSModalPanelWindowLevel];
+	if ([fullscreenWindow isVisible] && (isOntop || [PREFS boolForKey:MPEFullscreenBlockOthers])) {
+		NSInteger level = NSModalPanelWindowLevel;
+		if ([PREFS boolForKey:MPEFullscreenBlockOthers])
+			level = NSScreenSaverWindowLevel;
+		
+		[fullscreenWindow setLevel:level];
+		[fcControlWindow  setLevel:level];
+		
 		[fullscreenWindow orderWindow:NSWindowBelow relativeTo:[fcControlWindow windowNumber]];
 		[[playerController playerWindow] orderWindow:NSWindowBelow relativeTo:[fullscreenWindow windowNumber]];
-	} else
+	} else {
 		[fullscreenWindow setLevel:NSNormalWindowLevel];
+		[fcControlWindow  setLevel:NSNormalWindowLevel];
+	}
 }
 
 /*

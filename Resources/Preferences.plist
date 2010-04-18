@@ -26,6 +26,8 @@
 		<integer>1</integer>
 		<key>MPEBlackOutOtherScreensInFullscreen</key>
 		<true/>
+		<key>MPEFullscreenBlockOthers</key>
+		<true/>
 		<key>MPEFlipDisplayVertically</key>
 		<false/>
 		<key>MPEFlipDisplayHorizontally</key>

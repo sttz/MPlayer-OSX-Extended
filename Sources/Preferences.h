@@ -59,6 +59,7 @@ extern NSString* const MPEFlipDisplayHorizontally;
 extern NSString* const MPEFlipDisplayVertically;
 extern NSString* const MPEFont;
 extern NSString* const MPEFontStyle;
+extern NSString* const MPEFullscreenBlockOthers;
 extern NSString* const MPEFullscreenDisplayNumber;
 extern NSString* const MPEGoToFullscreenOn;
 extern NSString* const MPEGuessTextEncoding;

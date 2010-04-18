@@ -58,6 +58,7 @@ NSString* const MPEFlipDisplayHorizontally            = @"MPEFlipDisplayHorizont
 NSString* const MPEFlipDisplayVertically              = @"MPEFlipDisplayVertically";
 NSString* const MPEFont                               = @"MPEFont";
 NSString* const MPEFontStyle                          = @"MPEFontStyle";
+NSString* const MPEFullscreenBlockOthers			  = @"MPEFullscreenBlockOthers";
 NSString* const MPEFullscreenDisplayNumber            = @"MPEFullscreenDisplayNumber";
 NSString* const MPEGoToFullscreenOn                   = @"MPEGoToFullscreenOn";
 NSString* const MPEGuessTextEncoding                  = @"MPEGuessTextEncoding";

@@ -51,7 +51,6 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 -(void)awakeFromNib
 {	    
 	//window
-	[playListWindow setLevel:NSNormalWindowLevel];
 	[playListWindow setHidesOnDeactivate:NO];
 	[playListWindow setBackgroundColor: [NSColor colorWithDeviceRed:0.8 green: 0.8 blue: 0.8 alpha:1]];
 	
