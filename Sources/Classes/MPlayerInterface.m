@@ -580,6 +580,11 @@ static NSArray* statusNames;
 	else if ([cPrefs stringForKey:MPEOverrideAudioCodecs]) {
 		[audioCodecsArr addObject:[cPrefs stringForKey:MPEOverrideAudioCodecs]];
 	}
+	// audio output device
+	if ([cPrefs integerForKey:MPEAudioOutputDevice] > 0) {
+		[params addObject:@"-ao"];
+		[params addObject:[NSString stringWithFormat:@"coreaudio:device_id=%d", [cPrefs integerForKey:MPEAudioOutputDevice]]];
+	}
 	
 	// ac3/dts passthrough
 	if ([cPrefs boolForKey:MPEHardwareAC3Passthrough]) {

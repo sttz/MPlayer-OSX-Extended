@@ -56,6 +56,9 @@
 	IBOutlet NSWindow *cacheStatusWindow;
 	IBOutlet NSProgressIndicator *cacheStatusIndicator;
 	
+	IBOutlet NSPopUpButton *audioDeviceMenu;
+	NSMutableDictionary *outputDevices;
+	
 	IBOutlet NSWindow *customAspectRatioChooser;
 	
 	NSMutableDictionary *binaryBundles;
@@ -76,6 +79,7 @@
 }
 
 @property (retain) NSMutableDictionary *fonts;
+@property (retain) NSMutableDictionary *outputDevices;
 @property (retain) NSMutableDictionary *binaryInfo;
 @property (readonly) NSWindow *customAspectRatioChooser;
 @property (readonly) NSDictionaryController *binariesController;
@@ -105,6 +109,9 @@
 
 - (void) loadFonts;
 - (IBAction) changeFont:(NSPopUpButton *)sender;
+
+- (void) loadOutputDevices;
+- (IBAction) selectOutputDevice:(NSPopUpButton *)sender;
 
 - (IBAction) chooseCustomAspectRatio:(NSButton *)sender;
 

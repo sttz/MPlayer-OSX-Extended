@@ -36,6 +36,7 @@ extern NSString* const MPEAudioEqualizerSelectedPreset;
 extern NSString* const MPEAudioEqualizerValues;
 extern NSString* const MPEAudioItemRelativeVolume;
 extern NSString* const MPEAudioMute;
+extern NSString* const MPEAudioOutputDevice;
 extern NSString* const MPEAudioVolume;
 extern NSString* const MPEBS2BFilter;
 extern NSString* const MPEBlackOutOtherScreensInFullscreen;

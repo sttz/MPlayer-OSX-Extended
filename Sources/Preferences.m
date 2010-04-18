@@ -35,6 +35,7 @@ NSString* const MPEAudioEqualizerSelectedPreset       = @"MPEAudioEqualizerSelec
 NSString* const MPEAudioEqualizerValues               = @"MPEAudioEqualizerValues";
 NSString* const MPEAudioItemRelativeVolume            = @"MPEAudioItemRelativeVolume";
 NSString* const MPEAudioMute                          = @"MPEAudioMute";
+NSString* const MPEAudioOutputDevice				  = @"MPEAudioOutputDevice";
 NSString* const MPEAudioVolume                        = @"MPEAudioVolume";
 NSString* const MPEBS2BFilter                         = @"MPEBS2BFilter";
 NSString* const MPEBlackOutOtherScreensInFullscreen   = @"MPEBlackOutOtherScreensInFullscreen";

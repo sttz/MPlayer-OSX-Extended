@@ -22,6 +22,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include <CoreAudio/CoreAudio.h>
+
 #include <mach-o/arch.h>
 
 #import "PreferencesController2.h"
@@ -33,6 +35,7 @@
 #import "Debug.h"
 #import "Preferences.h"
 #import "BinaryBundle.h"
+#import "CocoaAdditions.h"
 
 #import <fontconfig/fontconfig.h>
 #import "RegexKitLite.h"
@@ -42,7 +45,7 @@
 #define ASPECT_REGEX	@"^(\\d+\\.?\\d*|\\.\\d+)(?:\\:(\\d+\\.?\\d*|\\.\\d+))?$"
 
 @implementation PreferencesController2
-@synthesize fonts, customAspectRatioChooser, binaryInfo, binariesController;
+@synthesize fonts, outputDevices, customAspectRatioChooser, binaryInfo, binariesController;
 
 - (void) awakeFromNib
 {
@@ -91,7 +94,8 @@
 	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES]; 
 	
 	// Check if custom screenshot path exists
-	if (![[NSFileManager defaultManager] fileExistsAtPath:[PREFS stringForKey:MPECustomScreenshotsSavePath]]) {
+	if ([PREFS objectForKey:MPECustomScreenshotsSavePath] && 
+			![[NSFileManager defaultManager] fileExistsAtPath:[PREFS stringForKey:MPECustomScreenshotsSavePath]]) {
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Screenshot save path '%@' doesn't exist anymore, using default location.",
 												[PREFS stringForKey:MPECustomScreenshotsSavePath]];
 		[PREFS removeObjectForKey:MPECustomScreenshotsSavePath];
@@ -122,6 +126,9 @@
 		[PREFS removeObjectForKey:MPESelectedBinary];
 	}
 	
+	// Load audio output devices
+	[self loadOutputDevices];
+	
 	// listen for playback restarts to recheck if the restart requirement
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(requireRestart:)
@@ -142,6 +149,7 @@
 	[views release];
 	[currentViewName release];
 	[fonts release];
+	[outputDevices release];
 	[binaryBundles release];
 	[binaryInfo release];
 	[binaryUpdaters release];
@@ -893,6 +901,101 @@
 - (IBAction) changeFont:(NSPopUpButton *)sender
 {
 	[[NSUserDefaults standardUserDefaults] setObject:[sender titleOfSelectedItem] forKey:MPEFont];
+	
+	[self requireRestart:sender];
+}
+
+- (void) loadOutputDevices
+{
+	AudioDeviceID *devids;
+	OSStatus err;
+    AudioObjectPropertyAddress property_address;
+    UInt32 i_param_size;
+    
+	// Get list of all audio device ids
+    property_address.mSelector = kAudioHardwarePropertyDevices;
+    property_address.mScope    = kAudioObjectPropertyScopeGlobal;
+    property_address.mElement  = kAudioObjectPropertyElementMaster;
+	
+    err = AudioObjectGetPropertyDataSize(kAudioObjectSystemObject, &property_address, 
+										 0, NULL, &i_param_size);
+	
+    if (err != noErr)
+        return [Debug log:ASL_LEVEL_ERR withMessage:@"Failed to get list of output devices: [%4.4s]",&err];
+	
+    devids = malloc(i_param_size);
+	
+    err = AudioObjectGetPropertyData(kAudioObjectSystemObject, &property_address, 
+									 0, NULL, &i_param_size, devids);
+	
+    if (err != noErr) {
+        free(devids);
+        return [Debug log:ASL_LEVEL_ERR withMessage:@"Failed to get list of output devices: [%4.4s]",&err];
+    }
+	
+    int num_devices = i_param_size / sizeof(AudioDeviceID);
+	
+	CFStringRef string;
+	
+	// Construct device selection menu
+	NSMenu *menu = [audioDeviceMenu menu];
+	NSMenuItem *item;
+	[menu removeAllItems];
+	
+	item = [[NSMenuItem new] autorelease];
+	[item setTitle:@"Default Output Device"];
+	[item setTag:0];
+	[menu addItem:item];
+	
+	[menu addItem:[NSMenuItem separatorItem]];
+	
+	int i;
+    for (i = 0; i < num_devices; ++i) {
+		
+		property_address.mSelector = kAudioDevicePropertyStreams;
+		property_address.mScope    = kAudioDevicePropertyScopeOutput;
+		
+		// Check for output streams
+		err = AudioObjectGetPropertyDataSize(devids[i], &property_address, 
+											 0, NULL, &i_param_size);
+		
+		if (err != noErr)
+			return [Debug log:ASL_LEVEL_ERR withMessage:@"Failed to get list of output streams: [%4.4s]",&err];
+		
+		if ((i_param_size / sizeof(AudioStreamID)) == 0)
+			continue;
+		
+		// Get device name
+		property_address.mSelector = kAudioObjectPropertyName;
+		property_address.mScope    = kAudioObjectPropertyScopeGlobal;
+		
+		i_param_size = sizeof(CFStringRef);
+		err = AudioObjectGetPropertyData(devids[i], &property_address, 0, NULL, &i_param_size, &string);
+		if (err != noErr) {
+			[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to get name of output device: [%4.4s]",&err];
+			continue;
+		}
+		
+		item = [[NSMenuItem new] autorelease];
+		[item setTitle:(NSString *)string];
+		[item setTag:devids[i]];
+		[menu addItem:item];
+		
+		CFRelease(string);
+    }
+	
+    free(devids);
+	
+	int outputDevice = 0;
+	if ([PREFS objectForKey:MPEAudioOutputDevice])
+		outputDevice = [PREFS integerForKey:MPEAudioOutputDevice];
+	
+	[audioDeviceMenu selectItemWithTag:outputDevice];
+}
+
+- (IBAction) selectOutputDevice:(NSPopUpButton *)sender
+{
+	[PREFS setInteger:[sender selectedTag] forKey:MPEAudioOutputDevice];
 	
 	[self requireRestart:sender];
 }

@@ -84,6 +84,7 @@
 		3A5879C80EED42BD003408E8 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A5879C70EED42BD003408E8 /* Sparkle.framework */; };
 		3A5879D30EED42CB003408E8 /* Sparkle.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 3A5879C70EED42BD003408E8 /* Sparkle.framework */; };
 		3A5879E00EED4507003408E8 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 3A5879DF0EED4507003408E8 /* dsa_pub.pem */; };
+		3A5BD023117B5807000D2F79 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A5BD022117B5807000D2F79 /* CoreAudio.framework */; };
 		3A5F3FBD10C17AFA00C5B912 /* BinaryBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A5F3FBC10C17AFA00C5B912 /* BinaryBundle.m */; };
 		3A638951108B953F00E90936 /* PFMoveApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A638950108B953F00E90936 /* PFMoveApplication.m */; };
 		3A638955108B95B000E90936 /* MoveApplication.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A638953108B95B000E90936 /* MoveApplication.strings */; };
@@ -295,6 +296,8 @@
 		3A38D3C40E50E45A00C1E468 /* Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Debug.m; path = Sources/Classes/Debug.m; sourceTree = "<group>"; };
 		3A5879C70EED42BD003408E8 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		3A5879DF0EED4507003408E8 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dsa_pub.pem; path = Resources/dsa_pub.pem; sourceTree = "<group>"; };
+		3A5BD016117B57C8000D2F79 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
+		3A5BD022117B5807000D2F79 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		3A5F3FBB10C17AFA00C5B912 /* BinaryBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BinaryBundle.h; path = Sources/Classes/BinaryBundle.h; sourceTree = "<group>"; };
 		3A5F3FBC10C17AFA00C5B912 /* BinaryBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BinaryBundle.m; path = Sources/Classes/BinaryBundle.m; sourceTree = "<group>"; };
 		3A63894F108B953F00E90936 /* PFMoveApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFMoveApplication.h; sourceTree = "<group>"; };
@@ -445,6 +448,7 @@
 				3ADA70990FED843800F7AFB9 /* libfreetype.6.dylib in Frameworks */,
 				3ADA709A0FED843800F7AFB9 /* libiconv.2.dylib in Frameworks */,
 				3A638959108B95D300E90936 /* Security.framework in Frameworks */,
+				3A5BD023117B5807000D2F79 /* CoreAudio.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -512,6 +516,8 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				3A5BD016117B57C8000D2F79 /* AudioUnit.framework */,
+				3A5BD022117B5807000D2F79 /* CoreAudio.framework */,
 			);
 			name = "MPlayer OSX";
 			sourceTree = "<group>";

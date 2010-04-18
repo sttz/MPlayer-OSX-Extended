@@ -77,6 +77,8 @@
 		<integer>0</integer>
 		<key>MPEEnableAudio</key>
 		<true/>
+		<key>MPEAudioOutputDevice</key>
+		<integer>0</integer>
 		<key>MPEHardwareAC3Passthrough</key>
 		<false/>
 		<key>MPEHardwareDTSPassthrough</key>
@@ -567,6 +569,7 @@
 	</dict>
 	<key>RequiresRestart</key>
 	<array>
+		<string>MPEAudioOutputDevice</string>
 		<string>MPECacheSizeInMB</string>
 		<string>MPEDefaultAudioLanguages</string>
 		<string>MPEDefaultSubtitleLanguages</string>
