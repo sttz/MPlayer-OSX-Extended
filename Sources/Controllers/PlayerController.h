@@ -136,6 +136,7 @@ extern NSString* const MPEPlaybackStoppedNotification;
 - (IBAction)stop:(id)sender;
 - (IBAction)seekFromMenu:(NSMenuItem *)item;
 - (IBAction)switchFullscreen:(id)sender;
+- (void)syncWindows:(BOOL)switchingToFullscreen;
 - (IBAction)takeScreenshot:(id)sender;
 - (void) setVolume:(double)volume;
 - (double)volume;

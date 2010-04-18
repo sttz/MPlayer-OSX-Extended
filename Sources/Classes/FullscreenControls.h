@@ -56,6 +56,7 @@
 	IBOutlet PlayerController *playerController;
 }
 
+@property (readonly,getter=window) PlayerFullscreenWindow *fcWindow;
 @property (readonly) BOOL beingDragged;
 
 - (void)fadeWith:(NSString*)effect;

@@ -96,6 +96,7 @@ typedef NSUInteger MPEVideoScaleMode;
 - (void) setAspectRatio:(float)aspect;
 - (void) setAspectRatioFromPreferences;
 - (void) setVideoScaleMode:(MPEVideoScaleMode)scaleMode;
+- (void) fullscreenWindowMoved:(NSNotification *)notification;
 
 // Event
 - (void) mouseDown: (NSEvent *) theEvent;

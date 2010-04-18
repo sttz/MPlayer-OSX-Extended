@@ -134,6 +134,7 @@ static unsigned int videoViewId;
 		rect.origin = [[playerController playerWindow] convertBaseToScreen:rect.origin];
 		[fullscreenWindow setFrame:rect display:NO animate:NO];
 		
+		[playerController syncWindows:YES];
 		[fullscreenWindow makeKeyAndOrderFront:nil];
 		[self updateOntop];
 		
@@ -168,6 +169,10 @@ static unsigned int videoViewId;
 	
 	} else {
 		
+		[[NSNotificationCenter defaultCenter] removeObserver:self
+														name:NSWindowDidMoveNotification
+													  object:fullscreenWindow];
+		
 		// unhide player window
 		if (![[playerController playerWindow] isVisible])
 			[[playerController playerWindow] orderWindow:NSWindowBelow
@@ -179,6 +184,7 @@ static unsigned int videoViewId;
 		[self setFrame:win_frame onWindow:[playerController playerWindow] blocking:NO];
 		
 		// move player window below fullscreen window
+		[playerController syncWindows:NO];
 		[[playerController playerWindow] orderWindow:NSWindowBelow relativeTo:[fullscreenWindow windowNumber]];
 		[[playerController playerWindow] makeKeyWindow];
 		
@@ -202,6 +208,14 @@ static unsigned int videoViewId;
 	}
 }
 
+- (void) fullscreenWindowMoved:(NSNotification *)notification
+{
+	// triggered when fullscreen window changes spaces
+	int fullscreenId = [playerController fullscreenDeviceId];
+	NSRect screen_frame = [[[NSScreen screens] objectAtIndex:fullscreenId] frame];
+	[fullscreenWindow setFrame:screen_frame display:YES animate:NO];
+}
+
 - (void) finishToggleFullscreen
 {
 	
@@ -212,6 +226,11 @@ static unsigned int videoViewId;
 			[[playerController playerWindow] orderOut:self];
 		
 		[fullscreenWindow startMouseTracking];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(fullscreenWindowMoved:)
+													 name:NSWindowDidMoveNotification
+												   object:fullscreenWindow];
 		
 	} else {
 		

@@ -30,7 +30,7 @@
 #import "TimestampTextField.h"
 
 @implementation FullscreenControls
-@synthesize beingDragged;
+@synthesize beingDragged, fcWindow;
 
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag {
 	

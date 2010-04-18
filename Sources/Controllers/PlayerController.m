@@ -930,6 +930,18 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	[videoOpenGLView toggleFullscreen];
 }
 /************************************************************************************/
+- (void)syncWindows:(BOOL)switchingToFullscreen
+{
+	// Make sure the player and fullscreen windows are on the same space
+	if (switchingToFullscreen) {
+		[playerWindow addChildWindow:[fullScreenControls window] ordered:NSWindowAbove];
+		[playerWindow removeChildWindow:[fullScreenControls window]];
+	} else {
+		[[fullScreenControls window] addChildWindow:playerWindow ordered:NSWindowBelow];
+		[[fullScreenControls window] removeChildWindow:playerWindow];
+	}
+}
+/************************************************************************************/
 - (int) fullscreenDeviceId {
 	
 	// Default value from preferences
