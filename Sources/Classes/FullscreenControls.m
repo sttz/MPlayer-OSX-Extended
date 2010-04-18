@@ -140,6 +140,16 @@
 	
 }
 
+- (void) cycleTimeDisplayMode:(id)sender
+{
+	if (![self isVisible])
+		[fcWindow showOSD];
+	else {
+		[fcTimeTextField cycleDisplayMode:self];
+		[fcWindow refreshOSDTimer];
+	}
+}
+
 - (void) interface:(MPlayerInterface *)mi hasChangedStateTo:(NSNumber *)statenumber fromState:(NSNumber *)oldstatenumber
 {	
 	MIState state = [statenumber unsignedIntValue];

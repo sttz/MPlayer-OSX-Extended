@@ -1503,6 +1503,14 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	[context removeItemAtIndex:0];
 	return context;
 }
+/************************************************************************************/
+- (void) cycleTimeDisplayMode:(id)sender
+{
+	if (![self isFullscreen])
+		[timeTextField cycleDisplayMode:self];
+	else
+		[fullScreenControls cycleTimeDisplayMode:self];
+}
 /************************************************************************************
  NOTIFICATION OBSERVERS
  ************************************************************************************/
@@ -1743,6 +1751,10 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	else if (keyHandled = ([characters isEqualToString:@"0"]
 						   || [uCharacters isEqualToString:@"*"]))
 		[self increaseVolume:self];
+	
+	// Cycle timestamp display modes
+	else if (keyHandled = ([theEvent keyCode] == kVK_Tab))
+		[self cycleTimeDisplayMode:self];
 	
 	// All actions below need a playing item
 	if (keyHandled || ![myPlayer isMovieOpen])

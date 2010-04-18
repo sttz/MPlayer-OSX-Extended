@@ -205,6 +205,19 @@
 	}
 }
 
+- (void) showOSD
+{
+	if (isFullscreen) {
+		
+		CGDisplayShowCursor(kCGDirectMainDisplay);
+		
+		if (![fullscreenControls isVisible])
+			[fullscreenControls orderFront:self];
+		
+		[self refreshOSDTimer];
+	}
+}
+
 - (void)mouseMoved:(NSEvent *)theEvent
 {	
 	NSPoint mousePosition = [NSEvent mouseLocation];
@@ -214,12 +227,7 @@
 	if(isFullscreen && [PREFS floatForKey:MPEFullscreenControlsHideTimeout] > 0
 	   && sqrDelta > [PREFS floatForKey:MPEFullscreenControlsSensitivity])
 	{
-		CGDisplayShowCursor(kCGDirectMainDisplay);
-		
-		if (![fullscreenControls isVisible])
-			[fullscreenControls orderFront:self];
-			
-		[self refreshOSDTimer];
+		[self showOSD];
 	}
 }
 

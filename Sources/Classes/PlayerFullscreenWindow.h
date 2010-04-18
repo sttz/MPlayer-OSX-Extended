@@ -46,6 +46,7 @@
 					defer: (BOOL) flag;
 
 - (void) hideOSD;
+- (void) showOSD;
 - (void) setFullscreen: (bool)aBool;
 - (void) startMouseTracking;
 - (void) stopMouseTracking;

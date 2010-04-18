@@ -76,6 +76,15 @@
 	[self updateTimestamp];
 }
 
+- (void)cycleDisplayMode:(id)sender
+{
+	displayType++;
+	if (displayType > MPETimestampTotal)
+		displayType = 0;
+	
+	[self updateTimestamp];
+}
+
 - (void)setTimestamptWithCurrentTime:(float)currentTime andTotalTime:(float)totalTime
 {
 	lastCurrentTime = currentTime;
@@ -85,11 +94,7 @@
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
-	displayType++;
-	if (displayType > MPETimestampTotal)
-		displayType = 0;
-	
-	[self updateTimestamp];
+	[self cycleDisplayMode:self];
 	
 	[super mouseDown:theEvent];
 }

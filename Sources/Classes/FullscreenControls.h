@@ -31,7 +31,7 @@
 
 @interface FullscreenControls : NSWindow <MPlayerInterfaceClientProtocol> {
 	
-	IBOutlet id fcWindow;
+	IBOutlet PlayerFullscreenWindow *fcWindow;
 	IBOutlet NSButton *fcPlayButton;
     IBOutlet id fcVolumeSlider;
 	IBOutlet id fcScrubbingBar;
@@ -59,5 +59,6 @@
 @property (readonly) BOOL beingDragged;
 
 - (void)fadeWith:(NSString*)effect;
+- (void)cycleTimeDisplayMode:(id)sender;
 
 @end

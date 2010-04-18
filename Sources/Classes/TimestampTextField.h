@@ -38,4 +38,6 @@ typedef NSUInteger MPETimestampDisplayType;
 }
 @property (nonatomic) MPETimestampDisplayType displayType;
 - (void)setTimestamptWithCurrentTime:(float)currentTime andTotalTime:(float)totalTime;
+- (void)changeDisplayMode:(id)sender;
+- (void)cycleDisplayMode:(id)sender;
 @end
