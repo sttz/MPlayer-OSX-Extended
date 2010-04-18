@@ -1,8 +1,8 @@
 /*  
- *  TimestampTextField.h
+ *  PlaylistTimestampTextField.m
  *  MPlayer OSX Extended
  *  
- *  Created on 01.01.2010
+ *  Created on 18.04.2010
  *  
  *  Description:
  *	Controller for the inspector pane.
@@ -22,26 +22,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#import <Cocoa/Cocoa.h>
+#import "PlaylistTimestampTextField.h"
 
-enum {
-	MPETimestampCurrent,
-	MPETimestampRemaining,
-	MPETimestampTotal,
-};
-typedef NSUInteger MPETimestampDisplayType;
 
-@interface TimestampTextField : NSTextField {
-	MPETimestampDisplayType displayType;
-	float lastCurrentTime;
-	float lastTotalTime;
-	NSString *autosaveName;
+@implementation PlaylistTimestampTextField
+- (NSString *)autosaveName
+{
+	return @"MPEPlaylistTimestamp";
 }
-@property (nonatomic) MPETimestampDisplayType displayType;
-@property (nonatomic,readonly) NSString *autosaveName;
-- (void)setTimestamptWithCurrentTime:(float)currentTime andTotalTime:(float)totalTime;
-- (void)setDisplayMode:(MPETimestampDisplayType)mode;
-- (void)changeDisplayMode:(id)sender;
-- (void)cycleDisplayMode:(id)sender;
-- (void)updateTimestamp;
 @end

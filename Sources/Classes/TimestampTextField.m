@@ -24,9 +24,33 @@
 
 #import "TimestampTextField.h"
 
+#import "Preferences.h"
 
 @implementation TimestampTextField
 @synthesize displayType;
+
+- (void)awakeFromNib
+{
+	[self setDisplayMode:[PREFS integerForKey:[self autosaveName]]];
+	
+	[PREFS addObserver:self
+			forKeyPath:[self autosaveName]
+			   options:NSKeyValueObservingOptionNew
+			   context:nil];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if ([keyPath isEqualToString:[self autosaveName]]) {
+		displayType = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+		[self updateTimestamp];
+	}
+}
+
+- (NSString *)autosaveName
+{
+	return @"MPEPlayerControlsTimestamp";
+}
 
 - (void)updateTimestamp
 {
@@ -70,19 +94,26 @@
 	[self setStringValue:timestamp];
 }
 
+- (void)setDisplayMode:(MPETimestampDisplayType)mode
+{
+	displayType = mode;
+	[self updateTimestamp];
+	
+	[PREFS setInteger:displayType forKey:[self autosaveName]];
+}
+
 - (void)changeDisplayMode:(id)sender
 {
-	displayType = [sender tag];
-	[self updateTimestamp];
+	[self setDisplayType:[sender tag]];
 }
 
 - (void)cycleDisplayMode:(id)sender
 {
-	displayType++;
-	if (displayType > MPETimestampTotal)
-		displayType = 0;
+	NSUInteger newType = displayType + 1;
+	if (newType > MPETimestampTotal)
+		newType = 0;
 	
-	[self updateTimestamp];
+	[self setDisplayMode:newType];
 }
 
 - (void)setTimestamptWithCurrentTime:(float)currentTime andTotalTime:(float)totalTime

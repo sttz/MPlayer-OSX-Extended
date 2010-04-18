@@ -91,6 +91,7 @@
 		3A6BAE57110E333300ACEFA0 /* KeyRedirectButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A6BAE56110E333300ACEFA0 /* KeyRedirectButton.m */; };
 		3A6E433210A33AE400B0BDC3 /* PreferencesController2.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A6E433110A33AE400B0BDC3 /* PreferencesController2.m */; };
 		3A71CA0010BEBB7800C810F4 /* CocoaAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71C9FF10BEBB7800C810F4 /* CocoaAdditions.m */; };
+		3A77EE50117B223600DE8A98 /* PlaylistTimestampTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A77EE4F117B223600DE8A98 /* PlaylistTimestampTextField.m */; };
 		3A780D0D10E11FED008E5AEC /* Inspector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A780D0B10E11FED008E5AEC /* Inspector.xib */; };
 		3A7A609E1108A1A700371851 /* pl_volume3.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A7A608E1108A1A700371851 /* pl_volume3.png */; };
 		3A7A609F1108A1A700371851 /* pl_volume2.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A7A608F1108A1A700371851 /* pl_volume2.png */; };
@@ -307,6 +308,8 @@
 		3A6E433110A33AE400B0BDC3 /* PreferencesController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesController2.m; path = Sources/Controllers/PreferencesController2.m; sourceTree = "<group>"; };
 		3A71C9FE10BEBB7800C810F4 /* CocoaAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CocoaAdditions.h; path = Sources/Classes/CocoaAdditions.h; sourceTree = "<group>"; };
 		3A71C9FF10BEBB7800C810F4 /* CocoaAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CocoaAdditions.m; path = Sources/Classes/CocoaAdditions.m; sourceTree = "<group>"; };
+		3A77EE4E117B223600DE8A98 /* PlaylistTimestampTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlaylistTimestampTextField.h; path = Sources/Classes/PlaylistTimestampTextField.h; sourceTree = "<group>"; };
+		3A77EE4F117B223600DE8A98 /* PlaylistTimestampTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlaylistTimestampTextField.m; path = Sources/Classes/PlaylistTimestampTextField.m; sourceTree = "<group>"; };
 		3A780D0C10E11FED008E5AEC /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Resources/English.lproj/Inspector.xib; sourceTree = "<group>"; };
 		3A7A608E1108A1A700371851 /* pl_volume3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pl_volume3.png; path = Resources/Graphics/pl_volume3.png; sourceTree = "<group>"; };
 		3A7A608F1108A1A700371851 /* pl_volume2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pl_volume2.png; path = Resources/Graphics/pl_volume2.png; sourceTree = "<group>"; };
@@ -624,6 +627,8 @@
 				3A9FB0221109F87700EF2AC3 /* TimestampTextField.m */,
 				3A6BAE55110E333300ACEFA0 /* KeyRedirectButton.h */,
 				3A6BAE56110E333300ACEFA0 /* KeyRedirectButton.m */,
+				3A77EE4E117B223600DE8A98 /* PlaylistTimestampTextField.h */,
+				3A77EE4F117B223600DE8A98 /* PlaylistTimestampTextField.m */,
 			);
 			name = Interface;
 			sourceTree = "<group>";
@@ -1012,6 +1017,7 @@
 				3A9FB0231109F87700EF2AC3 /* TimestampTextField.m in Sources */,
 				3ADD73B2110B9DB100568830 /* LocalUserDefaults.m in Sources */,
 				3A6BAE57110E333300ACEFA0 /* KeyRedirectButton.m in Sources */,
+				3A77EE50117B223600DE8A98 /* PlaylistTimestampTextField.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
