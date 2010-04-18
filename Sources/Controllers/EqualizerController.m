@@ -48,6 +48,16 @@
 										  options:0
 										  context:nil];
 	
+	[PREFS addObserver:self
+			forKeyPath:MPEVideoEqualizerEnabled
+			   options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial)
+			   context:nil];
+	
+	[PREFS addObserver:self
+			forKeyPath:MPEAudioEqualizerEnabled
+			   options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial)
+			   context:nil];
+	
 	[self selectAudioEqualizerPreset];
 }
 
@@ -70,6 +80,14 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
+	if ([keyPath isEqualToString:MPEVideoEqualizerEnabled]) {
+		[enableVideoEqualizerByDefaultItem setState:[change integerForKey:NSKeyValueChangeNewKey]];
+		return;
+	} else if ([keyPath isEqualToString:MPEAudioEqualizerEnabled]) {
+		[enableAudioEqualizerByDefaultItem setState:[change integerForKey:NSKeyValueChangeNewKey]];
+		return;
+	}
+	
 	MovieInfo *info = [AppController sharedController].movieInfoProvider.currentMovieInfo;
 	
 	if (([keyPath hasSuffix:MPEVideoEqualizerEnabled] || [keyPath hasSuffix:MPEAudioEqualizerEnabled])
@@ -92,6 +110,28 @@
 }
 
 - (IBAction) resetVideoEqualizer:(id)sender
+{
+	NSDictionary *values = [[NSDictionary new] autorelease];
+	
+	MovieInfo *info = [AppController sharedController].movieInfoProvider.currentMovieInfo;
+	[info.prefs setObject:values forKey:MPEVideoEqualizerValues];
+}
+
+- (IBAction) toggleEnableVideoEqualizerByDefault:(id)sender
+{
+	BOOL current = [PREFS boolForKey:MPEVideoEqualizerEnabled];
+	[PREFS setBool:!current forKey:MPEVideoEqualizerEnabled];
+}
+
+- (IBAction) setVideoValuesAsDefault:(id)sender
+{
+	MovieInfo *info = [AppController sharedController].movieInfoProvider.currentMovieInfo;
+	NSDictionary *values = [info.prefs objectForKey:MPEVideoEqualizerValues];
+	
+	[PREFS setObject:values forKey:MPEVideoEqualizerValues];
+}
+
+- (IBAction) resetVideoEqualizerToDefaults:(id)sender
 {
 	MovieInfo *info = [AppController sharedController].movieInfoProvider.currentMovieInfo;
 	[info.prefs removeObjectForKey:MPEVideoEqualizerValues];
@@ -141,6 +181,12 @@
 	[info.prefs removeObjectForKey:MPEAudioEqualizerValues];
 }
 
+- (IBAction) toggleEnableAudioEqualizerByDefault:(id)sender
+{
+	BOOL current = [PREFS boolForKey:MPEAudioEqualizerEnabled];
+	[PREFS setBool:!current forKey:MPEAudioEqualizerEnabled];
+}
+
 - (IBAction) changePreset:(NSPopUpButton *)sender
 {
 	if ([sender selectedTag] == 0)
@@ -168,7 +214,7 @@
 	[self setAudioEqualizerDirty];
 }
 
-- (IBAction) addAudioPreset:(NSButton *)sender
+- (IBAction) addAudioPreset:(NSMenuItem *)sender
 {
 	NSAlert *alert = [[NSAlert new] autorelease];
 	[alert setAlertStyle:NSInformationalAlertStyle];
@@ -205,7 +251,7 @@
 	}
 }
 
-- (IBAction) removeAudioPreset:(NSButton *)sender
+- (IBAction) removeAudioPreset:(NSMenuItem *)sender
 {
 	NSMutableDictionary *presets = [[[PREFS objectForKey:MPEAudioEqualizerPresets] mutableCopy] autorelease];
 	[presets removeObjectForKey:[[presetSelectionPopUp selectedItem] title]];

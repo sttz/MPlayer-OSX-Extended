@@ -32,20 +32,27 @@
 	
 	IBOutlet NSView *presetNameView;
 	IBOutlet NSTextField *presetNameField;
+	
+	IBOutlet NSMenuItem *enableAudioEqualizerByDefaultItem;
+	IBOutlet NSMenuItem *enableVideoEqualizerByDefaultItem;
 }
 
 - (IBAction) applyWithRestart:(id)sender;
 
 - (void) openVideoEqualizer;
 - (IBAction) resetVideoEqualizer:(id)sender;
+- (IBAction) toggleEnableVideoEqualizerByDefault:(id)sender;
+- (IBAction) setVideoValuesAsDefault:(id)sender;
+- (IBAction) resetVideoEqualizerToDefaults:(id)sender;
 
 - (void) openAudioEqualizer;
 - (IBAction) resetAudioEqualizer:(id)sender;
+- (IBAction) toggleEnableAudioEqualizerByDefault:(id)sender;
 - (void)selectAudioEqualizerPreset;
 - (IBAction) changePreset:(NSPopUpButton *)sender;
 - (IBAction) changeAudioValue:(NSSlider *)sender;
-- (IBAction) addAudioPreset:(NSButton *)sender;
-- (IBAction) removeAudioPreset:(NSButton *)sender;
+- (IBAction) addAudioPreset:(NSMenuItem *)sender;
+- (IBAction) removeAudioPreset:(NSMenuItem *)sender;
 - (void) setAudioEqualizerDirty;
 
 + (NSString *)eq2FilterValues;
