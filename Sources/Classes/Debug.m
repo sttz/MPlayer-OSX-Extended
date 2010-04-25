@@ -21,6 +21,8 @@
  *  along with this program; if not, see <http://www.gnu.org/licenses/>. 
  */
 
+#import <ExceptionHandling/ExceptionHandling.h>
+
 #import "Debug.h"
 
 /// Shared debugger singleton instance
@@ -114,6 +116,23 @@ static BOOL sharedInstanceConnectsStderr = NO;
 	asc = asl_open(dSender, dFacility, options);
 	// Only show message above level set in dFilterUpto
 	asl_set_filter(asc, ASL_FILTER_MASK_UPTO(dFilterUpto));
+	
+	// Setup Debug to log exceptions
+	NSExceptionHandler *handler = [NSExceptionHandler defaultExceptionHandler];
+	[handler setExceptionHandlingMask:(NSHandleUncaughtExceptionMask
+									   | NSHandleUncaughtSystemExceptionMask
+									   | NSHandleUncaughtRuntimeErrorMask
+									   | NSHandleTopLevelExceptionMask
+									   | NSHandleOtherExceptionMask)];
+	[handler setDelegate:self];
+}
+
+- (BOOL) exceptionHandler:(NSExceptionHandler *)sender shouldHandleException:(NSException *)exception mask:(unsigned int)aMask {
+	[Debug log:ASL_LEVEL_ERR withMessage:@"Unhandled %@: %@ (stack: %@)",
+											[exception name],
+											[exception reason],
+											[[exception userInfo] objectForKey:NSStackTraceKey]];
+	return YES;
 }
 
 /** Uninitialize Debug class.
