@@ -81,6 +81,7 @@
 		3A0A3E550F670C89008C8507 /* Binaries in Resources */ = {isa = PBXBuildFile; fileRef = 3A0A3E510F670C89008C8507 /* Binaries */; };
 		3A36660F0FE6E6A500CF05DC /* AppleRemote.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A36660D0FE6E6A500CF05DC /* AppleRemote.m */; };
 		3A38D3C50E50E45A00C1E468 /* Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A38D3C40E50E45A00C1E468 /* Debug.m */; };
+		3A43A5C811832B28003C6037 /* ExceptionHandling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A43A5C711832B28003C6037 /* ExceptionHandling.framework */; };
 		3A5879C80EED42BD003408E8 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A5879C70EED42BD003408E8 /* Sparkle.framework */; };
 		3A5879D30EED42CB003408E8 /* Sparkle.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 3A5879C70EED42BD003408E8 /* Sparkle.framework */; };
 		3A5879E00EED4507003408E8 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 3A5879DF0EED4507003408E8 /* dsa_pub.pem */; };
@@ -294,6 +295,7 @@
 		3A36660E0FE6E6A500CF05DC /* AppleRemote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppleRemote.h; path = Sources/External/AppleRemote/AppleRemote.h; sourceTree = "<group>"; };
 		3A38D3C30E50E45A00C1E468 /* Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Debug.h; path = Sources/Classes/Debug.h; sourceTree = "<group>"; };
 		3A38D3C40E50E45A00C1E468 /* Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Debug.m; path = Sources/Classes/Debug.m; sourceTree = "<group>"; };
+		3A43A5C711832B28003C6037 /* ExceptionHandling.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExceptionHandling.framework; path = System/Library/Frameworks/ExceptionHandling.framework; sourceTree = SDKROOT; };
 		3A5879C70EED42BD003408E8 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		3A5879DF0EED4507003408E8 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dsa_pub.pem; path = Resources/dsa_pub.pem; sourceTree = "<group>"; };
 		3A5BD016117B57C8000D2F79 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
@@ -449,6 +451,7 @@
 				3ADA709A0FED843800F7AFB9 /* libiconv.2.dylib in Frameworks */,
 				3A638959108B95D300E90936 /* Security.framework in Frameworks */,
 				3A5BD023117B5807000D2F79 /* CoreAudio.framework in Frameworks */,
+				3A43A5C811832B28003C6037 /* ExceptionHandling.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -518,6 +521,7 @@
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				3A5BD016117B57C8000D2F79 /* AudioUnit.framework */,
 				3A5BD022117B5807000D2F79 /* CoreAudio.framework */,
+				3A43A5C711832B28003C6037 /* ExceptionHandling.framework */,
 			);
 			name = "MPlayer OSX";
 			sourceTree = "<group>";
