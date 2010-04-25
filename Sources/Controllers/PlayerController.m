@@ -968,9 +968,15 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 			return screenId;
 		else
 			return 0;
+	
 	// custom screen id
-	} else
-		return fullscreenDeviceId;
+	} else {
+		
+		if (fullscreenDeviceId < [[NSScreen screens] count])
+			return fullscreenDeviceId;
+		else
+			return 0;
+	}
 }
 /************************************************************************************/
 - (IBAction)takeScreenshot:(id)sender {
@@ -1507,9 +1513,9 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 /************************************************************************************/
 - (void)screensDidChange {
 	
-	// Reset devide id to preferences value if auto or unavailable
-	if (fullscreenDeviceId == -2 || [self fullscreenDeviceId] >= [[NSScreen screens] count])
-		fullscreenDeviceId = [PREFS integerForKey:MPEFullscreenDisplayNumber];
+	// Reset devide id to preferences value if unavailable
+	if (fullscreenDeviceId >= [[NSScreen screens] count])
+		fullscreenDeviceId = -2;
 	// Rebuild menu and select current id
 	[self fillFullscreenMenu];
 	[self selectFullscreenDevice];
@@ -1565,7 +1571,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	unsigned int stateMask = (1<<state);
 	MIState oldState = [oldstatenumber unsignedIntValue];
 	unsigned int oldStateMask = (1<<oldState);
-		
+	
 	// First play after startup
 	if (state == MIStatePlaying && (oldStateMask & MIStateStartupMask)) {
 		// Populate menus
