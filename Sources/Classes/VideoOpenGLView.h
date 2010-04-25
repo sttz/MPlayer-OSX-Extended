@@ -27,6 +27,8 @@ enum {
 };
 typedef NSUInteger MPEVideoScaleMode;
 
+@class PlayerController;
+
 @interface VideoOpenGLView : NSOpenGLView <MPlayerVideoRenderereDelegateProtocol>
 {
 	MPlayerVideoRenderer *renderer;
@@ -69,7 +71,7 @@ typedef NSUInteger MPEVideoScaleMode;
 	IBOutlet NSMenuItem* KeepAspectMenuItem;
 	IBOutlet NSMenuItem* PanScanMenuItem;	
 	// other controllers outlets
-	IBOutlet id playerController;
+	IBOutlet PlayerController *playerController;
 	
 	IBOutlet NSWindow *fcControlWindow;
 	IBOutlet PlayerFullscreenWindow* fullscreenWindow;
