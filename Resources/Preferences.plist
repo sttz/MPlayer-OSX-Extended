@@ -27,7 +27,7 @@
 		<key>MPEBlackOutOtherScreensInFullscreen</key>
 		<true/>
 		<key>MPEFullscreenBlockOthers</key>
-		<true/>
+		<false/>
 		<key>MPEFlipDisplayVertically</key>
 		<false/>
 		<key>MPEFlipDisplayHorizontally</key>
@@ -54,11 +54,11 @@
 		<key>MPEGuessTextEncoding</key>
 		<string>disabled</string>
 		<key>MPELoadEmbeddedFonts</key>
-		<false/>
+		<true/>
 		<key>MPERenderSubtitlesFirst</key>
 		<false/>
 		<key>MPESubtitleScale</key>
-		<real>1.25</real>
+		<integer>1</integer>
 		<key>MPESubtitleTextColor</key>
 		<data>BAtzdHJlYW10eXBlZIHoA4QBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARmZmZmAQEBg5qZWT+G</data>
 		<key>MPESubtitleBorderColor</key>
