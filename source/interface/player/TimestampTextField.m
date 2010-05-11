@@ -65,12 +65,12 @@
 	}
 	
 	if (displayType == MPETimestampRemaining && (lastTotalTime == 0 || lastCurrentTime > lastTotalTime)) {
-		[self setStringValue:@"-xx:xx:xx"];
+		[self setStringValue:@"-00:00:00"];
 		return;
 	}
 	
 	if (displayType == MPETimestampTotal && lastTotalTime == 0) {
-		[self setStringValue:@"xx:xx:xx"];
+		[self setStringValue:@"00:00:00"];
 		return;
 	}
 	
@@ -104,7 +104,7 @@
 
 - (void)changeDisplayMode:(id)sender
 {
-	[self setDisplayType:[sender tag]];
+	[self setDisplayMode:[sender tag]];
 }
 
 - (void)cycleDisplayMode:(id)sender
