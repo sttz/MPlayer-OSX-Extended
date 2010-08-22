@@ -1627,9 +1627,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		// Running
 		} else {
 			// Update interface
-			[playerWindow setTitle:[NSString stringWithFormat:@"%@ - %@",
-									[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
-									[movieInfo title]]];
+			[playerWindow setTitle:[movieInfo title]];
 			[fullscreenButton setEnabled:YES];
 			// Disable loop when movie finished
 			[self setLoopMovie:NO];
