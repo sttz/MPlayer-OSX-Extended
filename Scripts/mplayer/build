@@ -47,6 +47,11 @@ fi
 
 targets=( "x86_64" "i386" "ppc" "ppcg3" "all" )
 
+mplayer_prefix="/usr/local"
+mplayer_datadir="$mplayer_prefix/share/mplayer"
+mplayer_confdir="$mplayer_prefix/etc/mplayer"
+mplayer_codecsdir="$mplayer_prefix/lib/codecs"
+
 no_clean=0
 no_configure=0
 no_build=0
@@ -56,6 +61,8 @@ clean_only=0
 configure_only=0
 build_only=0
 move_only=0
+
+debug_build=0
 
 all_options=""
 
@@ -74,6 +81,7 @@ General options:
 Build options:
     -u, --update                do an "svn update" before building
     -s, --shared                do a build with shared libraries (including libav*)
+    -d, --debug                 do a debug build
 
 Build steps:
     --no-STEP                   skip STEP in build process
@@ -108,6 +116,8 @@ while [ -n "$1" ]; do
 			-s | --shared )			shared_libs=1
 									;;
 			-u | --update )			do_update=1
+									;;
+			-d | --debug )			debug_build=1
 									;;
 		
 			--no-clean )			no_clean=1
@@ -248,12 +258,11 @@ config_opts="$config_opts --disable-jack --disable-sdl"
 # Enable bundle layout
 config_opts="$config_opts --enable-macosx-bundle"
 # Use external ASS library
-config_opts="$config_opts --disable-ass-internal"
+# config_opts="$config_opts --disable-ass-internal"
 
 # Disable static ffmpeg
 if [ $shared_libs -eq 1 ]; then
-	config_opts="$config_opts --disable-libavutil_a --disable-libavcodec_a --disable-libavformat_a"
-	config_opts="$config_opts --disable-libpostproc_a --disable-libswscale_a"
+	config_opts="$config_opts --disable-ffmpeg_a"
 fi
 
 # Intel platform options
@@ -274,6 +283,16 @@ if [ "$target_system" = "ppc" -o "$target_system" = "ppcg3" ]; then
 	if [ "$target_system" == "ppcg3" ]; then
 		config_opts="$config_opts --disable-altivec"
 	fi
+fi
+
+# Set directories
+config_opts="$config_opts --datadir=$mplayer_datadir"
+config_opts="$config_opts --confdir=$mplayer_confdir"
+config_opts="$config_opts --codecsdir=$mplayer_codecsdir"
+
+if [ $debug_build -eq 1 ]; then
+	config_opts="$config_opts --enable-debug"
+	do_move=0
 fi
 
 # *** DEBUG
