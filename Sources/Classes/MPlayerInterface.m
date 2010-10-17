@@ -675,7 +675,7 @@ static NSArray* statusNames;
 			// ass filter needs to in front of yuy2
 			if (![cPrefs boolForKey:MPERenderSubtitlesFirst])
 				[videoFilters addObject:@"ass"];
-			[videoFilters addObject:@"yuy2"];
+			[videoFilters addObject:@"format=yuy2"];
 		}
 	} else if ([cPrefs boolForKey:MPEVideoEqualizerEnabled])
 		[videoFilters addObject:@"scale"];
@@ -1390,7 +1390,7 @@ static NSArray* statusNames;
 }
 /************************************************************************************/
 - (void)readOutputC:(NSNotification *)notification
-{	
+{
 	NSString *data = [[NSString alloc] 
 						initWithData:[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"] 
 						encoding:NSUTF8StringEncoding];
