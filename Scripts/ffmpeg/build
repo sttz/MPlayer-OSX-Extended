@@ -26,7 +26,7 @@ else
 	all_targets=( "x86_64" "i386" "ppc" )
 	
 	# Build directories
-	build_dirs=( libavutil libavcodec libavformat libpostproc libswscale ) 
+	build_dirs=( libavcore libavutil libavcodec libavformat libpostproc libswscale ) 
 	
 	# options
 	do_update=0
