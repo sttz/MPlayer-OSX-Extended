@@ -813,6 +813,7 @@
 			isa = PBXProject;
 			buildConfigurationList = 377E0250085E333600D64A26 /* Build configuration list for PBXProject "MPlayer OSX Extended" */;
 			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -1124,6 +1125,10 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				OTHER_LDFLAGS = (
+					"-lstdc++",
+					"-licucore",
+				);
 				PREBINDING = NO;
 				ZERO_LINK = YES;
 			};
@@ -1142,6 +1147,10 @@
 				GCC_PREFIX_HEADER = "Sources/MPlayer OSX_Prefix.pch";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				OTHER_LDFLAGS = (
+					"-lstdc++",
+					"-licucore",
+				);
 				PREBINDING = NO;
 				STRIP_INSTALLED_PRODUCT = YES;
 				ZERO_LINK = NO;
