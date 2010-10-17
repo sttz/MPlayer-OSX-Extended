@@ -95,6 +95,7 @@
 
 - (void)orderFront:(id)sender
 {
+	[fcWindow addChildWindow:self ordered:NSWindowAbove];
 	[super orderFront:sender];
 	[self fadeWith:NSViewAnimationFadeInEffect];
 	[[playerController playerInterface] addClient:self];
@@ -102,6 +103,7 @@
 
 - (void)orderOut:(id)sender
 {
+	[fcWindow removeChildWindow:self];
 	[self fadeWith:NSViewAnimationFadeOutEffect];
 	[self performSelector:@selector(endOrderOut:) withObject:sender afterDelay:0.5];
 }
