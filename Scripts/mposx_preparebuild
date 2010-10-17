@@ -69,7 +69,7 @@ fi
 # *** SET PATHS / FLAGS
 
 # Make sure pkg-config doesn't interfere
-export PKG_CONFIG_PATH=""
+export PKG_CONFIG_PATH="${build_root}/bin/pkg-config"
 # Reset path to default + our own build root
 export PATH="${build_root}/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
 # Add scripts path if set
