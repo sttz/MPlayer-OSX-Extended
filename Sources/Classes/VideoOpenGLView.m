@@ -87,7 +87,8 @@ static unsigned int videoViewId;
 	}
     
 	//Play in fullscreen
-	if ([PREFS integerForKey:MPEStartPlaybackDisplayType] == MPEStartPlaybackDisplayTypeFullscreen)
+	if (!isFullscreen
+			&& [PREFS integerForKey:MPEStartPlaybackDisplayType] == MPEStartPlaybackDisplayTypeFullscreen)
 		[self toggleFullscreen];
 }
 
