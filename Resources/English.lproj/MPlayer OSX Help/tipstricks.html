@@ -30,7 +30,7 @@
 						To use the command line version of mplayer without any hussle, we suggest you create a link to the binary file
 						contained in the MPlayer OSX.app bundle. To do that, just type the following into your terminal:
 <pre>
-ln -s /Applications/MPlayer OSX.app/Contents/Resources/External_Binaries/mplayer.app/Contents/MacOS/mplayer /usr/local/bin/mplayer
+ln -s "/Applications/MPlayer\ OSX\ Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/mpextended.mpBinaries/Contents/MacOS/mplayer" /usr/local/bin/mplayer
 </pre>
 						This will create a symlink to the mplayer command line binary, and place it into /usr/local/bin. (You can place it
 						anywhere you like, but traditionally, user made binaries, that are not part of the distribution are placed in
@@ -49,25 +49,11 @@ ln -s /Applications/MPlayer OSX.app/Contents/Resources/External_Binaries/mplayer
 				<tr>
 					<td valign="center">
 						<p1>
-						Mplayer will by default look for a configuration file when launched. The recommended place to store your configuration
-						file is in <b>~/.mplayer/config</b> (if your user name is "mike", than this would be
-						<b>/Users/mike/.mplayer/config</b>). If you want to customize MPlayer, and make sure, that the settings stay, you
-						need to define them in the configuration file. The syntax is <b>config_option</b> = <b>value</b>.
-						</p1>
-					</td>
-				</tr>
-			</table>
-			<br>
-			<table class="dots" width="100%" border="0" cellspacing="0" cellpadding="5" summary="Two column table with heading">
-				<tr>
-					<td class="blue" colspan="2">
-						<h5><b>Improve subtitle visibility</b></h5>
-					</td>
-				</tr>
-				<tr>
-					<td valign="center">
-						<p1>
-						todo
+						MPlayer OSX Extended uses an different configuration file than the one in "~/.mplayer/config" to avoid conflicts.<br>
+						<br>
+						Place your config file in "~/Library/Application Support/MPlayer OSX Extended/MPlayer/" instead. See the 
+						<a href="http://www.mplayerhq.hu/DOCS/man/en/mplayer.1.txt">MPlayer man page</a> for details on the syntax 
+						and the available options.
 						</p1>
 					</td>
 				</tr>
