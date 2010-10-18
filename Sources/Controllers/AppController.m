@@ -8,6 +8,8 @@
  */
 
 #import "AppController.h"
+
+#include <Carbon/Carbon.h>
 #import <Sparkle/Sparkle.h>
 
 // other controllers
@@ -396,7 +398,7 @@ static AppController *instance = nil;
 - (IBAction) openLicenseAndCredits:(id)sender
 {
 	NSString *locBookName = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleHelpBookName"];
-	AHGotoPage(locBookName, @"creditslicense.html", 0);
+	AHGotoPage((CFStringRef)locBookName, (CFStringRef)@"creditslicense.html", 0);
 }
 
 - (IBAction) closeWindow:(id)sender {

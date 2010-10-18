@@ -894,6 +894,8 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
                            withObject:buttonIdentifierNumber];
             }
             break;
+		default:
+			break;
     }
 }
 /************************************************************************************/
@@ -1767,68 +1769,68 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	NSString *uCharacters = [theEvent charactersIgnoringModifiers];
 	
 	// Volume
-	if (keyHandled = [characters isEqualToString:@"m"])
+	if ((keyHandled = [characters isEqualToString:@"m"]))
 		[self toggleMute:self];
-	else if (keyHandled = ([characters isEqualToString:@"9"]
-						   || [uCharacters isEqualToString:@"/"]))
+	else if ((keyHandled = ([characters isEqualToString:@"9"]
+						   || [uCharacters isEqualToString:@"/"])))
 		[self decreaseVolume:self];
-	else if (keyHandled = ([characters isEqualToString:@"0"]
-						   || [uCharacters isEqualToString:@"*"]))
+	else if ((keyHandled = ([characters isEqualToString:@"0"]
+						   || [uCharacters isEqualToString:@"*"])))
 		[self increaseVolume:self];
 	
 	// Cycle timestamp display modes
-	else if (keyHandled = ([theEvent keyCode] == kVK_Tab))
+	else if ((keyHandled = ([theEvent keyCode] == kVK_Tab)))
 		[self cycleTimeDisplayMode:self];
 	
 	// All actions below need a playing item
-	if (keyHandled || ![myPlayer isMovieOpen])
+	if ((keyHandled || ![myPlayer isMovieOpen]))
 		return keyHandled;
 	
 	// Fullscreen
-	if (keyHandled = [characters isEqualToString:@"f"])
+	if ((keyHandled = [characters isEqualToString:@"f"]))
 		[self switchFullscreen:self];
 	
 	// Playback
-	else if (keyHandled = [characters isEqualToString:@"q"])
+	else if ((keyHandled = [characters isEqualToString:@"q"]))
 		[self stop:self];
-	else if (keyHandled = [characters isEqualToString:@"p"])
+	else if ((keyHandled = [characters isEqualToString:@"p"]))
 		[self playPause:self];
-	else if (keyHandled = ([theEvent keyCode] == kVK_Return))
+	else if ((keyHandled = ([theEvent keyCode] == kVK_Return)))
 		[self seekNext:self];
 	
 	// Cycle Streams
-	else if (keyHandled = [characters isEqualToString:@"j"])
+	else if ((keyHandled = [characters isEqualToString:@"j"]))
 		[self cycleSubtitleStreamsWithOSD:YES];
-	else if (keyHandled = [characters isEqualToString:@"#"])
+	else if ((keyHandled = [characters isEqualToString:@"#"]))
 		[self cycleAudioStreamsWithOSD:YES];
 	
 	// Cycle OSD
-	else if (keyHandled = [characters isEqualToString:@"o"])
+	else if ((keyHandled = [characters isEqualToString:@"o"]))
 		[self cycleOSD:self];
 	
 	// Audio Delay
-	else if (keyHandled = ([characters isEqualToString:@"+"]
-						   || [characters isEqualToString:@"="]))
+	else if ((keyHandled = ([characters isEqualToString:@"+"]
+						   || [characters isEqualToString:@"="])))
 		[self setAudioDelay:[PREFS floatForKey:MPEAudioDelayStepSize] relative:YES];
-	else if (keyHandled = [characters isEqualToString:@"-"])
+	else if ((keyHandled = [characters isEqualToString:@"-"]))
 		[self setAudioDelay:-[PREFS floatForKey:MPEAudioDelayStepSize] relative:YES];
 	
 	// Subtitle Delay
-	else if (keyHandled = [characters isEqualToString:@"x"])
+	else if ((keyHandled = [characters isEqualToString:@"x"]))
 		[self setSubtitleDelay:[PREFS floatForKey:MPESubtitleDelayStepSize] relative:YES];
-	else if (keyHandled = [characters isEqualToString:@"z"])
+	else if ((keyHandled = [characters isEqualToString:@"z"]))
 		[self setSubtitleDelay:-[PREFS floatForKey:MPESubtitleDelayStepSize] relative:YES];
 	
 	// Playback Speed
-	else if (keyHandled = [characters isEqualToString:@"["])
+	else if ((keyHandled = [characters isEqualToString:@"["]))
 		[self setPlaybackSpeed:(1/[PREFS floatForKey:MPEPlaybackSpeedMultiplierSmall]) multiply:YES];
-	else if (keyHandled = [characters isEqualToString:@"]"])
+	else if ((keyHandled = [characters isEqualToString:@"]"]))
 		[self setPlaybackSpeed:[PREFS floatForKey:MPEPlaybackSpeedMultiplierSmall] multiply:YES];
-	else if (keyHandled = [characters isEqualToString:@"{"])
+	else if ((keyHandled = [characters isEqualToString:@"{"]))
 		[self setPlaybackSpeed:(1/[PREFS floatForKey:MPEPlaybackSpeedMultiplierBig]) multiply:YES];
-	else if (keyHandled = [characters isEqualToString:@"}"])
+	else if ((keyHandled = [characters isEqualToString:@"}"]))
 		[self setPlaybackSpeed:[PREFS floatForKey:MPEPlaybackSpeedMultiplierBig] multiply:YES];
-	else if (keyHandled = ([theEvent keyCode] == kVK_Delete))
+	else if ((keyHandled = ([theEvent keyCode] == kVK_Delete)))
 		[self setPlaybackSpeed:1.0 multiply:NO];
 	
 	return keyHandled;

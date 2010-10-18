@@ -25,6 +25,7 @@
 #include <CoreAudio/CoreAudio.h>
 
 #include <mach-o/arch.h>
+#include <sys/sysctl.h>
 
 #import "PreferencesController2.h"
 
@@ -568,7 +569,7 @@
 		NSString *installedVersion = [oldInfo objectForKey:@"CFBundleVersion"];
 		NSString *newVersion = [info objectForKey:@"CFBundleVersion"];
 		NSComparisonResult result = [installedVersion compare:newVersion options:NSNumericSearch];
-		NSLog(@"compare: %@ <-> %@ = %d",installedVersion,newVersion,result);
+		NSLog(@"compare: %@ <-> %@ = %ld",installedVersion,newVersion,(long)result);
 		
 		// The versions are the same -> Reinstall?
 		if (result == NSOrderedSame) {
@@ -815,7 +816,7 @@
 	FcStrList *fontDirs = FcConfigGetFontDirs(config);
 	FcChar8 *fontDir;
 	FcBool cachesAreValid = FcTrue;
-	while (fontDir = FcStrListNext(fontDirs)) {
+	while ((fontDir = FcStrListNext(fontDirs))) {
 		cachesAreValid = (FcDirCacheValid(fontDir) || !FcFileIsDir(fontDir)) && cachesAreValid;
 	}
 	
@@ -842,7 +843,7 @@
 	
 	// Create pattern for all fonts and include family and style information
 	pat = FcPatternCreate();
-	os = FcObjectSetBuild(FC_FAMILY, FC_STYLE, (char *) 0);
+	os = FcObjectSetBuild(FC_FAMILY, FC_STYLE, NULL);
 	set = FcFontList(0, pat, os);
 	
 	FcObjectSetDestroy(os);

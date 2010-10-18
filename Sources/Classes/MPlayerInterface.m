@@ -478,16 +478,16 @@ static NSArray* statusNames;
 	}
 	
 	// subtitles color
-	NSColor *textColor;
-	if (textColor = [cPrefs colorForKey:MPESubtitleTextColor]) {
+	NSColor *textColor = [cPrefs colorForKey:MPESubtitleTextColor];
+	if (textColor) {
 		CGFloat red, green, blue, alpha;
 		[textColor getRed:&red green:&green blue:&blue alpha:&alpha];
 		[params addObject:@"-ass-color"];
 		[params addObject:[NSString stringWithFormat:@"%02X%02X%02X%02X",(unsigned)(red*255),(unsigned)(green*255),(unsigned)(blue*255),(unsigned)((1-alpha)*255)]];
 	}
 	// subtitles color
-	NSColor *borderColor;
-	if (borderColor = [cPrefs colorForKey:MPESubtitleBorderColor]) {
+	NSColor *borderColor = [cPrefs colorForKey:MPESubtitleBorderColor];
+	if (borderColor) {
 		CGFloat red, green, blue, alpha;
 		[borderColor getRed:&red green:&green blue:&blue alpha:&alpha];
 		[params addObject:@"-ass-border-color"];
@@ -842,7 +842,7 @@ static NSArray* statusNames;
 		[self applyVideoEqualizer];
 	
 	} else if ([keyPath isEqualToString:MPEAudioEqualizerValues]) {
-		[self sendCommand:[NSString stringWithFormat:@"af_eq_set_bands %@",
+		[self sendCommand:[NSString stringWithFormat:@"af_cmdline equalizer %@",
 						   [EqualizerController equalizerFilterValues]]];
 		
 	} else if ([keyPath isEqualToString:MPELoopMovie]) {
