@@ -201,7 +201,7 @@
 		if (mouseOverControls)
 			[self mouseExitedFCWindow];
 			
-		[fullscreenControls orderOut:self];
+		[fullscreenControls hide];
 	}
 }
 
@@ -212,7 +212,7 @@
 		CGDisplayShowCursor(kCGDirectMainDisplay);
 		
 		if (![fullscreenControls isVisible])
-			[fullscreenControls orderFront:self];
+			[fullscreenControls show];
 		
 		[self refreshOSDTimer];
 	}
@@ -257,7 +257,7 @@
 - (void) setFullscreen: (bool)aBool;
 {
 	if (!aBool) {
-		[fullscreenControls orderOut:self];
+		[fullscreenControls hide];
 		if (osdTimer != nil)
 			[osdTimer invalidate];
 		//CGDisplayShowCursor(kCGDirectMainDisplay);

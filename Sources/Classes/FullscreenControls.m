@@ -93,24 +93,23 @@
 	beingDragged = NO;
 }
 
-- (void)orderFront:(id)sender
+- (void)show
 {
 	[fcWindow addChildWindow:self ordered:NSWindowAbove];
-	[super orderFront:sender];
 	[self fadeWith:NSViewAnimationFadeInEffect];
 	[[playerController playerInterface] addClient:self];
 }
 
-- (void)orderOut:(id)sender
+- (void)hide
 {
 	[fcWindow removeChildWindow:self];
 	[self fadeWith:NSViewAnimationFadeOutEffect];
-	[self performSelector:@selector(endOrderOut:) withObject:sender afterDelay:0.5];
+	[self performSelector:@selector(endHide) withObject:nil afterDelay:0.5];
 }
 
-- (void)endOrderOut:(id)sender
+- (void)endHide
 {
-	[super orderOut:sender];
+	[self orderOut:self];
 	[[playerController playerInterface] removeClient:self];
 }
 

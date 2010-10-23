@@ -62,4 +62,7 @@
 - (void)fadeWith:(NSString*)effect;
 - (void)cycleTimeDisplayMode:(id)sender;
 
+- (void)show;
+- (void)hide;
+
 @end
