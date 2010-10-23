@@ -25,7 +25,61 @@
 #import "CocoaAdditions.h"
 #import <AppKit/NSView.h>
 
+#include <iconv.h>
+
+#define __iconvBufferLength 1024
+
 @implementation NSString (MPEAdditions)
+
+// Convert a NSData object to a NSString, ignoring all invalid characters
+// Encoding parameter is a iconv character encoding
++ (NSString *)stringWithData:(NSData *)data encoding:(NSString *)encoding
+{
+	// Convert to UTF-16, ignoring all invalid characters
+	iconv_t desc = iconv_open("UTF-16//IGNORE", [encoding UTF8String]);
+	
+	if (desc == (iconv_t)-1)
+		return nil;
+	
+	// Get data length and buffer
+	size_t input_len = [data length];
+	char *inbuff = (char *)[data bytes];
+	
+	// Allocate fixed-length output buffer
+	size_t outbuff_left;
+	char *outbuff = malloc(__iconvBufferLength);
+	char *outbuff_pos = NULL;
+	
+	// String to read converted chunks into
+	NSMutableString *string = [NSMutableString string];
+	
+	// Convert the input buffer chunk by chunk
+	errno = E2BIG;
+	while (errno == E2BIG) {
+		// Reset the output buffer
+		outbuff_left = __iconvBufferLength;
+		outbuff_pos = outbuff;
+		
+		// Convert the chunk
+		errno = 0;
+		iconv(desc, &inbuff, &input_len, &outbuff_pos, &outbuff_left);
+		
+		if (errno == EILSEQ || errno == EINVAL)
+			break;
+		
+		// Create a NSString from the output and append it to the result
+		NSString *chunk = [[[NSString alloc] initWithBytes:outbuff
+													length:(__iconvBufferLength - outbuff_left)
+												  encoding:NSUTF16StringEncoding] autorelease];
+		[string appendString:chunk];
+	}
+	
+	// Clean up
+	iconv_close(desc);
+	free(outbuff);
+	
+	return string;
+}
 
 - (NSComparisonResult)numericSearchCompare:(NSString *)aString
 {

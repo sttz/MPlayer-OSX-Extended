@@ -26,6 +26,7 @@
 #import <objc/Protocol.h>
 
 @interface NSString (MPEAdditions)
++ (NSString *)stringWithData:(NSData *)data encoding:(NSString *)encoding;
 - (NSComparisonResult)numericSearchCompare:(NSString *)aString;
 @end
 

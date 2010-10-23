@@ -10,6 +10,7 @@
 #import "MPlayerInterface.h"
 #import "RegexKitLite.h"
 #import <sys/sysctl.h>
+#include "iconv.h"
 
 #import "AppController.h"
 #import "PreferencesController2.h"
@@ -1338,9 +1339,8 @@ static NSArray* statusNames;
 /************************************************************************************/
 - (void)readError:(NSNotification *)notification
 {
-	NSString *data = [[NSString alloc] 
-					  initWithData:[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"] 
-					  encoding:NSUTF8StringEncoding];
+	NSData *input = [[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"];
+	NSString *data = [NSString stringWithData:input encoding:@"UTF-8"];
 	
 	// register for another read
 	if ([myMplayerTask isRunning] || (data && [data length] > 0))
@@ -1348,7 +1348,6 @@ static NSArray* statusNames;
 				readInBackgroundAndNotifyForModes:parseRunLoopModes];
 	
 	if (!data || [data length] == 0) {
-		[data release];
 		return;
 	}
 	
@@ -1385,15 +1384,12 @@ static NSArray* statusNames;
 		
 		[Debug log:ASL_LEVEL_INFO withMessage:line];
 	}
-	
-	[data release];
 }
 /************************************************************************************/
 - (void)readOutputC:(NSNotification *)notification
 {
-	NSString *data = [[NSString alloc] 
-						initWithData:[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"] 
-						encoding:NSUTF8StringEncoding];
+	NSData *input = [[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"];
+	NSString *data = [NSString stringWithData:input encoding:@"UTF-8"];
 	
 	// register for another read
 	if (data && [data length] > 0)
@@ -1409,12 +1405,10 @@ static NSArray* statusNames;
 	if (!data) {
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Couldn\'t read MPlayer data. Lost bytes: %u",
 			[(NSData *)[[notification userInfo] objectForKey:@"NSFileHandleNotificationDataItem"] length]];
-		[data release];
 		return;
 	}
 	
 	if ([data length] == 0) {
-		[data release];
 		return;
 	}
 	
@@ -1931,8 +1925,6 @@ static NSArray* statusNames;
 	if (streamsHaveChanged) {
 		[self notifyClientsWithSelector:@selector(interface:streamUpate:) andObject:playingItem];
 	}
-	
-	[data release];
 }
 
 @end
