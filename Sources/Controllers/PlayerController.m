@@ -1798,6 +1798,20 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	else if ((keyHandled = ([theEvent keyCode] == kVK_Return)))
 		[self seekNext:self];
 	
+	// Seeking
+	else if ((keyHandled = ([theEvent keyCode] == kVK_LeftArrow)))
+		[self seek:-[PREFS floatForKey:MPESeekStepSmall] mode:MISeekingModeRelative];
+	else if ((keyHandled = ([theEvent keyCode] == kVK_RightArrow)))
+		[self seek:[PREFS floatForKey:MPESeekStepSmall] mode:MISeekingModeRelative];
+	else if ((keyHandled = ([theEvent keyCode] == kVK_DownArrow)))
+		[self seek:-[PREFS floatForKey:MPESeekStepMedium] mode:MISeekingModeRelative];
+	else if ((keyHandled = ([theEvent keyCode] == kVK_UpArrow)))
+		[self seek:[PREFS floatForKey:MPESeekStepMedium] mode:MISeekingModeRelative];
+	else if ((keyHandled = ([theEvent keyCode] == kVK_PageDown)))
+		[self seek:-[PREFS floatForKey:MPESeekStepLarge] mode:MISeekingModeRelative];
+	else if ((keyHandled = ([theEvent keyCode] == kVK_PageUp)))
+		[self seek:[PREFS floatForKey:MPESeekStepLarge] mode:MISeekingModeRelative];
+	
 	// Cycle Streams
 	else if ((keyHandled = [characters isEqualToString:@"j"]))
 		[self cycleSubtitleStreamsWithOSD:YES];
@@ -1833,6 +1847,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	else if ((keyHandled = ([theEvent keyCode] == kVK_Delete)))
 		[self setPlaybackSpeed:1.0 multiply:NO];
 	
+	[Debug log:ASL_LEVEL_ERR withMessage:@"keyHandled=%d keyCode=%d",keyHandled,[theEvent keyCode]];
 	return keyHandled;
 }
 
