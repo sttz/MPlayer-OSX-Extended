@@ -159,8 +159,6 @@ extern NSString* const MIStatsDroppedFramesKey;
 	BOOL isRunning;
 	BOOL isReading;
 	NSMutableArray *myCommandsBuffer;
-	NSString *lastUnparsedLine;
-	NSString *lastUnparsedErrorLine;
 	int subtitleFileId;
 	NSDictionary *lastMissedSeek;
 	BOOL force32bitBinary;

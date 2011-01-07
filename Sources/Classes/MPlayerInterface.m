@@ -185,8 +185,6 @@ static NSArray* statusNames;
 	[clients release];
 	[myMplayerTask release];
 	[myPathToPlayer release];
-	[lastUnparsedLine release];
-	[lastUnparsedErrorLine release];
 	[buffer_name release];
 	[prefs release];
 	[screenshotPath release];
@@ -1358,26 +1356,13 @@ static NSArray* statusNames;
 	
 	int lineIndex = -1;
 	
-	while (1) {
+	while (++lineIndex < [myLines count]) {
+		
 		// Read next line of data
-		lineIndex++;
-		// check if end reached (save last unfinished line)
-		if (lineIndex >= [myLines count] - 1) {
-			[lastUnparsedErrorLine release];
-			if (lineIndex < [myLines count])
-				lastUnparsedErrorLine = [[myLines objectAtIndex:lineIndex] retain];
-			else
-				lastUnparsedErrorLine = nil;
-			break;
-		}
-		// load line
 		line = [myLines objectAtIndex:lineIndex];
-		// prepend unfinished line
-		if (lastUnparsedErrorLine) {
-			line = [lastUnparsedErrorLine stringByAppendingString:line];
-			[lastUnparsedErrorLine release];
-			lastUnparsedErrorLine = nil;
-		}
+		
+		//NSLog(@"%@",line);
+		
 		// skip empty lines
 		if ([[line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length] == 0)
 			continue;
