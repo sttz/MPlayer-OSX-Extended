@@ -193,8 +193,9 @@ static BOOL sharedInstanceConnectsStderr = NO;
 	NSEnumerator *files = [logFiles keyEnumerator];
 	NSString *file;
 	
-	while (file = [files nextObject]) {
-		unsigned long long size = [[fm fileAttributesAtPath:file traverseLink:YES] fileSize];
+	while ((file = [files nextObject])) {
+        file = [file stringByResolvingSymlinksInPath];
+		unsigned long long size = [[fm attributesOfItemAtPath:file error:NULL] fileSize];
 		if (size > dLogMaxSize) {
 			
 			// retain key because we remove the associated object from the dictionairy
@@ -213,13 +214,13 @@ static BOOL sharedInstanceConnectsStderr = NO;
 				if (isDirectory) {
 					continueMove = NO;
 					[Debug log:ASL_LEVEL_ERR withMessage:@"Cannot move old log: '%@' is a directory.", oldLog];
-				} else if (![fm removeFileAtPath:oldLog handler:nil]) {
+				} else if (![fm removeItemAtPath:oldLog error:NULL]) {
 					continueMove = NO;
 					[Debug log:ASL_LEVEL_ERR withMessage:@"Cannot remove old log at '%@'.", oldLog];
 				}
 			}
 			// Move file only if there's no file or directory in the way
-			if (!continueMove || ![fm movePath:file toPath:oldLog handler:nil])
+			if (!continueMove || ![fm moveItemAtPath:file toPath:oldLog error:NULL])
 				[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to move log to '%@'.", oldLog];
 			
 			// Re-open existing log and truncate if move failed

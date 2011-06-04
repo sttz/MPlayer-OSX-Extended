@@ -243,7 +243,7 @@
  */
 - (IBAction) checkForUpdates:(id)sender
 {
-	NSDictionary *info = [[[binariesController selectedObjects] objectAtIndex:0] value];
+	NSDictionary *info = (NSDictionary *)[[[binariesController selectedObjects] objectAtIndex:0] value];
 	NSString *identifier = [self updateIdentifierForBinaryWithIdentifier:[info objectForKey:@"CFBundleIdentifier"]];
 	SUUpdater *updater = [binaryUpdaters objectForKey:identifier];
 	
@@ -1007,7 +1007,7 @@
 	if (sender == binariesTable && [binariesTable clickedRow] < 0)
 		return;
 	
-	NSDictionary *info = [[[binariesController selectedObjects] objectAtIndex:0] value];
+	NSDictionary *info = (NSDictionary *)[[[binariesController selectedObjects] objectAtIndex:0] value];
 	
 	if (![[PREFS stringForKey:MPESelectedBinary] 
 		  isEqualToString:[info objectForKey:@"CFBundleIdentifier"]]
@@ -1024,7 +1024,7 @@
 
 - (IBAction) visitBinaryHomepage:(id)sender
 {
-	NSDictionary *info = [[[binariesController selectedObjects] objectAtIndex:0] value];
+	NSDictionary *info = (NSDictionary *)[[[binariesController selectedObjects] objectAtIndex:0] value];
 	
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[info objectForKey:@"MPEBinaryHomepage"]]];
 }
@@ -1038,7 +1038,7 @@
 		BOOL state = NO;
 		if ([selection count] > 0) {
 			
-			NSDictionary *info = [[selection objectAtIndex:0] value];
+			NSDictionary *info = (NSDictionary *)[[selection objectAtIndex:0] value];
 			NSString *identifier = [self updateIdentifierForBinaryWithIdentifier:
 									[info objectForKey:@"CFBundleIdentifier"]];
 			state = [[PREFS arrayForKey:MPEUpdateBinaries] containsObject:identifier];
@@ -1049,7 +1049,7 @@
 
 - (IBAction) setChecksForUpdates:(NSButton *)sender
 {
-	NSDictionary *info = [[[binariesController selectedObjects] objectAtIndex:0] value];
+	NSDictionary *info = (NSDictionary *)[[[binariesController selectedObjects] objectAtIndex:0] value];
 	NSString *identifier = [self updateIdentifierForBinaryWithIdentifier:[info objectForKey:@"CFBundleIdentifier"]];
 	
 	NSArray *updates = [PREFS arrayForKey:MPEUpdateBinaries];

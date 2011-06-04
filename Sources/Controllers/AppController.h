@@ -28,7 +28,7 @@ PlayListController, MenuController, InspectorController, MovieInfo;
 
 @protocol MovieInfoProvider;
 
-@interface AppController : NSObject
+@interface AppController : NSObject <NSOpenSavePanelDelegate>
 {
     // controller outlets
 	IBOutlet MenuController *menuController;

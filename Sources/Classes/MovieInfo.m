@@ -265,9 +265,9 @@ externalSubtitles, captureStats, playbackStats, player;
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
 	if ([keyPath isEqualToString:@"filename"]) {
-		NSString *newFile = [change objectForKey:NSKeyValueChangeNewKey];
+		NSString *newFile = [[change objectForKey:NSKeyValueChangeNewKey] stringByResolvingSymlinksInPath];
 		// update filesystem attributes
-		NSDictionary *attr = [[NSFileManager defaultManager] fileAttributesAtPath:newFile traverseLink:YES];
+		NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:newFile error:NULL];
 		if (attr != nil) {
 			[self setFilesize:[[attr objectForKey:NSFileSize] unsignedLongLongValue]];
 			[self setFileModificationDate:[attr objectForKey:NSFileModificationDate]];

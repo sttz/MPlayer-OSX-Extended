@@ -21,7 +21,7 @@
 @class MovieInfo, ScrubbingBar, TimestampTextField;
 @protocol MovieInfoProvider;
 
-@interface PlayListController : NSObject <MPlayerInterfaceClientProtocol, MovieInfoProvider>
+@interface PlayListController : NSObject <MPlayerInterfaceClientProtocol, MovieInfoProvider, NSToolbarDelegate>
 {
     // controllers outlets
 	IBOutlet id playerController;

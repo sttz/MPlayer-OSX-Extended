@@ -661,7 +661,7 @@ static AppController *instance = nil;
 	[[[self firstPlayerController] playListController] displayWindow:self];
 	
 	// add files to playlist
-	while (filename = [e nextObject]) {
+	while ((filename = [e nextObject])) {
 		// Only add movie files
 		if ([self isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]) {
 			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:filename];

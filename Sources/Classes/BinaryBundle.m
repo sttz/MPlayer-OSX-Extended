@@ -133,7 +133,7 @@ static void swap_header(uint8_t *bytes, ssize_t length) {
 	}
 	
 	// Check if the header appears to be valid
-	if (fat && num_fat < 0)
+	if (fat && num_fat == 0)
 		return foundArches;
 	
 	// Check for a given set of arches

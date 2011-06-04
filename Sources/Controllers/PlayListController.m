@@ -318,7 +318,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	
 	// set playlist text font size
 	columnsEnum = [[playListTable tableColumns] objectEnumerator];
-	while (column = [columnsEnum nextObject]) {
+	while ((column = [columnsEnum nextObject])) {
 		NSCell *theCell = [column dataCell];
 		[theCell setFont:[NSFont systemFontOfSize:textSize]];	
 		[column setDataCell:theCell];
@@ -483,7 +483,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 		NSString *path;
 		
 		// divide dragged files to arrays by its type
-		while (path = [fileEnum nextObject])
+		while ((path = [fileEnum nextObject]))
 		{
 			if ([[AppController sharedController] isExtension:[path pathExtension] ofType:MP_DIALOG_SUBTITLES]) {
 				[subtitlesList addObject:path];
