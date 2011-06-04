@@ -29,7 +29,7 @@ typedef NSUInteger MPEVideoScaleMode;
 
 @class PlayerController;
 
-@interface VideoOpenGLView : NSOpenGLView <MPlayerVideoRenderereDelegateProtocol>
+@interface VideoOpenGLView : NSOpenGLView <MPlayerVideoRenderereDelegateProtocol, NSAnimationDelegate>
 {
 	MPlayerVideoRenderer *renderer;
 	
