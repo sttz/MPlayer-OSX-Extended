@@ -1,0 +1,118 @@
+#!/bin/bash
+# MPlayer OSX build script
+# Adrian Stutz 2008
+
+# **************************************************** #
+# *** CONFIG
+
+# GLOBAL CONFIG
+buildconfig=`which mposx_buildconfig`
+if [ $? -eq 0 ]; then
+	
+	# Load global config
+	source mposx_buildconfig
+	
+else
+	
+	# Load default config
+	build_root="/Users/example/dev/usr/local"
+	
+fi
+
+# LOCAL CONFIG
+target_system="i386"
+
+# **************************************************** #
+# *** OPTION PARSING
+
+usage() {
+cat << EOF
+Usage: source $0 [options] [x86_64|i386|ppc|ppcg3|ub]
+
+General options:
+    -h, --help                  display this help
+    
+One of either x86_64, i386, ppc, ppcg3 or ub can be passed to set the target system (default: i386).
+Headers and configure flags will be set accordingly.
+EOF
+}
+
+# Parse command line
+while [ -n "$1" ]; do
+	case $1 in
+		x86_64 | i386 | ppc | ppcg3 | ub )	target_system=$1
+											;;
+		-h | --help )		 				usage
+							 				exit
+							 				;;
+		* )					 				usage
+							 				exit 1
+	esac
+	shift
+done
+
+# **************************************************** #
+# *** SET PATHS / FLAGS
+
+# Configure deployment target and SDK
+deployment_target=10.5
+sdk_path=/Developer/SDKs/MacOSX10.6.sdk
+
+# Make sure pkg-config doesn't interfere
+export PKG_CONFIG_PATH="${build_root}/bin/pkg-config"
+# Reset path to default + our own build root
+export PATH="${build_root}/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
+# Add scripts path
+export PATH="$scripts_path:$PATH"
+
+# Set deployment target and SDK
+export MACOSX_DEPLOYMENT_TARGET=$deployment_target
+export CFLAGS="-mmacosx-version-min=${deployment_target} -isystem ${sdk_path}"
+export LDFLAGS="-mmacosx-version-min=${deployment_target} -isysroot ${sdk_path}"
+export LDFLAGS="$LDFLAGS -Wl,-syslibroot,${sdk_path}"
+export CXXFLAGS="-mmacosx-version-min=${deployment_target} -isysroot ${sdk_path}"
+
+# Intel 64bit platform flags
+if [ $target_system = "x86_64" ]; then
+	export CFLAGS="$CFLAGS -arch x86_64"
+	export LDFLAGS="$LDFLAGS -arch x86_64"
+	export CXXFLAGS="$CXXFLAGS -arch x86_64"
+fi
+
+# Intel platform flags
+if [ $target_system = "i386" ]; then
+	export CFLAGS="$CFLAGS -arch i386"
+	export LDFLAGS="$LDFLAGS -arch i386"
+	export CXXFLAGS="$CXXFLAGS -arch i386"
+fi
+
+# PPC platform flags
+if [ "$target_system" = "ppc" ]; then
+	export CFLAGS="$CFLAGS -arch ppc -mcpu=7400"
+	export LDFLAGS="$LDFLAGS -arch ppc"
+	export CXXFLAGS="$CXXFLAGS -arch ppc -mcpu=7400"
+fi
+
+# PPC G3 platform flags
+if [ "$target_system" = "ppcg3" ]; then
+	export CFLAGS="$CFLAGS -arch ppc -mcpu=750"
+	export LDFLAGS="$LDFLAGS -arch ppc"
+	export CXXFLAGS="$CXXFLAGS -arch ppc -mcpu=750"
+fi
+
+# Universal binary platform flags
+if [ "$target_system" = "ub" ]; then
+	export CFLAGS="$CFLAGS -arch x86_64 -arch i386"
+	export LDFLAGS="$LDFLAGS -arch x86_64 -arch i386"
+	export CXXFLAGS="$CXXFLAGS -arch x86_64 -arch i386"
+fi
+
+# Set paths
+export LDFLAGS="$LDFLAGS -L${build_root}/lib -Wl,-search_paths_first"
+export CFLAGS="$CFLAGS -I${build_root}/include"
+export CXXFLAGS="$CXXFLAGS -I${build_root}/include"
+
+export BUILD_ROOT="$build_root"
+
+echo "Headers set for target system: $target_system"
+echo "Using build root: $build_root"

@@ -1,0 +1,229 @@
+#!/bin/bash
+# Adrian Stutz 2008
+
+# **************************************************** #
+# *** CONFIG
+
+# GLOBAL CONFIG
+buildconfig=`which mposx_buildconfig`
+if [ $? -eq 0 ]; then
+	
+	# Load global config
+	source mposx_buildconfig
+	
+else
+	
+	# Load default config
+	mplayerosx_path="/Users/example/dev/mplayerosx"
+	build_root="/Users/example/dev/usrs/local"
+fi
+
+# LOCAL CONFIG
+shared=1
+
+# **************************************************** #
+# *** OPTION PARSING
+
+usage() {
+cat << EOF
+Usage: $0 [options] [directory]
+
+General options:
+    -h, --help                  display this help
+
+Header options:
+    -s, --shared                install a binary with shared libraries
+	--static					install a static binary
+    
+[directory] will be searched for mplayer.i386 and mplayer.x86_64 and then 
+all necessary steps will be taken to install the binary (and all libraries 
+if --shared is set) into the mplayerosx root.
+EOF
+}
+
+# Parse command line
+while [ -n "$1" ]; do
+	case $1 in
+		-s | --shared )				shared=1
+									;;
+		--static )					shared=0
+									;;
+		-h | --help )				usage
+									exit
+									;;
+		* )							dir=$1
+									;;
+	esac
+	shift
+done
+
+# *** CHECK PARAMETERS
+if [ ! -n "$dir" ]; then
+	dir="."
+fi
+
+if [ ! -f "$dir/mplayer.i386" -o ! -f "$dir/mplayer.x86_64" ]; then
+	echo "mplayer.x86_64 or mplayer.i386 binary not found at '$dir'."
+	exit 1
+fi
+
+if [ ! -d "$mplayerosx_path/Binaries" ]; then
+	echo "Invalid mplayerosx path."
+	exit 1
+fi
+
+echo "install binaries from '$dir' to '$mplayerosx_path'..."
+
+# **************************************************** #
+# *** RECREATE MPLAYER BINARY
+
+echo "recreate mplayer.ub..."
+
+# recreate ub from untouched mplayer.i386 mplayer.ub
+# (the install names in mplayer.ub could have been already changed)
+lipo -create "$dir/mplayer.x86_64" "$dir/mplayer.i386" -output "$dir/mplayer.ub"
+
+# **************************************************** #
+# *** STATIC INSTALL
+
+if [ $shared -eq 0 ]; then
+	
+	echo "Clean install destination..."
+	
+	rm -rf "$mplayerosx_path/Binaries/mpextended.mpBinaries/Contents/MacOS/"*
+	
+	echo "Searching $dir for binaries..."
+	
+	# Copy universal binary (mplayer.ub) to mpextended.mpBinaries
+	if [ -f "$dir/mplayer.ub" ]; then
+		cp "$dir/mplayer.ub" "$mplayerosx_path/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer"
+		echo "mplayer.ub copied to mpextended.mpBinaries/Contents/MacOS/mplayer"
+	fi
+	
+	# Touch the folder to make XCode copy the new binaries
+	touch "$mplayerosx_path/Binaries"
+	
+	echo "Finished."
+	exit 0
+fi
+
+# **************************************************** #
+# *** SHARED INSTALL
+
+binary_container="$mplayerosx_path/Binaries/mpextended.mpBinaries"
+
+echo "Clean install destination..."
+
+rm -rf "$binary_container/Contents/MacOS/"*
+
+# **************************************************** #
+# *** GATHER LIBRARIES
+
+echo "gather libraries..."
+
+# recreate library direcotry
+mkdir "$dir/lib"
+
+# Gather mplayer dependencies
+for word in `otool -L "$dir/mplayer.ub"`; do
+	if echo "$word" | grep -q "$build_root"; then
+		# Copy library to lib folder
+		cp "$word" "$dir/lib"
+		lib=`basename $word`
+		echo "... copied $lib to $dir/lib"
+		# Gather library dependencies
+		# (only direct dependencies of libraries are considered)
+		for subword in `otool -L "$dir/lib/$lib"`; do
+			if echo "$subword" | grep -q "$build_root"; then
+				sublib=`basename $subword`
+				if [ ! -f "$dir/lib/$sublib" ]; then
+					cp "$subword" "$dir/lib"
+					echo "... copied $sublib to $dir/lib"
+				fi
+			fi
+		done
+	fi
+done
+
+
+# **************************************************** #
+# *** CHANGE INSTALL NAMES
+
+echo "changing install names..."
+
+# Loop through all libraries in ./lib
+for path in ./$dir/lib/*; do
+	
+	lib=`basename $path`
+	
+	echo "... change install name for: $lib"
+	
+	# change install path in mplayer
+	install_name_tool -change "$build_root/lib/$lib" "@executable_path/lib/$lib" "$dir/mplayer.ub"
+	# change libraries own id
+	install_name_tool -id "@executable_path/lib/$lib" "$path" 
+	
+	# change install path in other libraries
+	for path2 in ./$dir/lib/*; do
+		install_name_tool -change "$build_root/lib/$lib" "@executable_path/lib/$lib" "$path2"
+	done
+done
+
+# **************************************************** #
+# *** STRIP
+
+echo "stripping..."
+
+strip -x "$dir/mplayer.ub"
+echo "... stripped mplayer.ub"
+
+for path in ./$dir/lib/*; do
+	lib=`basename $path`
+	strip -x "$path"
+	echo "... stripped $lib"
+done
+
+# **************************************************** #
+# *** INSTALL
+
+echo "installing..."
+
+# copy mplayer binary
+cp "$dir/mplayer.ub" "$binary_container/Contents/MacOS/mplayer"
+# copy libraries
+cp -R "$dir/lib" "$binary_container/Contents/MacOS/"
+
+echo "... copied mplayer.ub and lib to mpextended.mpBinaries"
+
+# Try to find SVN revision
+revision=""
+if "$dir/mplayer.ub" |grep "MPlayer SVN-r" > /dev/null; then
+	line=`$dir/mplayer.ub |grep "MPlayer SVN-r"`
+	if [[ "$line" =~ SVN\-r([0-9]+) ]]; then
+		revision="${BASH_REMATCH[1]}"
+	fi
+fi
+
+# Try to get date from directory
+date="unknown date"
+olddir=`pwd`
+cd "$dir"
+thisdir=`pwd`
+date=`basename $thisdir`
+cd "$olddir"
+
+if [ "$revision" = "" ]; then
+	echo "Couldn't get SVN revision from binary!"
+else
+	echo "Setting SVN revision $revision ..."
+	
+	defaults write "$binary_container/Contents/Info" "MPEBinarySVNRevisionEquivalent" "$revision"
+	defaults write "$binary_container/Contents/Info" "CFBundleVersion" "$revision"
+	defaults write "$binary_container/Contents/Info" "CFBundleShortVersionString" "r$revision"
+	echo "... Updated mpextended.mpBinaries"
+fi
+
+# Touch the folder to make XCode copy the new binaries
+touch "$mplayerosx_path/Binaries"
+
+echo "Done."

@@ -1,0 +1,12 @@
+#!/bin/bash
+# MPlayer OSX build script
+# Adrian Stutz 2008
+
+# **************************************************** #
+# *** GLOBAL BUILD CONFIG
+
+# For the other scripts to find this config, it should be added to $PATH.
+
+scripts_path="/Users/adrian/dev/mplayer/mplayerosx/Scripts"
+build_root="/Users/adrian/dev/mplayer/build/usr/local"
+mplayerosx_path="/Users/adrian/dev/mplayer/mplayerosx"
