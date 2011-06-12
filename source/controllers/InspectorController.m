@@ -32,7 +32,7 @@
 #import "Preferences.h"
 #import "CocoaAdditions.h"
 
-static const float const firstSectionTopOffset  = 40.0f;
+static const float const firstSectionTopOffset  = 30.0f;
 
 static const float const collapsedSectionHeight = 20.0f;
 
