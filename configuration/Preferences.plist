@@ -566,8 +566,10 @@
 		<true/>
 		<key>MPEVideoEqualizerValues</key>
 		<dict/>
-		<key>MPEWindowOnTopMode</key>
-		<integer>0</integer>
+		<key>MPEWindowOnTop</key>
+		<false/>
+		<key>MPEWindowOnTopOnlyWhilePlaying</key>
+		<true/>
 	</dict>
 	<key>RequiresRestart</key>
 	<array>

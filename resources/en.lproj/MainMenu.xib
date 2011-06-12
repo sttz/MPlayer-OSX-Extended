@@ -736,16 +736,6 @@
 												<reference key="NSMixedImage" ref="280660191"/>
 												<int key="NSTag">200</int>
 											</object>
-											<object class="NSMenuItem" id="939079896">
-												<reference key="NSMenu" ref="528901534"/>
-												<string key="NSTitle">Fit Screen</string>
-												<string key="NSKeyEquiv">3</string>
-												<int key="NSKeyEquivModMask">1048576</int>
-												<int key="NSMnemonicLoc">2147483647</int>
-												<reference key="NSOnImage" ref="118746331"/>
-												<reference key="NSMixedImage" ref="280660191"/>
-												<int key="NSTag">200</int>
-											</object>
 											<object class="NSMenuItem" id="190163487">
 												<reference key="NSMenu" ref="528901534"/>
 												<string key="NSTitle">Full Screen</string>
@@ -935,6 +925,33 @@
 									<string key="NSTitle"/>
 									<string key="NSKeyEquiv"/>
 									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="118746331"/>
+									<reference key="NSMixedImage" ref="280660191"/>
+								</object>
+								<object class="NSMenuItem" id="192846224">
+									<reference key="NSMenu" ref="810610387"/>
+									<string key="NSTitle">Keep Window On Top</string>
+									<string key="NSKeyEquiv">T</string>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="118746331"/>
+									<reference key="NSMixedImage" ref="280660191"/>
+								</object>
+								<object class="NSMenuItem" id="900992410">
+									<reference key="NSMenu" ref="810610387"/>
+									<string key="NSTitle">... Only While Playing</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="118746331"/>
+									<reference key="NSMixedImage" ref="280660191"/>
+								</object>
+								<object class="NSMenuItem" id="321206678">
+									<reference key="NSMenu" ref="810610387"/>
+									<bool key="NSIsDisabled">YES</bool>
+									<bool key="NSIsSeparator">YES</bool>
+									<string key="NSTitle"/>
+									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="118746331"/>
 									<reference key="NSMixedImage" ref="280660191"/>
@@ -3505,27 +3522,35 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: playerController.player.movieOpen</string>
-						<reference key="source" ref="939079896"/>
-						<reference key="destination" ref="700428315"/>
+						<string key="label">value: values.MPEWindowOnTop</string>
+						<reference key="source" ref="192846224"/>
+						<reference key="destination" ref="299649667"/>
 						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="939079896"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: playerController.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">playerController.player.movieOpen</string>
+							<reference key="NSSource" ref="192846224"/>
+							<reference key="NSDestination" ref="299649667"/>
+							<string key="NSLabel">value: values.MPEWindowOnTop</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">values.MPEWindowOnTop</string>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">19611</int>
+					<int key="connectionID">19639</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">fitScreen:</string>
-						<reference key="source" ref="847214199"/>
-						<reference key="destination" ref="939079896"/>
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: values.MPEWindowOnTopOnlyWhilePlaying</string>
+						<reference key="source" ref="900992410"/>
+						<reference key="destination" ref="299649667"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="900992410"/>
+							<reference key="NSDestination" ref="299649667"/>
+							<string key="NSLabel">value: values.MPEWindowOnTopOnlyWhilePlaying</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">values.MPEWindowOnTopOnlyWhilePlaying</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
 					</object>
-					<int key="connectionID">19612</int>
+					<int key="connectionID">19644</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -4477,6 +4502,9 @@
 							<reference ref="983516722"/>
 							<reference ref="11581419"/>
 							<reference ref="209748131"/>
+							<reference ref="192846224"/>
+							<reference ref="900992410"/>
+							<reference ref="321206678"/>
 						</object>
 						<reference key="parent" ref="455942513"/>
 					</object>
@@ -4559,7 +4587,6 @@
 							<reference ref="993460538"/>
 							<reference ref="434144637"/>
 							<reference ref="107923094"/>
-							<reference ref="939079896"/>
 						</object>
 						<reference key="parent" ref="911500836"/>
 					</object>
@@ -5029,9 +5056,19 @@
 						<reference key="parent" ref="911038990"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">19609</int>
-						<reference key="object" ref="939079896"/>
-						<reference key="parent" ref="528901534"/>
+						<int key="objectID">19617</int>
+						<reference key="object" ref="192846224"/>
+						<reference key="parent" ref="810610387"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">19618</int>
+						<reference key="object" ref="900992410"/>
+						<reference key="parent" ref="810610387"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">19619</int>
+						<reference key="object" ref="321206678"/>
+						<reference key="parent" ref="810610387"/>
 					</object>
 				</object>
 			</object>
@@ -5358,8 +5395,9 @@
 					<string>19596.IBPluginDependency</string>
 					<string>19596.ImportedFromIB2</string>
 					<string>19605.IBPluginDependency</string>
-					<string>19609.IBPluginDependency</string>
-					<string>19609.ImportedFromIB2</string>
+					<string>19617.IBPluginDependency</string>
+					<string>19618.IBPluginDependency</string>
+					<string>19619.IBPluginDependency</string>
 					<string>1983.IBPluginDependency</string>
 					<string>1983.ImportedFromIB2</string>
 					<string>1984.IBPluginDependency</string>
@@ -5788,7 +5826,8 @@
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -5908,7 +5947,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">19612</int>
+			<int key="maxID">19644</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

@@ -84,6 +84,8 @@
 @property (readonly) NSWindow *customAspectRatioChooser;
 @property (readonly) NSDictionaryController *binariesController;
 
+- (void) upgradePreferences;
+
 - (IBAction) switchView:(NSToolbarItem*)sender;
 - (void) loadView:(NSString*)viewName;
 

@@ -96,7 +96,8 @@ extern NSString* const MPEUpdateBinaries;
 extern NSString* const MPEUse32bitBinaryon64bit;
 extern NSString* const MPEVideoEqualizerValues;
 extern NSString* const MPEVideoEqualizerEnabled;
-extern NSString* const MPEWindowOnTopMode;
+extern NSString* const MPEWindowOnTop;
+extern NSString* const MPEWindowOnTopOnlyWhilePlaying;
 
 // *** Top-level constants keys
 extern NSString* const MPEAudioDelayStepSize;
@@ -126,11 +127,6 @@ extern NSString* const MPEAdvancedOptionsEnabledKey;
 extern int const MPEStartPlaybackDisplayTypeWindow;
 extern int const MPEStartPlaybackDisplayTypeFullscreen;
 extern int const MPEStartPlaybackDisplayTypeDesktop;
-
-// *** MPEWindowOnTopMode values
-extern int const MPEWindowOnTopModeNever; 
-extern int const MPEWindowOnTopModeWhilePlaying;
-extern int const MPEWindowOnTopModeAlways;
 
 // *** MPEDisplaySize values
 extern int const MPEDisplaySizeHalf;

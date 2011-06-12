@@ -82,6 +82,9 @@
 	}
 	identifiers = idents;
 	
+	// Upgrade old preferences
+	[self upgradePreferences];
+	
 	// Restore selected view from preferences or default to first one
 	if ([PREFS objectForKey:MPESelectedPreferencesSection])
 		[self loadView:[PREFS stringForKey:MPESelectedPreferencesSection]];
@@ -158,6 +161,21 @@
 	[viewTags release];
 	
 	[super dealloc];
+}
+
+/** Upgrade outdated preferences settings
+ */
+- (void) upgradePreferences
+{
+	// Upgrade old ontop mode
+	if ([PREFS objectForKey:@"MPEWindowOnTopMode"]) {
+		int mode = [PREFS integerForKey:@"MPEWindowOnTopMode"];
+		
+		[PREFS setBool:(mode == 1 || mode == 2) forKey:MPEWindowOnTop];
+		[PREFS setBool:(mode == 2) forKey:MPEWindowOnTopOnlyWhilePlaying];
+		
+		[PREFS removeObjectForKey:@"MPEWindowOnTopMode"];
+	}
 }
 
 - (void) playersHaveChanged:(NSNotification *)notification

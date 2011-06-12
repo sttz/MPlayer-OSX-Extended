@@ -95,7 +95,8 @@ NSString* const MPEUpdateBinaries                     = @"MPEUpdateBinaries";
 NSString* const MPEUse32bitBinaryon64bit              = @"MPEUse32bitBinaryon64bit";
 NSString* const MPEVideoEqualizerValues               = @"MPEVideoEqualizerValues";
 NSString* const MPEVideoEqualizerEnabled              = @"MPEVideoEqualizerEnabled";
-NSString* const MPEWindowOnTopMode                    = @"MPEWindowOnTopMode";
+NSString* const MPEWindowOnTop						  = @"MPEWindowOnTop";
+NSString* const MPEWindowOnTopOnlyWhilePlaying		  = @"MPEWindowOnTopOnlyWhilePlaying";
 
 NSString* const MPEAudioDelayStepSize				  = @"MPEAudioDelayStepSize";
 NSString* const MPEFullscreenControlsHideTimeout      = @"MPEFullscreenControlsHideTimeout";
@@ -121,10 +122,6 @@ NSString* const MPEAdvancedOptionsEnabledKey          = @"MPEAdvancedOptionEnabl
 int const MPEStartPlaybackDisplayTypeWindow           = 0;
 int const MPEStartPlaybackDisplayTypeFullscreen       = 1;
 int const MPEStartPlaybackDisplayTypeDesktop          = 2;
-
-int const MPEWindowOnTopModeNever                     = 0;
-int const MPEWindowOnTopModeWhilePlaying              = 1;
-int const MPEWindowOnTopModeAlways                    = 2;
 
 int const MPEDisplaySizeHalf                          = 0;
 int const MPEDisplaySizeOriginal                      = 1;  

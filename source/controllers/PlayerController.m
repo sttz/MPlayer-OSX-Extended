@@ -109,7 +109,11 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	
 	// register for ontop changes
 	[PREFS addObserver:self
-			forKeyPath:MPEWindowOnTopMode
+			forKeyPath:MPEWindowOnTop
+			   options:NSKeyValueObservingOptionInitial
+			   context:nil];
+	[PREFS addObserver:self
+			forKeyPath:MPEWindowOnTopOnlyWhilePlaying
 			   options:NSKeyValueObservingOptionInitial
 			   context:nil];
 	
@@ -919,12 +923,13 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 }
 - (void)updateWindowOnTop
 {
-	if ([PREFS integerForKey:MPEWindowOnTopMode] == MPEWindowOnTopModeNever)
-		[self setOntop:NO];
-	else if ([PREFS integerForKey:MPEWindowOnTopMode] == MPEWindowOnTopModeAlways)
-		[self setOntop:YES];
-	else // [PREFS integerForKey:MPEWindowOnTopMode] == MPEWindowOnTopModeWhilePlaying
-		[self setOntop:[myPlayer isPlaying]];
+	bool onTop = [PREFS boolForKey:MPEWindowOnTop];
+	
+	if (onTop && [PREFS boolForKey:MPEWindowOnTopOnlyWhilePlaying]) {
+		onTop = [myPlayer isPlaying];
+	}
+	
+	[self setOntop:onTop];
 }
 /************************************************************************************/
 - (IBAction)switchFullscreen:(id)sender
@@ -1560,7 +1565,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 /************************************************************************************/
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-	if ([keyPath isEqualToString:MPEWindowOnTopMode])
+	if ([keyPath isEqualToString:MPEWindowOnTop] || [keyPath isEqualToString:MPEWindowOnTopOnlyWhilePlaying])
 		[self updateWindowOnTop];
 	
 	else if ([keyPath isEqualToString:MPEGoToFullscreenOn] || [keyPath isEqualToString:MPEFullscreenDisplayNumber])
