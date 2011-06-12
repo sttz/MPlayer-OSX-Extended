@@ -335,16 +335,14 @@ static unsigned int videoViewId;
 	NSRect win_frame = [[self window] frame];
 	NSRect mov_frame = [self bounds];
 	NSSize minSize = [[self window]contentMinSize];
-	NSSize screen_size;
+	NSRect screen_frame = [[[playerController playerWindow] screen] visibleFrame];
 	float fitFactor;
 	
 	// Determine maximal scale factor to fit screen
-	screen_size = [[[playerController playerWindow] screen] visibleFrame].size;
-	
-	if (screen_size.width / screen_size.height > video_aspect)
-		fitFactor = screen_size.height / video_size.height;
+	if (screen_frame.size.width / screen_frame.size.height > video_aspect)
+		fitFactor = screen_frame.size.height / video_size.height;
 	else
-		fitFactor = screen_size.width / video_size.width;
+		fitFactor = screen_frame.size.width / video_size.width;
 	
 	// Fit to specific width
 	if (windowSizeMode == WSM_FIT_WIDTH)
@@ -361,6 +359,12 @@ static unsigned int videoViewId;
 		win_frame.size.width = minSize.width;
 	else
 		win_frame.size.width += video_size.height*video_aspect*zoomFactor - mov_frame.size.width;
+	
+	// Keep window on screen
+	if (NSMaxX(win_frame) > NSMaxX(screen_frame))
+		win_frame.origin.x += NSMaxX(screen_frame) - NSMaxX(win_frame);
+	if (NSMinY(win_frame) < NSMinY(screen_frame))
+		win_frame.origin.y += NSMinY(screen_frame) - NSMinY(win_frame);
 	
 	[[self window] setFrame:win_frame display:YES animate:[[AppController sharedController] animateInterface]];
 	
