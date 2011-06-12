@@ -458,13 +458,8 @@ static NSArray* statusNames;
 	[params addObject:@"-ass"];
 	
 	// subtitles scale
-	if ([cPrefs floatForKey:MPESubtitleScale] > 0) {
-		float scale = [cPrefs floatForKey:MPESubtitleScale];
-		if ([cPrefs objectForKey:MPESubtitleItemRelativeScale])
-			scale *= [cPrefs floatForKey:MPESubtitleItemRelativeScale];
-		[params addObject:@"-ass-font-scale"];
-		[params addObject:[NSString stringWithFormat:@"%.3f",scale]];
-	}
+	[params addObject:@"-ass-font-scale"];
+	[params addObject:[NSString stringWithFormat:@"%.3f", [self subtitleScale]]];
 	
 	// embedded fonts
 	if ([cPrefs boolForKey:MPELoadEmbeddedFonts]) {
@@ -851,10 +846,7 @@ static NSArray* statusNames;
 		[self applyVolume];
 	
 	} else if ([keyPath isEqualToString:MPESubtitleScale] || [keyPath isEqualToString:MPESubtitleItemRelativeScale]) {
-		float sub_scale = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
-		if ([[playingItem prefs] objectForKey:MPESubtitleItemRelativeScale])
-			sub_scale *= [[playingItem prefs] floatForKey:MPESubtitleItemRelativeScale];
-		[self sendCommand:[NSString stringWithFormat:@"set_property sub_scale %f",sub_scale]];
+		[self sendCommand:[NSString stringWithFormat:@"set_property sub_scale %f", [self subtitleScale]]];
 	
 	} else if ([keyPath isEqualToString:MPEPlaybackSpeed]) {
 		float speed = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
@@ -884,6 +876,18 @@ static NSArray* statusNames;
 	// Also select the newly loaded subtitle
 	[self sendCommand:[NSString stringWithFormat:@"sub_file %u",[playingItem subtitleCountForType:SubtitleTypeFile]]];
 	[self sendCommand:@"get_property sub_file"];
+}
+/************************************************************************************/
+- (float) subtitleScale
+{
+	float sub_scale = 1, sub_rel_scale = 1;
+	
+	if ([[playingItem prefs] objectForKey:MPESubtitleScale])
+		sub_scale = [[playingItem prefs] floatForKey:MPESubtitleScale];
+	if ([[playingItem prefs] objectForKey:MPESubtitleItemRelativeScale])
+		sub_rel_scale = [[playingItem prefs] floatForKey:MPESubtitleItemRelativeScale];
+	
+	return sub_scale * sub_rel_scale;
 }
 /************************************************************************************/
 - (void) applyVideoEqualizer

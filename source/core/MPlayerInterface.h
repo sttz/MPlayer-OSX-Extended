@@ -194,6 +194,7 @@ extern NSString* const MIStatsDroppedFramesKey;
 - (void) takeScreenshot;
 
 - (void) loadNewSubtitleFile:(NSNotification *)notification;
+- (float) subtitleScale;
 - (void) applyVideoEqualizer;
 
 - (void) applySettingsWithRestart;
