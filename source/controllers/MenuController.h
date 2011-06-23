@@ -74,9 +74,6 @@ EqualizerController;
 - (IBAction) takeScreenshot:(NSMenuItem *)sender;
 
 // Window Menu
-- (IBAction) openPlayerWindow:(NSMenuItem *)sender;
-- (IBAction) togglePlaylistWindow:(NSMenuItem *)sender;
-
 - (IBAction) openVideoEqualizer:(NSMenuItem *)sender;
 - (IBAction) openAudioEqualizer:(NSMenuItem *)sender;
 

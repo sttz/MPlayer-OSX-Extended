@@ -22,6 +22,7 @@
 extern NSString* const MPENewPlayerOpenedNotification;
 extern NSString* const MPEPlayerClosedNotification;
 extern NSString* const MPEPlayerNotificationPlayerControllerKey;
+extern NSString* const MPEPlayerStoppedNotification;
 
 @class AppleRemote, PlayerController, PreferencesController2, EqualizerController,
 PlayListController, MenuController, InspectorController, MovieInfo;
@@ -64,16 +65,13 @@ PlayListController, MenuController, InspectorController, MovieInfo;
 	NSDictionary *preferencesSpecs;
 	
 	// Player controllers
-	PlayerController *playerController;
 	NSMutableArray *players;
 	
 	id<MovieInfoProvider> movieInfoProvider;
 }
 
 @property (nonatomic,readonly) MenuController *menuController;
-@property (nonatomic,retain) PlayerController *playerController;
 @property (nonatomic,readonly) PreferencesController2 *preferencesController;
-@property (nonatomic,readonly) PlayListController *playListController;
 @property (nonatomic,readonly) InspectorController *inspectorController;
 - (EqualizerController *)equalizerController;
 
@@ -92,8 +90,15 @@ PlayListController, MenuController, InspectorController, MovieInfo;
 
 - (NSUInteger) registerPlayer:(PlayerController *)player;
 - (void) removePlayer:(PlayerController *)player;
+- (PlayerController *) getPlayer;
 - (void) openNewPlayerWindow:(id)sender;
-- (PlayerController *) firstPlayerController;
+- (void) playerDidBecomeActivePlayer:(PlayerController *)player;
+- (void) playerResignedActivePlayer:(PlayerController *)player;
+
+@property (nonatomic,readonly) PlayerController *activePlayer;
+
+- (BOOL) changesRequireRestart;
+- (void) applyChangesWithRestart:(BOOL)restart;
 
 - (void) restart;
 

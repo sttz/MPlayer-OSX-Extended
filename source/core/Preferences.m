@@ -69,6 +69,8 @@ NSString* const MPEInspectorOpen                      = @"MPEInspectorOpen";
 NSString* const MPEKaraokeFilter                      = @"MPEKaraokeFilter";
 NSString* const MPELoadEmbeddedFonts                  = @"MPELoadEmbeddedFonts";
 NSString* const MPELoopMovie                          = @"MPELoopMovie";
+NSString* const MPEOpenFilesMode					  = @"MPEOpenFilesMode";
+NSString* const MPEOpenFilesReusePlayers			  = @"MPEOpenFilesReusePlayers";
 NSString* const MPEOSDLevel                           = @"MPEOSDLevel";
 NSString* const MPEOSDScale                           = @"MPEOSDScale";
 NSString* const MPEOverrideAudioCodecs                = @"MPEOverrideAudioCodecs";
@@ -154,6 +156,9 @@ int const MPEPostprocessingFilterOff                  = 0;
 int const MPEPostprocessingFilterDefault              = 1;
 int const MPEPostprocessingFilterFast                 = 2;
 int const MPEPostprocessingFilterHighQuality          = 3;
+
+int const MPEOpenFilesInFrontmostPlayer				  = 0;
+int const MPEOpenFilesInNewPlayer					  = 1;
 
 NSString* const MPEVideoEqualizerBrightness           = @"MPEVideoEqualizerBrightness";
 NSString* const MPEVideoEqualizerContrast             = @"MPEVideoEqualizerContrast";

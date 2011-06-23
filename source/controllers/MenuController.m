@@ -42,28 +42,28 @@
 
 - (IBAction) playPause:(NSMenuItem *)sender
 {
-	[[appController playerController] playPause:sender];
+	[[appController activePlayer] playPause:sender];
 }
 
 - (IBAction) stop:(NSMenuItem *)sender
 {
-	[[appController playerController] stop:self];
+	[[appController activePlayer] stop:self];
 }
 
 - (IBAction) toggleLoop:(NSMenuItem *)sender
 {
-	[[appController playerController] toggleLoop:sender];
+	[[appController activePlayer] toggleLoop:sender];
 }
 
 
 - (IBAction) skipToNext:(NSMenuItem *)sender
 {
-	[[appController playerController] seekNext:sender];
+	[[appController activePlayer] seekNext:sender];
 }
 
 - (IBAction) skipToPrevious:(NSMenuItem *)sender
 {
-	[[appController playerController] seekPrevious:sender];
+	[[appController activePlayer] seekPrevious:sender];
 }
 
 - (IBAction) skipToChapterFromMenu:(NSMenuItem *)sender
@@ -73,12 +73,12 @@
 
 - (IBAction) seekByTag:(NSMenuItem *)sender
 {
-	[[appController playerController] seekFromMenu:sender];
+	[[appController activePlayer] seekFromMenu:sender];
 }
 
 - (IBAction) stepFrame:(NSMenuItem *)sender
 {
-	[[appController playerController] stepFrame:sender];
+	[[appController activePlayer] stepFrame:sender];
 }
 
 
@@ -95,17 +95,17 @@
 
 - (IBAction) increaseVolume:(NSMenuItem *)sender
 {
-	[[appController playerController] increaseVolume:sender];
+	[[appController activePlayer] increaseVolume:sender];
 }
 
 - (IBAction) decreaseVolume:(NSMenuItem *)sender
 {
-	[[appController playerController] decreaseVolume:sender];
+	[[appController activePlayer] decreaseVolume:sender];
 }
 
 - (IBAction) muteVolume:(NSMenuItem *)sender
 {
-	[[appController playerController] toggleMute:sender];
+	[[appController activePlayer] toggleMute:sender];
 }
 
 
@@ -113,30 +113,30 @@
 
 - (IBAction) setSizeFromMenu:(NSMenuItem *)sender
 {
-	[[[appController playerController] videoOpenGLView] setWindowSizeMode:WSM_SCALE 
+	[[[appController activePlayer] videoOpenGLView] setWindowSizeMode:WSM_SCALE 
 																withValue:([sender tag]/100.0f)];
 }
 
 - (IBAction) fitScreen:(NSMenuItem *) sender
 {
-    [[[appController playerController] videoOpenGLView] setWindowSizeMode:WSM_FIT_SCREEN 
+    [[[appController activePlayer] videoOpenGLView] setWindowSizeMode:WSM_FIT_SCREEN 
 																withValue:1];
 }
 
 - (IBAction) fullScreen:(NSMenuItem *)sender
 {
-	[[appController playerController] switchFullscreen:sender];
+	[[appController activePlayer] switchFullscreen:sender];
 }
 
 
 - (IBAction) setVideoScaleMode:(NSMenuItem *)sender
 {
-	[[[appController playerController] videoOpenGLView] setVideoScaleMode:[sender tag]];
+	[[[appController activePlayer] videoOpenGLView] setVideoScaleMode:[sender tag]];
 }
 
 - (IBAction) originalAspect:(NSMenuItem *)sender
 {
-	[[[appController playerController] videoOpenGLView] setAspectRatio:0];
+	[[[appController activePlayer] videoOpenGLView] setAspectRatio:0];
 }
 
 - (IBAction) setAspectFromMenu:(NSMenuItem *)sender
@@ -153,7 +153,7 @@
 		return;
 	}
 	
-	[[[appController playerController] videoOpenGLView] setAspectRatio:aspectValue];
+	[[[appController activePlayer] videoOpenGLView] setAspectRatio:aspectValue];
 }
 
 - (IBAction) openCustomAspectChooser:(NSMenuItem *)sender
@@ -164,22 +164,11 @@
 
 - (IBAction) takeScreenshot:(NSMenuItem *)sender
 {
-	[[appController playerController] takeScreenshot:sender];
+	[[appController activePlayer] takeScreenshot:sender];
 }
 
 
 // -- Window Menu --------------------------------
-
-- (IBAction) openPlayerWindow:(NSMenuItem *)sender
-{
-	[[appController firstPlayerController] displayWindow:sender];
-}
-
-- (IBAction) togglePlaylistWindow:(NSMenuItem *)sender
-{
-	[[[appController firstPlayerController] playListController] displayWindow:sender];
-}
-
 
 - (IBAction) openVideoEqualizer:(NSMenuItem *)sender
 {

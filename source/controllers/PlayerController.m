@@ -43,8 +43,6 @@
 #define		MP_CHAPTER_CHECK_INTERVAL	0.5f
 #define		MP_SEEK_UPDATE_BLOCK		0.5f
 
-NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotification";
-
 @implementation PlayerController
 @synthesize myPlayer, playListController, videoOpenGLView, movieInfo;
 
@@ -568,7 +566,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	[volumeButton setImage:volumeImage];
 	[volumeButton setNeedsDisplay:YES];
 	
-	if ([self isCurrentPlayer])
+	if ([self isActivePlayer])
 		[menuController->toggleMuteMenuItem setState:(volume == 0)];
 }
 
@@ -654,7 +652,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 
 - (void) updateLoopStatus
 {
-	if (![self isCurrentPlayer]) return;
+	if (![self isActivePlayer]) return;
 	
 	if (movieInfo && [[movieInfo prefs] boolForKey:MPELoopMovie])
 		[menuController->loopMenuItem setState:NSOnState];
@@ -994,7 +992,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 /************************************************************************************/
 - (void)clearStreamMenus {
 	
-	if (![self isCurrentPlayer]) return;
+	if (![self isActivePlayer]) return;
 	
 	NSMenuItem *parentMenu;
 	int j;
@@ -1029,7 +1027,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 /************************************************************************************/
 - (void)fillStreamMenus {
 	
-	if (![self isCurrentPlayer]) return;
+	if (![self isActivePlayer]) return;
 	
 	// clear menus
 	[self clearStreamMenus];
@@ -1333,7 +1331,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 /************************************************************************************/
 - (void)clearChapterMenu {
 	
-	if (![self isCurrentPlayer]) return;
+	if (![self isActivePlayer]) return;
 	
 	[menuController->chapterMenu setEnabled:NO];
 	[chapterWindowItem setEnabled:NO];
@@ -1341,7 +1339,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 /************************************************************************************/
 - (void)fillChapterMenu {
 	
-	if (![self isCurrentPlayer]) return;
+	if (![self isActivePlayer]) return;
 	
 	[self clearChapterMenu];
 	[chaptersMenu removeAllItems];
@@ -1415,7 +1413,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 /************************************************************************************/
 - (void)clearFullscreenMenu {
 	
-	if (![self isCurrentPlayer]) return;
+	if (![self isActivePlayer]) return;
 	
 	[menuController->fullscreenMenu setEnabled:NO];
 	[fullscreenWindowItem setEnabled:NO];
@@ -1423,7 +1421,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 /************************************************************************************/
 - (void)fillFullscreenMenu {
 	
-	if (![self isCurrentPlayer]) return;
+	if (![self isActivePlayer]) return;
 	
 	[self clearFullscreenMenu];
 	[fullscreenDeviceMenu removeAllItems];
@@ -1598,14 +1596,14 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 			// Update interface
 			[playButton setImage:pauseImageOff];
 			[playButton setAlternateImage:pauseImageOn];
-			if ([self isCurrentPlayer])
+			if ([self isActivePlayer])
 				[menuController->playMenuItem setTitle:@"Pause"];
 		// Pausing
 		} else if (stateMask & MIStatePPPausedMask) {
 			// Update interface
 			[playButton setImage:playImageOff];
 			[playButton setAlternateImage:playImageOn];
-			if ([self isCurrentPlayer])
+			if ([self isActivePlayer])
 				[menuController->playMenuItem setTitle:@"Play"];
 			
 		}
@@ -1678,7 +1676,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 		} else
 			continuousPlayback = NO;
 		
-		[[NSNotificationCenter defaultCenter] postNotificationName:MPEPlaybackStoppedNotification
+		[[NSNotificationCenter defaultCenter] postNotificationName:MPEPlayerStoppedNotification
 															object:self];
 	}
 	
@@ -1864,7 +1862,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	return YES;
 }
 /************************************************************************************/
-- (void) playerDidBecomeCurrentPlayer
+- (void) playerDidBecomeActivePlayer
 {
 	[self fillStreamMenus];
 	[self fillChapterMenu];
@@ -1877,7 +1875,7 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	[menuController->playMenuItem setTitle:([myPlayer isPlaying] ? @"Pause" : @"Play")];
 }
 
-- (void) playerWillResignCurrentPlayer
+- (void) playerWillResignActivePlayer
 {
 	[self clearStreamMenus];
 	[self clearChapterMenu];
@@ -1891,9 +1889,9 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	appleRemoteHolding = NO;
 }
 
-- (BOOL) isCurrentPlayer
+- (BOOL) isActivePlayer
 {
-	return ([[AppController sharedController] playerController] == self);
+	return ([[AppController sharedController] activePlayer] == self);
 }
 
 /************************************************************************************/
@@ -1911,9 +1909,9 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	} else
 		closeNow = YES;
 	
-	if ([self isCurrentPlayer]) {
+	if ([self isActivePlayer]) {
+		[[AppController sharedController] playerResignedActivePlayer:self];
 		[[AppController sharedController] removePlayer:self];
-		[[AppController sharedController] setPlayerController:nil];
 	}
 	
 	[self stop:nil];
@@ -1934,8 +1932,8 @@ NSString* const MPEPlaybackStoppedNotification = @"MPEPlaybackStoppedNotificatio
 	if (movieInfo && [[AppController sharedController] movieInfoProvider] != self)
 		[[AppController sharedController] setMovieInfoProvider:self];
 	
-	if (![self isCurrentPlayer])
-		[[AppController sharedController] setPlayerController:self];
+	if (![self isActivePlayer])
+		[[AppController sharedController] playerDidBecomeActivePlayer:self];
 }
 
 

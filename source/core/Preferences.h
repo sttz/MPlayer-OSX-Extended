@@ -70,6 +70,8 @@ extern NSString* const MPEInspectorOpen;
 extern NSString* const MPEKaraokeFilter;
 extern NSString* const MPELoadEmbeddedFonts;
 extern NSString* const MPELoopMovie;
+extern NSString* const MPEOpenFilesMode;
+extern NSString* const MPEOpenFilesReusePlayers;
 extern NSString* const MPEOSDLevel;
 extern NSString* const MPEOSDScale;
 extern NSString* const MPEOverrideAudioCodecs;
@@ -165,6 +167,10 @@ extern int const MPEPostprocessingFilterOff;
 extern int const MPEPostprocessingFilterDefault;
 extern int const MPEPostprocessingFilterFast;
 extern int const MPEPostprocessingFilterHighQuality;
+
+// *** MPEOpenFilesMode values
+extern int const MPEOpenFilesInFrontmostPlayer;
+extern int const MPEOpenFilesInNewPlayer;
 
 // *** MPEVideoEqualizerValues dictionary keys
 extern NSString* const MPEVideoEqualizerBrightness;

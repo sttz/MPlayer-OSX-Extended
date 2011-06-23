@@ -529,6 +529,10 @@
 		<false/>
 		<key>MPELoadEmbeddedFonts</key>
 		<true/>
+		<key>MPEOpenFilesMode</key>
+		<integer>0</integer>
+		<key>MPEOpenFilesReusePlayers</key>
+		<true/>
 		<key>MPEOSDLevel</key>
 		<integer>1</integer>
 		<key>MPEOSDScale</key>

@@ -101,7 +101,7 @@
 - (IBAction) applyWithRestart:(id)sender
 {
 	[audioApplyButton setEnabled:NO];
-	[[[AppController sharedController] playerController] applyChangesWithRestart:YES];
+	[[AppController sharedController] applyChangesWithRestart:YES];
 }
 
 - (void) openVideoEqualizer
@@ -263,7 +263,7 @@
 
 - (void) setAudioEqualizerDirty
 {
-	if ([[[AppController sharedController] playerController] isRunning])
+	if ([[AppController sharedController] changesRequireRestart])
 		[audioApplyButton setEnabled:YES];
 }
 

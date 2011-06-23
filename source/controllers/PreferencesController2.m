@@ -136,16 +136,8 @@
 	// listen for playback restarts to recheck if the restart requirement
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(requireRestart:)
-												 name:MPEPlaybackStoppedNotification
-											   object:[[AppController sharedController] firstPlayerController]];
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(playersHaveChanged:)
-												 name:MPENewPlayerOpenedNotification
-											   object:[AppController sharedController]];
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(playersHaveChanged:)
-												 name:MPEPlayerClosedNotification
-											   object:[AppController sharedController]];
+												 name:MPEPlayerStoppedNotification
+											   object:nil];
 }
 
 - (void) dealloc
@@ -175,22 +167,6 @@
 		[PREFS setBool:(mode == 2) forKey:MPEWindowOnTopOnlyWhilePlaying];
 		
 		[PREFS removeObjectForKey:@"MPEWindowOnTopMode"];
-	}
-}
-
-- (void) playersHaveChanged:(NSNotification *)notification
-{
-	PlayerController *player = [[notification userInfo] objectForKey:MPEPlayerNotificationPlayerControllerKey];
-	
-	if ([notification name] == MPENewPlayerOpenedNotification) {
-		[[NSNotificationCenter defaultCenter] addObserver:self
-												 selector:@selector(requireRestart:)
-													 name:MPEPlaybackStoppedNotification
-												   object:player];
-	} else {
-		[[NSNotificationCenter defaultCenter] removeObserver:self
-														name:MPEPlaybackStoppedNotification
-													  object:player];
 	}
 }
 
@@ -277,14 +253,7 @@
  */
 - (IBAction) requireRestart:(id)sender
 {
-	BOOL restart = NO;
-	
-	for (PlayerController *player in [[AppController sharedController] players]) {
-		if ([player changesRequireRestart]) {
-			restart = YES;
-			break;
-		}
-	}
+	BOOL restart = [[AppController sharedController] changesRequireRestart];
 	
 	if (restart	&& !restartIsRequired) {
 		[[[self window] contentView] addSubview:restartView];
@@ -842,11 +811,16 @@
 	if (!cachesAreValid) {
 		[cacheStatusIndicator setUsesThreadedAnimation:YES];
 		[cacheStatusIndicator startAnimation:self];
-		[NSApp beginSheet:cacheStatusWindow
-		   modalForWindow:[[[AppController sharedController] firstPlayerController] playerWindow] 
-			modalDelegate:nil 
-		   didEndSelector:nil 
-			  contextInfo:nil];
+		
+		if (![[AppController sharedController] activePlayer]) {
+			[Debug log:ASL_LEVEL_WARNING withMessage:@"No active player to show Fontconfig caching status."];
+		} else {
+			[NSApp beginSheet:cacheStatusWindow
+			   modalForWindow:[[[AppController sharedController] activePlayer] playerWindow] 
+				modalDelegate:nil 
+			   didEndSelector:nil 
+				  contextInfo:nil];
+		}
 	}
 	
 	if (!FcConfigBuildFonts(config)) {

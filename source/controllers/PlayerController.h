@@ -20,8 +20,6 @@
 @class PlayListController, MenuController, TimestampTextField;
 @protocol MovieInfoProvider;
 
-extern NSString* const MPEPlaybackStoppedNotification;
-
 @interface PlayerController : NSObject <MPlayerInterfaceClientProtocol, MovieInfoProvider>
 {
 	// Shorthand to menu controller
@@ -189,9 +187,9 @@ extern NSString* const MPEPlaybackStoppedNotification;
 - (void) updatePlayerWindow;
 - (void) mplayerCrashed:(NSNotification *)notification;
 
-- (BOOL) isCurrentPlayer;
-- (void) playerDidBecomeCurrentPlayer;
-- (void) playerWillResignCurrentPlayer;
+- (BOOL) isActivePlayer;
+- (void) playerDidBecomeActivePlayer;
+- (void) playerWillResignActivePlayer;
 
 // window delegate methods
 - (BOOL)windowShouldZoom:(NSWindow *)sender toFrame:(NSRect)newFrame;
