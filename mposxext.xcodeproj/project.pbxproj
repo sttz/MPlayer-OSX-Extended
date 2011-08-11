@@ -167,6 +167,7 @@
 		3AC9A74A139BFFCB001A3429 /* system-file-manager.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AC9A6F0139BFFCB001A3429 /* system-file-manager.png */; };
 		3AC9A74B139BFFCB001A3429 /* video-x-generic.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AC9A6F1139BFFCB001A3429 /* video-x-generic.png */; };
 		3ACDFE3F139AB3D900275362 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ACDFE3E139AB3D900275362 /* Cocoa.framework */; };
+		9215958A13F49EC700F0ABCF /* mkv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9215958913F49EC700F0ABCF /* mkv.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -300,7 +301,7 @@
 		3A7A6B38139AB8AA006A8B4A /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = SDKs/MacOSX10.6.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = DEVELOPER_DIR; };
 		3A7A6B3A139AB990006A8B4A /* libfontconfig.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfontconfig.1.dylib; path = binaries/mpextended.mpBinaries/Contents/MacOS/lib/libfontconfig.1.dylib; sourceTree = "<group>"; };
 		3A7A6B3B139AB990006A8B4A /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.6.dylib; path = binaries/mpextended.mpBinaries/Contents/MacOS/lib/libfreetype.6.dylib; sourceTree = "<group>"; };
-		3A7A6B4F139ABBBB006A8B4A /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = SDKs/MacOSX10.6.sdk/usr/lib/libiconv.2.dylib; sourceTree = DEVELOPER_DIR; };
+		3A7A6B4F139ABBBB006A8B4A /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = binaries/mpextended.mpBinaries/Contents/MacOS/lib/libiconv.2.dylib; sourceTree = "<group>"; };
 		3A7A6B53139ABD51006A8B4A /* en */ = {isa = PBXFileReference; lastKnownFileType = folder; name = en; path = "en.lproj/MPlayer OSX Help"; sourceTree = "<group>"; };
 		3A7A6B55139ABD6C006A8B4A /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		3A7A6B79139ABE20006A8B4A /* example.mpBinaries */ = {isa = PBXFileReference; lastKnownFileType = folder; path = example.mpBinaries; sourceTree = "<group>"; };
@@ -402,6 +403,7 @@
 		3ACDFE41139AB3D900275362 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		3ACDFE42139AB3D900275362 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		3ACDFE43139AB3D900275362 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		9215958913F49EC700F0ABCF /* mkv.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mkv.icns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -718,6 +720,7 @@
 		3AC9A6B1139BFFCB001A3429 /* icons */ = {
 			isa = PBXGroup;
 			children = (
+				9215958913F49EC700F0ABCF /* mkv.icns */,
 				3AC9A6B2139BFFCB001A3429 /* audio.icns */,
 				3AC9A6B3139BFFCB001A3429 /* binaries.icns */,
 				3AC9A6B4139BFFCB001A3429 /* icon.icns */,
@@ -1012,6 +1015,7 @@
 				3AC9A74B139BFFCB001A3429 /* video-x-generic.png in Resources */,
 				3A4C776313A54D69000EDD78 /* skipLeftTemplate.png in Resources */,
 				3A4C776413A54D69000EDD78 /* skipRightTemplate.png in Resources */,
+				9215958A13F49EC700F0ABCF /* mkv.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
