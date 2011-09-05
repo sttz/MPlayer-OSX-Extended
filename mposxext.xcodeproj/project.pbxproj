@@ -69,7 +69,6 @@
 		3A7A6B39139AB8AA006A8B4A /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7A6B38139AB8AA006A8B4A /* Carbon.framework */; };
 		3A7A6B3C139AB990006A8B4A /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7A6B3A139AB990006A8B4A /* libfontconfig.1.dylib */; };
 		3A7A6B3D139AB990006A8B4A /* libfreetype.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7A6B3B139AB990006A8B4A /* libfreetype.6.dylib */; };
-		3A7A6B50139ABBBB006A8B4A /* libiconv.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7A6B4F139ABBBB006A8B4A /* libiconv.2.dylib */; };
 		3A7A6B54139ABD51006A8B4A /* MPlayer OSX Help in Resources */ = {isa = PBXBuildFile; fileRef = 3A7A6B52139ABD51006A8B4A /* MPlayer OSX Help */; };
 		3A7A6B56139ABD6C006A8B4A /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 3A7A6B55139ABD6C006A8B4A /* fonts */; };
 		3A7A6B58139ABDCB006A8B4A /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7A6A70139AB735006A8B4A /* Sparkle.framework */; };
@@ -168,6 +167,7 @@
 		3AC9A74B139BFFCB001A3429 /* video-x-generic.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AC9A6F1139BFFCB001A3429 /* video-x-generic.png */; };
 		3ACDFE3F139AB3D900275362 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ACDFE3E139AB3D900275362 /* Cocoa.framework */; };
 		9215958A13F49EC700F0ABCF /* mkv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9215958913F49EC700F0ABCF /* mkv.icns */; };
+		92614C81140EBF5400AA8103 /* libiconv.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92614C80140EBF5400AA8103 /* libiconv.2.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -301,7 +301,6 @@
 		3A7A6B38139AB8AA006A8B4A /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = SDKs/MacOSX10.6.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = DEVELOPER_DIR; };
 		3A7A6B3A139AB990006A8B4A /* libfontconfig.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfontconfig.1.dylib; path = binaries/mpextended.mpBinaries/Contents/MacOS/lib/libfontconfig.1.dylib; sourceTree = "<group>"; };
 		3A7A6B3B139AB990006A8B4A /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.6.dylib; path = binaries/mpextended.mpBinaries/Contents/MacOS/lib/libfreetype.6.dylib; sourceTree = "<group>"; };
-		3A7A6B4F139ABBBB006A8B4A /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = binaries/mpextended.mpBinaries/Contents/MacOS/lib/libiconv.2.dylib; sourceTree = "<group>"; };
 		3A7A6B53139ABD51006A8B4A /* en */ = {isa = PBXFileReference; lastKnownFileType = folder; name = en; path = "en.lproj/MPlayer OSX Help"; sourceTree = "<group>"; };
 		3A7A6B55139ABD6C006A8B4A /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		3A7A6B79139ABE20006A8B4A /* example.mpBinaries */ = {isa = PBXFileReference; lastKnownFileType = folder; path = example.mpBinaries; sourceTree = "<group>"; };
@@ -404,6 +403,7 @@
 		3ACDFE42139AB3D900275362 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		3ACDFE43139AB3D900275362 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9215958913F49EC700F0ABCF /* mkv.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mkv.icns; sourceTree = "<group>"; };
+		92614C80140EBF5400AA8103 /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = binaries/mpextended.mpBinaries/Contents/MacOS/lib/libiconv.2.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -411,9 +411,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92614C81140EBF5400AA8103 /* libiconv.2.dylib in Frameworks */,
 				3AC9A683139BF679001A3429 /* AppKit.framework in Frameworks */,
 				3AC9A681139BF667001A3429 /* Foundation.framework in Frameworks */,
-				3A7A6B50139ABBBB006A8B4A /* libiconv.2.dylib in Frameworks */,
 				3A7A6B39139AB8AA006A8B4A /* Carbon.framework in Frameworks */,
 				3A7A6B37139AB8A2006A8B4A /* OpenGL.framework in Frameworks */,
 				3A7A6B35139AB89D006A8B4A /* QuartzCore.framework in Frameworks */,
@@ -832,9 +832,9 @@
 		3ACDFE3D139AB3D900275362 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				92614C80140EBF5400AA8103 /* libiconv.2.dylib */,
 				3AC9A682139BF679001A3429 /* AppKit.framework */,
 				3AC9A680139BF667001A3429 /* Foundation.framework */,
-				3A7A6B4F139ABBBB006A8B4A /* libiconv.2.dylib */,
 				3A7A6B3A139AB990006A8B4A /* libfontconfig.1.dylib */,
 				3A7A6B3B139AB990006A8B4A /* libfreetype.6.dylib */,
 				3A7A6B38139AB8AA006A8B4A /* Carbon.framework */,
@@ -1191,6 +1191,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					binaries/mpextended.mpBinaries/Contents/MacOS/lib,
+					"\"$(SRCROOT)/binaries/mpextended.mpBinaries/Contents/MacOS/lib\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1221,6 +1222,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					binaries/mpextended.mpBinaries/Contents/MacOS/lib,
+					"\"$(SRCROOT)/binaries/mpextended.mpBinaries/Contents/MacOS/lib\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				OTHER_LDFLAGS = "-licucore";
