@@ -102,7 +102,7 @@
 				<string>aif</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>aiff.icns</string>
+			<string>audio</string>
 			<key>CFBundleTypeName</key>
 			<string>AIFF file</string>
 			<key>CFBundleTypeRole</key>
@@ -126,7 +126,7 @@
 				<string>wav</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>wav.icns</string>
+			<string>audio</string>
 			<key>CFBundleTypeName</key>
 			<string>WAVE Audio File</string>
 			<key>CFBundleTypeRole</key>
@@ -150,7 +150,7 @@
 				<string>cue</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>generic.icns</string>
+			<string>cue.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>CUE file</string>
 			<key>CFBundleTypeRole</key>
@@ -231,29 +231,13 @@
 				<string>ogv</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>movie.icns</string>
+			<string>ogg.icns</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
 				<string>video/ogg</string>
 			</array>
 			<key>CFBundleTypeName</key>
 			<string>Ogg Video File</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>ogx</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>generic.icns</string>
-			<key>CFBundleTypeMIMETypes</key>
-			<array>
-				<string>application/ogg</string>
-			</array>
-			<key>CFBundleTypeName</key>
-			<string>Ogg Application File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 		</dict>
@@ -321,7 +305,7 @@
 				<string>divx</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>movie.icns</string>
+			<string>divx.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>DivX file</string>
 			<key>CFBundleTypeRole</key>
@@ -333,7 +317,7 @@
 				<string>dv</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>movie.icns</string>
+			<string>dv.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>DV file</string>
 			<key>CFBundleTypeRole</key>
@@ -345,7 +329,7 @@
 				<string>asf</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>movie.icns</string>
+			<string>asf.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Advanced Streaming Format</string>
 			<key>CFBundleTypeRole</key>
@@ -357,7 +341,7 @@
 				<string>wma</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>wma.icns</string>
+			<string>audio.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>WIndows Media Audio</string>
 			<key>CFBundleTypeRole</key>
@@ -445,7 +429,7 @@
 				<string>mp3</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>mp3.icns</string>
+			<string>audio</string>
 			<key>CFBundleTypeName</key>
 			<string>MPEG Audio Layer 3</string>
 			<key>CFBundleTypeRole</key>
@@ -516,7 +500,7 @@
 				<string>m4v</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>m4v.icns</string>
+			<string>mp4</string>
 			<key>CFBundleTypeName</key>
 			<string>MPEG-4 File</string>
 			<key>CFBundleTypeRole</key>
@@ -528,7 +512,7 @@
 				<string>m4a</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>m4a.icns</string>
+			<string>audio</string>
 			<key>CFBundleTypeName</key>
 			<string>MPEG-4 Audio File</string>
 			<key>CFBundleTypeRole</key>
@@ -540,7 +524,7 @@
 				<string>3gp</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>movie.icns</string>
+			<string>3gp.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>3GPP File</string>
 			<key>CFBundleTypeRole</key>
@@ -564,7 +548,7 @@
 				<string>mka</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>audio.icns</string>
+			<string>mkv.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Matroska Audio File</string>
 			<key>CFBundleTypeRole</key>
@@ -600,7 +584,7 @@
 				<string>mks</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>generic.icns</string>
+			<string>mkv.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Matroska Elementry Stream</string>
 			<key>CFBundleTypeRole</key>
@@ -613,7 +597,7 @@
 				<string>ass</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>subtitle.icns</string>
+			<string>subtitles.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Sub Station Alpha Subtitle File</string>
 			<key>CFBundleTypeRole</key>
@@ -629,7 +613,7 @@
 				<string>usf</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>subtitle.icns</string>
+			<string>subtitles.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>USF Subtitle File</string>
 			<key>CFBundleTypeRole</key>
@@ -645,7 +629,7 @@
 				<string>utf</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>subtitle.icns</string>
+			<string>subtitles.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>UTF Subtitle File</string>
 			<key>CFBundleTypeRole</key>
@@ -657,7 +641,7 @@
 				<string>srt</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>subtitle.icns</string>
+			<string>subtitles.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Subrip Subtitle File</string>
 			<key>CFBundleTypeRole</key>
@@ -673,7 +657,7 @@
 				<string>rt</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>subtitle.icns</string>
+			<string>subtitles.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>RealText Subtitle File</string>
 			<key>CFBundleTypeRole</key>
@@ -689,7 +673,7 @@
 				<string>smi</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>subtitle.icns</string>
+			<string>subtitles.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>SAMI Subtitle File</string>
 			<key>CFBundleTypeRole</key>
