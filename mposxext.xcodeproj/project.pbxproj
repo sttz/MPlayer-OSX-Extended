@@ -69,7 +69,6 @@
 		3A7A6B39139AB8AA006A8B4A /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7A6B38139AB8AA006A8B4A /* Carbon.framework */; };
 		3A7A6B3C139AB990006A8B4A /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7A6B3A139AB990006A8B4A /* libfontconfig.1.dylib */; };
 		3A7A6B3D139AB990006A8B4A /* libfreetype.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7A6B3B139AB990006A8B4A /* libfreetype.6.dylib */; };
-		3A7A6B50139ABBBB006A8B4A /* libiconv.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7A6B4F139ABBBB006A8B4A /* libiconv.2.dylib */; };
 		3A7A6B54139ABD51006A8B4A /* MPlayer OSX Help in Resources */ = {isa = PBXBuildFile; fileRef = 3A7A6B52139ABD51006A8B4A /* MPlayer OSX Help */; };
 		3A7A6B56139ABD6C006A8B4A /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 3A7A6B55139ABD6C006A8B4A /* fonts */; };
 		3A7A6B58139ABDCB006A8B4A /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7A6A70139AB735006A8B4A /* Sparkle.framework */; };
@@ -167,6 +166,23 @@
 		3AC9A74A139BFFCB001A3429 /* system-file-manager.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AC9A6F0139BFFCB001A3429 /* system-file-manager.png */; };
 		3AC9A74B139BFFCB001A3429 /* video-x-generic.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AC9A6F1139BFFCB001A3429 /* video-x-generic.png */; };
 		3ACDFE3F139AB3D900275362 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ACDFE3E139AB3D900275362 /* Cocoa.framework */; };
+		9215958A13F49EC700F0ABCF /* mkv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9215958913F49EC700F0ABCF /* mkv.icns */; };
+		92614C81140EBF5400AA8103 /* libiconv.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92614C80140EBF5400AA8103 /* libiconv.2.dylib */; };
+		92E8E403141D1E4800FFA813 /* 3gp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92E8E3F6141D1E4800FFA813 /* 3gp.icns */; };
+		92E8E404141D1E4800FFA813 /* asf.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92E8E3F7141D1E4800FFA813 /* asf.icns */; };
+		92E8E405141D1E4800FFA813 /* avi.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92E8E3F8141D1E4800FFA813 /* avi.icns */; };
+		92E8E406141D1E4800FFA813 /* cue.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92E8E3F9141D1E4800FFA813 /* cue.icns */; };
+		92E8E407141D1E4800FFA813 /* divx.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92E8E3FA141D1E4800FFA813 /* divx.icns */; };
+		92E8E408141D1E4800FFA813 /* dv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92E8E3FB141D1E4800FFA813 /* dv.icns */; };
+		92E8E409141D1E4800FFA813 /* flv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92E8E3FC141D1E4800FFA813 /* flv.icns */; };
+		92E8E40A141D1E4800FFA813 /* mov.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92E8E3FD141D1E4800FFA813 /* mov.icns */; };
+		92E8E40B141D1E4800FFA813 /* mpeg.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92E8E3FE141D1E4800FFA813 /* mpeg.icns */; };
+		92E8E40C141D1E4800FFA813 /* ogg.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92E8E3FF141D1E4800FFA813 /* ogg.icns */; };
+		92E8E40D141D1E4800FFA813 /* rm.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92E8E400141D1E4800FFA813 /* rm.icns */; };
+		92E8E40E141D1E4800FFA813 /* vob.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92E8E401141D1E4800FFA813 /* vob.icns */; };
+		92E8E40F141D1E4800FFA813 /* wmv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92E8E402141D1E4800FFA813 /* wmv.icns */; };
+		92E8E411141D1E9000FFA813 /* mp4.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92E8E410141D1E9000FFA813 /* mp4.icns */; };
+		92E8E413141D1F2E00FFA813 /* m4v.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92E8E412141D1F2E00FFA813 /* m4v.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -300,7 +316,6 @@
 		3A7A6B38139AB8AA006A8B4A /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = SDKs/MacOSX10.6.sdk/System/Library/Frameworks/Carbon.framework; sourceTree = DEVELOPER_DIR; };
 		3A7A6B3A139AB990006A8B4A /* libfontconfig.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfontconfig.1.dylib; path = binaries/mpextended.mpBinaries/Contents/MacOS/lib/libfontconfig.1.dylib; sourceTree = "<group>"; };
 		3A7A6B3B139AB990006A8B4A /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.6.dylib; path = binaries/mpextended.mpBinaries/Contents/MacOS/lib/libfreetype.6.dylib; sourceTree = "<group>"; };
-		3A7A6B4F139ABBBB006A8B4A /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = SDKs/MacOSX10.6.sdk/usr/lib/libiconv.2.dylib; sourceTree = DEVELOPER_DIR; };
 		3A7A6B53139ABD51006A8B4A /* en */ = {isa = PBXFileReference; lastKnownFileType = folder; name = en; path = "en.lproj/MPlayer OSX Help"; sourceTree = "<group>"; };
 		3A7A6B55139ABD6C006A8B4A /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		3A7A6B79139ABE20006A8B4A /* example.mpBinaries */ = {isa = PBXFileReference; lastKnownFileType = folder; path = example.mpBinaries; sourceTree = "<group>"; };
@@ -402,6 +417,23 @@
 		3ACDFE41139AB3D900275362 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		3ACDFE42139AB3D900275362 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		3ACDFE43139AB3D900275362 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		9215958913F49EC700F0ABCF /* mkv.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mkv.icns; sourceTree = "<group>"; };
+		92614C80140EBF5400AA8103 /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = binaries/mpextended.mpBinaries/Contents/MacOS/lib/libiconv.2.dylib; sourceTree = "<group>"; };
+		92E8E3F6141D1E4800FFA813 /* 3gp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = 3gp.icns; sourceTree = "<group>"; };
+		92E8E3F7141D1E4800FFA813 /* asf.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = asf.icns; sourceTree = "<group>"; };
+		92E8E3F8141D1E4800FFA813 /* avi.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = avi.icns; sourceTree = "<group>"; };
+		92E8E3F9141D1E4800FFA813 /* cue.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = cue.icns; sourceTree = "<group>"; };
+		92E8E3FA141D1E4800FFA813 /* divx.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = divx.icns; sourceTree = "<group>"; };
+		92E8E3FB141D1E4800FFA813 /* dv.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = dv.icns; sourceTree = "<group>"; };
+		92E8E3FC141D1E4800FFA813 /* flv.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = flv.icns; sourceTree = "<group>"; };
+		92E8E3FD141D1E4800FFA813 /* mov.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mov.icns; sourceTree = "<group>"; };
+		92E8E3FE141D1E4800FFA813 /* mpeg.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mpeg.icns; sourceTree = "<group>"; };
+		92E8E3FF141D1E4800FFA813 /* ogg.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ogg.icns; sourceTree = "<group>"; };
+		92E8E400141D1E4800FFA813 /* rm.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = rm.icns; sourceTree = "<group>"; };
+		92E8E401141D1E4800FFA813 /* vob.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = vob.icns; sourceTree = "<group>"; };
+		92E8E402141D1E4800FFA813 /* wmv.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = wmv.icns; sourceTree = "<group>"; };
+		92E8E410141D1E9000FFA813 /* mp4.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mp4.icns; sourceTree = "<group>"; };
+		92E8E412141D1F2E00FFA813 /* m4v.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = m4v.icns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -409,9 +441,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92614C81140EBF5400AA8103 /* libiconv.2.dylib in Frameworks */,
 				3AC9A683139BF679001A3429 /* AppKit.framework in Frameworks */,
 				3AC9A681139BF667001A3429 /* Foundation.framework in Frameworks */,
-				3A7A6B50139ABBBB006A8B4A /* libiconv.2.dylib in Frameworks */,
 				3A7A6B39139AB8AA006A8B4A /* Carbon.framework in Frameworks */,
 				3A7A6B37139AB8A2006A8B4A /* OpenGL.framework in Frameworks */,
 				3A7A6B35139AB89D006A8B4A /* QuartzCore.framework in Frameworks */,
@@ -718,6 +750,22 @@
 		3AC9A6B1139BFFCB001A3429 /* icons */ = {
 			isa = PBXGroup;
 			children = (
+				92E8E412141D1F2E00FFA813 /* m4v.icns */,
+				92E8E410141D1E9000FFA813 /* mp4.icns */,
+				92E8E3F6141D1E4800FFA813 /* 3gp.icns */,
+				92E8E3F7141D1E4800FFA813 /* asf.icns */,
+				92E8E3F8141D1E4800FFA813 /* avi.icns */,
+				92E8E3F9141D1E4800FFA813 /* cue.icns */,
+				92E8E3FA141D1E4800FFA813 /* divx.icns */,
+				92E8E3FB141D1E4800FFA813 /* dv.icns */,
+				92E8E3FC141D1E4800FFA813 /* flv.icns */,
+				92E8E3FD141D1E4800FFA813 /* mov.icns */,
+				92E8E3FE141D1E4800FFA813 /* mpeg.icns */,
+				92E8E3FF141D1E4800FFA813 /* ogg.icns */,
+				92E8E400141D1E4800FFA813 /* rm.icns */,
+				92E8E401141D1E4800FFA813 /* vob.icns */,
+				92E8E402141D1E4800FFA813 /* wmv.icns */,
+				9215958913F49EC700F0ABCF /* mkv.icns */,
 				3AC9A6B2139BFFCB001A3429 /* audio.icns */,
 				3AC9A6B3139BFFCB001A3429 /* binaries.icns */,
 				3AC9A6B4139BFFCB001A3429 /* icon.icns */,
@@ -829,9 +877,9 @@
 		3ACDFE3D139AB3D900275362 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				92614C80140EBF5400AA8103 /* libiconv.2.dylib */,
 				3AC9A682139BF679001A3429 /* AppKit.framework */,
 				3AC9A680139BF667001A3429 /* Foundation.framework */,
-				3A7A6B4F139ABBBB006A8B4A /* libiconv.2.dylib */,
 				3A7A6B3A139AB990006A8B4A /* libfontconfig.1.dylib */,
 				3A7A6B3B139AB990006A8B4A /* libfreetype.6.dylib */,
 				3A7A6B38139AB8AA006A8B4A /* Carbon.framework */,
@@ -1012,6 +1060,22 @@
 				3AC9A74B139BFFCB001A3429 /* video-x-generic.png in Resources */,
 				3A4C776313A54D69000EDD78 /* skipLeftTemplate.png in Resources */,
 				3A4C776413A54D69000EDD78 /* skipRightTemplate.png in Resources */,
+				9215958A13F49EC700F0ABCF /* mkv.icns in Resources */,
+				92E8E403141D1E4800FFA813 /* 3gp.icns in Resources */,
+				92E8E404141D1E4800FFA813 /* asf.icns in Resources */,
+				92E8E405141D1E4800FFA813 /* avi.icns in Resources */,
+				92E8E406141D1E4800FFA813 /* cue.icns in Resources */,
+				92E8E407141D1E4800FFA813 /* divx.icns in Resources */,
+				92E8E408141D1E4800FFA813 /* dv.icns in Resources */,
+				92E8E409141D1E4800FFA813 /* flv.icns in Resources */,
+				92E8E40A141D1E4800FFA813 /* mov.icns in Resources */,
+				92E8E40B141D1E4800FFA813 /* mpeg.icns in Resources */,
+				92E8E40C141D1E4800FFA813 /* ogg.icns in Resources */,
+				92E8E40D141D1E4800FFA813 /* rm.icns in Resources */,
+				92E8E40E141D1E4800FFA813 /* vob.icns in Resources */,
+				92E8E40F141D1E4800FFA813 /* wmv.icns in Resources */,
+				92E8E411141D1E9000FFA813 /* mp4.icns in Resources */,
+				92E8E413141D1F2E00FFA813 /* m4v.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1187,6 +1251,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					binaries/mpextended.mpBinaries/Contents/MacOS/lib,
+					"\"$(SRCROOT)/binaries/mpextended.mpBinaries/Contents/MacOS/lib\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1217,6 +1282,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					binaries/mpextended.mpBinaries/Contents/MacOS/lib,
+					"\"$(SRCROOT)/binaries/mpextended.mpBinaries/Contents/MacOS/lib\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				OTHER_LDFLAGS = "-licucore";
