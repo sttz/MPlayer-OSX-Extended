@@ -66,6 +66,7 @@ PlayListController, MenuController, InspectorController, MovieInfo;
 	
 	// Player controllers
 	NSMutableArray *players;
+	PlayerController *activePlayer;
 	
 	id<MovieInfoProvider> movieInfoProvider;
 }

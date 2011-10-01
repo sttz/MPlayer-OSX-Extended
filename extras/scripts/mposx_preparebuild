@@ -67,7 +67,7 @@ export PATH="$scripts_path:$PATH"
 
 # Set deployment target and SDK
 export MACOSX_DEPLOYMENT_TARGET=$deployment_target
-export CFLAGS="-mmacosx-version-min=${deployment_target} -isystem ${sdk_path}"
+export CFLAGS="-mmacosx-version-min=${deployment_target} -isysroot ${sdk_path}"
 export LDFLAGS="-mmacosx-version-min=${deployment_target} -isysroot ${sdk_path}"
 export LDFLAGS="$LDFLAGS -Wl,-syslibroot,${sdk_path}"
 export CXXFLAGS="-mmacosx-version-min=${deployment_target} -isysroot ${sdk_path}"
