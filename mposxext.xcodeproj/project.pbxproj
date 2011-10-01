@@ -419,6 +419,7 @@
 		3ACDFE43139AB3D900275362 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9215958913F49EC700F0ABCF /* mkv.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mkv.icns; sourceTree = "<group>"; };
 		92614C80140EBF5400AA8103 /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = binaries/mpextended.mpBinaries/Contents/MacOS/lib/libiconv.2.dylib; sourceTree = "<group>"; };
+		9293505C1436C40800A65F23 /* Icon Source */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Icon Source"; sourceTree = "<group>"; };
 		92E8E3F6141D1E4800FFA813 /* 3gp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = 3gp.icns; sourceTree = "<group>"; };
 		92E8E3F7141D1E4800FFA813 /* asf.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = asf.icns; sourceTree = "<group>"; };
 		92E8E3F8141D1E4800FFA813 /* avi.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = avi.icns; sourceTree = "<group>"; };
@@ -701,6 +702,7 @@
 		3AC9A692139BFFCB001A3429 /* graphics */ = {
 			isa = PBXGroup;
 			children = (
+				9293505C1436C40800A65F23 /* Icon Source */,
 				3AC9A693139BFFCB001A3429 /* fullscreen */,
 				3AC9A6B1139BFFCB001A3429 /* icons */,
 				3AC9A6B7139BFFCB001A3429 /* inset.png */,
