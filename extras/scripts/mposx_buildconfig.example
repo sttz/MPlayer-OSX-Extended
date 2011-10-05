@@ -15,3 +15,6 @@ build_root="/Users/example/mplayer/usr/local"
 
 # Path to the MPlayer OSX source root
 mplayerosx_path="/Users/example/dev/mplayerosx"
+
+# Path to the directory releases are stored
+releases_path="/Users/example/dev/releases"
