@@ -28,7 +28,7 @@
 			<key>CFBundleTypeIconFile</key>
 			<string>ape</string>
 			<key>CFBundleTypeName</key>
-			<string>Monkey&apos;s Audio Lossless Audio Compression</string>
+			<string>Monkey's Audio Lossless Audio Compression</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>LSTypeIsPackage</key>
@@ -175,7 +175,7 @@
 				<string>aac</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>acc</string>
+			<string>aac</string>
 			<key>CFBundleTypeName</key>
 			<string>AAC file</string>
 			<key>CFBundleTypeRole</key>

@@ -19,7 +19,7 @@
    sodipodi:docname="audio.svg"><metadata
      id="metadata8"><rdf:RDF><cc:Work
          rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><defs
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
      id="defs6"><linearGradient
        x1="0"
        y1="0"
@@ -842,8 +842,8 @@
      inkscape:zoom="0.57894368"
      inkscape:cx="432.97791"
      inkscape:cy="395.77527"
-     inkscape:window-x="461"
-     inkscape:window-y="116"
+     inkscape:window-x="504"
+     inkscape:window-y="181"
      inkscape:window-maximized="0"
      inkscape:current-layer="g10" /><g
      id="g10"
@@ -986,5 +986,18 @@
      nodetypes="ccccccc"
      d="m -11.175208,4.6797783 5.2225458,0 5.9188864,-5.05590473 0,19.44462443 -5.9188864,-5.055503 -5.2225458,0 0,-9.3332167 z"
      style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:0;stroke-dashoffset:1009.13382508"
-     inkscape:connector-curvature="0" /></g>
+     inkscape:connector-curvature="0" /></g><text
+   xml:space="preserve"
+   style="font-size:57.59999847px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Minion Pro;-inkscape-font-specification:Minion Pro Medium"
+   x="7142.1011"
+   y="-7051.2827"
+   id="text3264"
+   sodipodi:linespacing="125%"
+   transform="scale(1,-1)"><tspan
+     sodipodi:role="line"
+     id="tspan3266"
+     x="7142.1011"
+     y="-7051.2827"
+     style="font-weight:500;fill:#6e6d6d;fill-opacity:1;-inkscape-font-specification:Minion Pro Medium">WAV</tspan></text>
+
 </g></svg>
