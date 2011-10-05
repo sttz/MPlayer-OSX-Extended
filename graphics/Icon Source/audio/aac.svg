@@ -16,7 +16,7 @@
    width="640"
    height="640"
    xml:space="preserve"
-   sodipodi:docname="ape.svg"
+   sodipodi:docname="aac.svg"
    inkscape:export-filename="/Users/bilalh/Programming/Projects/ forks/MPlayer-OSX-Extended/graphics/Icon Source/audio/wav.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"><metadata
@@ -842,11 +842,11 @@
      inkscape:window-height="624"
      id="namedview4"
      showgrid="false"
-     inkscape:zoom="0.57894368"
-     inkscape:cx="432.97791"
+     inkscape:zoom="0.59330678"
+     inkscape:cx="320"
      inkscape:cy="395.77527"
-     inkscape:window-x="1045"
-     inkscape:window-y="507"
+     inkscape:window-x="1195"
+     inkscape:window-y="515"
      inkscape:window-maximized="0"
      inkscape:current-layer="g10" /><g
      id="g10"
@@ -860,7 +860,7 @@
    height="409.60001"
    width="409.60001"
    transform="scale(1,-1)"
-   inkscape:export-filename="/Users/bilalh/Programming/Projects/ forks/MPlayer-OSX-Extended/graphics/Icon Source/audio/png/ape.png"
+   inkscape:export-filename="/Users/bilalh/Programming/Projects/ forks/MPlayer-OSX-Extended/graphics/Icon Source/audio/png/aac.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90" /><rect
    style="fill:none;fill-opacity:1;stroke:none"
@@ -1017,5 +1017,6 @@
      x="7142.1011"
      y="-7051.2827"
      style="font-weight:500;fill:#6e6d6d;fill-opacity:1;-inkscape-font-specification:Minion Pro Medium">AAC</tspan></text>
+
 
 </g></svg>
