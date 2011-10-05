@@ -1,0 +1,91 @@
+#!/bin/bash
+# MPlayer OSX sign update
+# Adrian Stutz 2009
+
+set -o errexit
+
+# **************************************************** #
+# *** CONFIG
+
+buildconfig=$(which mposx_buildconfig)
+if [ $? -eq 0 ]; then
+	# Load global config
+	source mposx_buildconfig
+else
+	echo Error: Unable to load global config mposx_buildconfig; exit 1;
+fi
+
+archive_filename_prefix="MPlayer-OSX-Extended_"
+keychain_privkey_name="MPlayerOSX Sparkle Private Key"
+payload_path="MPlayer OSX Extended.app"
+
+# **************************************************** #
+# *** OPTION PARSING
+
+usage() {
+cat << EOF
+Usage: source $0 payload
+
+General options:
+    -h, --help                  display this help
+    
+Package an MPE build for release and compute the necessary 
+sparkle signature and info needed for autoupdate.
+EOF
+}
+
+# Parse command line
+while [ -n "$1" ]; do
+	case $1 in
+		-h | --help )		 				usage
+							 				exit
+							 				;;
+		* )					 				payload_path=$1
+	esac
+	shift
+done
+
+# **************************************************** #
+# *** RELEASE PROCESSING
+
+# Check input payload
+if [ ! -d "$payload_path" ]; then
+	echo Error: Release payload "'$payload_path'" could not be found.; exit 1;
+fi
+
+cd "$(dirname "$payload_path")"
+payload_basepath=$(pwd)
+payload_filename=$(basename "$payload_path")
+
+# Get info from Info.plist
+plist_path="$payload_basepath/$payload_filename/Contents/Info"
+VERSION=$(defaults read "$plist_path" CFBundleShortVersionString)
+BUILD_ID=$(defaults read "$plist_path" CFBundleVersion)
+
+# Compress payload
+archive_filename="$archive_filename_prefix$VERSION.zip"
+
+# Check for existing release
+if [ -f "$releases_path/$archive_filename" ]; then
+	echo Error: Release archive "$archive_filename" already exists in "$releases_path".; exit 1;
+fi
+
+zip -ryq "$releases_path/$archive_filename" "$payload_filename"
+
+# Calculate signature
+SIZE=$(stat -f %z "$releases_path/$archive_filename")
+SIGNATURE=$(
+openssl dgst -sha1 -binary < "$releases_path/$archive_filename" \
+| openssl dgst -dss1 -sign <(security find-generic-password -g -s "$keychain_privkey_name" 2>&1 1>/dev/null | perl -pe '($_) = /"(.+)"/; s/\\012/\n/g') \
+| openssl enc -base64
+)
+
+[ $SIGNATURE ] || { echo Error: Unable to load signing private key with name "'$keychain_privkey_name'" from keychain; exit 1; }
+
+# Output sparkle information
+cat <<EOF
+version = $BUILD_ID
+shortVersionString = $VERSION
+length = $SIZE
+dsaSignature = $SIGNATURE
+EOF
