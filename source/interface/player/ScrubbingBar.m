@@ -10,7 +10,7 @@
 #import "ScrubbingBar.h"
 #import "Debug.h"
 
-@implementation ScrubbingBar:NSProgressIndicator
+@implementation ScrubbingBar
 - (void)awakeFromNib
 {
 	myStyle = MPEScrubbingBarEmptyStyle;
@@ -22,7 +22,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self 
 		selector:@selector(redrawAnim) name:NSViewFrameDidChangeNotification object:nil];
 	[self redrawAnim];
-	
+	    
 	[self setNeedsDisplay:YES];
 }
 
@@ -164,27 +164,25 @@
 {
 	myStyle = style;
 	if (style == MPEScrubbingBarProgressStyle)
-		[self startMyAnimation];
+		[self startAnimation:self];
 	else
-		[self stopMyAnimation];
+		[self stopAnimation:self];
 	[self setNeedsDisplay:YES];
 }
 
-- (void)startMyAnimation
+- (void)startAnimation:(id)sender
 {
-	[self startAnimation:self];
-	if (animationTimer == NULL) {
+    if (animationTimer == NULL) {
 		animationTimer = [[NSTimer scheduledTimerWithTimeInterval:0.05 
-								target:self selector:@selector(animate:) 
-								userInfo:nil repeats:YES] retain];
+                                                           target:self selector:@selector(animate:) 
+                                                         userInfo:nil repeats:YES] retain];
 		
 	}
 }
 
-- (void)stopMyAnimation
+- (void)stopAnimation:(id)sender
 {
-	[self stopAnimation:self];
-	if (animationTimer) {
+    if (animationTimer) {
 		[animationTimer invalidate];
 		[animationTimer release];
 		animationTimer = NULL;		
