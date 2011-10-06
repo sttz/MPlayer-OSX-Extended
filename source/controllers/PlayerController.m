@@ -1844,6 +1844,11 @@
 	else if ((keyHandled = [characters isEqualToString:@"o"]))
 		[self cycleOSD:self];
 	
+	// Set OSD to 2 (status bar messages)
+	else if ((keyHandled = [characters isEqualToString:@"O"])){
+		[[movieInfo prefs] setInteger:2 forKey:MPEOSDLevel];
+	}
+	
 	// Audio Delay
 	else if ((keyHandled = ([characters isEqualToString:@"+"]
 						   || [characters isEqualToString:@"="])))
@@ -1868,6 +1873,11 @@
 		[self setPlaybackSpeed:[PREFS floatForKey:MPEPlaybackSpeedMultiplierBig] multiply:YES];
 	else if ((keyHandled = ([theEvent keyCode] == kVK_Delete)))
 		[self setPlaybackSpeed:1.0 multiply:NO];
+	
+	else if ((keyHandled = [characters isEqualToString:@","]))
+		[myPlayer sendCommand:@"pausing seek -0.04"withOSD:MISurpressCommandOutputConditionally andPausing:MICommandPausingNone];
+	
+	// Other 
 	
 	[Debug log:ASL_LEVEL_ERR withMessage:@"keyHandled=%d keyCode=%d",keyHandled,[theEvent keyCode]];
 	return keyHandled;
