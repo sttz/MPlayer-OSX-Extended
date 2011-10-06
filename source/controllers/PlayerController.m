@@ -1185,7 +1185,7 @@
 - (void)cycleAudioStreamsWithOSD:(BOOL)showOSD {
 	
 	[myPlayer sendCommands:[NSArray arrayWithObjects:
-							@"switch_audio -2",
+							@"switch_audio",
 							@"get_property switch_audio",
 							nil]
 				   withOSD:(showOSD ? MISurpressCommandOutputNever : MISurpressCommandOutputConditionally)
