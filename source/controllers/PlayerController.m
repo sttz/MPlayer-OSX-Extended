@@ -1847,6 +1847,14 @@
 		[self setPlaybackSpeed:[PREFS floatForKey:MPEPlaybackSpeedMultiplierBig] multiply:YES];
 	else if ((keyHandled = ([theEvent keyCode] == kVK_Delete)))
 		[self setPlaybackSpeed:1.0 multiply:NO];
+
+	
+	// Mplayer command line like chapter shortcuts
+
+	else if ((keyHandled = [characters isEqualToString:@"!"]))
+		[self seekPrevious:self];
+	else if ((keyHandled = [characters isEqualToString:@"@"]))
+		[self seekNext:self];
 	
 	[Debug log:ASL_LEVEL_ERR withMessage:@"keyHandled=%d keyCode=%d",keyHandled,[theEvent keyCode]];
 	return keyHandled;
