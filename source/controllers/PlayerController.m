@@ -519,7 +519,7 @@
 		[videoOpenGLView setWindowSizeMode:WSM_SCALE withValue:1];
 }
 //************************************************************************************
-#pragma mark - Actions
+#pragma mark - Actions - Volume 
 //************************************************************************************
 // Apply volume and send it to mplayer
 - (void) setVolume:(double)volume
@@ -613,6 +613,7 @@
 	}
 }
 
+#pragma mark - Pausing/Playing
 /************************************************************************************/
 - (IBAction)playPause:(id)sender
 {
@@ -637,6 +638,7 @@
 	[myPlayer sendCommand:@"frame_step"];
 }
 
+#pragma mark - Looping 
 /************************************************************************************/
 - (void) setLoopMovie:(BOOL)loop
 {
@@ -661,6 +663,7 @@
 		[menuController->loopMenuItem setState:NSOffState];
 }
 
+#pragma mark - Seeking
 /************************************************************************************/
 - (void) seek:(float)seconds mode:(int)aMode
 {
@@ -761,6 +764,7 @@
 	}
 }
 
+#pragma mark - Chapters
 /************************************************************************************/
 - (void)skipToNextChapter {
 	
@@ -795,6 +799,7 @@
 	}
 }
 
+#pragma mark - Stop
 /************************************************************************************/
 - (IBAction)stop:(id)sender
 {
@@ -806,6 +811,7 @@
 	[playListController updateView];
 }
 
+#pragma mark - Remote
 /************************************************************************************/
 - (void) executeHoldActionForRemoteButton:(NSNumber*)buttonIdentifierNumber
 {
@@ -901,11 +907,13 @@
 			break;
     }
 }
+#pragma mark - Windows
 /************************************************************************************/
 - (NSWindow *) playerWindow
 {
 	return [[playerWindow retain] autorelease];
 }
+
 /************************************************************************************/
 - (void)setOntop:(BOOL)aBool
 {
@@ -1025,6 +1033,7 @@
 	}
 	
 }
+#pragma mark - Menus
 /************************************************************************************/
 - (void)fillStreamMenus {
 	
@@ -1179,6 +1188,8 @@
 				nil]];
 	
 }
+
+#pragma mark - Cycling
 - (IBAction)cycleAudioStreams:(id)sender {
 	
 	[self cycleAudioStreamsWithOSD:YES];
@@ -1225,6 +1236,8 @@
 	
 	[[movieInfo prefs] setInteger:osdLevel forKey:MPEOSDLevel];
 }
+
+#pragma mark - Delay
 /************************************************************************************/
 - (void)setAudioDelay:(float)delay relative:(BOOL)setRelative {
 	
@@ -1259,6 +1272,8 @@
 	
 	[[movieInfo prefs] setFloat:speed forKey:MPEPlaybackSpeed];
 }
+
+#pragma mark - Streams
 /************************************************************************************/
 - (void)newVideoStreamId:(int)streamId {
 	
@@ -1329,6 +1344,8 @@
 		[[[subtitleWindowItem submenu] itemAtIndex:0] setState:NSOnState];
 	}
 }
+
+#pragma mark - Chapter menu
 /************************************************************************************/
 - (void)clearChapterMenu {
 	
@@ -1407,6 +1424,7 @@
 	
 	currentChapter = 0;
 }
+#pragma mark - Other Menu
 /************************************************************************************/
 - (BOOL) isFullscreen {
 	return [videoOpenGLView isFullscreen];
@@ -1761,6 +1779,8 @@
 				objectForKey:@"SBClickedValue"] floatValue] mode:theMode];
 	}
 }
+
+#pragma mark - Key Handing
 
 // Handle additional keys not set as key equivalent
 - (BOOL)handleKeyEvent:(NSEvent *)theEvent
