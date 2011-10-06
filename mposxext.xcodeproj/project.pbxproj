@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3A1F02CD143277700095B4CC /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A1F02CC143277700095B4CC /* libiconv.dylib */; };
+		3A1F02CD143277700095B4CC /* libiconv.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A1F02CC143277700095B4CC /* libiconv.2.dylib */; };
 		3A4C775F13A51041000EDD78 /* ToggleEditLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A4C775E13A51041000EDD78 /* ToggleEditLabel.m */; };
 		3A4C776313A54D69000EDD78 /* skipLeftTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A4C776113A54D69000EDD78 /* skipLeftTemplate.png */; };
 		3A4C776413A54D69000EDD78 /* skipRightTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A4C776213A54D69000EDD78 /* skipRightTemplate.png */; };
@@ -222,7 +222,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3A1F02CC143277700095B4CC /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = SDKs/MacOSX10.7.sdk/usr/lib/libiconv.dylib; sourceTree = DEVELOPER_DIR; };
+		3A1F02CC143277700095B4CC /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = ../usr/local/Cellar/libiconv/1.14/lib/libiconv.2.dylib; sourceTree = DEVELOPER_DIR; };
 		3A4C775D13A51041000EDD78 /* ToggleEditLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToggleEditLabel.h; sourceTree = "<group>"; };
 		3A4C775E13A51041000EDD78 /* ToggleEditLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToggleEditLabel.m; sourceTree = "<group>"; };
 		3A4C776113A54D69000EDD78 /* skipLeftTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = skipLeftTemplate.png; sourceTree = "<group>"; };
@@ -463,7 +463,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A1F02CD143277700095B4CC /* libiconv.dylib in Frameworks */,
+				3A1F02CD143277700095B4CC /* libiconv.2.dylib in Frameworks */,
 				3AC9A683139BF679001A3429 /* AppKit.framework in Frameworks */,
 				3AC9A681139BF667001A3429 /* Foundation.framework in Frameworks */,
 				3A7A6B39139AB8AA006A8B4A /* Carbon.framework in Frameworks */,
@@ -910,7 +910,7 @@
 		3ACDFE3D139AB3D900275362 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3A1F02CC143277700095B4CC /* libiconv.dylib */,
+				3A1F02CC143277700095B4CC /* libiconv.2.dylib */,
 				3AC9A682139BF679001A3429 /* AppKit.framework */,
 				3AC9A680139BF667001A3429 /* Foundation.framework */,
 				3A7A6B3A139AB990006A8B4A /* libfontconfig.1.dylib */,
