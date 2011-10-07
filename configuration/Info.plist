@@ -597,7 +597,7 @@
 				<string>ass</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>subtitles.icns</string>
+			<string>ssa.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Sub Station Alpha Subtitle File</string>
 			<key>CFBundleTypeRole</key>
@@ -641,7 +641,7 @@
 				<string>srt</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>subtitles.icns</string>
+			<string>srt</string>
 			<key>CFBundleTypeName</key>
 			<string>Subrip Subtitle File</string>
 			<key>CFBundleTypeRole</key>

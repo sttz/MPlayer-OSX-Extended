@@ -170,6 +170,8 @@
 		3AC9A748139BFFCB001A3429 /* dialog-warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AC9A6EE139BFFCB001A3429 /* dialog-warning.png */; };
 		3ACDFE3F139AB3D900275362 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ACDFE3E139AB3D900275362 /* Cocoa.framework */; };
 		9215958A13F49EC700F0ABCF /* mkv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9215958913F49EC700F0ABCF /* mkv.icns */; };
+		92904706143FC27E00370BD0 /* ssa.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92904704143FC27E00370BD0 /* ssa.icns */; };
+		92904707143FC27E00370BD0 /* srt.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92904705143FC27E00370BD0 /* srt.icns */; };
 		92BB4C79143D04D100A0AB00 /* ape.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92BB4C73143D04D100A0AB00 /* ape.icns */; };
 		92BB4C7A143D04D100A0AB00 /* m4a.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92BB4C74143D04D100A0AB00 /* m4a.icns */; };
 		92BB4C7B143D04D100A0AB00 /* mka.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92BB4C75143D04D100A0AB00 /* mka.icns */; };
@@ -432,6 +434,8 @@
 		3ACDFE42139AB3D900275362 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		3ACDFE43139AB3D900275362 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9215958913F49EC700F0ABCF /* mkv.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mkv.icns; sourceTree = "<group>"; };
+		92904704143FC27E00370BD0 /* ssa.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ssa.icns; sourceTree = "<group>"; };
+		92904705143FC27E00370BD0 /* srt.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = srt.icns; sourceTree = "<group>"; };
 		92BB4C73143D04D100A0AB00 /* ape.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ape.icns; sourceTree = "<group>"; };
 		92BB4C74143D04D100A0AB00 /* m4a.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = m4a.icns; sourceTree = "<group>"; };
 		92BB4C75143D04D100A0AB00 /* mka.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mka.icns; sourceTree = "<group>"; };
@@ -772,6 +776,8 @@
 		3AC9A6B1139BFFCB001A3429 /* icons */ = {
 			isa = PBXGroup;
 			children = (
+				92904704143FC27E00370BD0 /* ssa.icns */,
+				92904705143FC27E00370BD0 /* srt.icns */,
 				92BB4C83143D087B00A0AB00 /* flac.icns */,
 				92BB4C81143D085E00A0AB00 /* aiff.icns */,
 				92BB4C7F143D05F800A0AB00 /* aac.icns */,
@@ -1120,6 +1126,8 @@
 				92BB4C80143D05F800A0AB00 /* aac.icns in Resources */,
 				92BB4C82143D085E00A0AB00 /* aiff.icns in Resources */,
 				92BB4C84143D087B00A0AB00 /* flac.icns in Resources */,
+				92904706143FC27E00370BD0 /* ssa.icns in Resources */,
+				92904707143FC27E00370BD0 /* srt.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
