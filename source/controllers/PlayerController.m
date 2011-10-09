@@ -46,6 +46,7 @@
 @implementation PlayerController
 @synthesize myPlayer, playListController, videoOpenGLView, movieInfo;
 
+#pragma mark - Init
 /************************************************************************************/
 -(id)init
 {
@@ -216,10 +217,10 @@
 	[super dealloc];
 }
 
-/************************************************************************************
- DRAG & DROP
- ************************************************************************************/
- 
+//************************************************************************************
+#pragma mark - Drag & Drop
+//************************************************************************************
+
  /*
 	Validate Drop Opperation on player window
  */
@@ -315,9 +316,9 @@
 	return YES;
 }
 
-/************************************************************************************
- INTERFACE
- ************************************************************************************/
+//************************************************************************************
+#pragma mark - Interface
+//************************************************************************************
 - (void) mplayerCrashed:(NSNotification *)notification
 {
 	NSAlert *alert = [NSAlert alertWithMessageText:@"Playback Error"
@@ -493,9 +494,9 @@
 		[myPlayer sendCommand:[NSString stringWithFormat:@"set_property sub_vob %i",subtitleVobStreamId]];
 }
 
-/************************************************************************************
- MISC
- ************************************************************************************/
+//************************************************************************************
+#pragma mark - Misc
+//************************************************************************************
 - (void) setMovieSize
 {
 	if ([PREFS integerForKey:MPEDisplaySize] == MPEDisplaySizeHalf)
@@ -517,9 +518,9 @@
 	} else
 		[videoOpenGLView setWindowSizeMode:WSM_SCALE withValue:1];
 }
-/************************************************************************************
- ACTIONS
- ************************************************************************************/
+//************************************************************************************
+#pragma mark - Actions - Volume 
+//************************************************************************************
 // Apply volume and send it to mplayer
 - (void) setVolume:(double)volume
 {
@@ -612,6 +613,7 @@
 	}
 }
 
+#pragma mark - Pausing/Playing
 /************************************************************************************/
 - (IBAction)playPause:(id)sender
 {
@@ -636,6 +638,7 @@
 	[myPlayer sendCommand:@"frame_step"];
 }
 
+#pragma mark - Looping 
 /************************************************************************************/
 - (void) setLoopMovie:(BOOL)loop
 {
@@ -660,6 +663,7 @@
 		[menuController->loopMenuItem setState:NSOffState];
 }
 
+#pragma mark - Seeking
 /************************************************************************************/
 - (void) seek:(float)seconds mode:(int)aMode
 {
@@ -760,6 +764,7 @@
 	}
 }
 
+#pragma mark - Chapters
 /************************************************************************************/
 - (void)skipToNextChapter {
 	
@@ -794,6 +799,7 @@
 	}
 }
 
+#pragma mark - Stop
 /************************************************************************************/
 - (IBAction)stop:(id)sender
 {
@@ -805,6 +811,7 @@
 	[playListController updateView];
 }
 
+#pragma mark - Remote
 /************************************************************************************/
 - (void) executeHoldActionForRemoteButton:(NSNumber*)buttonIdentifierNumber
 {
@@ -900,11 +907,13 @@
 			break;
     }
 }
+#pragma mark - Windows
 /************************************************************************************/
 - (NSWindow *) playerWindow
 {
 	return [[playerWindow retain] autorelease];
 }
+
 /************************************************************************************/
 - (void)setOntop:(BOOL)aBool
 {
@@ -1024,6 +1033,7 @@
 	}
 	
 }
+#pragma mark - Menus
 /************************************************************************************/
 - (void)fillStreamMenus {
 	
@@ -1178,6 +1188,8 @@
 				nil]];
 	
 }
+
+#pragma mark - Cycling
 - (IBAction)cycleAudioStreams:(id)sender {
 	
 	[self cycleAudioStreamsWithOSD:YES];
@@ -1224,6 +1236,8 @@
 	
 	[[movieInfo prefs] setInteger:osdLevel forKey:MPEOSDLevel];
 }
+
+#pragma mark - Delay
 /************************************************************************************/
 - (void)setAudioDelay:(float)delay relative:(BOOL)setRelative {
 	
@@ -1258,6 +1272,8 @@
 	
 	[[movieInfo prefs] setFloat:speed forKey:MPEPlaybackSpeed];
 }
+
+#pragma mark - Streams
 /************************************************************************************/
 - (void)newVideoStreamId:(int)streamId {
 	
@@ -1328,6 +1344,8 @@
 		[[[subtitleWindowItem submenu] itemAtIndex:0] setState:NSOnState];
 	}
 }
+
+#pragma mark - Chapter menu
 /************************************************************************************/
 - (void)clearChapterMenu {
 	
@@ -1406,6 +1424,7 @@
 	
 	currentChapter = 0;
 }
+#pragma mark - Other Menu
 /************************************************************************************/
 - (BOOL) isFullscreen {
 	return [videoOpenGLView isFullscreen];
@@ -1540,9 +1559,9 @@
 	else
 		[fullScreenControls cycleTimeDisplayMode:self];
 }
-/************************************************************************************
- NOTIFICATION OBSERVERS
- ************************************************************************************/
+//************************************************************************************
+#pragma mark - Notification Observers
+//************************************************************************************
 - (void) appShouldTerminate
 {
 	// save values before all is saved to disk and released
@@ -1761,6 +1780,8 @@
 	}
 }
 
+#pragma mark - Key Handing
+
 // Handle additional keys not set as key equivalent
 - (BOOL)handleKeyEvent:(NSEvent *)theEvent
 {
@@ -1823,6 +1844,11 @@
 	else if ((keyHandled = [characters isEqualToString:@"o"]))
 		[self cycleOSD:self];
 	
+	// Set OSD to 2 (status bar messages)
+	else if ((keyHandled = [characters isEqualToString:@"O"])){
+		[[movieInfo prefs] setInteger:2 forKey:MPEOSDLevel];
+	}
+	
 	// Audio Delay
 	else if ((keyHandled = ([characters isEqualToString:@"+"]
 						   || [characters isEqualToString:@"="])))
@@ -1847,14 +1873,26 @@
 		[self setPlaybackSpeed:[PREFS floatForKey:MPEPlaybackSpeedMultiplierBig] multiply:YES];
 	else if ((keyHandled = ([theEvent keyCode] == kVK_Delete)))
 		[self setPlaybackSpeed:1.0 multiply:NO];
+
+	
+	// Mplayer command line like chapter shortcuts
+
+	else if ((keyHandled = [characters isEqualToString:@"!"]))
+		[self seekPrevious:self];
+	else if ((keyHandled = [characters isEqualToString:@"@"]))
+		[self seekNext:self];
+	
+	// Other 
+	else if ((keyHandled = [characters isEqualToString:@","]))
+		[myPlayer sendCommand:@"pausing seek -0.04"withOSD:MISurpressCommandOutputConditionally andPausing:MICommandPausingNone];
+	
 	
 	[Debug log:ASL_LEVEL_ERR withMessage:@"keyHandled=%d keyCode=%d",keyHandled,[theEvent keyCode]];
 	return keyHandled;
 }
-
-/************************************************************************************
- DELEGATE METHODS
- ************************************************************************************/
+//************************************************************************************
+#pragma mark - Delegate Methods
+//************************************************************************************
 // main window delegates
 // exekutes when window zoom box is clicked
 - (BOOL)windowShouldZoom:(NSWindow *)sender toFrame:(NSRect)newFrame
