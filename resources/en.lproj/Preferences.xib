@@ -364,7 +364,7 @@
 						<reference ref="341385859"/>
 						<reference ref="374912468"/>
 					</object>
-					<object class="NSArray" key="NSToolbarIBDefaultItems">
+					<object class="NSMutableArray" key="NSToolbarIBDefaultItems">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<reference ref="193988672"/>
 						<reference ref="109390615"/>
@@ -379,12 +379,9 @@
 				</object>
 				<nil key="NSUserInterfaceItemIdentifier"/>
 				<object class="NSView" key="NSWindowView" id="1006">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<string key="NSFrameSize">{620, 452}</string>
-					<reference key="NSSuperview"/>
-					<reference key="NSWindow"/>
-					<reference key="NSNextKeyView"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
@@ -618,7 +615,7 @@ dG8gYSBjb3VwbGUgb2YgbWludXRlcy4</string>
 				<string key="NSClassName">LanguageTokenFieldDelegate</string>
 			</object>
 			<object class="NSCustomView" id="495739361">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1643,11 +1640,12 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					</object>
 				</object>
 				<string key="NSFrameSize">{620, 536}</string>
+				<reference key="NSSuperview"/>
 				<reference key="NSNextKeyView" ref="679579605"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 			<object class="NSCustomView" id="500521935">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2966,11 +2964,12 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					</object>
 				</object>
 				<string key="NSFrameSize">{620, 472}</string>
+				<reference key="NSSuperview"/>
 				<reference key="NSNextKeyView" ref="638463140"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 			<object class="NSCustomView" id="542152660">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -4496,11 +4495,12 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					</object>
 				</object>
 				<string key="NSFrameSize">{620, 423}</string>
+				<reference key="NSSuperview"/>
 				<reference key="NSNextKeyView" ref="564965965"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 			<object class="NSCustomView" id="211906935">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -4930,11 +4930,12 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					</object>
 				</object>
 				<string key="NSFrameSize">{620, 382}</string>
+				<reference key="NSSuperview"/>
 				<reference key="NSNextKeyView" ref="552189119"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 			<object class="NSCustomView" id="964890885">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -5336,10 +5337,11 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					</object>
 				</object>
 				<string key="NSFrameSize">{620, 384}</string>
+				<reference key="NSSuperview"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 			<object class="NSCustomView" id="387202449">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -5893,6 +5895,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						<reference key="NSHScroller" ref="307785528"/>
 						<reference key="NSContentView" ref="833698368"/>
 						<reference key="NSHeaderClipView" ref="607336625"/>
+						<reference key="NSCornerView" ref="827577924"/>
 						<bytes key="NSScrollAmts">QSAAAEEgAABBmAAAQZgAAA</bytes>
 					</object>
 					<object class="NSBox" id="103055315">
@@ -5937,11 +5940,12 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					</object>
 				</object>
 				<string key="NSFrameSize">{620, 512}</string>
+				<reference key="NSSuperview"/>
 				<reference key="NSNextKeyView" ref="377571280"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 			<object class="NSCustomView" id="693608299">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -6488,6 +6492,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 					</object>
 				</object>
 				<string key="NSFrameSize">{620, 391}</string>
+				<reference key="NSSuperview"/>
 				<reference key="NSNextKeyView" ref="895931873"/>
 				<string key="NSClassName">NSView</string>
 			</object>
@@ -9039,6 +9044,46 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 						</object>
 					</object>
 					<int key="connectionID">1465</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">requireRestart:</string>
+						<reference key="source" ref="785479483"/>
+						<reference key="destination" ref="1062755379"/>
+					</object>
+					<int key="connectionID">1466</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">requireRestart:</string>
+						<reference key="source" ref="785479483"/>
+						<reference key="destination" ref="325721655"/>
+					</object>
+					<int key="connectionID">1467</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">requireRestart:</string>
+						<reference key="source" ref="785479483"/>
+						<reference key="destination" ref="1012233433"/>
+					</object>
+					<int key="connectionID">1468</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">requireRestart:</string>
+						<reference key="source" ref="785479483"/>
+						<reference key="destination" ref="805866118"/>
+					</object>
+					<int key="connectionID">1469</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">requireRestart:</string>
+						<reference key="source" ref="785479483"/>
+						<reference key="destination" ref="612249583"/>
+					</object>
+					<int key="connectionID">1470</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -13464,7 +13509,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">1465</int>
+			<int key="maxID">1470</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
