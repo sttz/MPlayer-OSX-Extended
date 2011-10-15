@@ -14,6 +14,8 @@
     
 }
 
+// Return the filepath of the next episode based on filepath
+// returns nil if not found.
 +(NSString*) findNextEpisodePathFrom:(NSString*)filepath inFormats:(NSSet*)exts;
 
 @end
