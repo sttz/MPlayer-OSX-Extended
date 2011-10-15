@@ -29,6 +29,8 @@
 #import "PFMoveApplication.h"
 #import "RegexKitLite.h"
 
+#import "MovieMethods.h"
+
 NSString* const MPENewPlayerOpenedNotification           = @"MPENewPlayerOpenedNotification";
 NSString* const MPEPlayerClosedNotification              = @"MPEPlayerClosedNotification";
 NSString* const MPEPlayerNotificationPlayerControllerKey = @"MPEPlayerNotificationPlayerControllerKey";
@@ -39,9 +41,9 @@ NSString* const MPEPlayerStoppedNotification			 = @"MPEPlayerStoppedNotification
 
 static AppController *instance = nil;
 
-/************************************************************************************
- INITIALIZATION
- ************************************************************************************/
+/************************************************************************************/
+#pragma mark - INITIALIZATION
+/************************************************************************************/
 - (id)init
 {
 	if ((self = [super init])) {
@@ -120,9 +122,9 @@ static AppController *instance = nil;
 	return inspectorController;
 }
 
-/************************************************************************************
- INTERFACE
- ************************************************************************************/
+/************************************************************************************/
+#pragma mark - INTERFACE
+/************************************************************************************/
 - (NSUserDefaults *) preferences
 {
 	return [NSUserDefaults standardUserDefaults];
@@ -257,9 +259,9 @@ static AppController *instance = nil;
 	}
 }
 
-/************************************************************************************
- ACTIONS
- ************************************************************************************/
+/************************************************************************************/
+#pragma mark - ACTIONS
+/************************************************************************************/
 - (IBAction) openFile:(id)sender
 {
 	NSString *theFile;
@@ -267,9 +269,14 @@ static AppController *instance = nil;
 	// present open dialog
 	theFile = [self openDialogForType:MP_DIALOG_MEDIA];
 	
-	if (theFile) {
+	[self openFilePath:theFile];
+}
+
+- (void) openFilePath:(NSString*)filepath
+{
+	if (filepath) {
 		// if any file, create new item and play it
-		MovieInfo *item = [MovieInfo movieInfoWithPathToFile:theFile];
+		MovieInfo *item = [MovieInfo movieInfoWithPathToFile:filepath];
 		// apply selection from binary selection popup
 		NSString *binary = [preferencesController identifierFromSelectionInView];
 		if (binary)
@@ -277,6 +284,8 @@ static AppController *instance = nil;
 		[[self getPlayer] playItem:item];
 	}
 }
+
+
 //BETA//////////////////////////////////////////////////////////////////////////////////
 - (IBAction) openVIDEO_TS:(id)sender
 {
@@ -452,9 +461,9 @@ static AppController *instance = nil;
 	[[NSApp keyWindow] performClose:self];
 }
 
-/************************************************************************************
- BUNDLE ACCESS
- ************************************************************************************/
+/************************************************************************************/
+#pragma mark - BUNDLE ACCESS
+/************************************************************************************/
 // return array of document extensions of specified document type name
 - (NSArray *) typeExtensionsForName:(NSString *)typeName
 {
@@ -514,9 +523,9 @@ static AppController *instance = nil;
 	return NO;
 }
 
-/************************************************************************************
- MISC METHODS
- ************************************************************************************/
+/************************************************************************************/
+#pragma mark -  MISC METHODS
+/************************************************************************************/
 // presents open dialog for certain types
 - (NSString *) openDialogForType:(int)type
 {
@@ -658,10 +667,19 @@ static AppController *instance = nil;
 		return YES;
 }
 
+// Play the next episode based on the current file's filepath
+- (IBAction) playNextEpisode:(id)sender
+{
+	NSString *filename = [[self.movieInfoProvider currentMovieInfo] filename];
+	NSString *result = [MovieMethods findNextEpisodePathFrom:filename
+									  inFormats:	[NSSet setWithObjects:@"mkv", @"mp4", nil]];
+	[Debug log:ASL_LEVEL_INFO withMessage:@"currentFile=%@ nextFile=%@",filename, result ];
+	if (result) [self openFilePath:result];
+}
 
-/************************************************************************************
- DELEGATE METHODS
- ************************************************************************************/
+/************************************************************************************/
+#pragma mark - DELEGATE METHODS
+/*************************************************************************************/
 // app delegate method
 // executes when file is double clicked or dropped on apps icon
 // immediatlely starts to play dropped file without adding it to the playlist
