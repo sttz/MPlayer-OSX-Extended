@@ -104,7 +104,17 @@ static char ** ep_num (char *s);
 	return [nextPath retain];
 }
 
-// Get the postion of the name and number from the filename
+/**
+ * Get the postion of the name and number from the filename.
+ *
+ * @param  s - A c string.
+ * @return An array containg:
+ *         [0] - The index before the number starts.
+ *         [1] - arr[index - s + 1] is the name part of the string,
+ *               where index = (arr[1] != NULL) ? 1 : 0
+ *
+ * @error        [0] == NULL - Number not found
+ */ 
 static char **ep_num (char *s) 
 {
 	assert (s);
