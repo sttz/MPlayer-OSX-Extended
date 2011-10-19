@@ -167,6 +167,8 @@
 - (NSMenu *)contextMenu;
 
 - (IBAction)cycleOSD:(id)sender;
+- (IBAction)nextSubtitleLine:(id)sender;
+- (IBAction)prevSubtitleLine:(id)sender;
 - (void)setAudioDelay:(float)delay relative:(BOOL)setRelative;
 - (void)setSubtitleDelay:(float)delay relative:(BOOL)setRelative;
 - (void)setPlaybackSpeed:(float)speed multiply:(BOOL)multiply;
