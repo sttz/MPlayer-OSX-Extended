@@ -29,6 +29,9 @@
 #import "PFMoveApplication.h"
 #import "RegexKitLite.h"
 
+#import "MovieMethods.h"
+#import "SPMediaKeyTap.h"
+
 NSString* const MPENewPlayerOpenedNotification           = @"MPENewPlayerOpenedNotification";
 NSString* const MPEPlayerClosedNotification              = @"MPEPlayerClosedNotification";
 NSString* const MPEPlayerNotificationPlayerControllerKey = @"MPEPlayerNotificationPlayerControllerKey";
@@ -39,9 +42,9 @@ NSString* const MPEPlayerStoppedNotification			 = @"MPEPlayerStoppedNotification
 
 static AppController *instance = nil;
 
-/************************************************************************************
- INITIALIZATION
- ************************************************************************************/
+/************************************************************************************/
+#pragma mark - INITIALIZATION
+/************************************************************************************/
 - (id)init
 {
 	if ((self = [super init])) {
@@ -71,7 +74,26 @@ static AppController *instance = nil;
 {
 	[NSValueTransformer setValueTransformer:[[ENCACodeTransformer new] autorelease]
 									forName:@"ENCACodeTransformer"];
+	
+	
+	// Register defaults for the whitelist of apps that want to use media keys
+	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
+															 [SPMediaKeyTap defaultMediaKeyUserBundleIdentifiers], kMediaKeyUsingBundleIdentifiersDefaultsKey,
+															 nil]];
 }
+
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+	keyTap = [[SPMediaKeyTap alloc] initWithDelegate:self];
+	if([SPMediaKeyTap usesGlobalMediaKeyTap]){
+		NSLog(@"Media key monitoring enable");
+		[keyTap startWatchingMediaKeys];
+	}else{
+		NSLog(@"Media key monitoring disabled");
+	}
+	
+}
+
+
 
 - (void) awakeFromNib
 {
@@ -120,9 +142,9 @@ static AppController *instance = nil;
 	return inspectorController;
 }
 
-/************************************************************************************
- INTERFACE
- ************************************************************************************/
+/************************************************************************************/
+#pragma mark - INTERFACE
+/************************************************************************************/
 - (NSUserDefaults *) preferences
 {
 	return [NSUserDefaults standardUserDefaults];
@@ -257,9 +279,9 @@ static AppController *instance = nil;
 	}
 }
 
-/************************************************************************************
- ACTIONS
- ************************************************************************************/
+/************************************************************************************/
+#pragma mark - ACTIONS
+/************************************************************************************/
 - (IBAction) openFile:(id)sender
 {
 	NSString *theFile;
@@ -267,9 +289,14 @@ static AppController *instance = nil;
 	// present open dialog
 	theFile = [self openDialogForType:MP_DIALOG_MEDIA];
 	
-	if (theFile) {
+	[self openFilePath:theFile];
+}
+
+- (void) openFilePath:(NSString*)filepath
+{
+	if (filepath) {
 		// if any file, create new item and play it
-		MovieInfo *item = [MovieInfo movieInfoWithPathToFile:theFile];
+		MovieInfo *item = [MovieInfo movieInfoWithPathToFile:filepath];
 		// apply selection from binary selection popup
 		NSString *binary = [preferencesController identifierFromSelectionInView];
 		if (binary)
@@ -277,6 +304,8 @@ static AppController *instance = nil;
 		[[self getPlayer] playItem:item];
 	}
 }
+
+
 //BETA//////////////////////////////////////////////////////////////////////////////////
 - (IBAction) openVIDEO_TS:(id)sender
 {
@@ -452,9 +481,9 @@ static AppController *instance = nil;
 	[[NSApp keyWindow] performClose:self];
 }
 
-/************************************************************************************
- BUNDLE ACCESS
- ************************************************************************************/
+/************************************************************************************/
+#pragma mark - BUNDLE ACCESS
+/************************************************************************************/
 // return array of document extensions of specified document type name
 - (NSArray *) typeExtensionsForName:(NSString *)typeName
 {
@@ -514,9 +543,9 @@ static AppController *instance = nil;
 	return NO;
 }
 
-/************************************************************************************
- MISC METHODS
- ************************************************************************************/
+/************************************************************************************/
+#pragma mark -  MISC METHODS
+/************************************************************************************/
 // presents open dialog for certain types
 - (NSString *) openDialogForType:(int)type
 {
@@ -658,10 +687,19 @@ static AppController *instance = nil;
 		return YES;
 }
 
+// Play the next episode based on the current file's filepath
+- (IBAction) playNextEpisode:(id)sender
+{
+	NSString *filename = [[self.movieInfoProvider currentMovieInfo] filename];
+	NSString *result = [MovieMethods findNextEpisodePathFrom:filename
+									  inFormats:	[NSSet setWithObjects:@"mkv", @"mp4", nil]];
+	[Debug log:ASL_LEVEL_INFO withMessage:@"currentFile=%@ nextFile=%@",filename, result ];
+	if (result) [self openFilePath:result];
+}
 
-/************************************************************************************
- DELEGATE METHODS
- ************************************************************************************/
+/************************************************************************************/
+#pragma mark - DELEGATE METHODS
+/*************************************************************************************/
 // app delegate method
 // executes when file is double clicked or dropped on apps icon
 // immediatlely starts to play dropped file without adding it to the playlist
@@ -825,4 +863,59 @@ static AppController *instance = nil;
 		return nil;
 }
 /******************************************************************************/
+
+
+/************************************************************************************/
+#pragma mark - Media Key Methods.
+/*************************************************************************************/
+
+
+-(void)mediaKeyTap:(SPMediaKeyTap*)keyTap receivedMediaKeyEvent:(NSEvent*)event;
+{
+	NSAssert([event type] == NSSystemDefined && [event subtype] == SPSystemDefinedEventMediaKeys, @"Unexpected NSEvent in mediaKeyTap:receivedMediaKeyEvent:");
+	
+	// here be dragons...
+	int keyCode = (([event data1] & 0xFFFF0000) >> 16);
+	int keyFlags = ([event data1] & 0x0000FFFF);
+	BOOL keyIsPressed = (((keyFlags & 0xFF00) >> 8)) == 0xA;
+	int keyRepeat = (keyFlags & 0x1);
+	
+	if (keyIsPressed) {
+		NSString *debugString = [NSString stringWithFormat:@"%@", keyRepeat?@", repeated.":@"."];
+		switch (keyCode) {
+			case NX_KEYTYPE_PLAY:
+				debugString = [@"Play/pause pressed" stringByAppendingString:debugString];
+				[[self getPlayer] playPause:self];
+				break;
+				
+			case NX_KEYTYPE_FAST:
+				debugString = [@"Fastforward pressed" stringByAppendingString:debugString];
+				[[self getPlayer] skipToNextChapter];
+				break;
+				
+			case NX_KEYTYPE_REWIND:
+				debugString = [@"Rewind pressed" stringByAppendingString:debugString];
+				[[self getPlayer] skipToPreviousChapter];
+				break;
+			default:
+				// More cases defined in hidsystem/ev_keymap.h
+				debugString = [NSString stringWithFormat:@"Key %d pressed%@", keyCode, debugString];
+				break;
+		}
+		[Debug log:ASL_LEVEL_DEBUG withMessage:debugString];
+	}
+}
+
+- (void)sendEvent:(NSEvent *)theEvent
+{
+	// If event tap is not installed, handle events that reach the app instead
+	BOOL shouldHandleMediaKeyEventLocally = ![SPMediaKeyTap usesGlobalMediaKeyTap];
+	
+	if(shouldHandleMediaKeyEventLocally && [theEvent type] == NSSystemDefined 
+	   && [theEvent subtype] ==SPSystemDefinedEventMediaKeys) {
+		[self mediaKeyTap:nil receivedMediaKeyEvent:theEvent];
+	}
+//	[super sendEvent:theEvent];
+}
+
 @end
