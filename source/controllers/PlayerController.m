@@ -1237,6 +1237,17 @@
 	[[movieInfo prefs] setInteger:osdLevel forKey:MPEOSDLevel];
 }
 
+/************************************************************************************/
+- (void)prevSubtitleLine:(id)sender
+{
+	[myPlayer sendCommand:@"sub_step -1"];
+}
+
+- (void)nextSubtitleLine:(id)sender
+{
+	[myPlayer sendCommand:@"sub_step +1"];
+}
+
 #pragma mark - Delay
 /************************************************************************************/
 - (void)setAudioDelay:(float)delay relative:(BOOL)setRelative {
@@ -1843,6 +1854,12 @@
 	// Cycle OSD
 	else if ((keyHandled = [characters isEqualToString:@"o"]))
 		[self cycleOSD:self];
+
+	// Subtitles fixups
+	else if ((keyHandled = [characters isEqualToString:@"y"]))
+		[self nextSubtitleLine:self];
+	else if ((keyHandled = [characters isEqualToString:@"g"]))
+		[self prevSubtitleLine:self];
 	
 	// Audio Delay
 	else if ((keyHandled = ([characters isEqualToString:@"+"]
