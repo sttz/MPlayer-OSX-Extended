@@ -14,6 +14,7 @@
 #import "AppController.h"
 #import "PlayListController.h"
 #import "PreferencesController2.h"
+#import "EqualizerController.h"
 
 #import "Preferences.h"
 #import "CocoaAdditions.h"
@@ -739,9 +740,14 @@
 /************************************************************************************/
 - (IBAction)seekNext:(id)sender
 {
-	if ([myPlayer isRunning])
+	[self skipForwardIncludingChapters:YES];
+}
+
+- (void)skipForwardIncludingChapters:(BOOL)includeChapters
+{
+    if ([myPlayer isRunning])
 	{
-		if (movieInfo && [movieInfo chapterCount] > 0)
+		if (includeChapters && movieInfo && [movieInfo chapterCount] > 0)
 			[self skipToNextChapter];
 		else {
 			if (playingFromPlaylist)
@@ -755,9 +761,14 @@
 
 - (IBAction)seekPrevious:(id)sender
 {
-	if ([myPlayer isRunning])
+	[self skipBackwardIncludingChapters:YES];
+}
+
+- (void)skipBackwardIncludingChapters:(BOOL)includeChapters
+{
+    if ([myPlayer isRunning])
 	{
-		if (movieInfo && [movieInfo chapterCount] > 0)
+		if (includeChapters && movieInfo && [movieInfo chapterCount] > 0)
 			[self skipToPreviousChapter];
 		else
 			[self seek:0 mode:MISeekingModePercent];
@@ -1205,13 +1216,28 @@
 }
 - (IBAction)cycleSubtitleStreams:(id)sender {
 	
-	[self cycleSubtitleStreamsWithOSD:YES];
+	[self cycleSubtitleStreamsWithOSD:YES direction:1];
 }
-- (void)cycleSubtitleStreamsWithOSD:(BOOL)showOSD {
+- (void)cycleSubtitleStreamsWithOSD:(BOOL)showOSD direction:(int)dir {
 	
+    NSString *argument = (dir >= 0 ? @"" : @"-3");
+    
 	[myPlayer sendCommands:[NSArray arrayWithObjects:
-							@"sub_select",
+							[NSString stringWithFormat:@"sub_select %@", argument],
 							@"get_property sub_demux",@"get_property sub_file",@"get_property sub_vob",
+							nil]
+				   withOSD:(showOSD ? MISurpressCommandOutputNever : MISurpressCommandOutputConditionally)
+				andPausing:MICommandPausingKeep];
+}
+- (IBAction)cycleVideoStreams:(id)sender {
+	
+	[self cycleVideoStreamsWithOSD:YES];
+}
+- (void)cycleVideoStreamsWithOSD:(BOOL)showOSD {
+    
+	[myPlayer sendCommands:[NSArray arrayWithObjects:
+							@"step_property switch_video",
+							@"get_property switch_video",
 							nil]
 				   withOSD:(showOSD ? MISurpressCommandOutputNever : MISurpressCommandOutputConditionally)
 				andPausing:MICommandPausingKeep];
@@ -1815,7 +1841,11 @@
 	else if ((keyHandled = ([theEvent keyCode] == kVK_Tab)))
 		[self cycleTimeDisplayMode:self];
 	
-	// All actions below need a playing item
+    // Toggle ontop
+    else if ((keyHandled = [characters isEqualToString:@"T"]))
+        [PREFS setBool:![PREFS boolForKey:MPEWindowOnTop] forKey:MPEWindowOnTop];
+    
+	// ---- All actions below need a playing item ----
 	if ((keyHandled || ![myPlayer isMovieOpen]))
 		return keyHandled;
 	
@@ -1823,8 +1853,21 @@
 	if ((keyHandled = [characters isEqualToString:@"f"]))
 		[self switchFullscreen:self];
 	
+    // Playlist
+    else if ((keyHandled = ([theEvent keyCode] == kVK_Home)))
+		[self skipForwardIncludingChapters:NO];
+    else if ((keyHandled = ([theEvent keyCode] == kVK_End)))
+		[self skipBackwardIncludingChapters:NO];
+    else if ((keyHandled = ([characters isEqualToString:@">"]
+                            || [characters isEqualToString:@"@"])))
+		[self skipForwardIncludingChapters:YES];
+    else if ((keyHandled = ([characters isEqualToString:@"<"]
+                            || [characters isEqualToString:@"!"])))
+		[self skipBackwardIncludingChapters:YES];
+    
 	// Playback
-	else if ((keyHandled = [characters isEqualToString:@"q"]))
+	else if ((keyHandled = ([characters isEqualToString:@"q"]
+                            || [characters isEqualToString:@"U"])))
 		[self stop:self];
 	else if ((keyHandled = [characters isEqualToString:@"p"]))
 		[self playPause:self];
@@ -1847,9 +1890,13 @@
 	
 	// Cycle Streams
 	else if ((keyHandled = [characters isEqualToString:@"j"]))
-		[self cycleSubtitleStreamsWithOSD:YES];
+		[self cycleSubtitleStreamsWithOSD:YES direction:1];
+    else if ((keyHandled = [characters isEqualToString:@"J"]))
+		[self cycleSubtitleStreamsWithOSD:YES direction:-1];
 	else if ((keyHandled = [characters isEqualToString:@"#"]))
 		[self cycleAudioStreamsWithOSD:YES];
+    else if ((keyHandled = [characters isEqualToString:@"_"]))
+		[self cycleVideoStreamsWithOSD:YES];
 	
 	// Cycle OSD
 	else if ((keyHandled = [characters isEqualToString:@"o"]))
@@ -1886,14 +1933,36 @@
 	else if ((keyHandled = ([theEvent keyCode] == kVK_Delete)))
 		[self setPlaybackSpeed:1.0 multiply:NO];
 
-	
-	// Mplayer command line like chapter shortcuts
-
-	else if ((keyHandled = [characters isEqualToString:@"!"]))
-		[self seekPrevious:self];
-	else if ((keyHandled = [characters isEqualToString:@"@"]))
-		[self seekNext:self];
-	
+    // Frame drop
+    else if ((keyHandled = [characters isEqualToString:@"d"]))
+        [myPlayer sendCommand:@"frame_drop" withOSD:MISurpressCommandOutputNever andPausing:MICommandPausingKeep];
+    
+    // Information
+    else if ((keyHandled = ([characters isEqualToString:@"I"])))
+		[myPlayer sendCommand:@"osd_show_property_text \"${filename}\""];
+	else if ((keyHandled = ([characters isEqualToString:@"P"])))
+		[myPlayer sendCommand:@"osd_show_progression" withOSD:MISurpressCommandOutputNever andPausing:MICommandPausingKeep];
+    
+	// Video equalizer
+    if ([[movieInfo prefs] boolForKey:MPEVideoEqualizerEnabled]) {
+        if ((keyHandled = ([characters isEqualToString:@"1"])))
+            [EqualizerController stepVideoEqualizerValue:MPEVideoEqualizerContrast on:movieInfo by:-1];
+        else if ((keyHandled = ([characters isEqualToString:@"2"])))
+            [EqualizerController stepVideoEqualizerValue:MPEVideoEqualizerContrast on:movieInfo by:1];
+        else if ((keyHandled = ([characters isEqualToString:@"3"])))
+            [EqualizerController stepVideoEqualizerValue:MPEVideoEqualizerBrightness on:movieInfo by:-1];
+        else if ((keyHandled = ([characters isEqualToString:@"4"])))
+            [EqualizerController stepVideoEqualizerValue:MPEVideoEqualizerBrightness on:movieInfo by:1];
+        else if ((keyHandled = ([characters isEqualToString:@"5"])))
+            [EqualizerController stepVideoEqualizerValue:MPEVideoEqualizerHue on:movieInfo by:-1];
+        else if ((keyHandled = ([characters isEqualToString:@"6"])))
+            [EqualizerController stepVideoEqualizerValue:MPEVideoEqualizerHue on:movieInfo by:1];
+        else if ((keyHandled = ([characters isEqualToString:@"7"])))
+            [EqualizerController stepVideoEqualizerValue:MPEVideoEqualizerSaturation on:movieInfo by:-1];
+        else if ((keyHandled = ([characters isEqualToString:@"8"])))
+            [EqualizerController stepVideoEqualizerValue:MPEVideoEqualizerSaturation on:movieInfo by:1];
+    }
+    
 	[Debug log:ASL_LEVEL_ERR withMessage:@"keyHandled=%d keyCode=%d",keyHandled,[theEvent keyCode]];
 	return keyHandled;
 }

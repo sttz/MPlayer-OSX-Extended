@@ -20,7 +20,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
-
+#import "MovieInfo.h"
 
 @interface EqualizerController : NSObject {
 	
@@ -59,5 +59,7 @@
 + (NSString *)hueFilterValue;
 
 + (NSString *)equalizerFilterValues;
+
++ (void)stepVideoEqualizerValue:(NSString *)key on:(MovieInfo *)target by:(float)increment;
 
 @end
