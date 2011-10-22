@@ -53,9 +53,6 @@ typedef enum _NSScrubbingBarStyle {
 - (BOOL) mouseDownCanMoveWindow;
 - (BOOL) acceptsFirstMouse:(NSEvent *)theEvent;
 
-- (void) startMyAnimation;
-- (void) stopMyAnimation;
-
 - (NSScrubbingBarStyle)scrubStyle;
 - (void) setScrubStyle:(NSScrubbingBarStyle)style;
 
