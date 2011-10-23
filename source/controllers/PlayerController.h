@@ -151,6 +151,8 @@
 - (void)goToChapter:(unsigned int)chapter;
 - (void)skipToNextChapter;
 - (void)skipToPreviousChapter;
+- (void)skipForwardIncludingChapters:(BOOL)includeChapters;
+- (void)skipBackwardIncludingChapters:(BOOL)includeChapters;
 
 - (void)clearStreamMenus;
 - (void)fillStreamMenus;
@@ -160,13 +162,17 @@
 - (IBAction)cycleAudioStreams:(id)sender;
 - (void)cycleAudioStreamsWithOSD:(BOOL)showOSD;
 - (IBAction)cycleSubtitleStreams:(id)sender;
-- (void)cycleSubtitleStreamsWithOSD:(BOOL)showOSD;
+- (void)cycleSubtitleStreamsWithOSD:(BOOL)showOSD direction:(int)dir;
+- (IBAction)cycleVideoStreams:(id)sender;
+- (void)cycleVideoStreamsWithOSD:(BOOL)showOSD;
 - (void)newVideoStreamId:(int)streamId;
 - (void)newAudioStreamId:(int)streamId;
 - (void)newSubtitleStreamId:(int)streamId forType:(SubtitleType)type;
 - (NSMenu *)contextMenu;
 
 - (IBAction)cycleOSD:(id)sender;
+- (IBAction)nextSubtitleLine:(id)sender;
+- (IBAction)prevSubtitleLine:(id)sender;
 - (void)setAudioDelay:(float)delay relative:(BOOL)setRelative;
 - (void)setSubtitleDelay:(float)delay relative:(BOOL)setRelative;
 - (void)setPlaybackSpeed:(float)speed multiply:(BOOL)multiply;

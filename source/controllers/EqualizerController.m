@@ -292,4 +292,13 @@
 	return [parts componentsJoinedByString:@":"];					  
 }
 
++ (void)stepVideoEqualizerValue:(NSString *)key on:(MovieInfo *)target by:(float)increment
+{
+    NSMutableDictionary *values = [[[target prefs] objectForKey:MPEVideoEqualizerValues] mutableCopy];
+    float newValue = [values floatForKey:key];
+    newValue = fminf(fmaxf(newValue + increment, -100), 100);
+    [values setFloat:newValue forKey:key];
+    [[target prefs] setObject:values forKey:MPEVideoEqualizerValues];
+}
+
 @end
