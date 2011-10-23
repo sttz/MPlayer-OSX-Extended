@@ -25,15 +25,6 @@
 #import "ScrubbingBar.h"
 #import "TimestampTextField.h"
 
-#if __MAC_OS_X_VERSION_MIN_REQUIRED <= __MAC_OS_X_VERSION_10_5
-// used for preventing screensaver on leopard
-#import <CoreServices/CoreServices.h>
-// not very nice hack to get to the header on 64bit builds
-#ifdef __LP64__
-#import <CoreServices/../Frameworks/OSServices.framework/Headers/Power.h>
-#endif
-#endif
-
 #import <Carbon/Carbon.h>
 
 #include <sys/types.h>
@@ -518,6 +509,24 @@
 	
 	} else
 		[videoOpenGLView setWindowSizeMode:WSM_SCALE withValue:1];
+}
+
+- (void)allowSleep
+{
+    IOPMAssertionRelease(sleepAssertionId);
+}
+
+- (void)preventSleepIncludingDisplay:(BOOL)displaySleep
+{
+    [self allowSleep];
+    
+    CFStringRef assertionType;
+    if (displaySleep)
+        assertionType = kIOPMAssertionTypeNoDisplaySleep;
+    else
+        assertionType = kIOPMAssertionTypeNoIdleSleep;
+    
+    IOPMAssertionCreate(assertionType, kIOPMAssertionLevelOn, &sleepAssertionId);
 }
 //************************************************************************************
 #pragma mark - Actions - Volume 
@@ -1632,7 +1641,7 @@
 	unsigned int stateMask = (1<<state);
 	MIState oldState = [oldstatenumber unsignedIntValue];
 	unsigned int oldStateMask = (1<<oldState);
-	
+	    
 	// First play after startup
 	if (state == MIStatePlaying && (oldStateMask & MIStateStartupMask)) {
 		// Populate menus
@@ -1643,7 +1652,9 @@
 								@"get_property switch_video",@"get_property switch_audio",
 								@"get_property sub_demux",@"get_property sub_file",
 								@"get_property sub_vob",nil]];
-	}
+        // Prevent sleep
+        [self preventSleepIncludingDisplay:([movieInfo videoStreamCount] > 0)];
+    }
 	
 	// Change of Play/Pause state
 	if (!!(stateMask & MIStatePPPlayingMask) != !!(oldStateMask & MIStatePPPlayingMask)) {
@@ -1654,6 +1665,10 @@
 			[playButton setAlternateImage:pauseImageOn];
 			if ([self isActivePlayer])
 				[menuController->playMenuItem setTitle:@"Pause"];
+            // Prevent sleep
+            if ([movieInfo videoStreamCount] > 0) {
+                [self preventSleepIncludingDisplay:([movieInfo videoStreamCount] > 0)];
+            }
 		// Pausing
 		} else if (stateMask & MIStatePPPausedMask) {
 			// Update interface
@@ -1661,7 +1676,8 @@
 			[playButton setAlternateImage:playImageOn];
 			if ([self isActivePlayer])
 				[menuController->playMenuItem setTitle:@"Play"];
-			
+            // Allow sleep again
+            [self allowSleep];
 		}
 	}
 	
@@ -1676,8 +1692,8 @@
 			// Disable stream menus
 			[self clearStreamMenus];
 			[self clearChapterMenu];
-			// Release Sleep assertion
-			IOPMAssertionRelease(sleepAssertionId);	
+			// Allow sleep again
+            [self allowSleep];
 		// Running
 		} else {
 			// Update interface
@@ -1686,8 +1702,6 @@
 			// Disable loop when movie finished
 			[self setLoopMovie:NO];
 			[self updateLoopStatus];
-			// Create sleep assertion
-			IOPMAssertionCreate(kIOPMAssertionTypeNoDisplaySleep, kIOPMAssertionLevelOn, &sleepAssertionId);
 		}
 	}
 	
@@ -1768,13 +1782,6 @@
 /************************************************************************************/
 - (void) interface:(MPlayerInterface *)mi timeUpdate:(NSNumber *)newTime
 {
-	
-#if __MAC_OS_X_VERSION_MIN_REQUIRED <= __MAC_OS_X_VERSION_10_5
-	// prevent screensaver on leopard
-	if (NSAppKitVersionNumber < 1000 && [movieInfo isVideo])
-		UpdateSystemActivity(UsrActivity);
-#endif
-	
 	if ([myPlayer state] == MIStatePlaying || [myPlayer state] == MIStateSeeking) {
 		if (movieInfo) {
 			// update time
