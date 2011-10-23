@@ -29,7 +29,6 @@
 #import "PFMoveApplication.h"
 #import "RegexKitLite.h"
 
-#import "MovieMethods.h"
 #import "SPMediaKeyTap.h"
 
 NSString* const MPENewPlayerOpenedNotification           = @"MPENewPlayerOpenedNotification";
@@ -687,15 +686,7 @@ static AppController *instance = nil;
 		return YES;
 }
 
-// Play the next episode based on the current file's filepath
-- (IBAction) playNextEpisode:(id)sender
-{
-	NSString *filename = [[self.movieInfoProvider currentMovieInfo] filename];
-	NSString *result = [MovieMethods findNextEpisodePathFrom:filename
-									  inFormats:	[NSSet setWithObjects:@"mkv", @"mp4", nil]];
-	[Debug log:ASL_LEVEL_INFO withMessage:@"currentFile=%@ nextFile=%@",filename, result ];
-	if (result) [self openFilePath:result];
-}
+
 
 /************************************************************************************/
 #pragma mark - DELEGATE METHODS

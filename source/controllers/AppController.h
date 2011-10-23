@@ -35,7 +35,7 @@ PlayListController, MenuController, InspectorController, MovieInfo, SPMediaKeyTa
 	IBOutlet MenuController *menuController;
 	IBOutlet EqualizerController *equalizerController;
 	IBOutlet InspectorController *inspectorController;
-		
+	
 	// GUI outlets
 	IBOutlet id locationPanel;
 	IBOutlet id locationBox;
@@ -104,6 +104,7 @@ PlayListController, MenuController, InspectorController, MovieInfo, SPMediaKeyTa
 
 - (void) restart;
 
+- (void) openFilePath:(NSString*)filepath;
 // actions
 - (IBAction) openFile:(id)sender;
 - (IBAction) addToPlaylist:(id)sender;

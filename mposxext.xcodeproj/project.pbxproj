@@ -1221,12 +1221,8 @@
 				3A7A6A41139AB44D006A8B4A /* Debug.m in Sources */,
 				3A7A6A42139AB44D006A8B4A /* LocalUserDefaults.m in Sources */,
 				3A4C775F13A51041000EDD78 /* ToggleEditLabel.m in Sources */,
-<<<<<<< HEAD
-=======
-				92E9A6C81449139800223BE0 /* MovieMethods.m in Sources */,
 				925FA7121452422C00164C0B /* NSObject+SPInvocationGrabbing.m in Sources */,
 				925FA7141452422C00164C0B /* SPMediaKeyTap.m in Sources */,
->>>>>>> 6eb0d35... Nearly Finished Media Keys code
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
