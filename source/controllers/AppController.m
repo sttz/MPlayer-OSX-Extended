@@ -668,16 +668,16 @@ static AppController *instance = nil;
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
 {
 	if (filename) {
-		if ([[filename pathExtension] isEqualToString:@"mpBinaries"])
+		// load a binary bundle
+		if ([[filename pathExtension] isEqualToString:@"mpBinaries"]) {
 			[preferencesController installBinary:filename];
-		// create an item from it and play it
-		else if ([self isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]
-				 || [self isDVD:filename]) {
-			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:filename];
-			[[self getPlayer] playItem:item];
 		// load subtitles while playing
 		} else if (activePlayer && [self isExtension:[filename pathExtension] ofType:MP_DIALOG_SUBTITLES]) {
 			[activePlayer loadExternalSubtitleFile:filename withEncoding:nil];
+		// try playing the file otherwise
+		} else {
+			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:filename];
+			[[self getPlayer] playItem:item];
 		}
 		return YES;
 	}
