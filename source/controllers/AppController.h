@@ -50,6 +50,7 @@ PlayListController, MenuController, InspectorController, MovieInfo;
 	IBOutlet NSMenuItem *customAspectMenuItem;
 	
 	IBOutlet NSView *openFileSettings;
+    IBOutlet NSPopUpButton *openFileTypeMenu;
 	
 	IBOutlet NSView *openSubtitleSettings;
 	IBOutlet NSPopUpButton *openSubtitleEncoding;

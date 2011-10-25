@@ -539,6 +539,7 @@ static AppController *instance = nil;
 		[options addSubview:[preferencesController binarySelectionView]];
 		[options resizeAndArrangeSubviewsVerticallyWithPadding:5];
 		[openPanel setAccessoryView:options];
+		[self showFilesChanged:openFileTypeMenu];
 	} else if (type == MP_DIALOG_SUBTITLES) {
 		// beta: add encoding dropdown and load state from preferences
 		[openPanel setAccessoryView:openSubtitleSettings];
