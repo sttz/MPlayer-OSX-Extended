@@ -218,49 +218,19 @@
  */
 - (NSDragOperation) draggingEntered:(id <NSDraggingInfo>)sender
 {
-	int i;
 	NSPasteboard *pboard;
 	NSArray *fileArray;
-	NSArray *propertyList;
-	NSString *availableType;
 
 	pboard = [sender draggingPasteboard];	
 	//paste board contain filename?
-	if ( [[pboard types] containsObject:NSFilenamesPboardType] )
-	{	
+	if ( [[pboard types] containsObject:NSFilenamesPboardType] ) {	
 		//get dragged file array
 		fileArray = [pboard propertyListForType:@"NSFilenamesPboardType"];
-		if(fileArray)
-		{
-			//we are only dropping one item.
-			if([fileArray count] == 1)
-			{
-				//look in property list for know file type
-				availableType=[pboard availableTypeFromArray:[NSArray arrayWithObjects:NSFilenamesPboardType, nil]];
-				propertyList = [pboard propertyListForType:availableType];
-				for (i=0;i<[propertyList count];i++)
-				{
-					if ([[AppController sharedController] 
-							isExtension:[[propertyList objectAtIndex:i] pathExtension] 
-								 ofType:MP_DIALOG_MEDIA])
-						return NSDragOperationCopy; //its a movie file, good
-					
-					if ([[AppController sharedController] isDVD:[propertyList objectAtIndex:i]])
-						return NSDragOperationCopy; // video_ts folder
-					
-					if ([self isRunning] && [[AppController sharedController] 
-												isExtension:[[propertyList objectAtIndex:i] pathExtension] 
-													 ofType:MP_DIALOG_SUBTITLES])
-						return NSDragOperationCopy; // subtitles are good when playing
-					
-					// let the choice be overridden with the command key
-					if ([sender draggingSourceOperationMask] == NSDragOperationGeneric)
-						return NSDragOperationCopy;
-				}
-				return NSDragOperationNone; //no know object found, cancel drop.
-			}
-			else
-			{
+		if (fileArray) {
+			if([fileArray count] == 1) {
+				return NSDragOperationCopy; //we are only dropping one item.
+			} else {
+				// TODO: Add files to temporary playlist...
 				return NSDragOperationNone; //more than one item selected for drop.
 			}
 		}
@@ -281,25 +251,21 @@
 	pboard = [sender draggingPasteboard];
 
 	//drop contain filename type
-	if ( [[pboard types] containsObject:NSFilenamesPboardType] )
-	{		
+	if ([[pboard types] containsObject:NSFilenamesPboardType]) {		
 		//get file array, should contain 1 item since this is verified in (draggingEntered).
 		fileArray = [pboard propertyListForType:@"NSFilenamesPboardType"];
-		if(fileArray)
-		{
+		if (fileArray) {
 			filename = [fileArray objectAtIndex:0];
-			if (filename)
-			{
-				// Open if a media file or if forced with the command key
-				if ([sender draggingSourceOperationMask] == NSDragOperationGeneric || 
-						[[AppController sharedController] isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA] ||
-						[[AppController sharedController] isDVD:filename]) {
+			if (filename) {
+				// Load subtitle file
+				if ([[AppController sharedController] isExtension:[filename pathExtension] ofType:MP_DIALOG_SUBTITLES]) {
+					if (movieInfo) {
+						[movieInfo addExternalSubtitle:filename];
+					}
+				} else {
 					// create an item from it and play it
 					MovieInfo *item = [MovieInfo movieInfoWithPathToFile:filename];
 					[self playItem:item];
-				} else if (movieInfo) {
-					// load subtitles file
-					[movieInfo addExternalSubtitle:filename];
 				}
 			}
 		}

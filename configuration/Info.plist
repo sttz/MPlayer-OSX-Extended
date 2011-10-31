@@ -28,7 +28,7 @@
 			<key>CFBundleTypeIconFile</key>
 			<string>ape</string>
 			<key>CFBundleTypeName</key>
-			<string>Monkey's Audio Lossless Audio Compression</string>
+			<string>Monkey&apos;s Audio Lossless Audio Compression</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>LSTypeIsPackage</key>
@@ -332,6 +332,18 @@
 			<string>asf.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Advanced Streaming Format</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>avi</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>avi.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Audio Video Interleave</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 		</dict>
