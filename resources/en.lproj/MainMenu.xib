@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">10J869</string>
-		<string key="IBDocument.InterfaceBuilderVersion">1306</string>
-		<string key="IBDocument.AppKitVersion">1038.35</string>
-		<string key="IBDocument.HIToolboxVersion">461.00</string>
+		<string key="IBDocument.SystemVersion">11C74</string>
+		<string key="IBDocument.InterfaceBuilderVersion">1938</string>
+		<string key="IBDocument.AppKitVersion">1138.23</string>
+		<string key="IBDocument.HIToolboxVersion">567.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">1306</string>
+			<string key="NS.object.0">1938</string>
 		</object>
 		<object class="NSArray" key="IBDocument.IntegratedClassDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1196,6 +1196,7 @@
 				<object class="NSMutableString" key="NSViewClass">
 					<characters key="NS.bytes">View</characters>
 				</object>
+				<nil key="NSUserInterfaceItemIdentifier"/>
 				<object class="NSView" key="NSWindowView" id="811189161">
 					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
@@ -1333,7 +1334,8 @@
 					<string key="NSFrameSize">{480, 181}</string>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
-				<string key="NSMaxSize">{1e+13, 1e+13}</string>
+				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
+				<bool key="NSWindowIsRestorable">YES</bool>
 			</object>
 			<object class="NSWindowTemplate" id="660613583">
 				<int key="NSWindowStyleMask">1</int>
@@ -1345,6 +1347,7 @@
 				<object class="NSMutableString" key="NSViewClass">
 					<characters key="NS.bytes">View</characters>
 				</object>
+				<nil key="NSUserInterfaceItemIdentifier"/>
 				<object class="NSView" key="NSWindowView" id="925185780">
 					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
@@ -1450,7 +1453,8 @@
 					<string key="NSFrame">{{1, 9}, {480, 119}}</string>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
-				<string key="NSMaxSize">{1e+13, 1e+13}</string>
+				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
+				<bool key="NSWindowIsRestorable">YES</bool>
 			</object>
 			<object class="NSCustomView" id="452508252">
 				<nil key="NSNextResponder"/>
@@ -2087,7 +2091,7 @@
 				<string key="NSClassName">NSView</string>
 			</object>
 			<object class="NSCustomView" id="543008117">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2096,6 +2100,7 @@
 						<int key="NSvFlags">268</int>
 						<string key="NSFrame">{{110, 1}, {252, 22}}</string>
 						<reference key="NSSuperview" ref="543008117"/>
+						<reference key="NSNextKeyView"/>
 						<bool key="NSEnabled">YES</bool>
 						<object class="NSPopUpButtonCell" key="NSCell" id="590601190">
 							<int key="NSCellFlags">-2076049856</int>
@@ -2172,6 +2177,7 @@
 						<int key="NSvFlags">268</int>
 						<string key="NSFrame">{{47, 6}, {61, 14}}</string>
 						<reference key="NSSuperview" ref="543008117"/>
+						<reference key="NSNextKeyView" ref="399217320"/>
 						<bool key="NSEnabled">YES</bool>
 						<object class="NSTextFieldCell" key="NSCell" id="620812474">
 							<int key="NSCellFlags">68288064</int>
@@ -2185,12 +2191,62 @@
 					</object>
 				</object>
 				<string key="NSFrameSize">{373, 24}</string>
+				<reference key="NSSuperview"/>
+				<reference key="NSNextKeyView" ref="225599973"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 		</object>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
 			<object class="NSMutableArray" key="connectionRecords">
 				<bool key="EncodedWithXMLCoder">YES</bool>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">orderFrontStandardAboutPanel:</string>
+						<reference key="source" ref="565260528"/>
+						<reference key="destination" ref="23467200"/>
+					</object>
+					<int key="connectionID">19349</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">hide:</string>
+						<reference key="source" ref="565260528"/>
+						<reference key="destination" ref="118188598"/>
+					</object>
+					<int key="connectionID">19350</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">hideOtherApplications:</string>
+						<reference key="source" ref="565260528"/>
+						<reference key="destination" ref="723865743"/>
+					</object>
+					<int key="connectionID">19351</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">unhideAllApplications:</string>
+						<reference key="source" ref="565260528"/>
+						<reference key="destination" ref="156004980"/>
+					</object>
+					<int key="connectionID">19352</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">terminate:</string>
+						<reference key="source" ref="565260528"/>
+						<reference key="destination" ref="899816256"/>
+					</object>
+					<int key="connectionID">19353</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="472686626"/>
+						<reference key="destination" ref="700428315"/>
+					</object>
+					<int key="connectionID">724</int>
+				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">performMiniaturize:</string>
@@ -2256,12 +2312,36 @@
 					<int key="connectionID">181</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="472686626"/>
-						<reference key="destination" ref="700428315"/>
+					<object class="IBActionConnection" key="connection">
+						<string key="label">showHelp:</string>
+						<reference key="source" ref="543772563"/>
+						<reference key="destination" ref="908181601"/>
 					</object>
-					<int key="connectionID">724</int>
+					<int key="connectionID">19038</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">delete:</string>
+						<reference key="source" ref="543772563"/>
+						<reference key="destination" ref="326030844"/>
+					</object>
+					<int key="connectionID">19521</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">clearRecentDocuments:</string>
+						<reference key="source" ref="543772563"/>
+						<reference key="destination" ref="813315762"/>
+					</object>
+					<int key="connectionID">19592</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">initialFirstResponder</string>
+						<reference key="source" ref="524369740"/>
+						<reference key="destination" ref="597372817"/>
+					</object>
+					<int key="connectionID">963</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -2310,22 +2390,6 @@
 						<reference key="destination" ref="270444774"/>
 					</object>
 					<int key="connectionID">929</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">initialFirstResponder</string>
-						<reference key="source" ref="524369740"/>
-						<reference key="destination" ref="597372817"/>
-					</object>
-					<int key="connectionID">963</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">initialFirstResponder</string>
-						<reference key="source" ref="660613583"/>
-						<reference key="destination" ref="11957879"/>
-					</object>
-					<int key="connectionID">1188</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -2424,14 +2488,6 @@
 					<int key="connectionID">11102</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">checkForUpdates:</string>
-						<reference key="source" ref="466167469"/>
-						<reference key="destination" ref="202556878"/>
-					</object>
-					<int key="connectionID">14047</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">openSubtitleSettings</string>
 						<reference key="source" ref="700428315"/>
@@ -2449,50 +2505,11 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">showHelp:</string>
-						<reference key="source" ref="543772563"/>
-						<reference key="destination" ref="908181601"/>
-					</object>
-					<int key="connectionID">19038</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">openLicenseAndCredits:</string>
 						<reference key="source" ref="700428315"/>
 						<reference key="destination" ref="64985916"/>
 					</object>
 					<int key="connectionID">19039</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">title: defaults.MPECustomAspectRatio.MPECustomAspectRatioString</string>
-						<reference key="source" ref="810084006"/>
-						<reference key="destination" ref="299649667"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="810084006"/>
-							<reference key="NSDestination" ref="299649667"/>
-							<string key="NSLabel">title: defaults.MPECustomAspectRatio.MPECustomAspectRatioString</string>
-							<string key="NSBinding">title</string>
-							<string key="NSKeyPath">defaults.MPECustomAspectRatio.MPECustomAspectRatioString</string>
-							<object class="NSDictionary" key="NSOptions">
-								<bool key="EncodedWithXMLCoder">YES</bool>
-								<object class="NSArray" key="dict.sortedKeys">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<string>NSMultipleValuesPlaceholder</string>
-									<string>NSNotApplicablePlaceholder</string>
-									<string>NSNullPlaceholder</string>
-								</object>
-								<object class="NSMutableArray" key="dict.values">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<string>Mutliple</string>
-									<string>NotApplicable</string>
-									<string>Null</string>
-								</object>
-							</object>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19085</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -2527,44 +2544,528 @@
 					<int key="connectionID">19178</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">orderFrontStandardAboutPanel:</string>
-						<reference key="source" ref="565260528"/>
-						<reference key="destination" ref="23467200"/>
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">menuController</string>
+						<reference key="source" ref="700428315"/>
+						<reference key="destination" ref="847214199"/>
 					</object>
-					<int key="connectionID">19349</int>
+					<int key="connectionID">19400</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">hide:</string>
-						<reference key="source" ref="565260528"/>
-						<reference key="destination" ref="118188598"/>
+						<string key="label">openNewPlayerWindow:</string>
+						<reference key="source" ref="700428315"/>
+						<reference key="destination" ref="730552444"/>
 					</object>
-					<int key="connectionID">19350</int>
+					<int key="connectionID">19606</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">openFileTypeMenu</string>
+						<reference key="source" ref="700428315"/>
+						<reference key="destination" ref="399217320"/>
+					</object>
+					<int key="connectionID">19645</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">initialFirstResponder</string>
+						<reference key="source" ref="660613583"/>
+						<reference key="destination" ref="11957879"/>
+					</object>
+					<int key="connectionID">1188</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="236617444"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="236617444"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19510</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="277199025"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="277199025"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19509</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="1038818498"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1038818498"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19511</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="103271458"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="103271458"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19512</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="260083644"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="260083644"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19513</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="983516722"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="983516722"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19520</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="107923094"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="107923094"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19505</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="434144637"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="434144637"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19506</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="993460538"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="993460538"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19507</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="190163487"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="190163487"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19508</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">hideOtherApplications:</string>
-						<reference key="source" ref="565260528"/>
-						<reference key="destination" ref="723865743"/>
+						<string key="label">checkForUpdates:</string>
+						<reference key="source" ref="466167469"/>
+						<reference key="destination" ref="202556878"/>
 					</object>
-					<int key="connectionID">19351</int>
+					<int key="connectionID">14047</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">unhideAllApplications:</string>
-						<reference key="source" ref="565260528"/>
-						<reference key="destination" ref="156004980"/>
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="762544581"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="762544581"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
 					</object>
-					<int key="connectionID">19352</int>
+					<int key="connectionID">19514</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">terminate:</string>
-						<reference key="source" ref="565260528"/>
-						<reference key="destination" ref="899816256"/>
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="375942366"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="375942366"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
 					</object>
-					<int key="connectionID">19353</int>
+					<int key="connectionID">19515</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="122275591"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="122275591"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19516</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="870466676"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="870466676"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19517</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">title: defaults.MPECustomAspectRatio.MPECustomAspectRatioString</string>
+						<reference key="source" ref="810084006"/>
+						<reference key="destination" ref="299649667"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="810084006"/>
+							<reference key="NSDestination" ref="299649667"/>
+							<string key="NSLabel">title: defaults.MPECustomAspectRatio.MPECustomAspectRatioString</string>
+							<string key="NSBinding">title</string>
+							<string key="NSKeyPath">defaults.MPECustomAspectRatio.MPECustomAspectRatioString</string>
+							<object class="NSDictionary" key="NSOptions">
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSArray" key="dict.sortedKeys">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>NSMultipleValuesPlaceholder</string>
+									<string>NSNotApplicablePlaceholder</string>
+									<string>NSNullPlaceholder</string>
+								</object>
+								<object class="NSMutableArray" key="dict.values">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>Mutliple</string>
+									<string>NotApplicable</string>
+									<string>Null</string>
+								</object>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19085</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="810084006"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector" id="336474737">
+							<reference key="NSSource" ref="810084006"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19518</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: values.MPECustomAspectRatio</string>
+						<reference key="source" ref="810084006"/>
+						<reference key="destination" ref="299649667"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="810084006"/>
+							<reference key="NSDestination" ref="299649667"/>
+							<string key="NSLabel">hidden: values.MPECustomAspectRatio</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">values.MPECustomAspectRatio</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSIsNil</string>
+							</object>
+							<reference key="NSPreviousConnector" ref="336474737"/>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19519</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="872878021"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="872878021"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19504</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="772633321"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="772633321"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19496</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="748694322"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="748694322"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19497</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="1015279709"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1015279709"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19494</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="207953085"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="207953085"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19608</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="683529277"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="683529277"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19503</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="285625447"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="285625447"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19502</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="377720310"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="377720310"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19501</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="337623063"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="337623063"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19500</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="638368239"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="638368239"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19499</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="406833632"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="406833632"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19498</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: activePlayer.player.movieOpen</string>
+						<reference key="source" ref="986973415"/>
+						<reference key="destination" ref="700428315"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="986973415"/>
+							<reference key="NSDestination" ref="700428315"/>
+							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19495</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -2863,14 +3364,6 @@
 					<int key="connectionID">19399</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">menuController</string>
-						<reference key="source" ref="700428315"/>
-						<reference key="destination" ref="847214199"/>
-					</object>
-					<int key="connectionID">19400</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">setSizeFromMenu:</string>
 						<reference key="source" ref="847214199"/>
@@ -2919,459 +3412,6 @@
 					<int key="connectionID">19493</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="1015279709"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="1015279709"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19494</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="986973415"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="986973415"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19495</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="772633321"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="772633321"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19496</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="748694322"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="748694322"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19497</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="406833632"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="406833632"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19498</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="638368239"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="638368239"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19499</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="337623063"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="337623063"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19500</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="377720310"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="377720310"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19501</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="285625447"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="285625447"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19502</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="683529277"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="683529277"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19503</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="872878021"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="872878021"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19504</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="107923094"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="107923094"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19505</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="434144637"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="434144637"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19506</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="993460538"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="993460538"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19507</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="190163487"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="190163487"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19508</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="277199025"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="277199025"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19509</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="236617444"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="236617444"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19510</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="1038818498"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="1038818498"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19511</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="103271458"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="103271458"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19512</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="260083644"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="260083644"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19513</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="762544581"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="762544581"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19514</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="375942366"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="375942366"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19515</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="122275591"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="122275591"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19516</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="870466676"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="870466676"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19517</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="810084006"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector" id="336474737">
-							<reference key="NSSource" ref="810084006"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19518</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">hidden: values.MPECustomAspectRatio</string>
-						<reference key="source" ref="810084006"/>
-						<reference key="destination" ref="299649667"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="810084006"/>
-							<reference key="NSDestination" ref="299649667"/>
-							<string key="NSLabel">hidden: values.MPECustomAspectRatio</string>
-							<string key="NSBinding">hidden</string>
-							<string key="NSKeyPath">values.MPECustomAspectRatio</string>
-							<object class="NSDictionary" key="NSOptions">
-								<string key="NS.key.0">NSValueTransformerName</string>
-								<string key="NS.object.0">NSIsNil</string>
-							</object>
-							<reference key="NSPreviousConnector" ref="336474737"/>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19519</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="983516722"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="983516722"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19520</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">delete:</string>
-						<reference key="source" ref="543772563"/>
-						<reference key="destination" ref="326030844"/>
-					</object>
-					<int key="connectionID">19521</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">clearRecentDocuments:</string>
-						<reference key="source" ref="543772563"/>
-						<reference key="destination" ref="813315762"/>
-					</object>
-					<int key="connectionID">19592</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">openInspector:</string>
 						<reference key="source" ref="847214199"/>
@@ -3386,22 +3426,6 @@
 						<reference key="destination" ref="935798517"/>
 					</object>
 					<int key="connectionID">19595</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="803428905"/>
-						<reference key="destination" ref="700428315"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="803428905"/>
-							<reference key="NSDestination" ref="700428315"/>
-							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
-							<string key="NSBinding">enabled</string>
-							<string key="NSKeyPath">activePlayer.player.movieOpen</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">19597</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -3452,20 +3476,12 @@
 					<int key="connectionID">19604</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">openNewPlayerWindow:</string>
-						<reference key="source" ref="700428315"/>
-						<reference key="destination" ref="730552444"/>
-					</object>
-					<int key="connectionID">19606</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">enabled: activePlayer.player.movieOpen</string>
-						<reference key="source" ref="207953085"/>
+						<reference key="source" ref="803428905"/>
 						<reference key="destination" ref="700428315"/>
 						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="207953085"/>
+							<reference key="NSSource" ref="803428905"/>
 							<reference key="NSDestination" ref="700428315"/>
 							<string key="NSLabel">enabled: activePlayer.player.movieOpen</string>
 							<string key="NSBinding">enabled</string>
@@ -3473,7 +3489,7 @@
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">19608</int>
+					<int key="connectionID">19597</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -5013,224 +5029,114 @@
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<object class="NSArray" key="dict.sortedKeys">
 					<bool key="EncodedWithXMLCoder">YES</bool>
+					<string>-1.IBPluginDependency</string>
+					<string>-2.IBPluginDependency</string>
 					<string>-3.IBPluginDependency</string>
-					<string>-3.ImportedFromIB2</string>
 					<string>103.IBPluginDependency</string>
-					<string>103.ImportedFromIB2</string>
-					<string>106.IBEditorWindowLastContentRect</string>
 					<string>106.IBPluginDependency</string>
-					<string>106.ImportedFromIB2</string>
 					<string>111.IBPluginDependency</string>
-					<string>111.ImportedFromIB2</string>
 					<string>1182.IBPluginDependency</string>
-					<string>1182.ImportedFromIB2</string>
 					<string>1183.IBPluginDependency</string>
-					<string>1183.ImportedFromIB2</string>
 					<string>1184.IBPluginDependency</string>
-					<string>1184.ImportedFromIB2</string>
 					<string>1185.IBPluginDependency</string>
-					<string>1185.ImportedFromIB2</string>
 					<string>1186.IBPluginDependency</string>
-					<string>1186.ImportedFromIB2</string>
 					<string>1187.IBPluginDependency</string>
-					<string>1187.ImportedFromIB2</string>
 					<string>1193.IBPluginDependency</string>
-					<string>1193.ImportedFromIB2</string>
 					<string>1207.IBPluginDependency</string>
-					<string>1207.ImportedFromIB2</string>
 					<string>1237.IBPluginDependency</string>
-					<string>1237.ImportedFromIB2</string>
 					<string>129.IBPluginDependency</string>
-					<string>129.ImportedFromIB2</string>
-					<string>130.IBEditorWindowLastContentRect</string>
 					<string>130.IBPluginDependency</string>
-					<string>130.ImportedFromIB2</string>
 					<string>131.IBPluginDependency</string>
-					<string>131.ImportedFromIB2</string>
 					<string>134.IBPluginDependency</string>
-					<string>134.ImportedFromIB2</string>
 					<string>136.IBPluginDependency</string>
-					<string>136.ImportedFromIB2</string>
-					<string>14036.ImportedFromIB2</string>
+					<string>14036.IBPluginDependency</string>
 					<string>14037.IBPluginDependency</string>
-					<string>14037.ImportedFromIB2</string>
 					<string>14039.IBPluginDependency</string>
-					<string>14039.ImportedFromIB2</string>
 					<string>143.IBPluginDependency</string>
-					<string>143.ImportedFromIB2</string>
 					<string>14327.IBPluginDependency</string>
-					<string>14327.ImportedFromIB2</string>
 					<string>14328.IBPluginDependency</string>
-					<string>14328.ImportedFromIB2</string>
 					<string>14329.IBPluginDependency</string>
-					<string>14329.ImportedFromIB2</string>
 					<string>14330.IBPluginDependency</string>
-					<string>14330.ImportedFromIB2</string>
 					<string>144.IBPluginDependency</string>
-					<string>144.ImportedFromIB2</string>
 					<string>145.IBPluginDependency</string>
-					<string>145.ImportedFromIB2</string>
 					<string>14566.IBPluginDependency</string>
-					<string>14566.ImportedFromIB2</string>
 					<string>14571.IBPluginDependency</string>
-					<string>14571.ImportedFromIB2</string>
 					<string>149.IBPluginDependency</string>
-					<string>149.ImportedFromIB2</string>
 					<string>150.IBPluginDependency</string>
-					<string>150.ImportedFromIB2</string>
 					<string>156.IBPluginDependency</string>
-					<string>156.ImportedFromIB2</string>
 					<string>1564.IBPluginDependency</string>
-					<string>1564.ImportedFromIB2</string>
-					<string>1565.IBEditorWindowLastContentRect</string>
 					<string>1565.IBPluginDependency</string>
-					<string>1565.ImportedFromIB2</string>
 					<string>157.IBPluginDependency</string>
-					<string>157.ImportedFromIB2</string>
 					<string>158.IBPluginDependency</string>
-					<string>158.ImportedFromIB2</string>
 					<string>1581.IBPluginDependency</string>
-					<string>1581.ImportedFromIB2</string>
-					<string>1582.IBEditorWindowLastContentRect</string>
 					<string>1582.IBPluginDependency</string>
-					<string>1582.ImportedFromIB2</string>
 					<string>1583.IBPluginDependency</string>
-					<string>1583.ImportedFromIB2</string>
 					<string>1584.IBPluginDependency</string>
-					<string>1584.ImportedFromIB2</string>
 					<string>1586.IBPluginDependency</string>
-					<string>1586.ImportedFromIB2</string>
-					<string>15867.IBEditorWindowLastContentRect</string>
 					<string>15867.IBPluginDependency</string>
-					<string>15867.ImportedFromIB2</string>
 					<string>1587.IBPluginDependency</string>
-					<string>1587.ImportedFromIB2</string>
 					<string>15870.IBPluginDependency</string>
-					<string>15870.ImportedFromIB2</string>
 					<string>15871.IBPluginDependency</string>
-					<string>15871.ImportedFromIB2</string>
-					<string>15873.IBEditorWindowLastContentRect</string>
 					<string>15873.IBPluginDependency</string>
-					<string>15873.ImportedFromIB2</string>
 					<string>15874.IBPluginDependency</string>
-					<string>15874.ImportedFromIB2</string>
 					<string>15875.IBPluginDependency</string>
-					<string>15875.ImportedFromIB2</string>
 					<string>15876.IBPluginDependency</string>
-					<string>15876.ImportedFromIB2</string>
 					<string>15877.IBPluginDependency</string>
-					<string>15877.ImportedFromIB2</string>
 					<string>15878.IBPluginDependency</string>
-					<string>15878.ImportedFromIB2</string>
 					<string>15879.IBPluginDependency</string>
-					<string>15879.ImportedFromIB2</string>
 					<string>1588.IBPluginDependency</string>
-					<string>1588.ImportedFromIB2</string>
 					<string>15880.IBPluginDependency</string>
-					<string>15880.ImportedFromIB2</string>
 					<string>15881.IBPluginDependency</string>
-					<string>15881.ImportedFromIB2</string>
 					<string>15882.IBPluginDependency</string>
-					<string>15882.ImportedFromIB2</string>
 					<string>15883.IBPluginDependency</string>
-					<string>15883.ImportedFromIB2</string>
 					<string>15884.IBPluginDependency</string>
-					<string>15884.ImportedFromIB2</string>
 					<string>15885.IBPluginDependency</string>
-					<string>15885.ImportedFromIB2</string>
 					<string>15886.IBPluginDependency</string>
-					<string>15886.ImportedFromIB2</string>
 					<string>15887.IBPluginDependency</string>
-					<string>15887.ImportedFromIB2</string>
 					<string>15888.IBPluginDependency</string>
-					<string>15888.ImportedFromIB2</string>
 					<string>15889.IBPluginDependency</string>
-					<string>15889.ImportedFromIB2</string>
 					<string>1589.IBPluginDependency</string>
-					<string>1589.ImportedFromIB2</string>
 					<string>15890.IBPluginDependency</string>
-					<string>15890.ImportedFromIB2</string>
 					<string>15891.IBPluginDependency</string>
-					<string>15891.ImportedFromIB2</string>
 					<string>15892.IBPluginDependency</string>
-					<string>15892.ImportedFromIB2</string>
 					<string>15893.IBPluginDependency</string>
-					<string>15893.ImportedFromIB2</string>
 					<string>15894.IBPluginDependency</string>
-					<string>15894.ImportedFromIB2</string>
 					<string>15895.IBPluginDependency</string>
-					<string>15895.ImportedFromIB2</string>
 					<string>15896.IBPluginDependency</string>
-					<string>15896.ImportedFromIB2</string>
 					<string>15897.IBPluginDependency</string>
-					<string>15897.ImportedFromIB2</string>
 					<string>15898.IBPluginDependency</string>
-					<string>15898.ImportedFromIB2</string>
 					<string>15899.IBPluginDependency</string>
-					<string>15899.ImportedFromIB2</string>
 					<string>15900.IBPluginDependency</string>
-					<string>15900.ImportedFromIB2</string>
 					<string>15901.IBPluginDependency</string>
-					<string>15901.ImportedFromIB2</string>
 					<string>15902.IBPluginDependency</string>
-					<string>15902.ImportedFromIB2</string>
 					<string>15903.IBPluginDependency</string>
-					<string>15903.ImportedFromIB2</string>
 					<string>15904.IBPluginDependency</string>
-					<string>15904.ImportedFromIB2</string>
 					<string>15905.IBPluginDependency</string>
-					<string>15905.ImportedFromIB2</string>
 					<string>15906.IBPluginDependency</string>
-					<string>15906.ImportedFromIB2</string>
 					<string>15907.IBPluginDependency</string>
-					<string>15907.ImportedFromIB2</string>
 					<string>15908.IBPluginDependency</string>
-					<string>15908.ImportedFromIB2</string>
 					<string>15909.IBPluginDependency</string>
-					<string>15909.ImportedFromIB2</string>
 					<string>15910.IBPluginDependency</string>
-					<string>15910.ImportedFromIB2</string>
 					<string>15911.IBPluginDependency</string>
-					<string>15911.ImportedFromIB2</string>
 					<string>15912.IBPluginDependency</string>
-					<string>15912.ImportedFromIB2</string>
 					<string>15913.IBPluginDependency</string>
-					<string>15913.ImportedFromIB2</string>
 					<string>15914.IBPluginDependency</string>
-					<string>15914.ImportedFromIB2</string>
 					<string>15915.IBPluginDependency</string>
-					<string>15915.ImportedFromIB2</string>
 					<string>15916.IBPluginDependency</string>
-					<string>15916.ImportedFromIB2</string>
 					<string>15917.IBPluginDependency</string>
-					<string>15917.ImportedFromIB2</string>
 					<string>15918.IBPluginDependency</string>
-					<string>15918.ImportedFromIB2</string>
 					<string>15919.IBPluginDependency</string>
-					<string>15919.ImportedFromIB2</string>
 					<string>15920.IBPluginDependency</string>
-					<string>15920.ImportedFromIB2</string>
 					<string>15921.IBPluginDependency</string>
-					<string>15921.ImportedFromIB2</string>
 					<string>160.IBPluginDependency</string>
-					<string>160.ImportedFromIB2</string>
 					<string>163.IBPluginDependency</string>
-					<string>163.ImportedFromIB2</string>
 					<string>164.IBPluginDependency</string>
-					<string>164.ImportedFromIB2</string>
-					<string>169.IBEditorWindowLastContentRect</string>
 					<string>169.IBPluginDependency</string>
-					<string>169.ImportedFromIB2</string>
 					<string>171.IBPluginDependency</string>
-					<string>171.ImportedFromIB2</string>
 					<string>172.IBPluginDependency</string>
-					<string>172.ImportedFromIB2</string>
 					<string>173.IBPluginDependency</string>
-					<string>173.ImportedFromIB2</string>
 					<string>174.IBPluginDependency</string>
-					<string>174.ImportedFromIB2</string>
 					<string>18591.IBPluginDependency</string>
-					<string>18591.ImportedFromIB2</string>
 					<string>18631.IBPluginDependency</string>
 					<string>18632.IBPluginDependency</string>
 					<string>18633.IBPluginDependency</string>
@@ -5245,73 +5151,38 @@
 					<string>18819.IBPluginDependency</string>
 					<string>18820.IBPluginDependency</string>
 					<string>19.IBPluginDependency</string>
-					<string>19.ImportedFromIB2</string>
 					<string>19037.IBPluginDependency</string>
-					<string>19037.ImportedFromIB2</string>
 					<string>19135.IBPluginDependency</string>
-					<string>19135.ImportedFromIB2</string>
-					<string>19156.IBEditorWindowLastContentRect</string>
 					<string>19156.IBPluginDependency</string>
-					<string>19156.ImportedFromIB2</string>
 					<string>19157.IBPluginDependency</string>
-					<string>19157.ImportedFromIB2</string>
 					<string>19158.IBPluginDependency</string>
-					<string>19158.ImportedFromIB2</string>
 					<string>19159.IBPluginDependency</string>
 					<string>19160.IBPluginDependency</string>
-					<string>19161.IBEditorWindowLastContentRect</string>
 					<string>19161.IBPluginDependency</string>
-					<string>19161.ImportedFromIB2</string>
 					<string>19162.IBPluginDependency</string>
-					<string>19162.ImportedFromIB2</string>
 					<string>19163.IBPluginDependency</string>
-					<string>19163.ImportedFromIB2</string>
 					<string>19164.IBPluginDependency</string>
-					<string>19164.ImportedFromIB2</string>
 					<string>19165.IBPluginDependency</string>
-					<string>19165.ImportedFromIB2</string>
 					<string>19180.IBPluginDependency</string>
-					<string>19180.ImportedFromIB2</string>
 					<string>19184.IBPluginDependency</string>
-					<string>19184.ImportedFromIB2</string>
-					<string>19219.IBEditorWindowLastContentRect</string>
 					<string>19219.IBPluginDependency</string>
-					<string>19219.ImportedFromIB2</string>
 					<string>19220.IBPluginDependency</string>
-					<string>19220.ImportedFromIB2</string>
 					<string>19221.IBPluginDependency</string>
 					<string>19222.IBPluginDependency</string>
-					<string>19222.ImportedFromIB2</string>
 					<string>19223.IBPluginDependency</string>
-					<string>19223.ImportedFromIB2</string>
 					<string>19224.IBPluginDependency</string>
-					<string>19224.ImportedFromIB2</string>
 					<string>19225.IBPluginDependency</string>
-					<string>19225.ImportedFromIB2</string>
 					<string>19226.IBPluginDependency</string>
-					<string>19226.ImportedFromIB2</string>
 					<string>19227.IBPluginDependency</string>
-					<string>19227.ImportedFromIB2</string>
 					<string>19228.IBPluginDependency</string>
-					<string>19228.ImportedFromIB2</string>
 					<string>19229.IBPluginDependency</string>
-					<string>19229.ImportedFromIB2</string>
 					<string>19230.IBPluginDependency</string>
-					<string>19230.ImportedFromIB2</string>
 					<string>19231.IBPluginDependency</string>
-					<string>19231.ImportedFromIB2</string>
 					<string>19232.IBPluginDependency</string>
-					<string>19232.ImportedFromIB2</string>
 					<string>19233.IBPluginDependency</string>
-					<string>19233.ImportedFromIB2</string>
 					<string>19234.IBPluginDependency</string>
-					<string>19234.ImportedFromIB2</string>
 					<string>19235.IBPluginDependency</string>
-					<string>19235.ImportedFromIB2</string>
-					<string>19236.IBEditorWindowLastContentRect</string>
 					<string>19236.IBPluginDependency</string>
-					<string>19236.ImportedFromIB2</string>
-					<string>19237.IBEditorWindowLastContentRect</string>
 					<string>19237.IBPluginDependency</string>
 					<string>19238.IBPluginDependency</string>
 					<string>19239.IBPluginDependency</string>
@@ -5322,339 +5193,172 @@
 					<string>19244.IBPluginDependency</string>
 					<string>19245.IBPluginDependency</string>
 					<string>19342.IBPluginDependency</string>
+					<string>19348.IBPluginDependency</string>
 					<string>19589.IBPluginDependency</string>
-					<string>19590.IBEditorWindowLastContentRect</string>
 					<string>19590.IBPluginDependency</string>
 					<string>19591.IBPluginDependency</string>
 					<string>19593.IBPluginDependency</string>
 					<string>19596.IBPluginDependency</string>
-					<string>19596.ImportedFromIB2</string>
 					<string>19605.IBPluginDependency</string>
 					<string>19617.IBPluginDependency</string>
 					<string>19618.IBPluginDependency</string>
 					<string>19619.IBPluginDependency</string>
 					<string>1983.IBPluginDependency</string>
-					<string>1983.ImportedFromIB2</string>
 					<string>1984.IBPluginDependency</string>
-					<string>1984.ImportedFromIB2</string>
 					<string>2053.IBPluginDependency</string>
-					<string>2053.ImportedFromIB2</string>
 					<string>2167.IBPluginDependency</string>
-					<string>2167.ImportedFromIB2</string>
 					<string>2228.IBPluginDependency</string>
-					<string>2228.ImportedFromIB2</string>
 					<string>2231.IBPluginDependency</string>
-					<string>2231.ImportedFromIB2</string>
 					<string>23.IBPluginDependency</string>
-					<string>23.ImportedFromIB2</string>
-					<string>24.IBEditorWindowLastContentRect</string>
 					<string>24.IBPluginDependency</string>
-					<string>24.ImportedFromIB2</string>
-					<string>29.IBEditorWindowLastContentRect</string>
 					<string>29.IBPluginDependency</string>
-					<string>29.ImportedFromIB2</string>
 					<string>4296.IBPluginDependency</string>
-					<string>4296.ImportedFromIB2</string>
 					<string>4298.IBPluginDependency</string>
-					<string>4298.ImportedFromIB2</string>
 					<string>5.IBPluginDependency</string>
-					<string>5.ImportedFromIB2</string>
 					<string>5387.IBPluginDependency</string>
-					<string>5387.ImportedFromIB2</string>
-					<string>5388.IBEditorWindowLastContentRect</string>
 					<string>5388.IBPluginDependency</string>
-					<string>5388.ImportedFromIB2</string>
 					<string>5390.IBPluginDependency</string>
-					<string>5390.ImportedFromIB2</string>
 					<string>5391.IBPluginDependency</string>
-					<string>5391.ImportedFromIB2</string>
 					<string>5392.IBPluginDependency</string>
-					<string>5392.ImportedFromIB2</string>
 					<string>5393.IBPluginDependency</string>
-					<string>5393.ImportedFromIB2</string>
 					<string>5394.IBPluginDependency</string>
-					<string>5394.ImportedFromIB2</string>
 					<string>5395.IBPluginDependency</string>
-					<string>5395.ImportedFromIB2</string>
 					<string>5397.IBPluginDependency</string>
-					<string>5397.ImportedFromIB2</string>
 					<string>5398.IBPluginDependency</string>
-					<string>5398.ImportedFromIB2</string>
 					<string>5400.IBPluginDependency</string>
-					<string>5400.ImportedFromIB2</string>
 					<string>5401.IBPluginDependency</string>
-					<string>5401.ImportedFromIB2</string>
 					<string>56.IBPluginDependency</string>
-					<string>56.ImportedFromIB2</string>
 					<string>5635.IBPluginDependency</string>
-					<string>5635.ImportedFromIB2</string>
 					<string>5636.IBPluginDependency</string>
-					<string>5636.ImportedFromIB2</string>
 					<string>5637.IBPluginDependency</string>
-					<string>5637.ImportedFromIB2</string>
-					<string>57.IBEditorWindowLastContentRect</string>
 					<string>57.IBPluginDependency</string>
-					<string>57.ImportedFromIB2</string>
 					<string>58.IBPluginDependency</string>
-					<string>58.ImportedFromIB2</string>
 					<string>6993.IBPluginDependency</string>
-					<string>6993.ImportedFromIB2</string>
-					<string>704.IBEditorWindowLastContentRect</string>
 					<string>704.IBPluginDependency</string>
 					<string>704.IBWindowTemplateEditedContentRect</string>
-					<string>704.ImportedFromIB2</string>
 					<string>705.IBPluginDependency</string>
-					<string>705.ImportedFromIB2</string>
 					<string>72.IBPluginDependency</string>
-					<string>72.ImportedFromIB2</string>
-					<string>723.ImportedFromIB2</string>
+					<string>723.IBPluginDependency</string>
 					<string>7230.IBPluginDependency</string>
-					<string>7230.ImportedFromIB2</string>
 					<string>757.IBPluginDependency</string>
-					<string>757.ImportedFromIB2</string>
-					<string>81.IBEditorWindowLastContentRect</string>
 					<string>81.IBPluginDependency</string>
-					<string>81.ImportedFromIB2</string>
 					<string>83.IBPluginDependency</string>
-					<string>83.ImportedFromIB2</string>
 					<string>899.IBPluginDependency</string>
-					<string>899.ImportedFromIB2</string>
 					<string>92.IBPluginDependency</string>
-					<string>92.ImportedFromIB2</string>
 					<string>921.IBPluginDependency</string>
-					<string>921.ImportedFromIB2</string>
 					<string>922.IBPluginDependency</string>
-					<string>922.ImportedFromIB2</string>
 					<string>923.IBPluginDependency</string>
-					<string>923.ImportedFromIB2</string>
 					<string>924.IBPluginDependency</string>
-					<string>924.ImportedFromIB2</string>
 					<string>9382.IBPluginDependency</string>
-					<string>9382.ImportedFromIB2</string>
-					<string>9383.IBEditorWindowLastContentRect</string>
 					<string>9383.IBPluginDependency</string>
-					<string>9383.ImportedFromIB2</string>
 				</object>
 				<object class="NSMutableArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
-					<string>{{660, 938}, {300, 63}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
-					<string>{{366, 1000}, {64, 6}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
-					<string>{{531, 838}, {205, 163}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
-					<string>{{736, 718}, {156, 263}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
-					<string>{{327, 945}, {373, 39}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
-					<string>{{426, 248}, {252, 735}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
-					<string>{{410, 838}, {151, 163}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -5669,73 +5373,38 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
-					<string>{{326, 891}, {373, 24}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{425, 837}, {252, 71}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
-					<string>{{454, 688}, {212, 313}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
-					<string>{{666, 885}, {64, 6}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
-					<string>{{666, 728}, {187, 143}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -5747,117 +5416,66 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{579, 958}, {143, 23}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
-					<string>{{589, 798}, {221, 203}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
-					<string>{{176, 1001}, {545, 20}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
-					<string>{{736, 918}, {156, 83}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
-					<string>{{188, 808}, {274, 193}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{14, 964}, {480, 181}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{14, 964}, {480, 181}}</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
-					<string>{{368, 808}, {211, 193}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
-					<string>{{736, 955}, {64, 6}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<boolean value="YES"/>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="unlocalizedProperties">
@@ -5872,442 +5490,11 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">19644</int>
+			<int key="maxID">19645</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<bool key="EncodedWithXMLCoder">YES</bool>
-				<object class="IBPartialClassDescription">
-					<string key="className">AppController</string>
-					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>addToPlaylist:</string>
-							<string>applyLocation:</string>
-							<string>applyVIDEO_TSLocation:</string>
-							<string>cancelLocation:</string>
-							<string>cancelVIDEO_TSLocation:</string>
-							<string>closeWindow:</string>
-							<string>displayLogWindow:</string>
-							<string>openFile:</string>
-							<string>openHomepage:</string>
-							<string>openLicenseAndCredits:</string>
-							<string>openLocation:</string>
-							<string>openSubtitle:</string>
-							<string>openVIDEO_TS:</string>
-							<string>showFilesChanged:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>NSPopUpButton</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>addToPlaylist:</string>
-							<string>applyLocation:</string>
-							<string>applyVIDEO_TSLocation:</string>
-							<string>cancelLocation:</string>
-							<string>cancelVIDEO_TSLocation:</string>
-							<string>closeWindow:</string>
-							<string>displayLogWindow:</string>
-							<string>openFile:</string>
-							<string>openHomepage:</string>
-							<string>openLicenseAndCredits:</string>
-							<string>openLocation:</string>
-							<string>openSubtitle:</string>
-							<string>openVIDEO_TS:</string>
-							<string>showFilesChanged:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBActionInfo">
-								<string key="name">addToPlaylist:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">applyLocation:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">applyVIDEO_TSLocation:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">cancelLocation:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">cancelVIDEO_TSLocation:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">closeWindow:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">displayLogWindow:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">openFile:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">openHomepage:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">openLicenseAndCredits:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">openLocation:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">openSubtitle:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">openVIDEO_TS:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">showFilesChanged:</string>
-								<string key="candidateClassName">NSPopUpButton</string>
-							</object>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>aspectMenu</string>
-							<string>closeMenuItem</string>
-							<string>customAspectMenuItem</string>
-							<string>equalizerController</string>
-							<string>inspectorController</string>
-							<string>locationBox</string>
-							<string>locationPanel</string>
-							<string>menuController</string>
-							<string>openFileSettings</string>
-							<string>openSubtitleEncoding</string>
-							<string>openSubtitleSettings</string>
-							<string>playerWindow</string>
-							<string>preferencesController</string>
-							<string>video_tsBox</string>
-							<string>video_tsPanel</string>
-							<string>video_tsbutton</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>NSMenu</string>
-							<string>id</string>
-							<string>NSMenuItem</string>
-							<string>EqualizerController</string>
-							<string>InspectorController</string>
-							<string>id</string>
-							<string>id</string>
-							<string>MenuController</string>
-							<string>NSView</string>
-							<string>NSPopUpButton</string>
-							<string>NSView</string>
-							<string>id</string>
-							<string>PreferencesController2</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>aspectMenu</string>
-							<string>closeMenuItem</string>
-							<string>customAspectMenuItem</string>
-							<string>equalizerController</string>
-							<string>inspectorController</string>
-							<string>locationBox</string>
-							<string>locationPanel</string>
-							<string>menuController</string>
-							<string>openFileSettings</string>
-							<string>openSubtitleEncoding</string>
-							<string>openSubtitleSettings</string>
-							<string>playerWindow</string>
-							<string>preferencesController</string>
-							<string>video_tsBox</string>
-							<string>video_tsPanel</string>
-							<string>video_tsbutton</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">aspectMenu</string>
-								<string key="candidateClassName">NSMenu</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">closeMenuItem</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">customAspectMenuItem</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">equalizerController</string>
-								<string key="candidateClassName">EqualizerController</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">inspectorController</string>
-								<string key="candidateClassName">InspectorController</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">locationBox</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">locationPanel</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">menuController</string>
-								<string key="candidateClassName">MenuController</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">openFileSettings</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">openSubtitleEncoding</string>
-								<string key="candidateClassName">NSPopUpButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">openSubtitleSettings</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">playerWindow</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">preferencesController</string>
-								<string key="candidateClassName">PreferencesController2</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">video_tsBox</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">video_tsPanel</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">video_tsbutton</string>
-								<string key="candidateClassName">id</string>
-							</object>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/AppController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">EqualizerController</string>
-					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>addAudioPreset:</string>
-							<string>applyWithRestart:</string>
-							<string>changeAudioValue:</string>
-							<string>changePreset:</string>
-							<string>removeAudioPreset:</string>
-							<string>resetAudioEqualizer:</string>
-							<string>resetVideoEqualizer:</string>
-							<string>resetVideoEqualizerToDefaults:</string>
-							<string>setVideoValuesAsDefault:</string>
-							<string>toggleEnableAudioEqualizerByDefault:</string>
-							<string>toggleEnableVideoEqualizerByDefault:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>NSMenuItem</string>
-							<string>id</string>
-							<string>NSSlider</string>
-							<string>NSPopUpButton</string>
-							<string>NSMenuItem</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>addAudioPreset:</string>
-							<string>applyWithRestart:</string>
-							<string>changeAudioValue:</string>
-							<string>changePreset:</string>
-							<string>removeAudioPreset:</string>
-							<string>resetAudioEqualizer:</string>
-							<string>resetVideoEqualizer:</string>
-							<string>resetVideoEqualizerToDefaults:</string>
-							<string>setVideoValuesAsDefault:</string>
-							<string>toggleEnableAudioEqualizerByDefault:</string>
-							<string>toggleEnableVideoEqualizerByDefault:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBActionInfo">
-								<string key="name">addAudioPreset:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">applyWithRestart:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">changeAudioValue:</string>
-								<string key="candidateClassName">NSSlider</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">changePreset:</string>
-								<string key="candidateClassName">NSPopUpButton</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">removeAudioPreset:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">resetAudioEqualizer:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">resetVideoEqualizer:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">resetVideoEqualizerToDefaults:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">setVideoValuesAsDefault:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">toggleEnableAudioEqualizerByDefault:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">toggleEnableVideoEqualizerByDefault:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>audioApplyButton</string>
-							<string>audioEqualizerWindow</string>
-							<string>enableAudioEqualizerByDefaultItem</string>
-							<string>enableVideoEqualizerByDefaultItem</string>
-							<string>presetNameField</string>
-							<string>presetNameView</string>
-							<string>presetSelectionPopUp</string>
-							<string>videoEqualizerWindow</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>NSButton</string>
-							<string>NSWindow</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSTextField</string>
-							<string>NSView</string>
-							<string>NSPopUpButton</string>
-							<string>NSWindow</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>audioApplyButton</string>
-							<string>audioEqualizerWindow</string>
-							<string>enableAudioEqualizerByDefaultItem</string>
-							<string>enableVideoEqualizerByDefaultItem</string>
-							<string>presetNameField</string>
-							<string>presetNameView</string>
-							<string>presetSelectionPopUp</string>
-							<string>videoEqualizerWindow</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">audioApplyButton</string>
-								<string key="candidateClassName">NSButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">audioEqualizerWindow</string>
-								<string key="candidateClassName">NSWindow</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">enableAudioEqualizerByDefaultItem</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">enableVideoEqualizerByDefaultItem</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">presetNameField</string>
-								<string key="candidateClassName">NSTextField</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">presetNameView</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">presetSelectionPopUp</string>
-								<string key="candidateClassName">NSPopUpButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">videoEqualizerWindow</string>
-								<string key="candidateClassName">NSWindow</string>
-							</object>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/EqualizerController.h</string>
-					</object>
-				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">FirstResponder</string>
 					<object class="NSMutableDictionary" key="actions">
@@ -6326,842 +5513,11 @@
 						<string key="minorKey"/>
 					</object>
 				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">InspectorController</string>
-					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>resetAudioBoost:</string>
-							<string>resetAudioDelay:</string>
-							<string>resetPlaybackSpeed:</string>
-							<string>resetSubtitleDelay:</string>
-							<string>resetSubtitleScale:</string>
-							<string>toggleSection:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>resetAudioBoost:</string>
-							<string>resetAudioDelay:</string>
-							<string>resetPlaybackSpeed:</string>
-							<string>resetSubtitleDelay:</string>
-							<string>resetSubtitleScale:</string>
-							<string>toggleSection:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBActionInfo">
-								<string key="name">resetAudioBoost:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">resetAudioDelay:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">resetPlaybackSpeed:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">resetSubtitleDelay:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">resetSubtitleScale:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">toggleSection:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>audioBoost</string>
-							<string>audioDelay</string>
-							<string>container</string>
-							<string>fileAttributesSection</string>
-							<string>fileAttributesTriangle</string>
-							<string>playbackSettingsSection</string>
-							<string>playbackSettingsTriangle</string>
-							<string>playbackSpeed</string>
-							<string>scroller</string>
-							<string>statisticsSection</string>
-							<string>statisticsTriangle</string>
-							<string>subtitleDelay</string>
-							<string>subtitleScale</string>
-							<string>window</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>NSSlider</string>
-							<string>NSSlider</string>
-							<string>NSView</string>
-							<string>NSView</string>
-							<string>NSButton</string>
-							<string>NSView</string>
-							<string>NSButton</string>
-							<string>NSSlider</string>
-							<string>NSScrollView</string>
-							<string>NSView</string>
-							<string>NSButton</string>
-							<string>NSSlider</string>
-							<string>NSSlider</string>
-							<string>NSWindow</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>audioBoost</string>
-							<string>audioDelay</string>
-							<string>container</string>
-							<string>fileAttributesSection</string>
-							<string>fileAttributesTriangle</string>
-							<string>playbackSettingsSection</string>
-							<string>playbackSettingsTriangle</string>
-							<string>playbackSpeed</string>
-							<string>scroller</string>
-							<string>statisticsSection</string>
-							<string>statisticsTriangle</string>
-							<string>subtitleDelay</string>
-							<string>subtitleScale</string>
-							<string>window</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">audioBoost</string>
-								<string key="candidateClassName">NSSlider</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">audioDelay</string>
-								<string key="candidateClassName">NSSlider</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">container</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">fileAttributesSection</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">fileAttributesTriangle</string>
-								<string key="candidateClassName">NSButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">playbackSettingsSection</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">playbackSettingsTriangle</string>
-								<string key="candidateClassName">NSButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">playbackSpeed</string>
-								<string key="candidateClassName">NSSlider</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">scroller</string>
-								<string key="candidateClassName">NSScrollView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">statisticsSection</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">statisticsTriangle</string>
-								<string key="candidateClassName">NSButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">subtitleDelay</string>
-								<string key="candidateClassName">NSSlider</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">subtitleScale</string>
-								<string key="candidateClassName">NSSlider</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">window</string>
-								<string key="candidateClassName">NSWindow</string>
-							</object>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/InspectorController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">MenuController</string>
-					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>addToPlaylist:</string>
-							<string>decreaseVolume:</string>
-							<string>fitScreen:</string>
-							<string>fullScreen:</string>
-							<string>increaseVolume:</string>
-							<string>muteVolume:</string>
-							<string>openAudioEqualizer:</string>
-							<string>openCustomAspectChooser:</string>
-							<string>openInspector:</string>
-							<string>openLog:</string>
-							<string>openPreferences:</string>
-							<string>openVideoEqualizer:</string>
-							<string>originalAspect:</string>
-							<string>playPause:</string>
-							<string>playlistNext:</string>
-							<string>playlistPrevious:</string>
-							<string>seekByTag:</string>
-							<string>setAspectFromMenu:</string>
-							<string>setSizeFromMenu:</string>
-							<string>setVideoScaleMode:</string>
-							<string>skipToChapterFromMenu:</string>
-							<string>skipToNext:</string>
-							<string>skipToPrevious:</string>
-							<string>stepFrame:</string>
-							<string>stop:</string>
-							<string>takeScreenshot:</string>
-							<string>toggleLoop:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>addToPlaylist:</string>
-							<string>decreaseVolume:</string>
-							<string>fitScreen:</string>
-							<string>fullScreen:</string>
-							<string>increaseVolume:</string>
-							<string>muteVolume:</string>
-							<string>openAudioEqualizer:</string>
-							<string>openCustomAspectChooser:</string>
-							<string>openInspector:</string>
-							<string>openLog:</string>
-							<string>openPreferences:</string>
-							<string>openVideoEqualizer:</string>
-							<string>originalAspect:</string>
-							<string>playPause:</string>
-							<string>playlistNext:</string>
-							<string>playlistPrevious:</string>
-							<string>seekByTag:</string>
-							<string>setAspectFromMenu:</string>
-							<string>setSizeFromMenu:</string>
-							<string>setVideoScaleMode:</string>
-							<string>skipToChapterFromMenu:</string>
-							<string>skipToNext:</string>
-							<string>skipToPrevious:</string>
-							<string>stepFrame:</string>
-							<string>stop:</string>
-							<string>takeScreenshot:</string>
-							<string>toggleLoop:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBActionInfo">
-								<string key="name">addToPlaylist:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">decreaseVolume:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">fitScreen:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">fullScreen:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">increaseVolume:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">muteVolume:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">openAudioEqualizer:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">openCustomAspectChooser:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">openInspector:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">openLog:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">openPreferences:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">openVideoEqualizer:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">originalAspect:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">playPause:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">playlistNext:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">playlistPrevious:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">seekByTag:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">setAspectFromMenu:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">setSizeFromMenu:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">setVideoScaleMode:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">skipToChapterFromMenu:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">skipToNext:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">skipToPrevious:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">stepFrame:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">stop:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">takeScreenshot:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">toggleLoop:</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>appController</string>
-							<string>audioStreamMenu</string>
-							<string>chapterMenu</string>
-							<string>fullscreenMenu</string>
-							<string>loopMenuItem</string>
-							<string>playMenuItem</string>
-							<string>stretchToFillMenuItem</string>
-							<string>subtitleStreamMenu</string>
-							<string>toggleMuteMenuItem</string>
-							<string>videoStreamMenu</string>
-							<string>zoomToFillMenuItem</string>
-							<string>zoomToFitMenuItem</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>AppController</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-							<string>NSMenuItem</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>appController</string>
-							<string>audioStreamMenu</string>
-							<string>chapterMenu</string>
-							<string>fullscreenMenu</string>
-							<string>loopMenuItem</string>
-							<string>playMenuItem</string>
-							<string>stretchToFillMenuItem</string>
-							<string>subtitleStreamMenu</string>
-							<string>toggleMuteMenuItem</string>
-							<string>videoStreamMenu</string>
-							<string>zoomToFillMenuItem</string>
-							<string>zoomToFitMenuItem</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">appController</string>
-								<string key="candidateClassName">AppController</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">audioStreamMenu</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">chapterMenu</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">fullscreenMenu</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">loopMenuItem</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">playMenuItem</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">stretchToFillMenuItem</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">subtitleStreamMenu</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">toggleMuteMenuItem</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">videoStreamMenu</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">zoomToFillMenuItem</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">zoomToFitMenuItem</string>
-								<string key="candidateClassName">NSMenuItem</string>
-							</object>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/MenuController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">PreferencesController2</string>
-					<string key="superclassName">NSWindowController</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>changeFont:</string>
-							<string>checkForUpdates:</string>
-							<string>chooseCustomAspectRatio:</string>
-							<string>requireRestart:</string>
-							<string>restartPlayback:</string>
-							<string>selectBinary:</string>
-							<string>selectNewScreenshotPath:</string>
-							<string>selectOutputDevice:</string>
-							<string>setChecksForUpdates:</string>
-							<string>switchView:</string>
-							<string>visitBinaryHomepage:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>NSPopUpButton</string>
-							<string>id</string>
-							<string>NSButton</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>NSPopUpButton</string>
-							<string>NSPopUpButton</string>
-							<string>NSButton</string>
-							<string>NSToolbarItem</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>changeFont:</string>
-							<string>checkForUpdates:</string>
-							<string>chooseCustomAspectRatio:</string>
-							<string>requireRestart:</string>
-							<string>restartPlayback:</string>
-							<string>selectBinary:</string>
-							<string>selectNewScreenshotPath:</string>
-							<string>selectOutputDevice:</string>
-							<string>setChecksForUpdates:</string>
-							<string>switchView:</string>
-							<string>visitBinaryHomepage:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBActionInfo">
-								<string key="name">changeFont:</string>
-								<string key="candidateClassName">NSPopUpButton</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">checkForUpdates:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">chooseCustomAspectRatio:</string>
-								<string key="candidateClassName">NSButton</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">requireRestart:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">restartPlayback:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">selectBinary:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">selectNewScreenshotPath:</string>
-								<string key="candidateClassName">NSPopUpButton</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">selectOutputDevice:</string>
-								<string key="candidateClassName">NSPopUpButton</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">setChecksForUpdates:</string>
-								<string key="candidateClassName">NSButton</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">switchView:</string>
-								<string key="candidateClassName">NSToolbarItem</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">visitBinaryHomepage:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>advancedView</string>
-							<string>audioDeviceMenu</string>
-							<string>audioView</string>
-							<string>binariesController</string>
-							<string>binariesTable</string>
-							<string>binaryInstallDefaultCheckbox</string>
-							<string>binaryInstallOptions</string>
-							<string>binaryInstallUpdatesCheckbox</string>
-							<string>binarySelectionPopUp</string>
-							<string>binarySelectionView</string>
-							<string>binaryUpdateCheckbox</string>
-							<string>cacheStatusIndicator</string>
-							<string>cacheStatusWindow</string>
-							<string>customAspectRatioChooser</string>
-							<string>defaultsController</string>
-							<string>displayView</string>
-							<string>fontsController</string>
-							<string>fontsMenu</string>
-							<string>fullscreenSelectionMatrix</string>
-							<string>generalView</string>
-							<string>mplayerView</string>
-							<string>osdLevelPopUp</string>
-							<string>restartView</string>
-							<string>textView</string>
-							<string>videoView</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>NSView</string>
-							<string>NSPopUpButton</string>
-							<string>NSView</string>
-							<string>NSDictionaryController</string>
-							<string>NSTableView</string>
-							<string>NSButton</string>
-							<string>NSView</string>
-							<string>NSButton</string>
-							<string>NSPopUpButton</string>
-							<string>NSView</string>
-							<string>NSButton</string>
-							<string>NSProgressIndicator</string>
-							<string>NSWindow</string>
-							<string>NSWindow</string>
-							<string>NSUserDefaultsController</string>
-							<string>NSView</string>
-							<string>NSDictionaryController</string>
-							<string>NSPopUpButton</string>
-							<string>NSMatrix</string>
-							<string>NSView</string>
-							<string>NSView</string>
-							<string>NSPopUpButton</string>
-							<string>NSView</string>
-							<string>NSView</string>
-							<string>NSView</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>advancedView</string>
-							<string>audioDeviceMenu</string>
-							<string>audioView</string>
-							<string>binariesController</string>
-							<string>binariesTable</string>
-							<string>binaryInstallDefaultCheckbox</string>
-							<string>binaryInstallOptions</string>
-							<string>binaryInstallUpdatesCheckbox</string>
-							<string>binarySelectionPopUp</string>
-							<string>binarySelectionView</string>
-							<string>binaryUpdateCheckbox</string>
-							<string>cacheStatusIndicator</string>
-							<string>cacheStatusWindow</string>
-							<string>customAspectRatioChooser</string>
-							<string>defaultsController</string>
-							<string>displayView</string>
-							<string>fontsController</string>
-							<string>fontsMenu</string>
-							<string>fullscreenSelectionMatrix</string>
-							<string>generalView</string>
-							<string>mplayerView</string>
-							<string>osdLevelPopUp</string>
-							<string>restartView</string>
-							<string>textView</string>
-							<string>videoView</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">advancedView</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">audioDeviceMenu</string>
-								<string key="candidateClassName">NSPopUpButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">audioView</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">binariesController</string>
-								<string key="candidateClassName">NSDictionaryController</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">binariesTable</string>
-								<string key="candidateClassName">NSTableView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">binaryInstallDefaultCheckbox</string>
-								<string key="candidateClassName">NSButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">binaryInstallOptions</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">binaryInstallUpdatesCheckbox</string>
-								<string key="candidateClassName">NSButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">binarySelectionPopUp</string>
-								<string key="candidateClassName">NSPopUpButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">binarySelectionView</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">binaryUpdateCheckbox</string>
-								<string key="candidateClassName">NSButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">cacheStatusIndicator</string>
-								<string key="candidateClassName">NSProgressIndicator</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">cacheStatusWindow</string>
-								<string key="candidateClassName">NSWindow</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">customAspectRatioChooser</string>
-								<string key="candidateClassName">NSWindow</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">defaultsController</string>
-								<string key="candidateClassName">NSUserDefaultsController</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">displayView</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">fontsController</string>
-								<string key="candidateClassName">NSDictionaryController</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">fontsMenu</string>
-								<string key="candidateClassName">NSPopUpButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">fullscreenSelectionMatrix</string>
-								<string key="candidateClassName">NSMatrix</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">generalView</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">mplayerView</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">osdLevelPopUp</string>
-								<string key="candidateClassName">NSPopUpButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">restartView</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">textView</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">videoView</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/PreferencesController2.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">SUUpdater</string>
-					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">checkForUpdates:</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">checkForUpdates:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">checkForUpdates:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">delegate</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<string key="NS.key.0">delegate</string>
-						<object class="IBToOneOutletInfo" key="NS.object.0">
-							<string key="name">delegate</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/SUUpdater.h</string>
-					</object>
-				</object>
 			</object>
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencies">
-			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
-			<integer value="1050" key="NS.object.0"/>
-		</object>
-		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
 			<integer value="1050" key="NS.object.0"/>
 		</object>
