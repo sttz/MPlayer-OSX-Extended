@@ -7,6 +7,9 @@ http://www.mplayerosx.ch/
 Issue tracker:
 https://github.com/sttz/MPlayer-OSX-Extended/issues
 
+Downloads:
+http://code.google.com/p/mplayerosxext/downloads/list
+
 Build Instructions
 ------------------
 
@@ -28,4 +31,4 @@ It's best to use the same Fontconfig and Freetype versions as used in the binary
 
 #### libiconv.2 ####
 
-On Lion use the system's `libiconv.2`. On Snow Leopard the system's `libiconv.2` is not new enough (Version 8 is required)  so install libiconv using for example homebrew or macports.
+On Lion use the system's `libiconv.2`. On Snow Leopard the system's `libiconv.2` is not new enough (Version 8 is required)  so install libiconv using for example homebrew or macports, then link to it.
