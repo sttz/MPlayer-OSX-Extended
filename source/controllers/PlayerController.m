@@ -365,6 +365,7 @@
 	NSURL *fileURL = [NSURL fileURLWithPath:[movieInfo filename]];
 	if (fileURL)
 		[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:fileURL];
+	[playerWindow setTitleWithRepresentedFilename:[movieInfo filename]]; // add poxy icon
 }
 
 /************************************************************************************/
@@ -1653,6 +1654,7 @@
 		if (stateMask & MIStateStoppedMask) {
 			// Update interface
 			[playerWindow setTitle:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]];
+			[playerWindow setRepresentedURL:nil]; // remove poxy icon
 			[timeTextField setTimestamptWithCurrentTime:0 andTotalTime:0];
 			[fullscreenButton setEnabled:NO];
 			// Disable stream menus
