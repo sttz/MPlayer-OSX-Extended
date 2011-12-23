@@ -622,6 +622,15 @@
 									<reference key="NSOnImage" ref="118746331"/>
 									<reference key="NSMixedImage" ref="280660191"/>
 								</object>
+								<object class="NSMenuItem" id="152772214">
+									<reference key="NSMenu" ref="21549871"/>
+									<string key="NSTitle">... Automatically</string>
+									<string key="NSKeyEquiv">E</string>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="118746331"/>
+									<reference key="NSMixedImage" ref="280660191"/>
+								</object>
 								<object class="NSMenuItem" id="413380583">
 									<reference key="NSMenu" ref="21549871"/>
 									<bool key="NSIsDisabled">YES</bool>
@@ -3600,6 +3609,22 @@
 					</object>
 					<int key="connectionID">19650</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: values.MPEAutomaticallyPlayNextEpisode</string>
+						<reference key="source" ref="152772214"/>
+						<reference key="destination" ref="299649667"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="152772214"/>
+							<reference key="NSDestination" ref="299649667"/>
+							<string key="NSLabel">value: values.MPEAutomaticallyPlayNextEpisode</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">values.MPEAutomaticallyPlayNextEpisode</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">19658</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -4860,6 +4885,7 @@
 							<reference ref="986973415"/>
 							<reference ref="413380583"/>
 							<reference ref="705082968"/>
+							<reference ref="152772214"/>
 						</object>
 						<reference key="parent" ref="369106797"/>
 					</object>
@@ -5112,6 +5138,11 @@
 						<reference key="object" ref="705082968"/>
 						<reference key="parent" ref="21549871"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">19651</int>
+						<reference key="object" ref="152772214"/>
+						<reference key="parent" ref="21549871"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -5294,6 +5325,7 @@
 					<string>19619.IBPluginDependency</string>
 					<string>19646.IBPluginDependency</string>
 					<string>19647.IBPluginDependency</string>
+					<string>19651.IBPluginDependency</string>
 					<string>1983.IBPluginDependency</string>
 					<string>1984.IBPluginDependency</string>
 					<string>2053.IBPluginDependency</string>
@@ -5553,6 +5585,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{14, 964}, {480, 181}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -5583,7 +5616,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">19650</int>
+			<int key="maxID">19658</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

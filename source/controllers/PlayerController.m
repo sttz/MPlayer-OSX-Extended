@@ -19,6 +19,8 @@
 #import "Preferences.h"
 #import "CocoaAdditions.h"
 
+#import "MovieMethods.h"
+
 // custom classes
 #import "VideoOpenGLView.h"
 #import "VolumeSlider.h"
@@ -727,7 +729,7 @@
 		else {
 			if (playingFromPlaylist)
 				[playListController finishedPlayingItem:movieInfo];
-			else
+			else if (! [self automaticallyPlayNextEpisode])
 				[self stop:nil];
 			//[self seek:100 mode:MISeekingModePercent];
 		}
@@ -748,6 +750,22 @@
 		else
 			[self seek:0 mode:MISeekingModePercent];
 	}
+}
+
+- (BOOL) automaticallyPlayNextEpisode
+{
+	if ([PREFS boolForKey:MPEAutomaticallyPlayNextEpisode]){
+		
+		NSString *filename = [[self currentMovieInfo] filename];
+		NSString *result = [MovieMethods findNextEpisodePathFrom:filename
+													   inFormats:	[NSSet setWithObjects:@"mkv", @"mp4", nil]];
+		if (result){
+			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:result];
+			[self playItem:item];
+			return YES;
+		}
+	}
+	return NO;
 }
 
 #pragma mark - Chapters
@@ -1706,8 +1724,12 @@
 				else
 					[self stopFromPlaylist];
 			// Regular play mode
-			} else
-				[videoOpenGLView close];
+			} else{
+				if (state != MIStateFinished || ![self automaticallyPlayNextEpisode]){
+					[videoOpenGLView close];
+				}
+				
+			}
 		// Next item already waiting, don't clean up
 		} else
 			continuousPlayback = NO;
@@ -1719,6 +1741,10 @@
 	// Update on-top
 	[self updateWindowOnTop];
 }
+
+
+
+
 /************************************************************************************/
 - (void) interface:(MPlayerInterface *)mi streamUpate:(MovieInfo *)item
 {
