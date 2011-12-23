@@ -13,10 +13,18 @@
 #include <stdlib.h>
 
 @interface MovieMethods(){}
-+(NSArray*) enumerateAllFilesAtDirectory:(NSString*)dirPath
++ (NSArray*) enumerateAllFilesAtDirectory:(NSString*)dirPath
 								withExtensions:(NSSet*)exts
 							  beginningWith:(NSString*)seriesName;
+
++ (NSNumber*) acceptNextEpisode:(NSNumber*)current
+						number:(NSNumber*)newNumber;
+
++ (NSNumber*) acceptPreviousEpisode:(NSNumber*)current
+							number:(NSNumber*)newNumber;
+
 @end
+
 static char ** ep_num (char *s);
 
 @implementation MovieMethods
@@ -32,11 +40,11 @@ static char ** ep_num (char *s);
 	NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:dirPath];
 	
 	for (NSString *file in directoryEnumerator) {
-		// enumerate the folder
+		// enumerate the directory
 		NSDictionary *fileAttr = [directoryEnumerator fileAttributes];
 		
 		if ([[fileAttr objectForKey:NSFileType] isEqualToString:NSFileTypeDirectory]) {
-			// skip all sub-folders
+			// skip all subdirectories
 			[directoryEnumerator skipDescendants];
 			
 		// the normal file and the file extension is OK or if exts is nil, don't care the extensions
@@ -64,7 +72,37 @@ static char ** ep_num (char *s);
 			inFormats:exts];
 }
 
+
 +(NSString*) findNextEpisodePathFrom:(NSString*)filepath inFormats:(NSSet*)exts
+{
+	return [self episodePathFrom:filepath 
+				inFormats:exts 
+				   accept:@selector(acceptNextEpisode:number:)];
+}
+
++ (NSString*) findPreviousEpisodePathFrom:(NSString*)filepath
+{
+	//	All Movies
+	NSSet *exts = [NSSet setWithObjects:@"3gp", @"3iv", @"asf", @"avi", @"asf", @"bin", @"cpk", @"dat", @"divx", @"dv", @"dvr-ms", @"fli", @"flv", @"h264", @"i263", @"m1v", @"m2t", @"m2ts", @"m2v", @"m4v", @"mkv", @"mov", @"mp2", @"mp4", @"mpeg", @"mpg", @"mpg2", @"mpg4", @"mpv", @"mqv", @"nut", @"nuv", @"nsv", @"ogg", @"ogm", @"ogv", @"qt", @"ram", @"rec", @"rm", @"rmvb", @"ts", @"vcd", @"vfw", @"vob", @"wmv", @"webm", nil];
+	
+	return [self findPreviousEpisodePathFrom:filepath 
+							   inFormats:exts];
+}
+
+
++ (NSString*) findPreviousEpisodePathFrom:(NSString*)filepath inFormats:(NSSet*)exts
+{
+	return [self episodePathFrom:filepath 
+					   inFormats:exts 
+						  accept:@selector(acceptPreviousEpisode:number:)];
+}
+
+
+
+// Finds the next episode that that is accept by the selector
++ (NSString*) episodePathFrom:(NSString*)filepath 
+				   inFormats:(NSSet*)exts
+					  accept:(SEL)accept
 {
 	NSString *nextPath = nil;	
 	if (filepath) {		
@@ -72,11 +110,12 @@ static char ** ep_num (char *s);
 		NSString *movieName = [[filepath lastPathComponent] stringByDeletingPathExtension];
 		char* cMovieName = strdup([movieName UTF8String]);
 		char **ans = ep_num(cMovieName);
-		if (ans[0] != NULL) {
-			
+		if (ans[0] != NULL) { // The filename was parsed successfully 
+			// Gets the episodeNumber		
 			long episodeNumber = strtol(ans[0] + 1, NULL, 10);
 			if (episodeNumber == 0 ) episodeNumber++;  
 			
+			// Get the series name 
 			int index = ans[1] != NULL ? 1 : 0;
 			char name[ ans[index] - cMovieName + 1];
 			strncpy(name, cMovieName, ans[index] - cMovieName);
@@ -96,8 +135,12 @@ static char ** ep_num (char *s);
 					char* cName = strdup([s UTF8String]);
 					char **result = ep_num(cName);
 					if (result[0] != NULL){
-						long nextEpisodeNumber = strtol(result[0] + 1, NULL, 10);
-						if (nextEpisodeNumber == episodeNumber + 1){
+						long newEpisodeNumber = strtol(result[0] + 1, NULL, 10);
+						BOOL use = 
+						[[self performSelector:accept 
+								   withObject:[NSNumber numberWithInt:episodeNumber]
+								   withObject:[NSNumber numberWithInt:newEpisodeNumber]] boolValue];
+						if (use){
 							nextPath = [dirPath stringByAppendingPathComponent:s];
 							free(result);
 							free(cName);
@@ -113,6 +156,19 @@ static char ** ep_num (char *s);
 	[Debug log:ASL_LEVEL_DEBUG withMessage:@"nextPath =%@ ",nextPath ];
 	return [nextPath retain];
 }
+
++ (NSNumber*) acceptNextEpisode:(NSNumber*)current
+						number:(NSNumber*)newNumber
+{
+	return [NSNumber numberWithInt:[current intValue]+1 == [newNumber intValue]];
+}
+
++ (NSNumber*) acceptPreviousEpisode:(NSNumber*)current
+							number:(NSNumber*)newNumber
+{
+	return [NSNumber numberWithInt:[current intValue]-1 == [newNumber intValue]];
+}
+
 
 /**
  * Get the postion of the name and number from the filename.
