@@ -672,8 +672,7 @@ static AppController *instance = nil;
 - (IBAction) playNextEpisode:(id)sender
 {
 	NSString *filename = [[self.movieInfoProvider currentMovieInfo] filename];
-	NSString *result = [MovieMethods findNextEpisodePathFrom:filename
-									  inFormats:	[NSSet setWithObjects:@"mkv", @"mp4", nil]];
+	NSString *result = [MovieMethods findNextEpisodePathFrom:filename];
 	[Debug log:ASL_LEVEL_INFO withMessage:@"currentFile=%@ nextFile=%@",filename, result ];
 	if (result) [self openFilePath:result];
 }

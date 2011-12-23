@@ -54,6 +54,16 @@ static char ** ep_num (char *s);
 }
 
 
+
++ (NSString*) findNextEpisodePathFrom:(NSString*)filepath
+{
+	//	All Movies
+	NSSet *exts = [NSSet setWithObjects:@"3gp", @"3iv", @"asf", @"avi", @"asf", @"bin", @"cpk", @"dat", @"divx", @"dv", @"dvr-ms", @"fli", @"flv", @"h264", @"i263", @"m1v", @"m2t", @"m2ts", @"m2v", @"m4v", @"mkv", @"mov", @"mp2", @"mp4", @"mpeg", @"mpg", @"mpg2", @"mpg4", @"mpv", @"mqv", @"nut", @"nuv", @"nsv", @"ogg", @"ogm", @"ogv", @"qt", @"ram", @"rec", @"rm", @"rmvb", @"ts", @"vcd", @"vfw", @"vob", @"wmv", @"webm", nil];
+	
+	return [self findNextEpisodePathFrom:filepath 
+			inFormats:exts];
+}
+
 +(NSString*) findNextEpisodePathFrom:(NSString*)filepath inFormats:(NSSet*)exts
 {
 	NSString *nextPath = nil;	
@@ -126,7 +136,7 @@ static char **ep_num (char *s)
 	
 	bool hack = false;
 	
-	// Quick hack to fix space at start of filename
+	// To handle space at start of filename
 	if    (*s == ' ') hack = true;
 	while (*s == ' ') s++; 
 	
@@ -161,12 +171,11 @@ static char **ep_num (char *s)
 			if(! isdigit(*(s-1))){
 				ans[index]  = s;
 				index++;
-				// quick fix for - types
+				// To handle - types
 				if( (s - start) >=2 ) ans[index] = s-2;
 			}
 		}
 		
-		//else 
 		if(index == 1 && !(*s == ' ' || *s == '-' || *s == '_' || *s  == '~'  ) ) {
 			char *t = (s + 1);
 			if( *t == ' ' || *t == '-' || *t == '_' || *t  == '~' ) {

@@ -755,10 +755,8 @@
 - (BOOL) automaticallyPlayNextEpisode
 {
 	if ([PREFS boolForKey:MPEAutomaticallyPlayNextEpisode]){
-		
 		NSString *filename = [[self currentMovieInfo] filename];
-		NSString *result = [MovieMethods findNextEpisodePathFrom:filename
-													   inFormats:	[NSSet setWithObjects:@"mkv", @"mp4", nil]];
+		NSString *result = [MovieMethods findNextEpisodePathFrom:filename];
 		if (result){
 			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:result];
 			[self playItem:item];

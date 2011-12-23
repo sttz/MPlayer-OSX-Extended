@@ -18,4 +18,7 @@
 // returns nil if not found.
 +(NSString*) findNextEpisodePathFrom:(NSString*)filepath inFormats:(NSSet*)exts;
 
+// As Above with all movie formats
++(NSString*) findNextEpisodePathFrom:(NSString*)filepath;
+
 @end
