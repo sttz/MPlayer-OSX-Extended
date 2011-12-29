@@ -10,16 +10,74 @@
 
 	<body>
 		<div id="banner">
-			<div id="machelp"><a class="bread" href="index.html">MPlayer OSX Help</a></div>
+			<div id="machelp"><a class="bread" href="index.html">MPlayer OSX Extended Help</a></div>
 		</div>
 		<div id="mainbox">
 			<div id="caticon"><img src="gfx/icon.png" alt="MPlayer icon" height="32" width="32" border="0"></div>
 			<div id="pagetitle"><h4>Tips and tricks</h4></div>
-			<p1>Unleash the full power of MPlayer, and customize to your hearts need, using these helpful tricks</p1>
+			<p1>Unleash the full power of MPlayer, and customize to your hearts need, using these helpful tricks, some are from this  <a href="http://code.google.com/p/mplayerosx-builds/wiki/">wiki</a> </p1>
 			<br>
 			<br>
 			<table class="dots" width="100%" border="0" cellspacing="0" cellpadding="5" summary="Two column table with heading">
 				<tr>
+
+					<td class="blue" colspan="2">
+						<h5>Video scaling</b></h5>
+					</td>
+				</tr>
+				<tr>
+					<td valign="center">
+						<p1>
+							If you watch a lot of dvd videos, you are probably not satisfied with the resolution and would like to upscale the source. MPlayer can do it! The filter I use looks like this: 
+<pre>-vf scale=-3:1050 -sws 9</pre>
+							This upscales the video using the lanczos filter, until the height is 1050px. If your monitor has 1920 × 1080 pixel you can use use: 
+<pre>-vf scale=-3:1080 -sws 9 </pre>
+							Hope you too can notice the difference between OSX hardware scaler and mplayer's software upscaler. 
+						<p1>
+					</td>
+				</tr>
+			</table>
+			<br>
+			<table class="dots" width="100%" border="0" cellspacing="0" cellpadding="5" summary="Two column table with heading">
+				<tr>
+
+					<td class="blue" colspan="2">
+						<h5>Downmixing DTS 5.1 audio to 2-channels</b></h5>
+					</td>
+				</tr>
+				<tr>
+					<td valign="center">
+						<p1>
+Alot of files come with DTS audio. if you are like me and prefer to watch videos with a good pair of headphones, you need to downmix the audio properly. Basing my calculations on <a href="http://www.hydrogenaudio.org/forums/index.php?showtopic=55442" rel="nofollow">this forum discussion</a> I ended up using this filter: 
+<pre>-channels 6 -af pan=2:.67:.33:.33:.67:.89:.11:.11:.89:.89:.89:.89:.89</pre>
+						<p1>
+					</td>
+				</tr>
+			</table>
+			<br>
+
+			<table class="dots" width="100%" border="0" cellspacing="0" cellpadding="5" summary="Two column table with heading">
+				<tr>
+
+					<td class="blue" colspan="2">
+						<h5>Play a section of a video</b></h5>
+					</td>
+				</tr>
+				<tr>
+					<td valign="center">
+						<p1>
+							To play a section of a file use <strong>-endpos</strong> and <strong>-ss</strong>.-endpos is relative to ss. so -ss 00:00:30 -endpos 00:00:10 would start at 00:00:30 and end at 00:00:40.
+
+							
+						<p1>
+					</td>
+				</tr>
+			</table>
+			<br>
+
+			<table class="dots" width="100%" border="0" cellspacing="0" cellpadding="5" summary="Two column table with heading">
+				<tr>
+
 					<td class="blue" colspan="2">
 						<h5><b>Using the command line MPlayer</b></h5>
 					</td>
@@ -30,7 +88,7 @@
 						To use the command line version of mplayer without any hussle, we suggest you create a link to the binary file
 						contained in the MPlayer OSX.app bundle. To do that, just type the following into your terminal:
 <pre>
-ln -s "/Applications/MPlayer\ OSX\ Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/mpextended.mpBinaries/Contents/MacOS/mplayer" /usr/local/bin/mplayer
+ln -s "/Applications/MPlayer OSX Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer" /usr/local/bin/mplayer
 </pre>
 						This will create a symlink to the mplayer command line binary, and place it into /usr/local/bin. (You can place it
 						anywhere you like, but traditionally, user made binaries, that are not part of the distribution are placed in

@@ -1,0 +1,58 @@
+# replacement regex to make rows  
+# (.*)\t(.*)   
+# <tr>  <td>  $1  </td>  <td> $2 </td> </tr>
+
+# replacement regex to make titles 
+# ^([A-Z][\w /]+)
+# <tr> <td class="blue" colspan="2"> <h5><b>$1</b></h5> </td> </tr>
+
+Common 
+p / SPACE	Pause (pressing again unpauses).
+q / ESC	Stop playing.
+f	Toggle fullscreen
+#	Cycle through the available audio tracks.
+T	Toggle stay-on-top
+
+Navigation
+← and →	Seek backward/forward 10 seconds.
+↓ and ↑	Seek backward/forward 1 minute.
+Pagedown and Pageup	Seek backward/forward 10 minutes.
+.	Step forward. Pressing once will pause movie, every consecutive press will play one frame and then go into pause mode again (any other key unpauses).
+! and @	Seek to the beginning of the previous/next chapter.
+
+Volume
+/ and *	Decrease/increase volume.
+9 and 0	Decrease/increase volume.
+m	Mute sound.
+
+Subtitles
+j	Cycle through the available subtitles.
+J	Cycle through the available subtitles backwards.
+y and g	Step forward/backward in the subtitle list. 
+x and z	Adjust subtitle delay by +/- 0.1 seconds.
+
+Playlists
+< and >	Go backward/forward in the playlist.
+ENTER	Go forward in the playlist.
+HOME and END	next/previous playtree entry in the parent list.
+
+Information
+I	Show filename on the OSD.
+P	Show current time/total time
+o	Toggle OSD states: none / seek / seek + timer / seek + timer + total time.
+⇥ (Tab)	Cycle timestamp display modes
+
+Delay / Frame Dropping  
++ and -	Adjust audio delay by +/- 0.1 seconds. 
+d	Toggle frame dropping states: none / skip display / skip decoding.
+
+Playback Speed
+[ and ]	Decrease/increase current playback speed by 10%.
+{ and }	Halve/double current playback speed.
+backspace	Reset playback speed to normal
+
+Video Equaliser
+1 and 2	Adjust contrast.
+3 and 4	Adjust brightness.
+5 and 6	Adjust hue.
+7 and 8	Adjust saturation.
