@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8">
+		<title>Tips and tricks</title>
+		<meta name="robots" content="anchors">
+		<link href="css/stylesheet.css" type="text/css" rel="stylesheet" media="all">
+	</head>
+
+	<body>
+		<div id="banner">
+			<div id="machelp"><a class="bread" href="index.html">MPlayer OSX Extended Help</a></div>
+		</div>
+		<div id="mainbox">
+			<div id="caticon"><img src="gfx/icon.png" alt="MPlayer icon" height="32" width="32" border="0"></div>
+			<div id="pagetitle"><h4>Tips and tricks</h4></div>
+			<br>
+			<table class="dots" width="100%" border="0" cellspacing="0" cellpadding="5" summary="Two column table with heading">
+				<tr>
+
+					<td class="blue" colspan="4">
+						<h5>Constants</b></h5>
+					</td>
+				</tr>
+				<tr>
+					<td valign="center" colspan="4">
+							<p1>Starting from rev13, MPlayer OSX Extended exposes a number of constants which can be changed by adding them to your preferences property list (you could call them "hidden preferences" as well).</p1>
+							<p1>You can change any of the following constants by either editing the plist directly or issuing following command in the terminal:<br></p1><pre>defaults write hu.mplayerhq.mplayerosx.extended &lt;key name&gt; &lt;value&gt;</pre>
+							<p1>And reset the constant to its default with the following command:<br></p1><pre>defaults delete hu.mplayerhq.mplayerosx.extended &lt;key name&gt;</pre>
+					</td>
+					
+						<tbody><tr>
+							<th><em>Key Name</em></th>
+							<th><em>Default</em></th>
+							<th><em>Description</em></th>
+							<th><em>Available from</em></th>
+						</tr>
+						<tr>
+
+							<td>MPEAudioDelayStepSize</td>
+							<td>0.1</td>
+							<td>Step size for audio delay keys ("+" and "-").</td>
+							<td>rev14</td>
+						</tr>
+						<tr>
+							<td>MPEFullscreenControlsHideTimeout</td>
+
+							<td>3</td>
+							<td>Time seconds the after which the fullscreen controls get hidden.</td>
+							<td>rev13</td>
+						</tr>
+						<tr>
+							<td>MPEFullscreenControlsSensitivity</td>
+							<td>200</td>
+
+							<td>How much movement is needed to show the fullscreen controls.</td>
+							<td>rev13</td>
+						</tr>
+						<tr>
+							<td>MPEPlaybackSpeedMultiplierBig</td>
+							<td>2</td>
+							<td>Big multiplier for playback speed keys ("{" and "}").</td>
+
+							<td>rev14</td>
+						</tr>
+						<tr>
+							<td>MPEPlaybackSpeedMultiplierSmall</td>
+							<td>1.1</td>
+							<td>Small multiplier for playback speed keys ("[" and "]").</td>
+							<td>rev14</td>
+
+						</tr>
+						<tr>
+							<td>MPEPreflightNumInstances</td>
+							<td>4</td>
+							<td>How many concurrent MPlayer instances are used to preflight items.</td>
+							<td>rev13</td>
+						</tr>
+
+						<tr>
+							<td>MPERemoteSeekBase</td>
+							<td>5</td>
+							<td>(see next item)</td>
+							<td>rev13</td>
+						</tr>
+						<tr>
+
+							<td>MPERemoteSkipStep</td>
+							<td>60</td>
+							<td>The seek step when holding forward/backward on the Apple Remote is caculated with base*2^step.</td>
+							<td>rev13</td>
+						</tr>
+						<tr>
+							<td>MPEScrollWheelSeekMultiple</td>
+
+							<td>10</td>
+							<td>The scroll wheel x-difference is multiplied with this value to get the seek amount in seconds.</td>
+							<td>rev13</td>
+						</tr>
+						<tr>
+							<td>MPESeekStepLarge</td>
+							<td>600</td>
+
+							<td>The large seek step in seconds (PgUp/PgDown).</td>
+							<td>rev13</td>
+						</tr>
+						<tr>
+							<td>MPESeekStepMedium</td>
+							<td>60</td>
+							<td>The medium seek step in seconds (Arrow up/down).</td>
+
+							<td>rev13</td>
+						</tr>
+						<tr>
+							<td>MPESeekStepSmall</td>
+							<td>10</td>
+							<td>The small seek step in seconds (Arrow left/right).</td>
+							<td>rev13</td>
+
+						</tr>
+						<tr>
+							<td>MPESubtitleDelayStepSize</td>
+							<td>0.1</td>
+							<td>Step size for subtitle delay keys ("x" and "z").</td>
+							<td>rev14</td>
+						</tr>
+
+						<tr>
+							<td>MPEVolumeStepSize</td>
+							<td>10</td>
+							<td>The volume step size for the menu command, keys and the Apple Remote.</td>
+							<td>rev13</td>
+						</tr>
+					</tbody>.
+					
+					
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>
