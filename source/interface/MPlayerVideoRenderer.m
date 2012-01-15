@@ -47,6 +47,7 @@
 - (NSInvocation *)invocationForSelector:(SEL)selector;
 - (void)callDelegateWithSelector:(SEL)selector andObject:(id)object;
 - (void)threadMain;
+- (CFStringRef) suggestedColorMatrix:(int)width withHeight:(int)height;
 - (void)renderOpenGL;
 - (void)adaptSize;
 @end
@@ -208,6 +209,11 @@
 	error = CVPixelBufferCreateWithBytes( NULL, image_width, image_height, kYUVSPixelFormat, image_buffer, image_width*image_bytes, NULL, NULL, NULL, &currentFrameBuffer);
 	if(error != kCVReturnSuccess)
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to create Pixel Buffer (%d)", error];
+
+	// Set the guessed color matrix based on video size
+	CVBufferSetAttachment(currentFrameBuffer,
+						  kCVImageBufferYCbCrMatrixKey, [self suggestedColorMatrix:width withHeight:height],
+						  kCVAttachmentMode_ShouldPropagate);
 	
 	error = CVOpenGLTextureCacheCreate(NULL, 0, ctx, CGLGetPixelFormat(ctx), 0, &textureCache);
 	if(error != kCVReturnSuccess)
@@ -252,6 +258,15 @@
 	
 	memcpy(image_buffer, image_data, image_width*image_height*image_bytes);
 	[self renderOpenGL];
+}
+
+/* Helper method to guess the correct colormatrix based on video size
+ */
+- (CFStringRef) suggestedColorMatrix:(int)width withHeight:(int)height {
+	if (width >= 1280 || height > 576)
+		return kCVImageBufferYCbCrMatrix_ITU_R_709_2;
+	else
+		return kCVImageBufferYCbCrMatrix_ITU_R_601_4;
 }
 
 - (void)renderOpenGL {
