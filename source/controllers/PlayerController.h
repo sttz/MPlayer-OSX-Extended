@@ -153,6 +153,7 @@
 - (void)skipToPreviousChapter;
 - (void)skipForwardIncludingChapters:(BOOL)includeChapters;
 - (void)skipBackwardIncludingChapters:(BOOL)includeChapters;
+- (BOOL) automaticallyPlayEpisode:(BOOL)next;
 
 - (void)clearStreamMenus;
 - (void)fillStreamMenus;

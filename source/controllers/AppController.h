@@ -104,6 +104,7 @@ PlayListController, MenuController, InspectorController, MovieInfo;
 
 - (void) restart;
 
+- (void) openFilePath:(NSString*)filepath;
 // actions
 - (IBAction) openFile:(id)sender;
 - (IBAction) addToPlaylist:(id)sender;
