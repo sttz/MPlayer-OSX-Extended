@@ -178,3 +178,6 @@ extern NSString* const MPEVideoEqualizerContrast;
 extern NSString* const MPEVideoEqualizerGamma;
 extern NSString* const MPEVideoEqualizerHue;
 extern NSString* const MPEVideoEqualizerSaturation;
+
+// ***  For play next episode
+extern NSString* const MPEAutomaticallyPlayNextEpisode;

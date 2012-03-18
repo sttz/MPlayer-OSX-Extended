@@ -166,3 +166,4 @@ NSString* const MPEVideoEqualizerGamma                = @"MPEVideoEqualizerGamma
 NSString* const MPEVideoEqualizerHue                  = @"MPEVideoEqualizerHue";
 NSString* const MPEVideoEqualizerSaturation           = @"MPEVideoEqualizerSaturation";
 
+NSString* const MPEAutomaticallyPlayNextEpisode		  = @"MPEAutomaticallyPlayNextEpisode";

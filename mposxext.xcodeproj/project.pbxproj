@@ -196,6 +196,7 @@
 		92E8E40F141D1E4800FFA813 /* wmv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92E8E402141D1E4800FFA813 /* wmv.icns */; };
 		92E8E411141D1E9000FFA813 /* mp4.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92E8E410141D1E9000FFA813 /* mp4.icns */; };
 		92E8E413141D1F2E00FFA813 /* m4v.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92E8E412141D1F2E00FFA813 /* m4v.icns */; };
+		92E9A6C81449139800223BE0 /* MovieMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 92E9A6C71449139800223BE0 /* MovieMethods.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -460,6 +461,8 @@
 		92E8E402141D1E4800FFA813 /* wmv.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = wmv.icns; sourceTree = "<group>"; };
 		92E8E410141D1E9000FFA813 /* mp4.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mp4.icns; sourceTree = "<group>"; };
 		92E8E412141D1F2E00FFA813 /* m4v.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = m4v.icns; sourceTree = "<group>"; };
+		92E9A6C61449139800223BE0 /* MovieMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieMethods.h; sourceTree = "<group>"; };
+		92E9A6C71449139800223BE0 /* MovieMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieMethods.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -614,6 +617,8 @@
 				3A7A6932139AB44D006A8B4A /* PlayListController.m */,
 				3A7A6933139AB44D006A8B4A /* PreferencesController2.h */,
 				3A7A6934139AB44D006A8B4A /* PreferencesController2.m */,
+				92E9A6C61449139800223BE0 /* MovieMethods.h */,
+				92E9A6C71449139800223BE0 /* MovieMethods.m */,
 			);
 			path = controllers;
 			sourceTree = "<group>";
@@ -1195,6 +1200,7 @@
 				3A7A6A41139AB44D006A8B4A /* Debug.m in Sources */,
 				3A7A6A42139AB44D006A8B4A /* LocalUserDefaults.m in Sources */,
 				3A4C775F13A51041000EDD78 /* ToggleEditLabel.m in Sources */,
+				92E9A6C81449139800223BE0 /* MovieMethods.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
