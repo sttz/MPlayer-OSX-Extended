@@ -577,7 +577,7 @@ static NSArray* statusNames;
 	// audio output device
 	if ([cPrefs integerForKey:MPEAudioOutputDevice] > 0) {
 		[params addObject:@"-ao"];
-		[params addObject:[NSString stringWithFormat:@"coreaudio:device_id=%d", [cPrefs integerForKey:MPEAudioOutputDevice]]];
+		[params addObject:[NSString stringWithFormat:@"coreaudio:device_id=%ld", (long)[cPrefs integerForKey:MPEAudioOutputDevice]]];
 	}
 	
 	// ac3/dts passthrough

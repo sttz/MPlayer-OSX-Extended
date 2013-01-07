@@ -75,7 +75,7 @@
 	NSMutableDictionary *idents = [NSMutableDictionary new];
 	for (NSToolbarItem *item in [[[self window] toolbar] items]) {
 		if ([item tag] >= 0) {
-			NSString *viewName = [viewTags objectForKey:[NSString stringWithFormat:@"%d",[item tag]]];
+			NSString *viewName = [viewTags objectForKey:[NSString stringWithFormat:@"%ld", (long)[item tag]]];
 			[idents setObject:[item itemIdentifier] 
 					   forKey:viewName];
 		}
