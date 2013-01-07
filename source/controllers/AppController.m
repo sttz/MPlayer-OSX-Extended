@@ -93,11 +93,6 @@ static AppController *instance = nil;
 	} else
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to load preferences specs."];
 	
-	// register for urls
-	[[NSAppleEventManager sharedAppleEventManager] 
-		setEventHandler:self andSelector:@selector(getUrl:withReplyEvent:) 
-		forEventClass:kInternetEventClass andEventID:kAEGetURL];
-	
 	// pre-load language codes
 	[LanguageCodes sharedInstance];
 	
@@ -680,6 +675,32 @@ static AppController *instance = nil;
 /************************************************************************************/
 #pragma mark - DELEGATE METHODS
 /*************************************************************************************/
+- (void)openDocuments:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
+{
+    NSAppleEventDescriptor *documents = [event paramDescriptorForKeyword:keyDirectObject];
+    NSURLBookmarkResolutionOptions resolveOptions = (
+        NSURLBookmarkResolutionWithoutUI
+        | NSURLBookmarkResolutionWithoutMounting
+    );
+    NSMutableArray *filenames = [[NSMutableArray new] autorelease];
+    
+    for (int i = 1; i <= [documents numberOfItems]; i++) {
+        NSData *bookmarkData = [[documents descriptorAtIndex:i] data];
+        NSURL *document = [NSURL URLByResolvingBookmarkData:bookmarkData
+                                                    options:resolveOptions
+                                              relativeToURL:nil
+                                        bookmarkDataIsStale:NO
+                                                      error:nil];
+        if (document) {
+            [filenames addObject:[document path]];
+        }
+    }
+    
+    if ([filenames count] > 0) {
+        [self application:NSApp openFiles:filenames];
+    }
+}
+/************************************************************************************/
 // app delegate method
 // executes when file is double clicked or dropped on apps icon
 // immediatlely starts to play dropped file without adding it to the playlist
@@ -808,6 +829,21 @@ static AppController *instance = nil;
 	// show main window if we won't be moved
 	[[players lastObject] displayWindow:self];
 	
+    // register for urls
+	[[NSAppleEventManager sharedAppleEventManager]
+     setEventHandler:self andSelector:@selector(getUrl:withReplyEvent:)
+     forEventClass:kInternetEventClass andEventID:kAEGetURL];
+    
+    // Workaround for a but on Mountain Lion that introduces a 5-6 second
+    // delay between opening files by double-clicking or dragging them onto
+    // the application and the application's windows being shown.
+    // If we handle the kAEOpenDocuments Apple Event directly, the delay disappears.
+    if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_7) {
+        [[NSAppleEventManager sharedAppleEventManager]
+         setEventHandler:self andSelector:@selector(openDocuments:withReplyEvent:)
+         forEventClass:kCoreEventClass andEventID:kAEOpenDocuments];
+    }
+    
 	// only initialize fontconfig if not moving and player window is loaded
 	[preferencesController loadFonts];
 }
