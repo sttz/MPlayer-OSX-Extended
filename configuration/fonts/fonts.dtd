@@ -12,7 +12,9 @@
     Add a directory that provides fonts
 -->
 <!ELEMENT dir (#PCDATA)>
-<!ATTLIST dir xml:space (default|preserve) 'preserve'>
+<!ATTLIST dir
+	  prefix    CDATA       "default"
+	  xml:space (default|preserve) 'preserve'>
 
 <!--
     Define the per-user file that holds cache font information.
@@ -33,7 +35,9 @@
     home directory path.
 -->
 <!ELEMENT cachedir (#PCDATA)>
-<!ATTLIST cachedir xml:space (default|preserve) 'preserve'>
+<!ATTLIST cachedir
+	  prefix    CDATA      "default"
+	  xml:space (default|preserve) 'preserve'>
 
 <!--
     Reference another configuration file; note that this
@@ -48,6 +52,8 @@
 <!ELEMENT include (#PCDATA)>
 <!ATTLIST include
 	  ignore_missing    (no|yes)		"no"
+	  prefix	    CDATA               "default"
+	  deprecated	    (yes|no)		"no"
 	  xml:space	    (default|preserve)	"preserve">
 
 <!--
@@ -63,7 +69,7 @@
     the set of valid Unicode chars.  This idea
     was borrowed from Mozilla
  -->
-<!ELEMENT blank (int)*>
+<!ELEMENT blank (int|range)*>
 
 <!--
     Aliases are just a special case for multiple match elements
@@ -107,20 +113,22 @@
 
 <!ELEMENT pattern (patelt)*>
 
-<!ENTITY % constant 'int|double|string|matrix|bool|charset|const'>
+<!ENTITY % constant 'int|double|string|matrix|bool|charset|langset|const'>
 
 <!ELEMENT patelt (%constant;)*>
 <!ATTLIST patelt
 	  name CDATA	#REQUIRED>
 
-<!ELEMENT alias (family*, prefer?, accept?, default?)>
+<!ELEMENT alias (test?, family*, prefer?, accept?, default?)>
+<!ATTLIST alias
+	  binding (weak|strong|same) "weak">
 <!ELEMENT prefer (family)*>
 <!ELEMENT accept (family)*>
 <!ELEMENT default (family)*>
 <!ELEMENT family (#PCDATA)>
 <!ATTLIST family xml:space (default|preserve) 'preserve'>
 
-<!ENTITY % expr 'int|double|string|matrix|bool|charset
+<!ENTITY % expr 'int|double|string|matrix|bool|charset|langset
 		|name|const
 		|or|and|eq|not_eq|less|less_eq|more|more_eq|contains|not_contains
 		|plus|minus|times|divide|not|if|floor|ceil|round|trunc'>
@@ -157,6 +165,7 @@
 	  qual (any|all|first|not_first)    "any"
 	  name CDATA	    #REQUIRED
 	  target (pattern|font|default)		"default"
+	  ignore-blanks (true|false)	"false"
 	  compare (eq|not_eq|less|less_eq|more|more_eq|contains|not_contains)	"eq">
 
 <!--
@@ -194,8 +203,9 @@
 <!ATTLIST string xml:space (default|preserve) 'preserve'>
 <!ELEMENT matrix (double,double,double,double)>
 <!ELEMENT bool (#PCDATA)>
-<!ELEMENT charset (#PCDATA)>
-<!ATTLIST charset xml:space (default|preserve) 'preserve'>
+<!ELEMENT charset (int|range)*>
+<!ELEMENT range (int,int)>
+<!ELEMENT langset (string)*>
 <!ELEMENT name (#PCDATA)>
 <!ATTLIST name xml:space (default|preserve) 'preserve'>
 <!ELEMENT const (#PCDATA)>
