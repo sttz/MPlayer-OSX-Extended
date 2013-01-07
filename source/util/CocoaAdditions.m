@@ -25,6 +25,7 @@
 #import "CocoaAdditions.h"
 #import <AppKit/NSView.h>
 
+#include <objc/runtime.h>
 #include <iconv.h>
 
 #define __iconvBufferLength 1024
