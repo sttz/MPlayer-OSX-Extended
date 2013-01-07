@@ -161,7 +161,10 @@ static AppController *instance = nil;
 
 - (void) removePlayer:(PlayerController *)player
 {
-	[players removeObject:player];
+    // Keep first player as it's wired to the playlist
+    if ([players indexOfObject:player] > 0) {
+        [players removeObject:player];
+    }
 	
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
 						  player,MPEPlayerNotificationPlayerControllerKey,
@@ -185,34 +188,51 @@ static AppController *instance = nil;
 	// Try to reuse an existing player
 	if ([PREFS boolForKey:MPEOpenFilesReusePlayers]) {
 		for (PlayerController *existingPlayer in players) {
-			if (![existingPlayer isRunning]) {
-				return existingPlayer;
-			}
-		}
-	}
-		
-	// Open a new player
-	if ([players count] == 0 || [PREFS integerForKey:MPEOpenFilesMode] == MPEOpenFilesInNewPlayer) {
-		return [self createNewPlayerController];
-
-	// Find frontmost window
-	} else {
-		NSArray *windows = [NSApp orderedWindows];
-		NSUInteger windowIndex = NSUIntegerMax;
-		for (PlayerController *existingPlayer in players) {
-			NSUInteger index = [windows indexOfObject:[player playerWindow]];
-			if (!player || (index != NSNotFound && index < windowIndex)) {
+			if (![existingPlayer isRunning] && [[existingPlayer playerWindow] isVisible]) {
 				player = existingPlayer;
-				windowIndex = index;
+                break;
 			}
 		}
-		return player;
 	}
+    
+    // No player to reuse found
+    if (!player) {
+        // Open a new player (reuse first player if it has been closed)
+        if ([PREFS integerForKey:MPEOpenFilesMode] == MPEOpenFilesInNewPlayer
+                && [[[players objectAtIndex:0] playerWindow] isVisible]) {
+            player = [self createNewPlayerController];
+
+        // Find frontmost window
+        } else {
+            NSArray *windows = [NSApp orderedWindows];
+            NSUInteger windowIndex = NSUIntegerMax;
+            for (PlayerController *existingPlayer in players) {
+                NSUInteger index = [windows indexOfObject:[player playerWindow]];
+                if (index != NSNotFound && index < windowIndex) {
+                    player = existingPlayer;
+                    windowIndex = index;
+                }
+            }
+        }
+    }
+    
+    if (player) {
+        return player;
+        
+    // Return first player if no other appropriate player has been found
+    } else {
+        return [players objectAtIndex:0];
+    }
 }
 
 - (void) openNewPlayerWindow:(id)sender
 {
-	[[self createNewPlayerController] displayWindow:self];
+    // Reuse first player window if it has been closed
+    if (![[[players objectAtIndex:0] playerWindow] isVisible]) {
+        [[players objectAtIndex:0] displayWindow:self];
+    } else {
+        [[self createNewPlayerController] displayWindow:self];
+    }
 }
 
 - (void) playerDidBecomeActivePlayer:(PlayerController *)player
@@ -334,13 +354,13 @@ static AppController *instance = nil;
         int i;
 		//  take care of multiple selection
 		for (i=0; i<[[thePanel filenames] count]; i++) {
-			//MovieInfo *item = [MovieInfo movieInfoWithPathToFile:[[thePanel filenames] objectAtIndex:i]];
+			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:[[thePanel filenames] objectAtIndex:i]];
 			[[self preferences]
 					setObject:[[[thePanel filenames] objectAtIndex:i]
 					stringByDeletingLastPathComponent]
 					forKey:MPEDefaultDirectory];
 			// TODO: Get correct playlist here
-			//[[[self firstPlayerController] playListController] appendItem:item];
+            [[[players objectAtIndex:0] playListController] appendItem:item];
 		}
     }
 }
@@ -738,14 +758,14 @@ static AppController *instance = nil;
 	NSString *filename;
 	
 	// TODO: Create new playlist here
-	//[[[self firstPlayerController] playListController] displayWindow:self];
+	[[[players objectAtIndex:0] playListController] displayWindow:self];
 	
 	// add files to playlist
 	while ((filename = [e nextObject])) {
 		// Only add movie files
 		if ([self isExtension:[filename pathExtension] ofType:MP_DIALOG_MEDIA]) {
-			//MovieInfo *item = [MovieInfo movieInfoWithPathToFile:filename];
-			//[[[self firstPlayerController] playListController] appendItem:item];
+			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:filename];
+			[[[players objectAtIndex:0] playListController] appendItem:item];
 		}
 	}
 	
