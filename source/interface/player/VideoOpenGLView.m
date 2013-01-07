@@ -77,16 +77,12 @@ static unsigned int videoViewId;
 	[self setAspectRatioFromPreferences];
 	
     if (isFullscreen) {
-		
 		[fullscreenWindow makeKeyAndOrderFront:nil];
-		isFullscreen = YES;
-		
 	} else {
-		
 		[self resizeView];
 	}
     
-	//Play in fullscreen
+	// Play in fullscreen
 	if (!isFullscreen
 			&& [PREFS integerForKey:MPEStartPlaybackDisplayType] == MPEStartPlaybackDisplayTypeFullscreen)
 		[self toggleFullscreen];
