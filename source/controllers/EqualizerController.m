@@ -67,13 +67,15 @@
 	MovieInfo *info = [AppController sharedController].movieInfoProvider.currentMovieInfo;
 	NSString *title = [info.prefs objectForKey:MPEAudioEqualizerSelectedPreset];
 	
-	if (title)
+	if (title) {
 		if ([presetSelectionPopUp itemWithTitle:title]) {
 			[presetSelectionPopUp selectItemWithTitle:title];
 			return;
-		} else
+		} else {
 			// Reset removed preset
 			[[info prefs] removeObjectForKey:MPEAudioEqualizerSelectedPreset];
+        }
+    }
 	
 	[presetSelectionPopUp selectItemWithTag:0];
 }
