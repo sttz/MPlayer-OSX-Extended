@@ -56,7 +56,7 @@ done
 
 # Configure deployment target and SDK
 deployment_target=10.5
-sdk_path=/Developer/SDKs/MacOSX10.6.sdk
+sdk_path=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk
 
 # Make sure pkg-config doesn't interfere
 export PKG_CONFIG_PATH="${build_root}/bin/pkg-config"
@@ -67,7 +67,7 @@ export PATH="$scripts_path:$PATH"
 
 # Set deployment target and SDK
 export MACOSX_DEPLOYMENT_TARGET=$deployment_target
-export CFLAGS="-mmacosx-version-min=${deployment_target} -isysroot ${sdk_path}"
+export CFLAGS="-mmacosx-version-min=${deployment_target} -isystem ${sdk_path}"
 export LDFLAGS="-mmacosx-version-min=${deployment_target} -isysroot ${sdk_path}"
 export LDFLAGS="$LDFLAGS -Wl,-syslibroot,${sdk_path}"
 export CXXFLAGS="-mmacosx-version-min=${deployment_target} -isysroot ${sdk_path}"
