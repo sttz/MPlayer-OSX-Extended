@@ -84,12 +84,14 @@
 
 - (IBAction) playlistPrevious:(NSMenuItem *)sender
 {
-	
+	// TODO: Choose proper playlist here
+    [[[[appController players] objectAtIndex:0] playListController] playPrevious:self];
 }
 
 - (IBAction) playlistNext:(NSMenuItem *)sender
 {
-	
+	// TODO: Choose proper playlist here
+    [[[[appController players] objectAtIndex:0] playListController] playNext:self];
 }
 
 
