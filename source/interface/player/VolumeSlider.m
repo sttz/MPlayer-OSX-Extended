@@ -2,6 +2,7 @@
 
 #import "PlayerWindow.h"
 #import "PlayerController.h"
+#import "CocoaAdditions.h"
 
 #import "Debug.h"
 
@@ -28,7 +29,7 @@
 {
 	knobOff = [[NSImage imageNamed:@"volumeKnobOff"] retain];
 	knobOn = [[NSImage imageNamed:@"volumeKnobOn"] retain];
-	knobOffset = -2;
+	knobOffset = -1;
 }
 
 - (void)drawKnob:(NSRect)knobRect
@@ -40,7 +41,11 @@
 	else
 		knob = knobOff;
 
-	[knob compositeToPoint: NSMakePoint(knobRect.origin.x,knobRect.origin.y+knobRect.size.height+knobOffset) operation:NSCompositeSourceOver];
+    [knob drawAtPoint:NSMakePoint(knobRect.origin.x, knobRect.origin.y - knobOffset)
+            fromRect:NSZeroRect
+           operation:NSCompositeSourceOver
+            fraction:1.0
+      respectFlipped:YES];
 }
 
 - (BOOL)startTrackingAt:(NSPoint)startPoint inView:(NSView *)controlView

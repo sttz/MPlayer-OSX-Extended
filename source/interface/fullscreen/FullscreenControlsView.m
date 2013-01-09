@@ -40,7 +40,10 @@
 	[[NSColor clearColor] set];
     NSRectFill([self frame]);
 	
-	[backgroudImage compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
+    [backgroudImage drawAtPoint:NSZeroPoint
+                       fromRect:NSZeroRect
+                      operation:NSCompositeSourceOver
+                       fraction:1.0];
 	
 	[[self window] invalidateShadow];
 }

@@ -76,3 +76,7 @@
 #endif
 - (NSMenuItem *)itemWithRepresentedIntegerValue:(NSInteger)value;
 @end
+
+@interface NSImage (MPEAdditions)
+- (void)drawAtPoint:(NSPoint)point fromRect:(NSRect)srcRect operation:(NSCompositingOperation)op fraction:(CGFloat)delta respectFlipped:(BOOL)respectContextIsFlipped;
+@end

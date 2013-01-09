@@ -24,6 +24,7 @@
 
 #import "FullscreenControlsVolumeSlider.h"
 
+#import "CocoaAdditions.h"
 
 @implementation FullscreenControlsVolumeSliderCell
 - (void)loadImages
@@ -31,7 +32,7 @@
 	// knobOff/On are released in [super dealloc]
 	knobOff = [[NSImage imageNamed:@"fc_aslider_knob"] retain];
 	knobOn = [[NSImage imageNamed:@"fc_aslider_knob_on"] retain];
-	knobOffset = -4;
+	knobOffset = -3;
 	barImage = [[NSImage imageNamed:@"fc_aslider_bar"] retain];
 }
 
@@ -43,7 +44,11 @@
 
 - (void)drawBarInside:(NSRect)aRect flipped:(BOOL)flipped
 {
-	[barImage compositeToPoint: NSMakePoint(aRect.origin.x,aRect.origin.y+(aRect.size.height/2)) operation:NSCompositeSourceOver];
+    [barImage drawAtPoint:NSMakePoint(aRect.origin.x,aRect.origin.y+(aRect.size.height/2))
+                 fromRect:NSZeroRect
+                operation:NSCompositeSourceOver
+                 fraction:1.0
+           respectFlipped:YES];
 }
 
 - (BOOL)_usesCustomTrackImage {

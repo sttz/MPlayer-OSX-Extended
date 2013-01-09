@@ -316,5 +316,15 @@
 
 @end
 
-
+@implementation NSImage (MPEAdditions)
+- (void)drawAtPoint:(NSPoint)point fromRect:(NSRect)srcRect operation:(NSCompositingOperation)op fraction:(CGFloat)delta respectFlipped:(BOOL)respectContextIsFlipped
+{
+    [self drawInRect:NSMakeRect(point.x, point.y, self.size.width, self.size.height)
+            fromRect:srcRect
+           operation:op
+            fraction:delta
+      respectFlipped:respectContextIsFlipped
+               hints:nil];
+}
+@end
 

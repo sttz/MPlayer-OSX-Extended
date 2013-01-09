@@ -43,7 +43,10 @@
 	int i = 0;
 	for (i = 0; i < numFrames; i++)
 	{
-        [scrubBarAnimFrame compositeToPoint:NSMakePoint(i * frameWidth, 0) operation:NSCompositeCopy];
+        [scrubBarAnimFrame drawAtPoint:NSMakePoint(i * frameWidth, 0)
+                              fromRect:NSZeroRect
+                             operation:NSCompositeCopy
+                              fraction:1.0];
     }
 	[scrubBarAnim unlockFocus];
 }
@@ -114,8 +117,14 @@
 	double theValue = [self doubleValue] / ([self maxValue] - [self minValue]);	
 	
 	//draw bar end left and right
-	[scrubBarEnds compositeToPoint:NSMakePoint(0, 0) fromRect:NSMakeRect(0,0,endWidth,[scrubBarEnds size].height) operation:NSCompositeSourceAtop];
-	[scrubBarEnds compositeToPoint:NSMakePoint([self frame].size.width - endWidth,0) fromRect:NSMakeRect(endWidth,0,endWidth,[scrubBarEnds size].height) operation:NSCompositeSourceAtop];
+	[scrubBarEnds drawAtPoint:NSMakePoint(0, 0)
+                     fromRect:NSMakeRect(0,0,endWidth,[scrubBarEnds size].height)
+                    operation:NSCompositeSourceAtop
+                     fraction:1.0];
+    [scrubBarEnds drawAtPoint:NSMakePoint([self frame].size.width - endWidth,0)
+                     fromRect:NSMakeRect(endWidth,0,endWidth,[scrubBarEnds size].height)
+                    operation:NSCompositeSourceAtop
+                     fraction:1.0];
 	
 	// resize the bar run frame if needed
 	if ([scrubBarRun size].width != runLength)
@@ -124,7 +133,10 @@
 		[scrubBarRun setSize:NSMakeSize(runLength, [scrubBarRun size].height)];
 		[scrubBarRun recache];
 	}
-	[scrubBarRun compositeToPoint:NSMakePoint(endWidth,0) operation:NSCompositeSourceAtop];
+    [scrubBarRun drawAtPoint:NSMakePoint(endWidth,0)
+                    fromRect:NSZeroRect
+                   operation:NSCompositeSourceAtop
+                    fraction:1.0];
 	
 	if ([self scrubStyle] == MPEScrubbingBarPositionStyle) {
 		// calculate actual x-position of badge with badge offset and shadow
@@ -134,9 +146,10 @@
 		if (badgeWidth > [scrubBarBadge size].width)
 			badgeWidth = [scrubBarBadge size].width;
 		
-		[scrubBarBadge compositeToPoint: NSMakePoint(badgePosX, yBadgeOffset)
-				fromRect: NSMakeRect(0, 0, badgeWidth, [scrubBarBadge size].height) 
-				operation: NSCompositeSourceAtop];
+        [scrubBarBadge drawAtPoint:NSMakePoint(badgePosX, yBadgeOffset)
+                          fromRect:NSMakeRect(0, 0, badgeWidth, [scrubBarBadge size].height)
+                         operation:NSCompositeSourceAtop
+                          fraction:1.0];
 		
 	} else if ([self scrubStyle] == MPEScrubbingBarProgressStyle) {
 		[scrubBarAnim 
