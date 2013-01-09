@@ -137,9 +137,9 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
     [toolbar setDisplayMode: NSToolbarDisplayModeIconOnly];
     [playListWindow setToolbar:toolbar];
 	
-	//display if playlist was opened on last quit
+	// Display if playlist was opened on last quit
 	if ([PREFS boolForKey:MPEPlaylistOpen])
-		[self performSelector:@selector(displayWindow:) withObject:nil afterDelay:0];
+		[playListWindow performSelector:@selector(orderFront:) withObject:self afterDelay:0];
 	
 	// Load playlist
 	myData = [[NSMutableArray alloc] init];
