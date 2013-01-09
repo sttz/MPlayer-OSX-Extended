@@ -846,10 +846,12 @@ static AppController *instance = nil;
 	if (PFMoveToApplicationsFolderIfNecessary())
 		return;
 	
-	// show main window if we won't be moved
-	[[players lastObject] displayWindow:self];
+	// show main window and ensure it becomes the active player
+    PlayerController *firstPlaer = [players lastObject];
+    [self playerDidBecomeActivePlayer:firstPlaer];
+	[firstPlaer displayWindow:self];
 	
-    // register for urls
+    // Register for urls
 	[[NSAppleEventManager sharedAppleEventManager]
      setEventHandler:self andSelector:@selector(getUrl:withReplyEvent:)
      forEventClass:kInternetEventClass andEventID:kAEGetURL];
@@ -864,7 +866,7 @@ static AppController *instance = nil;
          forEventClass:kCoreEventClass andEventID:kAEOpenDocuments];
     }
     
-	// only initialize fontconfig if not moving and player window is loaded
+	// Initialize fontconfig
 	[preferencesController loadFonts];
 }
 /******************************************************************************/
