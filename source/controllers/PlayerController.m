@@ -1169,6 +1169,7 @@
 			[NSString stringWithFormat:@"set_property switch_audio %d",[[sender representedObject] intValue]],
 			@"get_property switch_audio",
 			nil]];
+    [myPlayer applyVolume];
 }
 - (void)subtitleMenuAction:(id)sender {
 	
@@ -1204,11 +1205,12 @@
 - (void)cycleAudioStreamsWithOSD:(BOOL)showOSD {
 	
 	[myPlayer sendCommands:[NSArray arrayWithObjects:
-							@"switch_audio",
+							@"step_property switch_audio",
 							@"get_property switch_audio",
 							nil]
 				   withOSD:(showOSD ? MISurpressCommandOutputNever : MISurpressCommandOutputConditionally)
 				andPausing:MICommandPausingKeep];
+    [myPlayer applyVolume];
 }
 - (IBAction)cycleSubtitleStreams:(id)sender {
 	
