@@ -706,6 +706,14 @@
 									<reference key="NSOnImage" ref="118746331"/>
 									<reference key="NSMixedImage" ref="280660191"/>
 								</object>
+								<object class="NSMenuItem" id="691711694">
+									<reference key="NSMenu" ref="21549871"/>
+									<string key="NSTitle">Reset Volume</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="118746331"/>
+									<reference key="NSMixedImage" ref="280660191"/>
+								</object>
 							</object>
 						</object>
 					</object>
@@ -2163,7 +2171,6 @@
 						<string key="NSFrame">{{110, 1}, {252, 22}}</string>
 						<reference key="NSSuperview" ref="543008117"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<bool key="NSEnabled">YES</bool>
 						<object class="NSPopUpButtonCell" key="NSCell" id="590601190">
 							<int key="NSCellFlags">-2076180416</int>
@@ -3559,6 +3566,14 @@
 					<int key="connectionID">19604</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">resetVolume:</string>
+						<reference key="source" ref="847214199"/>
+						<reference key="destination" ref="691711694"/>
+					</object>
+					<int key="connectionID">19664</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">enabled: activePlayer.player.movieOpen</string>
 						<reference key="source" ref="803428905"/>
@@ -4900,6 +4915,7 @@
 							<reference ref="413380583"/>
 							<reference ref="705082968"/>
 							<reference ref="152772214"/>
+							<reference ref="691711694"/>
 						</object>
 						<reference key="parent" ref="369106797"/>
 					</object>
@@ -5162,6 +5178,11 @@
 						<reference key="object" ref="6163821"/>
 						<reference key="parent" ref="520000377"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">19662</int>
+						<reference key="object" ref="691711694"/>
+						<reference key="parent" ref="21549871"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -5346,6 +5367,7 @@
 					<string>19647.IBPluginDependency</string>
 					<string>19651.IBPluginDependency</string>
 					<string>19659.IBPluginDependency</string>
+					<string>19662.IBPluginDependency</string>
 					<string>1983.IBPluginDependency</string>
 					<string>1984.IBPluginDependency</string>
 					<string>2053.IBPluginDependency</string>
@@ -5607,6 +5629,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{14, 964}, {480, 181}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -5637,7 +5660,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">19661</int>
+			<int key="maxID">19664</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -5662,14 +5685,10 @@
 							<string>openLocation:</string>
 							<string>openSubtitle:</string>
 							<string>openVIDEO_TS:</string>
-							<string>openVIDEO_TSLocation:</string>
-							<string>playNextEpisode:</string>
 							<string>showFilesChanged:</string>
 						</object>
 						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -5703,8 +5722,6 @@
 							<string>openLocation:</string>
 							<string>openSubtitle:</string>
 							<string>openVIDEO_TS:</string>
-							<string>openVIDEO_TSLocation:</string>
-							<string>playNextEpisode:</string>
 							<string>showFilesChanged:</string>
 						</object>
 						<object class="NSArray" key="dict.values">
@@ -5759,14 +5776,6 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">openVIDEO_TS:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">openVIDEO_TSLocation:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">playNextEpisode:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
@@ -6319,6 +6328,7 @@
 							<string>playPause:</string>
 							<string>playlistNext:</string>
 							<string>playlistPrevious:</string>
+							<string>resetVolume:</string>
 							<string>seekByTag:</string>
 							<string>setAspectFromMenu:</string>
 							<string>setSizeFromMenu:</string>
@@ -6333,6 +6343,7 @@
 						</object>
 						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
@@ -6382,6 +6393,7 @@
 							<string>playPause:</string>
 							<string>playlistNext:</string>
 							<string>playlistPrevious:</string>
+							<string>resetVolume:</string>
 							<string>seekByTag:</string>
 							<string>setAspectFromMenu:</string>
 							<string>setSizeFromMenu:</string>
@@ -6458,6 +6470,10 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">playlistPrevious:</string>
+								<string key="candidateClassName">NSMenuItem</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">resetVolume:</string>
 								<string key="candidateClassName">NSMenuItem</string>
 							</object>
 							<object class="IBActionInfo">

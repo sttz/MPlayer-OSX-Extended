@@ -110,6 +110,11 @@
 	[[appController activePlayer] toggleMute:sender];
 }
 
+- (IBAction) resetVolume:(NSMenuItem *)sender
+{
+	[[appController activePlayer] setVolume:25];
+}
+
 
 // -- Movie Menu --------------------------------
 

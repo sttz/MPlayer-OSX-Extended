@@ -60,6 +60,7 @@ EqualizerController;
 - (IBAction) increaseVolume:(NSMenuItem *)sender;
 - (IBAction) decreaseVolume:(NSMenuItem *)sender;
 - (IBAction) muteVolume:(NSMenuItem *)sender;
+- (IBAction) resetVolume:(NSMenuItem *)sender;
 
 // Movie Menu
 - (IBAction) setSizeFromMenu:(NSMenuItem *)sender;
