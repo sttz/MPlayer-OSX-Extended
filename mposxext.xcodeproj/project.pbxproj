@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A335FD616B098EB0086C243 /* NSString+SymlinksAndAliases.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A335FD516B098EB0086C243 /* NSString+SymlinksAndAliases.m */; };
 		3A4C775F13A51041000EDD78 /* ToggleEditLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A4C775E13A51041000EDD78 /* ToggleEditLabel.m */; };
 		3A4C776313A54D69000EDD78 /* skipLeftTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A4C776113A54D69000EDD78 /* skipLeftTemplate.png */; };
 		3A4C776413A54D69000EDD78 /* skipRightTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A4C776213A54D69000EDD78 /* skipRightTemplate.png */; };
@@ -225,6 +226,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3A335FD416B098EB0086C243 /* NSString+SymlinksAndAliases.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SymlinksAndAliases.h"; sourceTree = "<group>"; };
+		3A335FD516B098EB0086C243 /* NSString+SymlinksAndAliases.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SymlinksAndAliases.m"; sourceTree = "<group>"; };
 		3A4C775D13A51041000EDD78 /* ToggleEditLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToggleEditLabel.h; sourceTree = "<group>"; };
 		3A4C775E13A51041000EDD78 /* ToggleEditLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToggleEditLabel.m; sourceTree = "<group>"; };
 		3A4C776113A54D69000EDD78 /* skipLeftTemplate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = skipLeftTemplate.png; sourceTree = "<group>"; };
@@ -582,6 +585,8 @@
 		3A7A691F139AB44D006A8B4A /* MoveApplication */ = {
 			isa = PBXGroup;
 			children = (
+				3A335FD416B098EB0086C243 /* NSString+SymlinksAndAliases.h */,
+				3A335FD516B098EB0086C243 /* NSString+SymlinksAndAliases.m */,
 				3A7A6920139AB44D006A8B4A /* PFMoveApplication.h */,
 				3A7A6921139AB44D006A8B4A /* PFMoveApplication.m */,
 			);
@@ -907,6 +912,7 @@
 				3A7A690E139AB44D006A8B4A /* source */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 1;
 		};
 		3ACDFE3B139AB3D900275362 /* Products */ = {
 			isa = PBXGroup;
@@ -1200,6 +1206,7 @@
 				3A7A6A42139AB44D006A8B4A /* LocalUserDefaults.m in Sources */,
 				3A4C775F13A51041000EDD78 /* ToggleEditLabel.m in Sources */,
 				92E9A6C81449139800223BE0 /* MovieMethods.m in Sources */,
+				3A335FD616B098EB0086C243 /* NSString+SymlinksAndAliases.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

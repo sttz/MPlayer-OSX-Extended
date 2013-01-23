@@ -843,8 +843,7 @@ static AppController *instance = nil;
 	[self setSparkleFeed];
 	
 	// offer to move application
-	if (PFMoveToApplicationsFolderIfNecessary())
-		return;
+	PFMoveToApplicationsFolderIfNecessary();
 	
 	// show main window and ensure it becomes the active player
     PlayerController *firstPlaer = [players lastObject];

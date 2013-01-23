@@ -1,5 +1,5 @@
 //
-//  PFMoveApplication.h, version 1.1
+//  PFMoveApplication.h, version 1.7.2
 //  LetsMove
 //
 //  Created by Andy Kim at Potion Factory LLC on 9/17/09
@@ -8,4 +8,4 @@
 
 #import <Foundation/Foundation.h>
 
-extern BOOL PFMoveToApplicationsFolderIfNecessary();
+void PFMoveToApplicationsFolderIfNecessary(void);
