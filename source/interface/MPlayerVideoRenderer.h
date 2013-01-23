@@ -62,8 +62,6 @@
 	uint32_t image_width;
 	uint32_t image_height;
 	uint32_t image_bytes;
-	float image_aspect;
-	float org_image_aspect;
 }
 
 @property (retain) id<MPlayerVideoRenderereDelegateProtocol> delegate;

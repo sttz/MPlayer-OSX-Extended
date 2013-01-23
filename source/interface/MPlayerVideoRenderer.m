@@ -91,8 +91,19 @@
 - (void)boundsDidChangeTo:(NSRect)bounds withVideoFrame:(NSRect)frame {
 	
 	CGLLockContext(ctx);
+	
 	textureFrame = frame;
+	textureFrame.origin.x = roundf(textureFrame.origin.x);
+	textureFrame.origin.y = roundf(textureFrame.origin.y);
+	textureFrame.size.width = roundf(textureFrame.size.width);
+	textureFrame.size.height = roundf(textureFrame.size.height);
+	
 	displayFrame = bounds;
+	displayFrame.origin.x = roundf(displayFrame.origin.x);
+	displayFrame.origin.y = roundf(displayFrame.origin.y);
+	displayFrame.size.width = roundf(displayFrame.size.width);
+	displayFrame.size.height = roundf(displayFrame.size.height);
+
 	CGLUnlockContext(ctx);
 	
 	[self adaptSize];
@@ -174,10 +185,7 @@
 	image_width = width;
 	image_height = height;
 	image_bytes = bytes;
-	image_aspect = aspect;
-	image_aspect = image_aspect/100;
-	org_image_aspect = image_aspect;
-	
+
 	shm_fd = shm_open([connectionName UTF8String], O_RDONLY, S_IRUSR);
 	if (shm_fd == -1)
 	{
@@ -206,6 +214,7 @@
 	glDisable(GL_CULL_FACE);
 	
 	// Setup CoreVideo Texture
+	// TODO: Support k24RGBPixelFormat, k32ARGBPixelFormat and k32BGRAPixelFormat
 	error = CVPixelBufferCreateWithBytes( NULL, image_width, image_height, kYUVSPixelFormat, image_buffer, image_width*image_bytes, NULL, NULL, NULL, &currentFrameBuffer);
 	if(error != kCVReturnSuccess)
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to create Pixel Buffer (%d)", error];
@@ -223,7 +232,7 @@
 	
 	// Start OpenGLView in GUI
 	[self callDelegateWithSelector:@selector(startRenderingWithSize:)
-						 andObject:[NSValue valueWithSize:NSMakeSize((image_height*image_aspect), image_height)]];
+						 andObject:[NSValue valueWithSize:NSMakeSize(image_width, image_height)]];
 	
 	isRendering = YES;
 	

@@ -329,11 +329,12 @@ static unsigned int videoViewId;
 		return;
 	
 	NSRect win_frame = [[self window] frame];
-	NSRect mov_frame = [self bounds];
-	NSSize minSize = [[self window]contentMinSize];
+	NSSize minSize = [[self window] contentMinSize];
+	NSSize mov_size = [self convertSizeToBase:[self bounds].size];
+	NSSize chrome_size = NSMakeSize(win_frame.size.width - mov_size.width, win_frame.size.height - mov_size.height);
 	NSRect screen_frame = [[[playerController playerWindow] screen] visibleFrame];
 	float fitFactor;
-	
+
 	// Determine maximal scale factor to fit screen
 	if (screen_frame.size.width / screen_frame.size.height > video_aspect)
 		fitFactor = screen_frame.size.height / video_size.height;
@@ -347,21 +348,21 @@ static unsigned int videoViewId;
 	// Limit factor
 	if (windowSizeMode == WSM_FIT_SCREEN || zoomFactor > fitFactor)
 		zoomFactor = fitFactor;
-	
+
 	// Apply size
-	win_frame.size.height += (video_size.height*zoomFactor) - mov_frame.size.height;
+	win_frame.size.height = (video_size.height*zoomFactor) + chrome_size.height;
 	
 	if(video_size.height*video_aspect*zoomFactor < minSize.width)
 		win_frame.size.width = minSize.width;
 	else
-		win_frame.size.width += video_size.height*video_aspect*zoomFactor - mov_frame.size.width;
-	
+		win_frame.size.width = video_size.height*video_aspect*zoomFactor + chrome_size.width;
+
 	// Keep window on screen
 	if (NSMaxX(win_frame) > NSMaxX(screen_frame))
 		win_frame.origin.x += NSMaxX(screen_frame) - NSMaxX(win_frame);
 	if (NSMinY(win_frame) < NSMinY(screen_frame))
 		win_frame.origin.y += NSMinY(screen_frame) - NSMinY(win_frame);
-	
+
 	[[self window] setFrame:win_frame display:YES animate:[[AppController sharedController] animateInterface]];
 	
 	// remove fullscreen callback

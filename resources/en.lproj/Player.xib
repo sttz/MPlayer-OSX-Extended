@@ -411,7 +411,7 @@
 						<object class="NSOpenGLView" id="981082951">
 							<reference key="NSNextResponder" ref="774858533"/>
 							<int key="NSvFlags">274</int>
-							<string key="NSFrame">{{0, 54}, {566, 313}}</string>
+							<string key="NSFrame">{{0, 54}, {565, 313}}</string>
 							<reference key="NSSuperview" ref="774858533"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="137559229"/>
@@ -1072,6 +1072,7 @@
 							<string key="NSFrame">{{30, 56}, {388, 26}}</string>
 							<reference key="NSSuperview" ref="694818864"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="262245080"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="883217584">
 								<int key="NSCellFlags">67108864</int>
@@ -1099,6 +1100,7 @@
 							<string key="NSFrame">{{109, 62}, {303, 12}}</string>
 							<reference key="NSSuperview" ref="694818864"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="801516116"/>
 							<int key="NSpiFlags">24844</int>
 							<double key="NSMaxValue">100</double>
 						</object>
@@ -1108,6 +1110,7 @@
 							<string key="NSFrame">{{29, 60}, {76, 18}}</string>
 							<reference key="NSSuperview" ref="694818864"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="228039738"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="585536615">
 								<int key="NSCellFlags">67108864</int>
@@ -1133,6 +1136,7 @@
 							<string key="NSFrame">{{163, 10}, {42, 38}}</string>
 							<reference key="NSSuperview" ref="694818864"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="985076788"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="895826710">
 								<int key="NSCellFlags">67108864</int>
@@ -1163,6 +1167,7 @@
 							<string key="NSFrame">{{242, 10}, {50, 38}}</string>
 							<reference key="NSSuperview" ref="694818864"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="613531348"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="36026815">
 								<int key="NSCellFlags">67108864</int>
@@ -1193,6 +1198,7 @@
 							<string key="NSFrame">{{204, 8}, {41, 42}}</string>
 							<reference key="NSSuperview" ref="694818864"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="397174536"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="637446991">
 								<int key="NSCellFlags">67108928</int>
@@ -1223,6 +1229,7 @@
 							<string key="NSFrame">{{417, 54}, {29, 30}}</string>
 							<reference key="NSSuperview" ref="694818864"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="981205803"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="368542095">
 								<int key="NSCellFlags">67108864</int>
@@ -1253,6 +1260,7 @@
 							<string key="NSFrame">{{2, 54}, {29, 30}}</string>
 							<reference key="NSSuperview" ref="694818864"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="1021833447"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="881728902">
 								<int key="NSCellFlags">67108864</int>
@@ -1313,6 +1321,7 @@
 							<string key="NSFrame">{{364, 17}, {31, 23}}</string>
 							<reference key="NSSuperview" ref="694818864"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="991288666"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="1051688248">
 								<int key="NSCellFlags">67108864</int>
@@ -1343,6 +1352,7 @@
 							<string key="NSFrame">{{331, 17}, {31, 23}}</string>
 							<reference key="NSSuperview" ref="694818864"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="322834418"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="629644682">
 								<int key="NSCellFlags">67108864</int>
@@ -1373,6 +1383,7 @@
 							<string key="NSFrame">{{36, 21}, {74, 15}}</string>
 							<reference key="NSSuperview" ref="694818864"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="847191769"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSSliderCell" key="NSCell" id="212782284">
 								<int key="NSCellFlags">67108864</int>
@@ -1399,6 +1410,7 @@
 							<string key="NSFrame">{{18, 18}, {13, 19}}</string>
 							<reference key="NSSuperview" ref="694818864"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="524983526"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="737643833">
 								<int key="NSCellFlags">67108864</int>
@@ -1427,6 +1439,7 @@
 					<string key="NSFrameSize">{451, 100}</string>
 					<reference key="NSSuperview"/>
 					<reference key="NSWindow"/>
+					<reference key="NSNextKeyView" ref="366329999"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
@@ -3892,6 +3905,7 @@ U2VlayAxMCBtaW51dGVzIGZvcndhcmQ</string>
 							<string>playPause:</string>
 							<string>playlistNext:</string>
 							<string>playlistPrevious:</string>
+							<string>resetVolume:</string>
 							<string>seekByTag:</string>
 							<string>setAspectFromMenu:</string>
 							<string>setSizeFromMenu:</string>
@@ -3906,6 +3920,7 @@ U2VlayAxMCBtaW51dGVzIGZvcndhcmQ</string>
 						</object>
 						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
@@ -3955,6 +3970,7 @@ U2VlayAxMCBtaW51dGVzIGZvcndhcmQ</string>
 							<string>playPause:</string>
 							<string>playlistNext:</string>
 							<string>playlistPrevious:</string>
+							<string>resetVolume:</string>
 							<string>seekByTag:</string>
 							<string>setAspectFromMenu:</string>
 							<string>setSizeFromMenu:</string>
@@ -4031,6 +4047,10 @@ U2VlayAxMCBtaW51dGVzIGZvcndhcmQ</string>
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">playlistPrevious:</string>
+								<string key="candidateClassName">NSMenuItem</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">resetVolume:</string>
 								<string key="candidateClassName">NSMenuItem</string>
 							</object>
 							<object class="IBActionInfo">
