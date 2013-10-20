@@ -127,7 +127,7 @@ static BOOL sharedInstanceConnectsStderr = NO;
 	[handler setDelegate:self];
 }
 
-- (BOOL) exceptionHandler:(NSExceptionHandler *)sender shouldHandleException:(NSException *)exception mask:(unsigned int)aMask {
+- (BOOL) exceptionHandler:(NSExceptionHandler *)sender shouldHandleException:(NSException *)exception mask:(NSUInteger)aMask {
 	[Debug log:ASL_LEVEL_ERR withMessage:@"Unhandled %@: %@ (stack: %@)",
 											[exception name],
 											[exception reason],
