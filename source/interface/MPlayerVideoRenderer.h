@@ -59,9 +59,11 @@
 	//video texture
 	unsigned char *image_data;
 	unsigned char *image_buffer;
-	uint32_t image_width;
-	uint32_t image_height;
 	uint32_t image_bytes;
+	
+	NSSize imageSize;
+	NSSize displaySize;
+	OSType pixelFormat;
 }
 
 @property (retain) id<MPlayerVideoRenderereDelegateProtocol> delegate;

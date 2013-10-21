@@ -73,13 +73,11 @@ static unsigned int videoViewId;
 	video_size = [sizeValue sizeValue];
 	video_aspect = org_video_aspect = video_size.width / video_size.height;
 	
-	// Aspect ratio
+	// Set aspect ratio (will resize view and open video window)
 	[self setAspectRatioFromPreferences];
 	
     if (isFullscreen) {
 		[fullscreenWindow makeKeyAndOrderFront:nil];
-	} else {
-		[self resizeView];
 	}
     
 	// Play in fullscreen

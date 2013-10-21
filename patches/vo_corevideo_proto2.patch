@@ -1,0 +1,41 @@
+Index: libvo/vo_corevideo.h
+===================================================================
+--- libvo/vo_corevideo.h	(revision 36463)
++++ libvo/vo_corevideo.h	(working copy)
+@@ -40,6 +40,13 @@
+ - (void) ontop;
+ @end
+ 
++@protocol MPlayerOSXVOProto2 <MPlayerOSXVOProto>
++- (int) startWithImageSize:(NSSize)imageSize
++			   displaySize:(NSSize)displaySize
++			 bytesPerPixel:(int)bytes
++			andPixelFormat:(OSType)pixelFormat;
++@end
++
+ @interface MPlayerOpenGLView : MPCommonOpenGLView
+ {
+ 	//CoreVideo
+Index: libvo/vo_corevideo.m
+===================================================================
+--- libvo/vo_corevideo.m	(revision 36463)
++++ libvo/vo_corevideo.m	(working copy)
+@@ -203,8 +203,16 @@
+ 
+ 		//connect to mplayerosx
+ 		mplayerosxProxy=[NSConnection rootProxyForConnectionWithRegisteredName:[NSString stringWithUTF8String:buffer_name] host:nil];
+-		if ([mplayerosxProxy conformsToProtocol:@protocol(MPlayerOSXVOProto)]) {
+-			[mplayerosxProxy setProtocolForProxy:@protocol(MPlayerOSXVOProto)];
++        if ([mplayerosxProxy conformsToProtocol:@protocol(MPlayerOSXVOProto2)]) {
++            [mplayerosxProxy setProtocolForProxy:@protocol(MPlayerOSXVOProto2)];
++            mplayerosxProto = (id <MPlayerOSXVOProto>)mplayerosxProxy;
++            [mplayerosxProxy startWithImageSize:NSMakeSize(image_width, image_height)
++                                    displaySize:NSMakeSize(d_width, d_height)
++                                  bytesPerPixel:image_bytes
++                                 andPixelFormat:pixelFormat];
++		}
++        else if ([mplayerosxProxy conformsToProtocol:@protocol(MPlayerOSXVOProto)]) {
++            [mplayerosxProxy setProtocolForProxy:@protocol(MPlayerOSXVOProto)];
+ 			mplayerosxProto = (id <MPlayerOSXVOProto>)mplayerosxProxy;
+ 			[mplayerosxProto startWithWidth: image_width withHeight: image_height withBytes: image_bytes withAspect:d_width*100/d_height];
+ 		}

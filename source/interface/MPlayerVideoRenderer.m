@@ -42,8 +42,14 @@
 - (void) ontop;
 @end
 
+@protocol MPlayerOSXVOProto2 <MPlayerOSXVOProto>
+- (int) startWithImageSize:(NSSize)imageSize
+			   displaySize:(NSSize)displaySize
+			 bytesPerPixel:(int)bytes
+			andPixelFormat:(OSType)pixelFormat;
+@end
 
-@interface MPlayerVideoRenderer (PrivateMethods) <MPlayerOSXVOProto>
+@interface MPlayerVideoRenderer (PrivateMethods) <MPlayerOSXVOProto2>
 - (NSInvocation *)invocationForSelector:(SEL)selector;
 - (void)callDelegateWithSelector:(SEL)selector andObject:(id)object;
 - (void)threadMain;
@@ -179,12 +185,23 @@
 /* Method called by MPlayer when playback starts.
  */
 - (int) startWithWidth:(int)width withHeight:(int)height withBytes:(int)bytes withAspect:(int)aspect {
-	
+	return [self startWithImageSize:NSMakeSize(width, height)
+						displaySize:NSMakeSize(height * aspect/100, height)
+					  bytesPerPixel:bytes
+					 andPixelFormat:kYUVSPixelFormat];
+}
+
+- (int) startWithImageSize:(NSSize)aImageSize
+			   displaySize:(NSSize)aDisplaySize
+			 bytesPerPixel:(int)aBytesPerPixel
+			andPixelFormat:(int)aPixelFormat {
+
 	CVReturn error = kCVReturnSuccess;
 	
-	image_width = width;
-	image_height = height;
-	image_bytes = bytes;
+	imageSize = aImageSize;
+	displaySize = aDisplaySize;
+	pixelFormat = aPixelFormat;
+	image_bytes = aBytesPerPixel;
 
 	shm_fd = shm_open([connectionName UTF8String], O_RDONLY, S_IRUSR);
 	if (shm_fd == -1)
@@ -193,7 +210,7 @@
 		return 0;
 	}
 	
-	image_data = mmap(NULL, image_width*image_height*image_bytes,
+	image_data = mmap(NULL, imageSize.width*imageSize.height*image_bytes,
 					  PROT_READ, MAP_SHARED, shm_fd, 0);
 	
 	if (image_data == MAP_FAILED)
@@ -202,7 +219,7 @@
 		return 0;
 	}
 	
-	image_buffer = malloc(image_width*image_height*image_bytes);
+	image_buffer = malloc(imageSize.width*imageSize.height*image_bytes);
 	
 	CGLLockContext(ctx);
 	[context makeCurrentContext];
@@ -214,14 +231,13 @@
 	glDisable(GL_CULL_FACE);
 	
 	// Setup CoreVideo Texture
-	// TODO: Support k24RGBPixelFormat, k32ARGBPixelFormat and k32BGRAPixelFormat
-	error = CVPixelBufferCreateWithBytes( NULL, image_width, image_height, kYUVSPixelFormat, image_buffer, image_width*image_bytes, NULL, NULL, NULL, &currentFrameBuffer);
+	error = CVPixelBufferCreateWithBytes( NULL, imageSize.width, imageSize.height, pixelFormat, image_buffer, imageSize.width*image_bytes, NULL, NULL, NULL, &currentFrameBuffer);
 	if(error != kCVReturnSuccess)
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to create Pixel Buffer (%d)", error];
 
 	// Set the guessed color matrix based on video size
 	CVBufferSetAttachment(currentFrameBuffer,
-						  kCVImageBufferYCbCrMatrixKey, [self suggestedColorMatrix:width withHeight:height],
+						  kCVImageBufferYCbCrMatrixKey, [self suggestedColorMatrix:imageSize.width withHeight:imageSize.height],
 						  kCVAttachmentMode_ShouldPropagate);
 	
 	error = CVOpenGLTextureCacheCreate(NULL, 0, ctx, CGLGetPixelFormat(ctx), 0, &textureCache);
@@ -232,7 +248,7 @@
 	
 	// Start OpenGLView in GUI
 	[self callDelegateWithSelector:@selector(startRenderingWithSize:)
-						 andObject:[NSValue valueWithSize:NSMakeSize(image_width, image_height)]];
+						 andObject:[NSValue valueWithSize:displaySize]];
 	
 	isRendering = YES;
 	
@@ -246,7 +262,7 @@
 	isRendering = NO;
 	
 	//make sure we destroy the shared buffer
-	if (munmap(image_data, image_width*image_height*image_bytes) == -1)
+	if (munmap(image_data, imageSize.width*imageSize.height*image_bytes) == -1)
 		[Debug log:ASL_LEVEL_ERR withMessage:@"munmap failed"];
 	
 	close(shm_fd);
@@ -265,7 +281,7 @@
  */
 - (void) render {
 	
-	memcpy(image_buffer, image_data, image_width*image_height*image_bytes);
+	memcpy(image_buffer, image_data, imageSize.width*imageSize.height*image_bytes);
 	[self renderOpenGL];
 }
 
