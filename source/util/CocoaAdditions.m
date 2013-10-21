@@ -328,3 +328,61 @@
 }
 @end
 
+@implementation NSSound (MPEAdditions)
+
++ (AudioDeviceID)defaultDeviceIsInput:(BOOL)isInput
+{
+	AudioDeviceID deviceId;
+	UInt32 size = sizeof deviceId;
+	
+	AudioHardwarePropertyID prop = (isInput
+									? kAudioHardwarePropertyDefaultInputDevice
+									: kAudioHardwarePropertyDefaultOutputDevice);
+	
+	OSStatus err = AudioHardwareGetProperty(prop, &size, &deviceId);
+	if (err != noErr) {
+		NSLog(@"Could not get default audio device (input = %d, error = %d).", isInput, (int)err);
+		return 0;
+	}
+	
+	return deviceId;
+}
+
++ (AudioDeviceID)defaultOutputDevice
+{
+	return [self defaultDeviceIsInput:NO];
+}
+
++ (AudioDeviceID)defaultInputDevice
+{
+	return [self defaultDeviceIsInput:YES];
+}
+
++ (UInt32)numberOfChannelsOf:(AudioDeviceID)deviceId onInput:(BOOL)isInput
+{
+	UInt32 size;
+	OSStatus err;
+	
+	err = AudioDeviceGetPropertyInfo(deviceId, 0, isInput, kAudioDevicePropertyStreamConfiguration, &size, NULL);
+	if (err != noErr) {
+		NSLog(@"Could not get property info (device = %u, input = %d, error = %d).", deviceId, isInput, (int)err);
+		return 0;
+	}
+	
+	AudioBufferList	*buffers = (AudioBufferList *)malloc(size);
+	err = AudioDeviceGetProperty(deviceId, 0, isInput, kAudioDevicePropertyStreamConfiguration, &size, buffers);
+	if (err != noErr) {
+		NSLog(@"Could not get property (device = %u, input = %d, error = %d).", deviceId, isInput, (int)err);
+		return 0;
+	}
+	
+	UInt32 numChannels = 0;
+	for (UInt32 i = 0; i < buffers->mNumberBuffers; i++) {
+		numChannels += buffers->mBuffers[i].mNumberChannels;
+	}
+	
+	free(buffers);
+	return numChannels;
+}
+
+@end

@@ -23,6 +23,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import <CoreAudio/CoreAudio.h>
 #import <objc/Protocol.h>
 
 @interface NSString (MPEAdditions)
@@ -79,4 +80,10 @@
 
 @interface NSImage (MPEAdditions)
 - (void)drawAtPoint:(NSPoint)point fromRect:(NSRect)srcRect operation:(NSCompositingOperation)op fraction:(CGFloat)delta respectFlipped:(BOOL)respectContextIsFlipped;
+@end
+
+@interface NSSound (MPEAdditions)
++ (AudioDeviceID)defaultOutputDevice;
++ (AudioDeviceID)defaultInputDevice;
++ (UInt32)numberOfChannelsOf:(AudioDeviceID)deviceId onInput:(BOOL)isInput;
 @end

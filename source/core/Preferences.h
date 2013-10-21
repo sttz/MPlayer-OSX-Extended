@@ -36,6 +36,7 @@ extern NSString* const MPEAudioEqualizerSelectedPreset;
 extern NSString* const MPEAudioEqualizerValues;
 extern NSString* const MPEAudioItemRelativeVolume;
 extern NSString* const MPEAudioMute;
+extern NSString* const MPEAudioOutputChannels;
 extern NSString* const MPEAudioOutputDevice;
 extern NSString* const MPEAudioVolume;
 extern NSString* const MPEBS2BFilter;
@@ -124,6 +125,13 @@ extern NSString* const MPECustomAspectRatioValueKey;
 // *** MPEAdvancedOptions dictionaries keys
 extern NSString* const MPEAdvancedOptionsStringKey;
 extern NSString* const MPEAdvancedOptionsEnabledKey;
+
+// *** MPEAudioOutputChannels values
+extern int const MPEAudioOutputChannelsAutomatic;
+extern int const MPEAudioOutputChannelsStereo;
+extern int const MPEAudioOutputChannels50Surround;
+extern int const MPEAudioOutputChannels51Surround;
+extern int const MPEAudioOutputChannels71Surround;
 
 // *** MPEStartPlaybackDisplayType values
 extern int const MPEStartPlaybackDisplayTypeWindow;

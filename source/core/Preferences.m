@@ -35,6 +35,7 @@ NSString* const MPEAudioEqualizerSelectedPreset       = @"MPEAudioEqualizerSelec
 NSString* const MPEAudioEqualizerValues               = @"MPEAudioEqualizerValues";
 NSString* const MPEAudioItemRelativeVolume            = @"MPEAudioItemRelativeVolume";
 NSString* const MPEAudioMute                          = @"MPEAudioMute";
+NSString* const MPEAudioOutputChannels				  = @"MPEAudioOutputChannels";
 NSString* const MPEAudioOutputDevice				  = @"MPEAudioOutputDevice";
 NSString* const MPEAudioVolume                        = @"MPEAudioVolume";
 NSString* const MPEBS2BFilter                         = @"MPEBS2BFilter";
@@ -120,6 +121,12 @@ NSString* const MPECustomAspectRatioValueKey          = @"MPECustomAspectRatioVa
 
 NSString* const MPEAdvancedOptionsStringKey           = @"MPEAdvancedOptionString";
 NSString* const MPEAdvancedOptionsEnabledKey          = @"MPEAdvancedOptionEnabled";
+
+int const MPEAudioOutputChannelsAutomatic			  = 0;
+int const MPEAudioOutputChannelsStereo				  = 1;
+int const MPEAudioOutputChannels50Surround			  = 2;
+int const MPEAudioOutputChannels51Surround			  = 3;
+int const MPEAudioOutputChannels71Surround			  = 4;
 
 int const MPEStartPlaybackDisplayTypeWindow           = 0;
 int const MPEStartPlaybackDisplayTypeFullscreen       = 1;

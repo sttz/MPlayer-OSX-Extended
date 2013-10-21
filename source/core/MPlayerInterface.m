@@ -579,6 +579,35 @@ static NSArray* statusNames;
 		[params addObject:@"-ao"];
 		[params addObject:[NSString stringWithFormat:@"coreaudio:device_id=%ld", (long)[cPrefs integerForKey:MPEAudioOutputDevice]]];
 	}
+	// channels
+	if ([cPrefs integerForKey:MPEAudioOutputChannels] != MPEAudioOutputChannelsStereo) {
+		NSInteger channelsOption = [cPrefs integerForKey:MPEAudioOutputChannels];
+		UInt32 channels = 0;
+		
+		if (channelsOption == MPEAudioOutputChannelsAutomatic) {
+			AudioDeviceID audioDevice;
+			if ([cPrefs integerForKey:MPEAudioOutputDevice] > 0) {
+				audioDevice = (AudioDeviceID)[cPrefs integerForKey:MPEAudioOutputDevice];
+			} else {
+				audioDevice = [NSSound defaultOutputDevice];
+			}
+			
+			channels = [NSSound numberOfChannelsOf:audioDevice onInput:NO];
+		} else if (channelsOption == MPEAudioOutputChannels50Surround) {
+			channels = 5;
+		} else if (channelsOption == MPEAudioOutputChannels51Surround) {
+			channels = 6;
+		} else if (channelsOption == MPEAudioOutputChannels71Surround) {
+			channels = 8;
+		} else {
+			[Debug log:ASL_LEVEL_ERR withMessage:@"Unkown value for MPEAudioOutputChannels: %d", channelsOption];
+		}
+		
+		if (channels > 0 && channels != 2) {
+			[params addObject:@"-channels"];
+			[params addObject:[NSString stringWithFormat:@"%u", channels]];
+		}
+	}
 	
 	// ac3/dts passthrough
 	if ([cPrefs boolForKey:MPEHardwareAC3Passthrough]) {

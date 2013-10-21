@@ -577,6 +577,7 @@
 	</dict>
 	<key>RequiresRestart</key>
 	<array>
+		<string>MPEAudioOutputChannels</string>
 		<string>MPEAudioOutputDevice</string>
 		<string>MPECacheSizeInMB</string>
 		<string>MPEDefaultAudioLanguages</string>

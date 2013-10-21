@@ -945,7 +945,7 @@
 	int i;
     for (i = 0; i < num_devices; ++i) {
 		
-		property_address.mSelector = kAudioDevicePropertyStreams;
+		property_address.mSelector = kAudioDevicePropertyStreamConfiguration;
 		property_address.mScope    = kAudioDevicePropertyScopeOutput;
 		
 		// Check for output streams
@@ -953,9 +953,23 @@
 											 0, NULL, &i_param_size);
 		
 		if (err != noErr)
-			return [Debug log:ASL_LEVEL_ERR withMessage:@"Failed to get list of output streams: [%4.4s]",&err];
+			return [Debug log:ASL_LEVEL_ERR withMessage:@"Failed to get output stream configuration: [%4.4s]",&err];
 		
-		if ((i_param_size / sizeof(AudioStreamID)) == 0)
+		AudioBufferList	*buffers = (AudioBufferList *)malloc(i_param_size);
+		err = AudioObjectGetPropertyData(devids[i], &property_address,
+										 0, NULL, &i_param_size, buffers);
+		
+		if (err != noErr)
+			return [Debug log:ASL_LEVEL_ERR withMessage:@"Failed to get output stream configuration: [%4.4s]",&err];
+		
+		UInt32 numChannels = 0;
+		for (UInt32 i = 0; i < buffers->mNumberBuffers; i++) {
+			numChannels += buffers->mBuffers[i].mNumberChannels;
+		}
+		
+		free(buffers);
+		
+		if (numChannels == 0)
 			continue;
 		
 		// Get device name
@@ -970,7 +984,7 @@
 		}
 		
 		item = [[NSMenuItem new] autorelease];
-		[item setTitle:(NSString *)string];
+		[item setTitle:[NSString stringWithFormat:@"%@ (%uch)", string, numChannels]];
 		[item setTag:devids[i]];
 		[menu addItem:item];
 		
