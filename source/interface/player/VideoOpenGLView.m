@@ -68,6 +68,21 @@ static unsigned int videoViewId;
 	return [[buffer_name retain] autorelease];
 }
 
+
+/*
+ Window level to use for full screen windows
+ */
+- (NSInteger)levelForFullscreenWindow
+{
+	if ([PREFS boolForKey:MPEFullscreenBlockOthers]) {
+		return NSScreenSaverWindowLevel;
+	} else if (isOntop) {
+		return NSModalPanelWindowLevel;
+	} else {
+		return  NSNormalWindowLevel;
+	}
+}
+
 - (void)startRenderingWithSize:(NSValue *)sizeValue {
 	
 	video_size = [sizeValue sizeValue];
@@ -142,8 +157,6 @@ static unsigned int videoViewId;
 		
 		[playerController syncWindows:YES];
 		[fullscreenWindow makeKeyAndOrderFront:nil];
-		[self updateOntop];
-		
 		[fullscreenWindow setFullscreen:YES];
 		
 		// Save current frame for back transition
@@ -165,6 +178,8 @@ static unsigned int videoViewId;
 		
 		if ([PREFS boolForKey:MPEBlackOutOtherScreensInFullscreen])
 			[self blackScreensExcept:fullscreenId];
+		
+		[self updateOntop];
 		
 		// wait for animation to finish
 		if ([[AppController sharedController] animateInterface]) {
@@ -288,7 +303,7 @@ static unsigned int videoViewId;
 		win = [[NSWindow alloc] initWithContentRect:fs_rect styleMask:NSBorderlessWindowMask 
 											backing:NSBackingStoreBuffered defer:NO screen:[[NSScreen screens] objectAtIndex:i]];
 		[win setBackgroundColor:[NSColor blackColor]];
-		if ([PREFS boolForKey:MPEFullscreenBlockOthers])
+		if (isOntop || [PREFS boolForKey:MPEFullscreenBlockOthers])
 			[win setLevel:NSScreenSaverWindowLevel];
 		else
 			[win setLevel:NSModalPanelWindowLevel];
@@ -505,6 +520,26 @@ static unsigned int videoViewId;
 */
 - (void) updateOntop
 {
+	if ([fullscreenWindow isVisible]) {
+		NSInteger level = [self levelForFullscreenWindow];
+		
+		[fullscreenWindow setLevel:level];
+		[fcControlWindow  setLevel:level];
+		
+		[fullscreenWindow orderWindow:NSWindowBelow relativeTo:[fcControlWindow windowNumber]];
+		[[playerController playerWindow] orderWindow:NSWindowBelow relativeTo:[fullscreenWindow windowNumber]];
+		
+		if (blackingWindows) {
+			for (NSWindow *blackingWindow in blackingWindows) {
+				[blackingWindow setLevel:level];
+			}
+		}
+	} else {
+		[fullscreenWindow setLevel:NSNormalWindowLevel];
+		[fcControlWindow  setLevel:NSNormalWindowLevel];
+	}
+	
+	
 	if ([fullscreenWindow isVisible] && (isOntop || [PREFS boolForKey:MPEFullscreenBlockOthers])) {
 		NSInteger level = NSModalPanelWindowLevel;
 		if ([PREFS boolForKey:MPEFullscreenBlockOthers])
