@@ -120,9 +120,20 @@ static unsigned int videoViewId;
 	
 	if (switchingToFullscreen) {
 		
-		// hide menu and dock if on same screen
-		if (fullscreenId == 0)
-			SetSystemUIMode( kUIModeAllSuppressed, 0);
+		// Hide menu bar and dock if
+		// ... we black out all screens
+		// ... we go fullscreen on the main screen (where the menu/dock is prior to 10.9)
+		// ... we're on 10.9 with separate spaces enabled (all screens have menu/dock)
+		// There's currently no way to only hide the menu/dock on the screen
+		// we go fullscreen on in 10.9 and we therefore need to hide the menu/dock
+		// on all screens. We propably need to use the new fullscreen mode to fix this.
+		if ([PREFS boolForKey:MPEBlackOutOtherScreensInFullscreen]
+			|| fullscreenId == 0
+			|| (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_8
+				&& [NSScreen screensHaveSeparateSpaces])) {
+			[NSApp setPresentationOptions:NSApplicationPresentationAutoHideMenuBar
+										  | NSApplicationPresentationAutoHideDock];
+		}
 		
 		// place fswin above video in player window
 		NSRect rect = [self frame];
@@ -237,7 +248,7 @@ static unsigned int videoViewId;
 		[self drawRect:old_view_frame];
 		
 		//exit kiosk mode
-		SetSystemUIMode( kUIModeNormal, 0);
+		[NSApp setPresentationOptions:NSApplicationPresentationDefault];
 		
 		// reset drag point
 		dragStartPoint = NSZeroPoint;
@@ -271,9 +282,6 @@ static unsigned int videoViewId;
 		// don't black fullscreen screen
 		if (i == fullscreenId)
 			continue;
-		// when blacking the main screen, hide the menu bar and dock
-		if (i == 0)
-			SetSystemUIMode( kUIModeAllSuppressed, 0);
 		
 		fs_rect = [[[NSScreen screens] objectAtIndex:i] frame];
 		fs_rect.origin = NSZeroPoint;
