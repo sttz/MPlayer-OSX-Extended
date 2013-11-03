@@ -77,8 +77,8 @@
 		
 		// place controls on screen
 		NSArray *pos;
-		if ([[[AppController sharedController] preferences] objectForKey:@"FullscreenControlsPosition"]) 
-			pos = [[[AppController sharedController] preferences] arrayForKey:@"FullscreenControlsPosition"];
+		if ([PREFS objectForKey:@"FullscreenControlsPosition"])
+			pos = [PREFS arrayForKey:@"FullscreenControlsPosition"];
 		else
 			pos = [NSArray arrayWithObjects:[NSNumber numberWithFloat:INITIAL_FC_X_POS],[NSNumber numberWithFloat:INITIAL_FC_Y_POS], nil];
 		
@@ -134,12 +134,12 @@
 		
 		// check values for sanity and reset to defaults if so
 		if (!isfinite(px) || isnan(px) || !isfinite(py) || isnan(py))
-			[[[AppController sharedController] preferences] removeObjectForKey:@"FullscreenControlsPosition"];
+			[PREFS removeObjectForKey:@"FullscreenControlsPosition"];
 		// save sane values in preferences
 		else {
 			NSArray *pos = [NSArray arrayWithObjects:
 				[NSNumber numberWithFloat:px],[NSNumber numberWithFloat:py],nil];
-			[[[AppController sharedController] preferences] setObject:pos forKey:@"FullscreenControlsPosition"];
+			[PREFS setObject:pos forKey:@"FullscreenControlsPosition"];
 		}
 	}
 }

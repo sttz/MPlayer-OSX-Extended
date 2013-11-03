@@ -26,6 +26,7 @@
 #import "VolumeSlider.h"
 #import "ScrubbingBar.h"
 #import "TimestampTextField.h"
+#import "FullscreenControls.h"
 
 #import <Carbon/Carbon.h>
 
@@ -495,7 +496,10 @@
     else
         assertionType = kIOPMAssertionTypeNoIdleSleep;
     
-    IOPMAssertionCreate(assertionType, kIOPMAssertionLevelOn, &sleepAssertionId);
+    IOPMAssertionCreateWithName(assertionType,
+								kIOPMAssertionLevelOn,
+								CFSTR("Playing video or audio file"),
+								&sleepAssertionId);
 }
 //************************************************************************************
 #pragma mark - Actions - Volume 
@@ -1600,7 +1604,7 @@
 - (void) appShouldTerminate
 {
 	// save values before all is saved to disk and released
-	if ([myPlayer state] > MIStateStopped && [[[AppController sharedController] preferences] objectForKey:@"PlaylistRemember"])
+	if ([myPlayer state] > MIStateStopped && [PREFS objectForKey:@"PlaylistRemember"])
 	{
 		/*if ([[[AppController sharedController] preferences] boolForKey:@"PlaylistRemember"])
 		{

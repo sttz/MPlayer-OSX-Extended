@@ -11,6 +11,7 @@
 // other controllers
 #import "PlayerController.h"
 #import "AppController.h"
+#import "InspectorController.h"
 
 #import "ScrubbingBar.h"
 #import "TimestampTextField.h"
@@ -291,11 +292,9 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	NSTableColumn *column;
 	float textSize;
 	
-	NSUserDefaults *defaults = [[AppController sharedController] preferences];
-	
 	// set playlist text font size
-	if ([defaults objectForKey:@"SmallPlaylistText"]) {
-		if ([defaults boolForKey:@"SmallPlaylistText"])
+	if ([PREFS objectForKey:@"SmallPlaylistText"]) {
+		if ([PREFS boolForKey:@"SmallPlaylistText"])
 			textSize = kSmallerTextSize;
 		else
 			textSize = kDefaultTextSize;

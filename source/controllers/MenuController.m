@@ -13,6 +13,7 @@
 #import "PlayListController.h"
 #import "PreferencesController2.h"
 #import "EqualizerController.h"
+#import "InspectorController.h"
 
 #import "VideoOpenGLView.h"
 

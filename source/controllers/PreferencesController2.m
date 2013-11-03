@@ -758,9 +758,12 @@
 	[panel setCanChooseFiles:NO];
 	
 	NSString *oldPath = [prefs objectForKey:MPECustomScreenshotsSavePath];
+	if (oldPath) {
+		[panel setDirectoryURL:[NSURL fileURLWithPath:oldPath]];
+	}
 	
-	if ([panel runModalForDirectory:oldPath file:nil types:nil] == NSOKButton) {
-		[prefs setObject:[[panel filenames] objectAtIndex:0] 
+	if ([panel runModal] == NSFileHandlingPanelOKButton) {
+		[prefs setObject:[[panel URL] path]
 				  forKey:MPECustomScreenshotsSavePath];
 		[PREFS setObject:[NSNumber numberWithInt:MPEScreenshotSaveLocationCustom] 
 				  forKey:MPEScreenshotSaveLocation];

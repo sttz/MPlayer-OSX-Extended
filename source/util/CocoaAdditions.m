@@ -338,8 +338,18 @@
 	AudioHardwarePropertyID prop = (isInput
 									? kAudioHardwarePropertyDefaultInputDevice
 									: kAudioHardwarePropertyDefaultOutputDevice);
+	AudioObjectPropertyAddress address = {
+		prop,
+		kAudioObjectPropertyScopeGlobal,
+		kAudioObjectPropertyElementMaster
+	};
 	
-	OSStatus err = AudioHardwareGetProperty(prop, &size, &deviceId);
+	OSStatus err = AudioObjectGetPropertyData(kAudioObjectSystemObject,
+											  &address,
+											  0,
+											  NULL,
+											  &size,
+											  &deviceId);
 	if (err != noErr) {
 		NSLog(@"Could not get default audio device (input = %d, error = %d).", isInput, (int)err);
 		return 0;
@@ -362,15 +372,20 @@
 {
 	UInt32 size;
 	OSStatus err;
+	AudioObjectPropertyAddress address = {
+		kAudioDevicePropertyStreamConfiguration,
+		isInput ? kAudioDevicePropertyScopeInput : kAudioDevicePropertyScopeOutput,
+		kAudioObjectPropertyElementMaster
+	};
 	
-	err = AudioDeviceGetPropertyInfo(deviceId, 0, isInput, kAudioDevicePropertyStreamConfiguration, &size, NULL);
+	err = AudioObjectGetPropertyDataSize(deviceId, &address, 0, NULL, &size);
 	if (err != noErr) {
 		NSLog(@"Could not get property info (device = %u, input = %d, error = %d).", deviceId, isInput, (int)err);
 		return 0;
 	}
 	
 	AudioBufferList	*buffers = (AudioBufferList *)malloc(size);
-	err = AudioDeviceGetProperty(deviceId, 0, isInput, kAudioDevicePropertyStreamConfiguration, &size, buffers);
+	err = AudioObjectGetPropertyData(deviceId, &address, 0, NULL, &size, buffers);
 	if (err != noErr) {
 		NSLog(@"Could not get property (device = %u, input = %d, error = %d).", deviceId, isInput, (int)err);
 		return 0;

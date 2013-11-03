@@ -87,7 +87,6 @@ PlayListController, MenuController, InspectorController, MovieInfo;
 + (NSString *) userApplicationSupportDirectoryPath;
 
 // app's interface
-- (NSUserDefaults *) preferences;
 - (NSArray *) preferencesRequiringRestart;
 
 - (NSUInteger) registerPlayer:(PlayerController *)player;

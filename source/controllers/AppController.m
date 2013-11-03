@@ -129,10 +129,6 @@ static AppController *instance = nil;
 /************************************************************************************/
 #pragma mark - INTERFACE
 /************************************************************************************/
-- (NSUserDefaults *) preferences
-{
-	return [NSUserDefaults standardUserDefaults];
-}
 - (NSArray *) preferencesRequiringRestart
 {
 	return [preferencesSpecs objectForKey:@"RequiresRestart"];
@@ -317,18 +313,17 @@ static AppController *instance = nil;
 	NSString *theDir = nil;
 	NSString *defDir;
 	
-	if (!(defDir = [[self preferences] objectForKey:MPEDefaultDirectory]))
+	if (!(defDir = [PREFS objectForKey:MPEDefaultDirectory]))
 		defDir = NSHomeDirectory();
 
     [thePanel setAllowsMultipleSelection:NO];
-	[thePanel setCanChooseDirectories : YES ];
-	[thePanel setCanChooseFiles : NO ];
+	[thePanel setCanChooseDirectories:YES];
+	[thePanel setCanChooseFiles:NO];
+	[thePanel setDirectoryURL:[NSURL fileURLWithPath:defDir]];
 	
-    if ([thePanel runModalForDirectory:defDir file:nil types:[NSArray arrayWithObject:@"VOB"]] == NSOKButton) {
-        theDir = [[thePanel filenames] objectAtIndex:0];
-		[[NSUserDefaults standardUserDefaults]
-				setObject:[theDir stringByDeletingLastPathComponent]
-				forKey:MPEDefaultDirectory];
+    if ([thePanel runModal] == NSFileHandlingPanelOKButton) {
+        theDir = [[thePanel URL] path];
+		[PREFS setObject:[theDir stringByDeletingLastPathComponent]	forKey:MPEDefaultDirectory];
 		if ([self isDVD:theDir]) {
 			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:theDir];
 			[[self getPlayer] playItem:item];
@@ -353,24 +348,26 @@ static AppController *instance = nil;
 	[fileTypes addObjectsFromArray:[self typeExtensionsForName:@"Audio file"]];
 	
 	// present open dialog
-	if (!(defDir = [[self preferences] objectForKey:MPEDefaultDirectory]))
+	if (!(defDir = [PREFS objectForKey:MPEDefaultDirectory]))
 		defDir = NSHomeDirectory();
 	
 	// allow multiple selection
 	[thePanel setAllowsMultipleSelection:YES];
+	[thePanel setDirectoryURL:[NSURL fileURLWithPath:defDir]];
+	[thePanel setAllowedFileTypes:fileTypes];
 	
-    if ([thePanel runModalForDirectory:defDir file:nil types:fileTypes] == NSOKButton) {
+    if ([thePanel runModal] == NSFileHandlingPanelOKButton) {
         int i;
+		NSString *path;
 		//  take care of multiple selection
-		for (i=0; i<[[thePanel filenames] count]; i++) {
-			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:[[thePanel filenames] objectAtIndex:i]];
-			[[self preferences]
-					setObject:[[[thePanel filenames] objectAtIndex:i]
-					stringByDeletingLastPathComponent]
-					forKey:MPEDefaultDirectory];
+		for (i=0; i<[[thePanel URLs] count]; i++) {
+			path = [[[thePanel URLs] objectAtIndex:i] path];
+			MovieInfo *item = [MovieInfo movieInfoWithPathToFile:path];
 			// TODO: Get correct playlist here
             [[[players objectAtIndex:0] playListController] appendItem:item];
 		}
+		
+		[PREFS setObject:[path stringByDeletingLastPathComponent] forKey:MPEDefaultDirectory];
     }
 }
 /************************************************************************************/
@@ -558,11 +555,12 @@ static AppController *instance = nil;
 	NSString *theFile = nil;
 	NSString *defDir;
 	
-	if (!(defDir = [[self preferences] objectForKey:MPEDefaultDirectory]))
+	if (!(defDir = [PREFS objectForKey:MPEDefaultDirectory]))
 		defDir = NSHomeDirectory();
 
     [openPanel setAllowsMultipleSelection:NO];
 	[openPanel setDelegate:self];
+	[openPanel setDirectoryURL:[NSURL fileURLWithPath:defDir]];
 	[openPanel setAllowedFileTypes:typeList];
 	
 	// show additional options based on type
@@ -576,8 +574,8 @@ static AppController *instance = nil;
 	} else if (type == MP_DIALOG_SUBTITLES) {
 		// beta: add encoding dropdown and load state from preferences
 		[openPanel setAccessoryView:openSubtitleSettings];
-		if ([[self preferences] objectForKey:MPETextEncoding]) {
-			[openSubtitleEncoding selectItemWithTitle:[[self preferences] objectForKey:MPETextEncoding]];
+		if ([PREFS objectForKey:MPETextEncoding]) {
+			[openSubtitleEncoding selectItemWithTitle:[PREFS objectForKey:MPETextEncoding]];
 			if ([openSubtitleEncoding indexOfSelectedItem] < 0)
 				[openSubtitleEncoding selectItemAtIndex:0];
 		}
@@ -585,11 +583,9 @@ static AppController *instance = nil;
 			[openSubtitleEncoding selectItemAtIndex:0];
 	}
 	
-    if ([openPanel runModalForDirectory:defDir file:nil types:nil] == NSOKButton) {
-        theFile = [[openPanel filenames] objectAtIndex:0];
-		[[NSUserDefaults standardUserDefaults]
-				setObject:[theFile stringByDeletingLastPathComponent]
-				forKey:MPEDefaultDirectory];
+    if ([openPanel runModal] == NSFileHandlingPanelOKButton) {
+        theFile = [[openPanel URL] path];
+		[PREFS setObject:[theFile stringByDeletingLastPathComponent] forKey:MPEDefaultDirectory];
     }
 	return theFile;
 }
@@ -600,18 +596,18 @@ static AppController *instance = nil;
 	NSString *theFile = nil;
 	NSString *defDir;
 	
-	if (!(defDir = [[self preferences] objectForKey:MPEDefaultDirectory]))
+	if (!(defDir = [PREFS objectForKey:MPEDefaultDirectory]))
 		defDir = NSHomeDirectory();
 
     [thePanel setAllowsMultipleSelection:NO];
-	[thePanel setCanChooseDirectories : YES ];
-	[thePanel setCanChooseFiles : NO ];
+	[thePanel setCanChooseDirectories:YES];
+	[thePanel setCanChooseFiles:NO];
+	[thePanel setAllowedFileTypes:typeList];
+	[thePanel setDirectoryURL:[NSURL fileURLWithPath:defDir]];
 	
-    if ([thePanel runModalForDirectory:defDir file:nil types:typeList] == NSOKButton) {
-        theFile = [[thePanel filenames] objectAtIndex:0];
-		[[NSUserDefaults standardUserDefaults]
-				setObject:[theFile stringByDeletingLastPathComponent]
-				forKey:MPEDefaultDirectory];
+    if ([thePanel runModal] == NSFileHandlingPanelOKButton) {
+        theFile = [[thePanel URL] path];
+		[PREFS setObject:[theFile stringByDeletingLastPathComponent] forKey:MPEDefaultDirectory];
     }
 	return theFile;
 }
@@ -667,7 +663,7 @@ static AppController *instance = nil;
 	NSString *theFile = nil;
 	NSString *defDir;
 	
-	if (!(defDir = [[self preferences] objectForKey:MPEDefaultDirectory]))
+	if (!(defDir = [PREFS objectForKey:MPEDefaultDirectory]))
 		defDir = NSHomeDirectory();
 
  //   [thePanel setAllowsMultipleSelection:NO];
@@ -686,8 +682,8 @@ static AppController *instance = nil;
 // animate interface transitions
 - (BOOL) animateInterface
 {
-	if ([[self preferences] objectForKey:MPEAnimateInterfaceTransitions])
-		return [[self preferences] boolForKey:MPEAnimateInterfaceTransitions];
+	if ([PREFS objectForKey:MPEAnimateInterfaceTransitions])
+		return [PREFS boolForKey:MPEAnimateInterfaceTransitions];
 	else
 		return YES;
 }
@@ -809,7 +805,7 @@ static AppController *instance = nil;
 			userInfo:nil];
 
 	// try to save preferences
-	if (![[self preferences] synchronize]) {
+	if (![PREFS synchronize]) {
 		// if prefs could not be saved present alert box
 		if (NSRunAlertPanel(NSLocalizedString(@"Error",nil),
 				NSLocalizedString(@"Preferences could not be saved.\nQuit anyway?",nil),
@@ -888,7 +884,7 @@ static AppController *instance = nil;
 {
 	NSString *feed;
 	
-	if ([[self preferences] boolForKey:MPECheckForUpdatesIncludesPrereleases])
+	if ([PREFS boolForKey:MPECheckForUpdatesIncludesPrereleases])
 		feed = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"SUPrereleaseFeedURL"];
 	else
 		feed = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"SUFeedURL"];
