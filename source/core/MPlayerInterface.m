@@ -343,10 +343,13 @@ static NSArray* statusNames;
 	// *** FILES
 	
 	// add movie file
-	if ([[AppController sharedController] isDVD:[playingItem filename]])
-		[params addObject:[NSString stringWithFormat:@"dvd:///%@",[playingItem filename]]];
-	else 
+	if ([[AppController sharedController] isDVD:[playingItem filename]]) {
+		[params addObject:@"dvd://"];
+		[params addObject:@"-dvd-device"];
 		[params addObject:[playingItem filename]];
+	} else {
+		[params addObject:[playingItem filename]];
+	}
 	
 	// add subtitles file
 	if ([[playingItem externalSubtitles] count] > 0) {
