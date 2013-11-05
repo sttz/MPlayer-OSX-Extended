@@ -72,8 +72,6 @@ typedef NSUInteger MPEVideoScaleMode;
 	IBOutlet NSMenuItem* PanScanMenuItem;	
 	// other controllers outlets
 	IBOutlet PlayerController *playerController;
-	
-	IBOutlet NSWindow *fcControlWindow;
 	IBOutlet PlayerFullscreenWindow* fullscreenWindow;
 }
 

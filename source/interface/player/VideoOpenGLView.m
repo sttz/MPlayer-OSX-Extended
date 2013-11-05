@@ -79,7 +79,7 @@ static unsigned int videoViewId;
 	} else if (isOntop) {
 		return NSModalPanelWindowLevel;
 	} else {
-		return  NSNormalWindowLevel;
+		return NSNormalWindowLevel;
 	}
 }
 
@@ -524,9 +524,7 @@ static unsigned int videoViewId;
 		NSInteger level = [self levelForFullscreenWindow];
 		
 		[fullscreenWindow setLevel:level];
-		[fcControlWindow  setLevel:level];
 		
-		[fullscreenWindow orderWindow:NSWindowBelow relativeTo:[fcControlWindow windowNumber]];
 		[[playerController playerWindow] orderWindow:NSWindowBelow relativeTo:[fullscreenWindow windowNumber]];
 		
 		if (blackingWindows) {
@@ -536,23 +534,6 @@ static unsigned int videoViewId;
 		}
 	} else {
 		[fullscreenWindow setLevel:NSNormalWindowLevel];
-		[fcControlWindow  setLevel:NSNormalWindowLevel];
-	}
-	
-	
-	if ([fullscreenWindow isVisible] && (isOntop || [PREFS boolForKey:MPEFullscreenBlockOthers])) {
-		NSInteger level = NSModalPanelWindowLevel;
-		if ([PREFS boolForKey:MPEFullscreenBlockOthers])
-			level = NSScreenSaverWindowLevel;
-		
-		[fullscreenWindow setLevel:level];
-		[fcControlWindow  setLevel:level];
-		
-		[fullscreenWindow orderWindow:NSWindowBelow relativeTo:[fcControlWindow windowNumber]];
-		[[playerController playerWindow] orderWindow:NSWindowBelow relativeTo:[fullscreenWindow windowNumber]];
-	} else {
-		[fullscreenWindow setLevel:NSNormalWindowLevel];
-		[fcControlWindow  setLevel:NSNormalWindowLevel];
 	}
 }
 
