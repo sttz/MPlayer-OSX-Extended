@@ -508,7 +508,7 @@
 		<key>MPEFlipDisplayVertically</key>
 		<false/>
 		<key>MPEFont</key>
-		<string>Myriad Pro</string>
+		<string>Trebuchet MS</string>
 		<key>MPEFontStyle</key>
 		<string>Semibold</string>
 		<key>MPEFullscreenBlockOthers</key>
