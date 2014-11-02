@@ -129,7 +129,6 @@
 	// resize the bar run frame if needed
 	if ([scrubBarRun size].width != runLength)
 	{
-		[scrubBarRun setScalesWhenResized:YES];
 		[scrubBarRun setSize:NSMakeSize(runLength, [scrubBarRun size].height)];
 		[scrubBarRun recache];
 	}
