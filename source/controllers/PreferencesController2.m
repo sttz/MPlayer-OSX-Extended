@@ -519,9 +519,9 @@
 	// Check if given path is a bundle and is a valid binary bundle
 	if (!binary || ![[binary infoDictionary] objectForKey:@"MPEBinarySVNRevisionEquivalent"]) {
 		NSRunAlertPanel(@"Binary Installation Error", 
-						[NSString stringWithFormat:@"The MPlayer binary '%@' couldn't be recognized.",
-							[path lastPathComponent]], 
-						 @"OK", nil, nil);
+						@"The MPlayer binary '%@' couldn't be recognized.",
+						@"OK", nil, nil,
+						[path lastPathComponent]);
 		return;
 	}
 	
@@ -531,11 +531,11 @@
 	// Check if the binary has minimum required version
 	if (![self binaryHasRequiredMinVersion:info]) {
 		NSRunAlertPanel(@"Binary Installation Error", 
-						[NSString stringWithFormat:@"The MPlayer binary '%@' is not compatible with this %@ version (at least r%d required).",
-						 [path lastPathComponent],
-						 [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
-						 [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"MPEBinaryMinRevision"] intValue]], 
-						@"OK", nil, nil);
+						@"The MPlayer binary '%@' is not compatible with this %@ version (at least r%d required).",
+						@"OK", nil, nil,
+						[path lastPathComponent],
+						[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
+						[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"MPEBinaryMinRevision"] intValue]);
 		return;
 	}
 	
@@ -562,33 +562,30 @@
 		if (result == NSOrderedSame) {
 			
 			if (NSRunAlertPanel(@"Binary Already Installed", 
-				[NSString stringWithFormat:
-				 @"The MPlayer binary '%@' is already installed (version %@). Do you want to install it again?",
-				 [info objectForKey:@"CFBundleName"],
-				 [info objectForKey:@"CFBundleShortVersionString"]],
-				 @"Cancel", @"Reinstall", nil) == NSAlertDefaultReturn) return;
+				@"The MPlayer binary '%@' is already installed (version %@). Do you want to install it again?",
+				@"Cancel", @"Reinstall", nil,
+				[info objectForKey:@"CFBundleName"],
+				[info objectForKey:@"CFBundleShortVersionString"]) == NSAlertDefaultReturn) return;
 		
 		// The binary we're installing is newer -> Upgrade?
 		} else if (result == NSOrderedAscending) {
 			
 			if (NSRunAlertPanel(@"Upgrade Binary", 
-				[NSString stringWithFormat:
 				 @"Do you want to upgrade the MPlayer binary '%@' from version %@ to %@?",
+				 @"Upgrade", @"Cancel", nil,
 				 [info objectForKey:@"CFBundleName"],
 				 [oldInfo objectForKey:@"CFBundleShortVersionString"],
-				 [info objectForKey:@"CFBundleShortVersionString"]],
-				 @"Upgrade", @"Cancel", nil) == NSAlertAlternateReturn) return;
+				 [info objectForKey:@"CFBundleShortVersionString"]) == NSAlertAlternateReturn) return;
 		
 		// The binary we're installing is older -> Downgrade?
 		} else {
 			
 			if (NSRunAlertPanel(@"Downgrade Binary", 
-				[NSString stringWithFormat:
-				 @"A newer version of the MPlayer binary '%@' is already installed. Do you want to downgrade from version %@ to %@?",
-				 [info objectForKey:@"CFBundleName"],
-				 [oldInfo objectForKey:@"CFBundleShortVersionString"],
-				 [info objectForKey:@"CFBundleShortVersionString"]],
-				 @"Cancel", @"Downgrade", nil) == NSAlertDefaultReturn) return;
+				@"A newer version of the MPlayer binary '%@' is already installed. Do you want to downgrade from version %@ to %@?",
+				@"Cancel", @"Downgrade", nil,
+				[info objectForKey:@"CFBundleName"],
+				[oldInfo objectForKey:@"CFBundleShortVersionString"],
+				[info objectForKey:@"CFBundleShortVersionString"]) == NSAlertDefaultReturn) return;
 			
 		}
 		
@@ -987,7 +984,7 @@
 		}
 		
 		item = [[NSMenuItem new] autorelease];
-		[item setTitle:[NSString stringWithFormat:@"%@ (%uch)", string, numChannels]];
+		[item setTitle:[NSString stringWithFormat:@"%@ (%luch)", string, (unsigned long)numChannels]];
 		[item setTag:devids[i]];
 		[menu addItem:item];
 		

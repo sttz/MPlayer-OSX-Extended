@@ -608,7 +608,7 @@ static NSArray* statusNames;
 		
 		if (channels > 0 && channels != 2) {
 			[params addObject:@"-channels"];
-			[params addObject:[NSString stringWithFormat:@"%u", channels]];
+			[params addObject:[NSString stringWithFormat:@"%lu", (unsigned long)channels]];
 		}
 	}
 	

@@ -380,14 +380,14 @@
 	
 	err = AudioObjectGetPropertyDataSize(deviceId, &address, 0, NULL, &size);
 	if (err != noErr) {
-		NSLog(@"Could not get property info (device = %u, input = %d, error = %d).", deviceId, isInput, (int)err);
+		NSLog(@"Could not get property info (device = %lu, input = %d, error = %ld).", (unsigned long)deviceId, isInput, (long)err);
 		return 0;
 	}
 	
 	AudioBufferList	*buffers = (AudioBufferList *)malloc(size);
 	err = AudioObjectGetPropertyData(deviceId, &address, 0, NULL, &size, buffers);
 	if (err != noErr) {
-		NSLog(@"Could not get property (device = %u, input = %d, error = %d).", deviceId, isInput, (int)err);
+		NSLog(@"Could not get property (device = %lu, input = %d, error = %ld).", (unsigned long)deviceId, isInput, (long)err);
 		return 0;
 	}
 	

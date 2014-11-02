@@ -335,9 +335,12 @@
 		[myPlayer stop];
 		
 	if (![anItem fileIsValid]) {
-		NSRunAlertPanel(NSLocalizedString(@"Error",nil), [NSString stringWithFormat:
-				NSLocalizedString(@"File or URL %@ could not be found.",nil), [anItem filename]],
-				NSLocalizedString(@"OK",nil),nil,nil);
+		NSRunAlertPanel(NSLocalizedString(@"Error",nil),
+						NSLocalizedString(@"File or URL %@ could not be found.",nil),
+						NSLocalizedString(@"OK",nil),
+						nil,
+						nil,
+						[anItem filename]);
 		return;
 	}
 	
