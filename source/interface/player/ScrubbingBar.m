@@ -112,18 +112,19 @@
 
 - (void)drawRect:(NSRect)aRect
 {
-	float runLength = [self frame].size.width - [scrubBarEnds size].width;
+	NSSize viewSize = [self bounds].size;
+	float runLength = viewSize.width - [scrubBarEnds size].width;
 	float endWidth = [scrubBarEnds size].width / 2;		// each half of the picture is one end
 	double theValue = [self doubleValue] / ([self maxValue] - [self minValue]);	
 	
 	//draw bar end left and right
 	[scrubBarEnds drawAtPoint:NSMakePoint(0, 0)
                      fromRect:NSMakeRect(0,0,endWidth,[scrubBarEnds size].height)
-                    operation:NSCompositeSourceAtop
+                    operation:NSCompositeSourceOver
                      fraction:1.0];
-    [scrubBarEnds drawAtPoint:NSMakePoint([self frame].size.width - endWidth,0)
+    [scrubBarEnds drawAtPoint:NSMakePoint(viewSize.width - endWidth,0)
                      fromRect:NSMakeRect(endWidth,0,endWidth,[scrubBarEnds size].height)
-                    operation:NSCompositeSourceAtop
+                    operation:NSCompositeSourceOver
                      fraction:1.0];
 	
 	// resize the bar run frame if needed
@@ -134,27 +135,27 @@
 	}
     [scrubBarRun drawAtPoint:NSMakePoint(endWidth,0)
                     fromRect:NSZeroRect
-                   operation:NSCompositeSourceAtop
+                   operation:NSCompositeSourceOver
                     fraction:1.0];
 	
 	if ([self scrubStyle] == MPEScrubbingBarPositionStyle) {
 		// calculate actual x-position of badge with badge offset and shadow
-		float badgePosX = ([self frame].size.width - rightClip) * theValue - xBadgeOffset;
+		float badgePosX = (viewSize.width - rightClip) * theValue - xBadgeOffset;
 		// limit the badge width not to draw into the shadow on the rigth side
-		float badgeWidth = [self frame].size.width - badgePosX - rightClip;
+		float badgeWidth = viewSize.width - badgePosX - rightClip;
 		if (badgeWidth > [scrubBarBadge size].width)
 			badgeWidth = [scrubBarBadge size].width;
 		
         [scrubBarBadge drawAtPoint:NSMakePoint(badgePosX, yBadgeOffset)
                           fromRect:NSMakeRect(0, 0, badgeWidth, [scrubBarBadge size].height)
-                         operation:NSCompositeSourceAtop
+                         operation:NSCompositeSourceOver
                           fraction:1.0];
 		
 	} else if ([self scrubStyle] == MPEScrubbingBarProgressStyle) {
 		[scrubBarAnim 
-			drawInRect:NSMakeRect(0, 0, [self frame].size.width - rightClip, [self frame].size.height) 
-			fromRect:NSMakeRect((1.0 - animFrame) * [scrubBarAnimFrame size].width, 0, [self frame].size.width - rightClip, [scrubBarAnim size].height) 
-			operation:NSCompositeSourceAtop fraction:1.0];
+			drawInRect:NSMakeRect(0, 0, viewSize.width - rightClip, viewSize.height)
+			fromRect:NSMakeRect((1.0 - animFrame) * [scrubBarAnimFrame size].width, 0, viewSize.width - rightClip, [scrubBarAnim size].height)
+			operation:NSCompositeSourceOver fraction:1.0];
 	}
 }
 
