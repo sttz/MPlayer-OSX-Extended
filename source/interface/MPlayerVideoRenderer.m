@@ -53,7 +53,6 @@
 - (NSInvocation *)invocationForSelector:(SEL)selector;
 - (void)callDelegateWithSelector:(SEL)selector andObject:(id)object;
 - (void)threadMain;
-- (CFStringRef) suggestedColorMatrix:(int)width withHeight:(int)height;
 - (void)renderOpenGL;
 - (void)adaptSize;
 @end
@@ -235,10 +234,27 @@
 	if(error != kCVReturnSuccess)
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to create Pixel Buffer (%d)", error];
 
-	// Set the guessed color matrix based on video size
-	CVBufferSetAttachment(currentFrameBuffer,
-						  kCVImageBufferYCbCrMatrixKey, [self suggestedColorMatrix:imageSize.width withHeight:imageSize.height],
-						  kCVAttachmentMode_ShouldPropagate);
+	if (imageSize.height <= 576) {
+		CVBufferSetAttachment(currentFrameBuffer,
+							  kCVImageBufferColorPrimariesKey, kCVImageBufferColorPrimaries_SMPTE_C,
+							  kCVAttachmentMode_ShouldPropagate);
+		CVBufferSetAttachment(currentFrameBuffer,
+							  kCVImageBufferTransferFunctionKey, kCVImageBufferTransferFunction_ITU_R_709_2,
+							  kCVAttachmentMode_ShouldPropagate);
+		CVBufferSetAttachment(currentFrameBuffer,
+							  kCVImageBufferYCbCrMatrixKey, kCVImageBufferYCbCrMatrix_ITU_R_601_4,
+							  kCVAttachmentMode_ShouldPropagate);
+	} else {
+		CVBufferSetAttachment(currentFrameBuffer,
+							  kCVImageBufferColorPrimariesKey, kCVImageBufferColorPrimaries_ITU_R_709_2,
+							  kCVAttachmentMode_ShouldPropagate);
+		CVBufferSetAttachment(currentFrameBuffer,
+							  kCVImageBufferTransferFunctionKey, kCVImageBufferTransferFunction_ITU_R_709_2,
+							  kCVAttachmentMode_ShouldPropagate);
+		CVBufferSetAttachment(currentFrameBuffer,
+							  kCVImageBufferYCbCrMatrixKey, kCVImageBufferYCbCrMatrix_ITU_R_709_2,
+							  kCVAttachmentMode_ShouldPropagate);
+	}
 	
 	error = CVOpenGLTextureCacheCreate(NULL, 0, ctx, CGLGetPixelFormat(ctx), 0, &textureCache);
 	if(error != kCVReturnSuccess)
@@ -283,15 +299,6 @@
 	
 	memcpy(image_buffer, image_data, imageSize.width*imageSize.height*image_bytes);
 	[self renderOpenGL];
-}
-
-/* Helper method to guess the correct colormatrix based on video size
- */
-- (CFStringRef) suggestedColorMatrix:(int)width withHeight:(int)height {
-	if (width >= 1280 || height > 576)
-		return kCVImageBufferYCbCrMatrix_ITU_R_709_2;
-	else
-		return kCVImageBufferYCbCrMatrix_ITU_R_601_4;
 }
 
 - (void)renderOpenGL {
