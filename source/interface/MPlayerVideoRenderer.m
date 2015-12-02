@@ -308,12 +308,17 @@
 		error = CVOpenGLTextureCacheCreateTextureFromImage (NULL, textureCache,  currentFrameBuffer,  0, &texture);
 	
 	if (error == kCVReturnSuccess && isRendering) {
+		GLenum target = CVOpenGLTextureGetTarget(texture);
 		
 		//Render Video Texture
 		CVOpenGLTextureGetCleanTexCoords(texture, lowerLeft, lowerRight, upperRight, upperLeft);
 		
-		glEnable(CVOpenGLTextureGetTarget(texture));
-		glBindTexture(CVOpenGLTextureGetTarget(texture), CVOpenGLTextureGetName(texture));
+		glEnable(target);
+		glBindTexture(target, CVOpenGLTextureGetName(texture));
+		glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameterf(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameterf(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		
 		glColor3f(1,1,1);
 		glBegin(GL_QUADS);
@@ -322,7 +327,7 @@
 		glTexCoord2f(lowerRight[0], lowerRight[1]); glVertex2i(	NSMaxX(textureFrame),		NSMaxY(textureFrame));
 		glTexCoord2f(upperRight[0], upperRight[1]); glVertex2i(	NSMaxX(textureFrame),		textureFrame.origin.y);
 		glEnd();
-		glDisable(CVOpenGLTextureGetTarget(texture));
+		glDisable(target);
 		
 		glFlush();
 		
