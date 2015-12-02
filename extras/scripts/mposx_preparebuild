@@ -20,7 +20,7 @@ else
 fi
 
 # LOCAL CONFIG
-target_system="i386"
+target_system="x86_64"
 
 # **************************************************** #
 # *** OPTION PARSING
@@ -32,7 +32,7 @@ Usage: source $0 [options] [x86_64|i386|ppc|ppcg3|ub]
 General options:
     -h, --help                  display this help
     
-One of either x86_64, i386, ppc, ppcg3 or ub can be passed to set the target system (default: i386).
+One of either x86_64, i386, ppc, ppcg3 or ub can be passed to set the target system (default: x86_64).
 Headers and configure flags will be set accordingly.
 EOF
 }
@@ -55,8 +55,8 @@ done
 # *** SET PATHS / FLAGS
 
 # Configure deployment target and SDK
-deployment_target=10.5
-sdk_path=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk
+deployment_target=10.6
+sdk_path=$(xcrun --show-sdk-path)
 
 # Make sure pkg-config doesn't interfere
 export PKG_CONFIG_PATH="${build_root}/bin/pkg-config"
@@ -86,25 +86,17 @@ if [ $target_system = "i386" ]; then
 	export CXXFLAGS="$CXXFLAGS -arch i386"
 fi
 
-# PPC platform flags
-if [ "$target_system" = "ppc" ]; then
-	export CFLAGS="$CFLAGS -arch ppc -mcpu=7400"
-	export LDFLAGS="$LDFLAGS -arch ppc"
-	export CXXFLAGS="$CXXFLAGS -arch ppc -mcpu=7400"
-fi
-
-# PPC G3 platform flags
-if [ "$target_system" = "ppcg3" ]; then
-	export CFLAGS="$CFLAGS -arch ppc -mcpu=750"
-	export LDFLAGS="$LDFLAGS -arch ppc"
-	export CXXFLAGS="$CXXFLAGS -arch ppc -mcpu=750"
-fi
-
 # Universal binary platform flags
 if [ "$target_system" = "ub" ]; then
 	export CFLAGS="$CFLAGS -arch x86_64 -arch i386"
 	export LDFLAGS="$LDFLAGS -arch x86_64 -arch i386"
 	export CXXFLAGS="$CXXFLAGS -arch x86_64 -arch i386"
+fi
+
+# Fix for text relocation error on i386
+# See: http://stackoverflow.com/questions/6650178/illegal-text-reloc-to-non-lazy-ptr-error-while-building-in-xcode-4-with-libav-l
+if [ $target_system = "i386" ]; then
+	export LDFLAGS="$LDFLAGS -Wl,-read_only_relocs,suppress"
 fi
 
 # Set paths

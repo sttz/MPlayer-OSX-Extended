@@ -142,12 +142,12 @@ while [ -n "$1" ]; do
 									;;
 			-qq | --really-quiet )	really_quiet=1
 									;;
-			-h | --help )			echo "?!"
-									#usage
+			-h | --help )
+									usage
 									exit
 									;;
-			* )						echo "?!"
-									#usage
+			* )
+									usage
 									exit 1
 		esac
 		all_options="$all_options $1"
@@ -241,8 +241,8 @@ source mposx_preparebuild "$target_system"
 #export CFLAGS="-O4 -fomit-frame-pointer $CFLAGS"
 #export CXXFLAGS="-O4 -fomit-frame-pointer $CXXFLAGS"
 
-export CFLAGS="-O4 -fomit-frame-pointer $CFLAGS"
-export CXXFLAGS="-O4 -fomit-frame-pointer $CXXFLAGS"
+export CFLAGS="-Os -fomit-frame-pointer $CFLAGS"
+export CXXFLAGS="-Os -fomit-frame-pointer $CXXFLAGS"
 
 # *** Base configure options
 config_opts=""
@@ -264,9 +264,11 @@ config_opts="$config_opts --disable-jack --disable-sdl"
 config_opts="$config_opts --enable-macosx-bundle"
 # Use external ASS library
 config_opts="$config_opts --disable-ass-internal"
+# Use external ASS library
+config_opts="$config_opts --disable-qtx"
 
-#config_opts="$config_opts --cc=clang"
-config_opts="$config_opts --cc=gcc"
+config_opts="$config_opts --cc=clang"
+#config_opts="$config_opts --cc=llvm-gcc"
 
 # Disable static ffmpeg
 #if [ $shared_libs -eq 1 ]; then

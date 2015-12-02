@@ -217,7 +217,7 @@ fi
 # *** SET PATHS/HEADERS/OPTIONS
 
 # Set flags and paths
-source mposx_preparebuild -s "$target_system"
+source mposx_preparebuild "$target_system"
 
 # *** Base configure options
 config_opts=""
