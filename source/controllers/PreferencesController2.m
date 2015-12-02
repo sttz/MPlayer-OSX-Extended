@@ -806,7 +806,8 @@
 	while ((fontDir = FcStrListNext(fontDirs))) {
 		cachesAreValid = (FcDirCacheValid(fontDir) || !FcFileIsDir(fontDir)) && cachesAreValid;
 	}
-	
+    FcStrListDone(fontDirs);
+    
 	// Display rebuilding dialog while Fontconfig is working
 	if (!cachesAreValid) {
 		[cacheStatusIndicator setUsesThreadedAnimation:YES];
@@ -837,9 +838,6 @@
 	pat = FcPatternCreate();
 	os = FcObjectSetBuild(FC_FAMILY, FC_STYLE, NULL);
 	set = FcFontList(0, pat, os);
-	
-	FcObjectSetDestroy(os);
-	FcPatternDestroy(pat);
 	
 	// Read fonts into dictionary
 	if (set) {
@@ -888,6 +886,10 @@
 	[fontsController setSelectionIndex:[fontsMenu indexOfItemWithTitle:defaultFont]];
 	
 	FcFontSetDestroy(set);
+	FcObjectSetDestroy(os);
+	FcPatternDestroy(pat);
+	FcConfigDestroy(config);
+	
 	FcFini();
 }
 
