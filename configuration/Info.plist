@@ -934,6 +934,11 @@
 	<string>dsa_pub.pem</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>UTImportedTypeDeclarations</key>
 	<array/>
 </dict>
