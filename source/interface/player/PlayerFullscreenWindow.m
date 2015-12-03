@@ -166,14 +166,14 @@
 	lastMousePosition = [NSEvent mouseLocation];
 	[self setAcceptsMouseMovedEvents:YES];
 	[self makeFirstResponder:[self contentView]];
-	CGDisplayHideCursor(kCGDirectMainDisplay);
+	[self hideCursor];
 }
 
 - (void)mouseExitedFSWindow
 {
 	mouseInWindow = NO;
 	[self setAcceptsMouseMovedEvents:NO];
-	CGDisplayShowCursor(kCGDirectMainDisplay);
+	[self showCursor];
 }
 
 - (void)mouseEnteredFCWindow
@@ -195,8 +195,9 @@
 {
 	if(isFullscreen)
 	{
-		if (mouseInWindow)
-			CGDisplayHideCursor(kCGDirectMainDisplay);
+		if (mouseInWindow) {
+			[self hideCursor];
+		}
 		
 		if (mouseOverControls)
 			[self mouseExitedFCWindow];
@@ -209,7 +210,7 @@
 {
 	if (isFullscreen) {
 		
-		CGDisplayShowCursor(kCGDirectMainDisplay);
+		[self showCursor];
 		
 		if (![fullscreenControls isVisible])
 			[fullscreenControls show];
@@ -260,11 +261,26 @@
 		[fullscreenControls hide];
 		if (osdTimer != nil)
 			[osdTimer invalidate];
-		//CGDisplayShowCursor(kCGDirectMainDisplay);
-	} else {
-		//CGDisplayHideCursor(kCGDirectMainDisplay);
 	}
 	isFullscreen = aBool;
+}
+
+- (void) showCursor
+{
+	if (!isCursorHidden)
+		return;
+	
+	isCursorHidden = NO;
+	[NSCursor unhide];
+}
+
+- (void) hideCursor
+{
+	if (isCursorHidden)
+		return;
+	
+	isCursorHidden = YES;
+	[NSCursor hide];
 }
 
 @end

@@ -34,6 +34,7 @@
 	BOOL isFullscreen;
 	BOOL mouseInWindow;
 	BOOL mouseOverControls;
+	BOOL isCursorHidden;
 	
 	NSTrackingRectTag fsTrackTag, fcTrackTag;
 	NSTimer *osdTimer;
@@ -56,5 +57,8 @@
 - (void) mouseExitedFSWindow;
 - (void) mouseEnteredFCWindow;
 - (void) mouseExitedFCWindow;
+
+- (void) showCursor;
+- (void) hideCursor;
 
 @end
