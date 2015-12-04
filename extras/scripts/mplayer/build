@@ -266,6 +266,8 @@ config_opts="$config_opts --enable-macosx-bundle"
 config_opts="$config_opts --disable-ass-internal"
 # Use external ASS library
 config_opts="$config_opts --disable-qtx"
+# Disable PNG as Homebrew libpng can be picked up
+config_opts="$config_opts --disable-png"
 
 config_opts="$config_opts --cc=clang"
 #config_opts="$config_opts --cc=llvm-gcc"
