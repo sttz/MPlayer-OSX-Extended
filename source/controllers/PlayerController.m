@@ -736,10 +736,9 @@
 			[self skipToNextChapter];
 		else {
 			if (playingFromPlaylist)
-				[playListController finishedPlayingItem:movieInfo];
-			else if (! [self automaticallyPlayEpisode:true])
+				[playListController playNext:self];
+			else if (![self automaticallyPlayEpisode:true])
 				[self stop:nil];
-			//[self seek:100 mode:MISeekingModePercent];
 		}
 	}
 }
@@ -755,10 +754,12 @@
 	{
 		if (includeChapters && movieInfo && [movieInfo chapterCount] > 0)
 			[self skipToPreviousChapter];
-		else if ([self automaticallyPlayEpisode:false])			
-			
-			[self seek:0 mode:MISeekingModePercent];
-		
+		else {
+			if (playingFromPlaylist)
+				[playListController playPrevious:self];
+			if (![self automaticallyPlayEpisode:false])
+				[self seek:0 mode:MISeekingModePercent];
+		}
 	}
 }
 
