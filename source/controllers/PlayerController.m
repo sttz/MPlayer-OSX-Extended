@@ -1957,7 +1957,7 @@
 		[myPlayer sendCommand:@"osd_show_progression" withOSD:MISurpressCommandOutputNever andPausing:MICommandPausingKeep];
     
 	// Video equalizer
-    if ([[movieInfo prefs] boolForKey:MPEVideoEqualizerEnabled]) {
+    if (!keyHandled && [[movieInfo prefs] boolForKey:MPEVideoEqualizerEnabled]) {
         if ((keyHandled = ([characters isEqualToString:@"1"])))
             [EqualizerController stepVideoEqualizerValue:MPEVideoEqualizerContrast on:movieInfo by:-1];
         else if ((keyHandled = ([characters isEqualToString:@"2"])))
@@ -1976,7 +1976,7 @@
             [EqualizerController stepVideoEqualizerValue:MPEVideoEqualizerSaturation on:movieInfo by:1];
     }
     
-	[Debug log:ASL_LEVEL_ERR withMessage:@"keyHandled=%d keyCode=%d",keyHandled,[theEvent keyCode]];
+	[Debug log:ASL_LEVEL_INFO withMessage:@"keyHandled=%d keyCode=%d characters=%@",keyHandled,[theEvent keyCode], characters];
 	return keyHandled;
 }
 //************************************************************************************
