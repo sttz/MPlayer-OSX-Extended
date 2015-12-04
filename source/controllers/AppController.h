@@ -123,7 +123,7 @@ PlayListController, MenuController, InspectorController, MovieInfo;
 
 // bundle access
 - (NSArray *) getExtensionsForType:(int)type;
-- (NSArray *) typeExtensionsForName:(NSString *)typeName;
+- (NSArray *) typeExtensionsConformingTo:(NSString *)uti;
 - (BOOL) isExtension:(NSString *)theExt ofType:(int)type;
 - (BOOL) isDVD:(NSString *)path;
 

@@ -344,8 +344,8 @@ static AppController *instance = nil;
 	NSString *defDir;
 	
 	// take both audio and movie files in account
-	fileTypes = [NSMutableArray arrayWithArray:[self typeExtensionsForName:@"Movie file"]];
-	[fileTypes addObjectsFromArray:[self typeExtensionsForName:@"Audio file"]];
+	fileTypes = [NSMutableArray arrayWithArray:[self typeExtensionsConformingTo:@"public.movie"]];
+	[fileTypes addObjectsFromArray:[self typeExtensionsConformingTo:@"public.audio"]];
 	
 	// present open dialog
 	if (!(defDir = [PREFS objectForKey:MPEDefaultDirectory]))
@@ -486,17 +486,27 @@ static AppController *instance = nil;
 #pragma mark - BUNDLE ACCESS
 /************************************************************************************/
 // return array of document extensions of specified document type name
-- (NSArray *) typeExtensionsForName:(NSString *)typeName
+- (NSArray *) typeExtensionsConformingTo:(NSString *)uti
 {
-	int i;
-	NSArray *typeList = [[[NSBundle mainBundle] infoDictionary]
-			objectForKey:@"CFBundleDocumentTypes"];
-	for (i=0; i<[typeList count]; i++) {
-		if ([[[typeList objectAtIndex:i] objectForKey:@"CFBundleTypeName"]
-			isEqualToString:typeName])
-			return [[typeList objectAtIndex:i] objectForKey:@"CFBundleTypeExtensions"];
+	NSArray *importedTypes = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"UTImportedTypeDeclarations"];
+	NSMutableArray *extensions = [NSMutableArray arrayWithCapacity:50];
+	for (NSDictionary *type in importedTypes) {
+		NSArray *conformsTo = [type arrayForKey:@"UTTypeConformsTo"];
+		if (!conformsTo || ![conformsTo containsObject:uti])
+			continue;
+		
+		NSDictionary *tagSpec = [type dictionaryForKey:@"UTTypeTagSpecification"];
+		if (!tagSpec)
+			continue;
+		
+		NSArray *extTag = [tagSpec arrayForKey:@"public.filename-extension"];
+		if (!extTag)
+			continue;
+		
+		[extensions addObjectsFromArray:extTag];
 	}
-	return nil;
+	
+	return extensions;
 }
 /************************************************************************************/
 - (NSArray *) getExtensionsForType:(int)type {
@@ -505,11 +515,11 @@ static AppController *instance = nil;
 	
 	// Load file types
 	if (type == MP_DIALOG_MEDIA || type == MP_DIALOG_VIDEO)
-		[typeList addObjectsFromArray:[self typeExtensionsForName:@"Movie file"]];
+		[typeList addObjectsFromArray:[self typeExtensionsConformingTo:@"public.movie"]];
 	if (type == MP_DIALOG_MEDIA || type == MP_DIALOG_AUDIO)
-		[typeList addObjectsFromArray:[self typeExtensionsForName:@"Audio file"]];
+		[typeList addObjectsFromArray:[self typeExtensionsConformingTo:@"public.audio"]];
 	if (type == MP_DIALOG_SUBTITLES)
-		[typeList addObjectsFromArray:[self typeExtensionsForName:@"Subtitles file"]];
+		[typeList addObjectsFromArray:[self typeExtensionsConformingTo:@"public.subtitles"]];
 	
 	return typeList;
 }
