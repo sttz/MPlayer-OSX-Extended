@@ -567,7 +567,7 @@
 		<key>MPEUse32bitBinaryon64bit</key>
 		<false/>
 		<key>MPEUseYUY2VideoFilter</key>
-		<true/>
+		<false/>
 		<key>MPEVideoEqualizerValues</key>
 		<dict/>
 		<key>MPEWindowOnTop</key>
