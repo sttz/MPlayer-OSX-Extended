@@ -712,9 +712,9 @@
 {
 	float seconds;
 	int sign = ([item tag] >= 0) ? 1 : -1;
-	if (abs([item tag]) == 1)
+	if (labs([item tag]) == 1)
 		seconds = [PREFS floatForKey:MPESeekStepSmall] * sign;
-	else if (abs([item tag]) == 2)
+	else if (labs([item tag]) == 2)
 		seconds = [PREFS floatForKey:MPESeekStepMedium] * sign;
 	else
 		seconds = [PREFS floatForKey:MPESeekStepLarge] * sign;

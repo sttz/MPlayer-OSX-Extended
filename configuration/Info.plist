@@ -7,6 +7,8 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.folder</string>
@@ -15,578 +17,576 @@
 				<string>public.video</string>
 				<string>public.subtitles</string>
 			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
 		</dict>
 		<dict>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>hu.mplayerhq.mplayerosx</string>
-			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>binaries</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>hu.mplayerhq.mplayerosx</string>
+			</array>
 		</dict>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>subtitles</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.binaries</string>
 			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>subtitles</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
 		</dict>
 		<dict>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>hu.mplayerhq.flv</string>
-			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>flv</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>hu.mplayerhq.ape</string>
+				<string>hu.mplayerhq.flv</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>ape</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>hu.mplayerhq.flac</string>
+				<string>hu.mplayerhq.ape</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>flac</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>hu.mplayerhq.flac</string>
+			</array>
 		</dict>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>audio</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.wv</string>
 			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>rm</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>hu.mplayerhq.real</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>rm</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>hu.mplayerhq.real</string>
+			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>audio</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>hu.mplayerhq.real</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>rm</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-		</dict>
-		<dict>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>hu.mplayerhq.real</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>rm</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.mod</string>
 			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>audio</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
 		</dict>
 		<dict>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>hu.mplayerhq.aiff</string>
-			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>aiff</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>hu.mplayerhq.aiff</string>
+			</array>
 		</dict>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>audio</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.dts</string>
 			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>audio</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
 		</dict>
 		<dict>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>hu.mplayerhq.wav</string>
-			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>wav</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>hu.mplayerhq.vob</string>
+				<string>hu.mplayerhq.wav</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>vob</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>hu.mplayerhq.cue</string>
+				<string>hu.mplayerhq.vob</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>cue</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>hu.mplayerhq.cue</string>
+			</array>
 		</dict>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>audio</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.ac3</string>
 			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>audio</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
 		</dict>
 		<dict>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>hu.mplayerhq.aac</string>
-			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>aac</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>hu.mplayerhq.aac</string>
+			</array>
 		</dict>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>movie</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.ogm</string>
 			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>movie</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
 		</dict>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>ogg</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.ogg</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>ogg</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.oga</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>ogg</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.ogv</string>
 			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>ogg</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
 		</dict>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>audio</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.oma</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>audio</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.voc</string>
 			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>audio</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
 		</dict>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>movie</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.avx</string>
 			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>movie</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
 		</dict>
 		<dict>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>hu.mplayerhq.mov</string>
-			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>mov</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>hu.mplayerhq.divx</string>
+				<string>hu.mplayerhq.mov</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>divx</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>hu.mplayerhq.dv</string>
+				<string>hu.mplayerhq.divx</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>dv</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>hu.mplayerhq.asf</string>
+				<string>hu.mplayerhq.dv</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>asf</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>hu.mplayerhq.avi</string>
+				<string>hu.mplayerhq.asf</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>avi</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>hu.mplayerhq.wma</string>
+				<string>hu.mplayerhq.avi</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>wma</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>hu.mplayerhq.wmv</string>
+				<string>hu.mplayerhq.wma</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>wmv</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>hu.mplayerhq.wmv</string>
+			</array>
 		</dict>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>mpeg</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.mpg</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>mpeg</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.m1v</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>mpeg</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.m2a</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>mpeg</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.mp1</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>mpeg</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.mp2</string>
 			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>mpeg</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
 		</dict>
 		<dict>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>hu.mplayerhq.mp3</string>
-			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>mp3</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>hu.mplayerhq.mp3</string>
+			</array>
 		</dict>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>mpeg</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.m2p</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>mpeg</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.m2ts</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>mpeg</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.m2v</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>mpeg</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.mpa</string>
 			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>mpeg</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
 		</dict>
 		<dict>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>hu.mplayerhq.mp4</string>
-			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>mp4</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>hu.mplayerhq.m4a</string>
+				<string>hu.mplayerhq.mp4</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>m4a</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>hu.mplayerhq.3gp</string>
+				<string>hu.mplayerhq.m4a</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>3gp</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>hu.mplayerhq.3gp</string>
+			</array>
 		</dict>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>audio</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.midi</string>
 			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>audio</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
 		</dict>
 		<dict>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>hu.mplayerhq.mka</string>
-			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>mka</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>hu.mplayerhq.mka</string>
+			</array>
 		</dict>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>mkv</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.mkv</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>mkv</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.webm</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>mkv</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.mks</string>
 			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>mkv</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
 		</dict>
 		<dict>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>hu.mplayerhq.ssa</string>
-			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>ssa</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>hu.mplayerhq.ssa</string>
+			</array>
 		</dict>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>subtitles</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.usf</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>subtitles</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.utf</string>
 			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>subtitles</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
 		</dict>
 		<dict>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>hu.mplayerhq.srt</string>
-			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>srt</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>hu.mplayerhq.srt</string>
+			</array>
 		</dict>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>subtitles</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.rt</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>subtitles</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>hu.mplayerhq.smi</string>
 			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>subtitles</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
 		</dict>
 		<dict>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>hu.mplayerhq.audio</string>
-			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>audio</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>hu.mplayerhq.movie</string>
+				<string>hu.mplayerhq.audio</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>movie</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-		</dict>
-		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>hu.mplayerhq.subtitle</string>
+				<string>hu.mplayerhq.movie</string>
 			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeIconFile</key>
 			<string>subtitles</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>hu.mplayerhq.subtitle</string>
+			</array>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
@@ -600,7 +600,7 @@
 	<key>CFBundleIconFile</key>
 	<string>icon</string>
 	<key>CFBundleIdentifier</key>
-	<string>hu.mplayerhq.mplayerosx.extended</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -755,7 +755,7 @@
 				<string>public.audio</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Monkey&apos;s Audio Lossless Audio Compression</string>
+			<string>Monkey's Audio Lossless Audio Compression</string>
 			<key>UTTypeIconFile</key>
 			<string>ape</string>
 			<key>UTTypeIdentifier</key>
