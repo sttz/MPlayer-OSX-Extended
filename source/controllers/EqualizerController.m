@@ -82,11 +82,16 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
+	BOOL newValue = NO;
+	if ([change objectForKey:NSKeyValueChangeNewKey] != [NSNull null]) {
+		newValue = [change boolForKey:NSKeyValueChangeNewKey];
+	}
+	
 	if ([keyPath isEqualToString:MPEVideoEqualizerEnabled]) {
-		[enableVideoEqualizerByDefaultItem setState:[change integerForKey:NSKeyValueChangeNewKey]];
+		[enableVideoEqualizerByDefaultItem setState:newValue];
 		return;
 	} else if ([keyPath isEqualToString:MPEAudioEqualizerEnabled]) {
-		[enableAudioEqualizerByDefaultItem setState:[change integerForKey:NSKeyValueChangeNewKey]];
+		[enableAudioEqualizerByDefaultItem setState:newValue];
 		return;
 	}
 	
