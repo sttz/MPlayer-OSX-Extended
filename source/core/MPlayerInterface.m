@@ -944,11 +944,14 @@ static NSArray* statusNames;
 	if ([[playingItem prefs] objectForKey:MPEAudioItemRelativeVolume])
 		volume *= [[playingItem prefs] floatForKey:MPEAudioItemRelativeVolume];
 	
-	if (playerMute)
+	if (playerMute) {
 		[self sendCommand:[NSString stringWithFormat:@"set_property mute %d", playerMute]];
-	else
+		[self sendCommand:@"osd_show_property_text Mute"];
+	} else {
 		[self sendCommand:[NSString stringWithFormat:@"set_property volume %.2f", volume]];
-	
+		[self sendCommand:[NSString stringWithFormat:@"osd_show_property_text 'Volume: %3.0f%%'", volume]];
+	}
+
 	// Inform clients of change
 	[self notifyClientsWithSelector:@selector(interface:volumeUpdate:isMuted:) 
 						  andObject:[NSNumber numberWithFloat:volume]
