@@ -168,7 +168,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 /************************************************************************************
  INTERFACE
  ************************************************************************************/
-- (MovieInfo *) itemAtIndex:(int) aIndex
+- (MovieInfo *) itemAtIndex:(NSInteger) aIndex
 {
 	if (aIndex >= 0 || aIndex < [[tableData arrangedObjects] count])
 		return [[tableData arrangedObjects] objectAtIndex:aIndex];
@@ -176,7 +176,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 		return nil;
 }
 /************************************************************************************/
-- (void) selectItemAtIndex:(int) aIndex
+- (void) selectItemAtIndex:(NSInteger) aIndex
 {
 	[playListTable selectRowIndexes:[NSIndexSet indexSetWithIndex:aIndex] byExtendingSelection:NO];
 }
@@ -186,17 +186,17 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	return [self itemAtIndex:[playListTable selectedRow]];
 }
 /************************************************************************************/
-- (int) indexOfSelectedItem
+- (NSInteger) indexOfSelectedItem
 {
 	return [playListTable selectedRow];
 }
 /************************************************************************************/
-- (int) numberOfSelectedItems
+- (NSInteger) numberOfSelectedItems
 {
 	return [playListTable numberOfSelectedRows];
 }
 /************************************************************************************/
-- (int) indexOfItem:(MovieInfo *)anItem
+- (NSInteger) indexOfItem:(MovieInfo *)anItem
 {
 	if ([[tableData arrangedObjects] count] > 0 && anItem) {
 		NSUInteger aIndex = [[tableData arrangedObjects] indexOfObjectIdenticalTo:anItem];
@@ -206,7 +206,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	return -1;
 }
 /************************************************************************************/
-- (int) itemCount
+- (NSInteger) itemCount
 {
 	return [[tableData arrangedObjects] count];
 }
@@ -220,13 +220,13 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	}
 }
 /************************************************************************************/
-- (void) insertItem:(MovieInfo *)anItem atIndex:(int) aIndex
+- (void) insertItem:(MovieInfo *)anItem atIndex:(NSInteger) aIndex
 {
 	if (anItem && aIndex >= 0 && aIndex <= [[tableData arrangedObjects] count])
 		[tableData insertObject:anItem atArrangedObjectIndex:aIndex];
 }
 /************************************************************************************/
-- (void) removeItemAtIndex:(unsigned int)index
+- (void) removeItemAtIndex:(NSInteger)index
 {
 	if ([[tableData arrangedObjects] objectAtIndex:index])
 		[tableData removeObjectAtArrangedObjectIndex:index];
@@ -277,9 +277,9 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	}
 	
 	if([self itemCount] == 1)
-		[playListCount setStringValue:[NSString stringWithFormat:@"%d item, %01d:%02d:%02d",[self itemCount],totalTime/3600,(totalTime%3600)/60,totalTime%60]];
+		[playListCount setStringValue:[NSString stringWithFormat:@"%ld item, %01d:%02d:%02d",[self itemCount],totalTime/3600,(totalTime%3600)/60,totalTime%60]];
 	else
-		[playListCount setStringValue:[NSString stringWithFormat:@"%d items, %01d:%02d:%02d",[self itemCount],totalTime/3600,(totalTime%3600)/60,totalTime%60]];
+		[playListCount setStringValue:[NSString stringWithFormat:@"%ld items, %01d:%02d:%02d",[self itemCount],totalTime/3600,(totalTime%3600)/60,totalTime%60]];
 	
 	// update menu items
 	//[playNextMenuItem setEnabled:[playerController isPlaying]];
@@ -329,7 +329,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 /************************************************************************************/
 - (void) finishedPlayingItem:(MovieInfo *)playingItem
 {
-	int theIndex = [self indexOfItem:playingItem];
+	NSInteger theIndex = [self indexOfItem:playingItem];
 	if (theIndex < 0)
 		return;
 	
@@ -398,7 +398,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	if ([availableType isEqualToString:@"PlaylistSelectionEnumeratorType"]) {
 		// drag inside the table
 		[tv setDropRow:row dropOperation:NSTableViewDropAbove];
-		return op;
+		return NSDragOperationMove;
 	}
 	
 	if([availableType isEqualToString:NSFilenamesPboardType]) {
@@ -432,14 +432,14 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 				return NSDragOperationNone;
 			if (subsCount == 0) return NSDragOperationNone;
 			[tv setDropRow:row dropOperation:op];
-			return op;
+			return NSDragOperationLink;
 		}
 		
 		if (op == NSTableViewDropAbove) {
 			if (movieCount == 0 && otherCount == 0 && audioCount == 0)
 				return NSDragOperationNone;
 			[tv setDropRow:row dropOperation:op];
-			return op;
+			return NSDragOperationLink;
 		}
 	}
 	return NSDragOperationNone;
@@ -474,7 +474,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	
 	if([availableType isEqualToString:NSFilenamesPboardType])
 	{
-		int i, insertIndex = row;
+		NSInteger i, insertIndex = row;
 		NSMutableArray *movieList = [NSMutableArray array];
 		NSMutableArray *subtitlesList = [NSMutableArray array];
 		NSMutableArray *audioList = [NSMutableArray array];
@@ -612,7 +612,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	if (![playerController isRunning])
 		return;
 	
-	int itemIdx = [self indexOfItem:[playerController playingItem]];
+	NSInteger itemIdx = [self indexOfItem:[playerController playingItem]];
 	
 	if(itemIdx > 0)
 	{
@@ -629,7 +629,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	if (![playerController isRunning])
 		return;
 	
-	int itemIdx = [self indexOfItem:[playerController playingItem]];
+	NSInteger itemIdx = [self indexOfItem:[playerController playingItem]];
 	
 	if(itemIdx >= 0 && itemIdx < ([self itemCount]-1))
 	{
@@ -641,7 +641,7 @@ static void addToolbarItem(NSMutableDictionary *theDict,NSString *identifier,NSS
 	}
 }
 
-- (void)playItemAtIndex:(int)index
+- (void)playItemAtIndex:(NSInteger)index
 {
 	if (index >= [self itemCount]) {
 		[Debug log:ASL_LEVEL_ERR withMessage:@"Cannot play item at index %d, only %d item in Playlist.",index,[self itemCount]];

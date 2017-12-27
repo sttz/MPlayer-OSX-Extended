@@ -314,7 +314,7 @@ externalSubtitles, captureStats, playbackStats, player;
 - (NSString *) displayLength {
 	
 	if (length > 0)
-		return [NSString stringWithFormat:@"%01d:%02d:%02d",length/3600,(length%3600)/60,length%60];
+		return [NSString stringWithFormat:@"%01ld:%02ld:%02ld",length/3600,(length%3600)/60,length%60];
 	else
 		return @"--:--:--";
 }
@@ -372,7 +372,7 @@ externalSubtitles, captureStats, playbackStats, player;
 	}
 }
 
-- (unsigned int)externalSubtitleCount {
+- (NSUInteger)externalSubtitleCount {
 	
 	return [externalSubtitles count];
 }
@@ -406,7 +406,7 @@ externalSubtitles, captureStats, playbackStats, player;
 	return [video objectForKey:[NSString stringWithFormat:@"%u",streamId]];
 }
 
--(unsigned int)videoStreamCount {
+-(NSUInteger)videoStreamCount {
 	
 	return [video count];
 }
@@ -461,7 +461,7 @@ externalSubtitles, captureStats, playbackStats, player;
 	return [[audio objectForKey:[NSString stringWithFormat:@"%u",streamId]] objectAtIndex:2];
 }
 
--(unsigned int)audioStreamCount {
+-(NSUInteger)audioStreamCount {
 	
 	return [audio count];
 }
@@ -515,7 +515,7 @@ externalSubtitles, captureStats, playbackStats, player;
 
 
 
--(unsigned int)subtitleCountForType:(SubtitleType)type {
+-(NSUInteger)subtitleCountForType:(SubtitleType)type {
 	
 	if (type == SubtitleTypeAll)
 		return ([subtitle count] + [subfile count] + [subvob count]);
@@ -581,7 +581,7 @@ externalSubtitles, captureStats, playbackStats, player;
 }
 
 
--(unsigned int)chapterCount {
+-(NSUInteger)chapterCount {
 
 	return [chapter count];
 }

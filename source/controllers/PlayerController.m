@@ -977,7 +977,7 @@
 	[fullScreenControls setLevel:fullsceenLevel];
 }
 /************************************************************************************/
-- (int) fullscreenDeviceId {
+- (NSUInteger) fullscreenDeviceId {
 	
 	// Default value from preferences
 	if (fullscreenDeviceId == -2) {
@@ -1150,7 +1150,7 @@
 												   action:@selector(subtitleMenuAction:)
 											keyEquivalent:@""];
 				[item setRepresentedObject:[NSArray arrayWithObjects:
-											[NSNumber numberWithInt:type], 
+											[NSNumber numberWithInteger:type],
 											streamId,
 											nil]];
 			}
@@ -1254,7 +1254,7 @@
 	if (!movieInfo)
 		return;
 	
-	int osdLevel;
+	NSInteger osdLevel;
 	
 	if ([[movieInfo prefs] objectForKey:MPEOSDLevel])
 		osdLevel = [[movieInfo prefs] integerForKey:MPEOSDLevel];
@@ -1365,7 +1365,7 @@
 		else
 			subtitleVobStreamId = streamId;
 		
-		int index = -1;
+		NSInteger index = -1;
 		for (NSMenuItem *item in [subtitleStreamsMenu itemArray]) {
 			NSArray *arr = [item representedObject];
 			if (arr && [arr count] == 2 
@@ -1454,7 +1454,7 @@
 		
 		if (bestKey) {
 			
-			int index = [chaptersMenu indexOfItemWithRepresentedObject:bestKey];
+			NSInteger index = [chaptersMenu indexOfItemWithRepresentedObject:bestKey];
 			
 			if (index != -1) {
 				[[chaptersMenu itemAtIndex:index] setState:NSOnState];
@@ -1542,8 +1542,8 @@
 	[[fullscreenWindowItem submenu] setStateOfAllItemsTo:NSOffState];
 	
 	// index of currently selected device
-	int index = [fullscreenDeviceMenu indexOfItemWithRepresentedObject:[NSNumber numberWithInt:[self fullscreenDeviceId]]];
-	int state = (fullscreenDeviceId < 0) ? NSMixedState : NSOnState;
+	NSInteger index = [fullscreenDeviceMenu indexOfItemWithRepresentedObject:[NSNumber numberWithInteger:[self fullscreenDeviceId]]];
+	NSInteger state = (fullscreenDeviceId < 0) ? NSMixedState : NSOnState;
 	
 	if (index != -1) {
 		[[fullscreenDeviceMenu itemAtIndex:index] setState:state];
@@ -1553,7 +1553,7 @@
 	// select auto entry
 	if (fullscreenDeviceId == -2) {
 		
-		int index = [fullscreenDeviceMenu indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-2]];
+		NSInteger index = [fullscreenDeviceMenu indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-2]];
 		
 		[[fullscreenDeviceMenu itemAtIndex:index] setState:NSOnState];
 		[[[fullscreenWindowItem submenu] itemAtIndex:index] setState:NSOnState];
@@ -1561,7 +1561,7 @@
 		// same entry implicit selection
 		if ([PREFS integerForKey:MPEGoToFullscreenOn] == MPEGoToFullscreenOnSameScreen) {
 			
-			int index = [fullscreenDeviceMenu indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-1]];
+			NSInteger index = [fullscreenDeviceMenu indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-1]];
 			
 			[[fullscreenDeviceMenu itemAtIndex:index] setState:NSMixedState];
 			[[[fullscreenWindowItem submenu] itemAtIndex:index] setState:NSMixedState];
@@ -1571,7 +1571,7 @@
 	// select same entry
 	if (fullscreenDeviceId == -1) {
 		
-		int index = [fullscreenDeviceMenu indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-1]];
+		NSInteger index = [fullscreenDeviceMenu indexOfItemWithRepresentedObject:[NSNumber numberWithInt:-1]];
 		
 		[[fullscreenDeviceMenu itemAtIndex:index] setState:NSOnState];
 		[[[fullscreenWindowItem submenu] itemAtIndex:index] setState:NSOnState];

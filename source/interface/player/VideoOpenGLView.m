@@ -126,7 +126,7 @@ static unsigned int videoViewId;
 		isFullscreen = NO;
 	}
 	
-	int fullscreenId = [playerController fullscreenDeviceId];
+	NSUInteger fullscreenId = [playerController fullscreenDeviceId];
 	NSRect screen_frame = [[[NSScreen screens] objectAtIndex:fullscreenId] frame];
 	/*screen_frame.origin.x = 500;
 	screen_frame.origin.y = 500;
@@ -232,7 +232,7 @@ static unsigned int videoViewId;
 - (void) fullscreenWindowMoved:(NSNotification *)notification
 {
 	// triggered when fullscreen window changes spaces
-	int fullscreenId = [playerController fullscreenDeviceId];
+	NSUInteger fullscreenId = [playerController fullscreenDeviceId];
 	NSRect screen_frame = [[[NSScreen screens] objectAtIndex:fullscreenId] frame];
 	[fullscreenWindow setFrame:screen_frame display:YES animate:NO];
 }
@@ -285,7 +285,7 @@ static unsigned int videoViewId;
 /*
 	Black out all screens except fullscreen screen
  */
-- (void) blackScreensExcept:(int)fullscreenId
+- (void) blackScreensExcept:(NSUInteger)fullscreenId
 {
 	[blackingWindows release];
 	blackingWindows = [[NSMutableArray alloc] initWithCapacity:[[NSScreen screens] count]];

@@ -110,7 +110,7 @@ static void swap_header(uint8_t *bytes, ssize_t length) {
 	
 	// Look for any of the six magic numbers relevant to Mach-O executables, and swap the header if necessary.
 	magic = *((uint32_t *)bytes);
-	max_fat = (length - sizeof(struct fat_header)) / sizeof(struct fat_arch);
+	max_fat = (uint32_t)(length - sizeof(struct fat_header)) / sizeof(struct fat_arch);
 	if (MH_MAGIC == magic || MH_CIGAM == magic) {
 		struct mach_header *mh = (struct mach_header *)bytes;
 		if (MH_CIGAM == magic) swap_header(bytes, length);

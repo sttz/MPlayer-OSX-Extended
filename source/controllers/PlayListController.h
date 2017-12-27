@@ -87,15 +87,15 @@
 @property (nonatomic,readonly,getter=window) NSWindow *playListWindow;
 
 // data access interface
-- (MovieInfo *) itemAtIndex:(int) aIndex;
-- (void) selectItemAtIndex:(int) aIndex;
+- (MovieInfo *) itemAtIndex:(NSInteger) aIndex;
+- (void) selectItemAtIndex:(NSInteger) aIndex;
 - (MovieInfo *) selectedItem;
-- (int) indexOfSelectedItem;
-- (int) numberOfSelectedItems;
-- (int) indexOfItem:(MovieInfo *)anItem;
-- (int) itemCount;
+- (NSInteger) indexOfSelectedItem;
+- (NSInteger) numberOfSelectedItems;
+- (NSInteger) indexOfItem:(MovieInfo *)anItem;
+- (NSInteger) itemCount;
 - (void) appendItem:(MovieInfo *)anItem;
-- (void) insertItem:(MovieInfo *)anItem atIndex:(int) aIndex;
+- (void) insertItem:(MovieInfo *)anItem atIndex:(NSInteger) aIndex;
 - (void) deleteSelection;
 
 // controller interface
@@ -109,8 +109,8 @@
 - (IBAction)changePlayMode:(id)sender;
 - (IBAction)playPrevious:(id)sender;
 - (IBAction)playNext:(id)sender;
-- (void)playItemAtIndex:(int)index;
-- (void) removeItemAtIndex:(unsigned int)index;
+- (void)playItemAtIndex:(NSInteger)index;
+- (void) removeItemAtIndex:(NSInteger)index;
 
 // TableView data access methods
 - (NSDragOperation)tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)op;

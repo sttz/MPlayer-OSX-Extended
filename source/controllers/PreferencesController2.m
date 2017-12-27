@@ -161,7 +161,7 @@
 {
 	// Upgrade old ontop mode
 	if ([PREFS objectForKey:@"MPEWindowOnTopMode"]) {
-		int mode = [PREFS integerForKey:@"MPEWindowOnTopMode"];
+		NSInteger mode = [PREFS integerForKey:@"MPEWindowOnTopMode"];
 		
 		[PREFS setBool:(mode == 1 || mode == 2) forKey:MPEWindowOnTop];
 		[PREFS setBool:(mode == 2) forKey:MPEWindowOnTopOnlyWhilePlaying];
@@ -766,7 +766,7 @@
 				  forKey:MPEScreenshotSaveLocation];
     } else {
 		// User cancel: Reset the menu to the last selection
-		[PREFS setObject:[NSNumber numberWithInt:screenshotSavePathLastSelection] 
+		[PREFS setObject:[NSNumber numberWithInteger:screenshotSavePathLastSelection]
 				  forKey:MPEScreenshotSaveLocation];
 	}
 	
@@ -995,7 +995,7 @@
 	
     free(devids);
 	
-	int outputDevice = 0;
+	NSInteger outputDevice = 0;
 	if ([PREFS objectForKey:MPEAudioOutputDevice])
 		outputDevice = [PREFS integerForKey:MPEAudioOutputDevice];
 	

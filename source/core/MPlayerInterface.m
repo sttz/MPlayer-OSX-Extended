@@ -209,8 +209,8 @@ static NSArray* statusNames;
 	
 	// send initial state update
 	if ([client respondsToSelector:@selector(interface:hasChangedStateTo:fromState:)])
-		[client interface:self hasChangedStateTo:[NSNumber numberWithUnsignedInt:state] 
-									   fromState:[NSNumber numberWithUnsignedInt:MIStateInitializing]];
+		[client interface:self hasChangedStateTo:[NSNumber numberWithUnsignedInteger:state]
+									   fromState:[NSNumber numberWithUnsignedInteger:MIStateInitializing]];
 	// send initial time update
 	if ([client respondsToSelector:@selector(interface:timeUpdate:)])
 		[client interface:self timeUpdate:[NSNumber numberWithFloat:mySeconds]];

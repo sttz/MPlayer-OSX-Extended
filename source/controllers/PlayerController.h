@@ -111,7 +111,7 @@
 - (void) setOntop:(BOOL)aBool;
 - (BOOL) changesRequireRestart;
 - (void) applyChangesWithRestart:(BOOL)restart;
-- (int) fullscreenDeviceId;
+- (NSUInteger) fullscreenDeviceId;
 - (NSWindow *) playerWindow;
 
 - (IBAction) togglePlaylist:(id)sender;

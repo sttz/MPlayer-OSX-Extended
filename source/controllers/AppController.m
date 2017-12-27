@@ -722,7 +722,7 @@ static AppController *instance = nil;
         NSURL *document = [NSURL URLByResolvingBookmarkData:bookmarkData
                                                     options:resolveOptions
                                               relativeToURL:nil
-                                        bookmarkDataIsStale:NO
+                                        bookmarkDataIsStale:nil
                                                       error:nil];
         if (document) {
             [filenames addObject:[document path]];

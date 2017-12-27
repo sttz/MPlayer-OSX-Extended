@@ -87,21 +87,21 @@ typedef NSUInteger MPEStreamType;
 	// video
 	NSString *videoFormat;
 	NSString *videoCodec;
-	unsigned int videoBitrate;
-	unsigned int videoWidth;
-	unsigned int videoHeight;
+	NSInteger videoBitrate;
+	NSInteger videoWidth;
+	NSInteger videoHeight;
 	float videoFPS;
 	float videoAspect;
 	
 	// audio
 	NSString *audioFormat;
 	NSString *audioCodec;
-	unsigned int audioBitrate;
+	NSInteger audioBitrate;
 	float audioSampleRate;
-	unsigned int audioChannels;
+	NSInteger audioChannels;
 	
 	// length
-	unsigned int length;
+	NSInteger length;
 	
 	// statistics
 	BOOL captureStats;
@@ -135,7 +135,7 @@ typedef NSUInteger MPEStreamType;
 @property (nonatomic,retain) NSString* fileFormat;
 @property (nonatomic,getter=isSeekable) BOOL seekable;
 @property (nonatomic,readonly) NSString* displayLength;
-@property (nonatomic) unsigned int length;
+@property (nonatomic) NSInteger length;
 
 // file attributes (set automatically with setFilename:)
 @property (nonatomic) unsigned long long filesize;
@@ -146,18 +146,18 @@ typedef NSUInteger MPEStreamType;
 // video properties
 @property (nonatomic,retain) NSString* videoFormat;
 @property (nonatomic,retain) NSString* videoCodec;
-@property (nonatomic) unsigned int videoBitrate;
-@property (nonatomic) unsigned int videoWidth;
-@property (nonatomic) unsigned int videoHeight;
+@property (nonatomic) NSInteger videoBitrate;
+@property (nonatomic) NSInteger videoWidth;
+@property (nonatomic) NSInteger videoHeight;
 @property (nonatomic) float videoFPS;
 @property (nonatomic) float videoAspect;
 
 // audio properties
 @property (nonatomic,retain) NSString* audioFormat;
 @property (nonatomic,retain) NSString* audioCodec;
-@property (nonatomic) unsigned int audioBitrate;
+@property (nonatomic) NSInteger audioBitrate;
 @property (nonatomic) float audioSampleRate;
-@property (nonatomic) unsigned int audioChannels; 
+@property (nonatomic) NSInteger audioChannels; 
 
 // local preferences
 @property (nonatomic, readonly) LocalUserDefaults *prefs;
@@ -169,7 +169,7 @@ typedef NSUInteger MPEStreamType;
 
 // external subtitles
 - (void)addExternalSubtitle:(NSString *)path;
-- (unsigned int)externalSubtitleCount;
+- (NSUInteger)externalSubtitleCount;
 @property (nonatomic,readonly) NSArray* externalSubtitles;
 
 // Set and get info
@@ -180,7 +180,7 @@ typedef NSUInteger MPEStreamType;
 -(void)newVideoStream:(unsigned int)streamId;
 -(void)setVideoStreamName:(NSString *)streamName forId:(unsigned int)streamId;
 -(NSString *)videoNameForStream:(unsigned int)streamId;
--(unsigned int)videoStreamCount;
+-(NSUInteger)videoStreamCount;
 -(NSEnumerator *)getVideoStreamsEnumerator;
 -(NSString *)descriptionForVideoStream:(unsigned int)streamId;
 
@@ -190,7 +190,7 @@ typedef NSUInteger MPEStreamType;
 -(void)setAudioStreamLanguage:(NSString *)streamLanguage forId:(unsigned int)streamId;
 -(NSString *)audioNameForStream:(unsigned int)streamId;
 -(NSString *)audioLanguageForStream:(unsigned int)streamId;
--(unsigned int)audioStreamCount;
+-(NSUInteger)audioStreamCount;
 -(NSEnumerator *)getAudioStreamsEnumerator;
 -(NSString *)descriptionForAudioStream:(unsigned int)streamId;
 
@@ -200,7 +200,7 @@ typedef NSUInteger MPEStreamType;
 -(void)setSubtitleStreamLanguage:(NSString *)streamLanguage forId:(unsigned int)streamId andType:(SubtitleType)type;
 -(NSString *)subtitleNameForStream:(unsigned int)streamId andType:(SubtitleType)type;
 -(NSString *)subtitleLanguageForStream:(unsigned int)streamId andType:(SubtitleType)type;
--(unsigned int)subtitleCountForType:(SubtitleType)type;
+-(NSUInteger)subtitleCountForType:(SubtitleType)type;
 -(NSEnumerator *)getSubtitleStreamsEnumeratorForType:(SubtitleType)type;
 -(NSString *)descriptionForSubtitleStream:(unsigned int)streamId andType:(SubtitleType)type;
 
@@ -210,7 +210,7 @@ typedef NSUInteger MPEStreamType;
 -(void)setChapterName:(NSString *)chapterName forId:(unsigned int)chapterId;
 -(NSString *)nameForChapter:(unsigned int)chapterId;
 -(float)startOfChapter:(unsigned int)chapterId;
--(unsigned int)chapterCount;
+-(NSUInteger)chapterCount;
 -(NSEnumerator *)getChaptersEnumerator;
 
 -(NSMutableDictionary *)subDictForType:(SubtitleType)type;

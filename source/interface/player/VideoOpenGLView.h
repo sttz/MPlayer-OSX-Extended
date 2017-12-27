@@ -82,7 +82,7 @@ typedef NSUInteger MPEVideoScaleMode;
 // Main Thread methods
 - (NSString *)bufferName;
 - (BOOL) isFullscreen;
-- (void) blackScreensExcept:(int)fullscreenId;
+- (void) blackScreensExcept:(NSUInteger)fullscreenId;
 - (void) unblackScreens;
 - (NSRect) videoFrame;
 - (void) reshape;
