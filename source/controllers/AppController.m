@@ -52,6 +52,36 @@ static AppController *instance = nil;
 		
 		// save instance for sharedController
 		instance = self;
+		
+		// create preferences and register application factory presets
+		NSString *specFilePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"Preferences.plist"];
+		preferencesSpecs = [[NSDictionary alloc] initWithContentsOfFile:specFilePath];
+		
+		if (preferencesSpecs) {
+			NSMutableDictionary *defaultsAndConstants = [NSMutableDictionary dictionary];
+			[defaultsAndConstants addEntriesFromDictionary:[preferencesSpecs objectForKey:@"Defaults"]];
+			[defaultsAndConstants addEntriesFromDictionary:[preferencesSpecs objectForKey:@"Constants"]];
+			[[NSUserDefaults standardUserDefaults] registerDefaults:defaultsAndConstants];
+		} else
+			[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to load preferences specs."];
+		
+		// pre-load language codes
+		[LanguageCodes sharedInstance];
+		
+		// Work around an issue where the saved open panel size gets ridiculously large,
+		// preventing the open panel from being opened
+		if ([PREFS objectForKey:@"NSNavPanelExpandedSizeForOpenMode"]) {
+			NSSize openSize = NSSizeFromString([PREFS stringForKey:@"NSNavPanelExpandedSizeForOpenMode"]);
+			if (openSize.width > 1e+10 || openSize.height > 1e+10) {
+				[PREFS removeObjectForKey:@"NSNavPanelExpandedSizeForOpenMode"];
+			}
+		}
+		
+		// register for sparkle feed changes
+		[PREFS addObserver:self
+				forKeyPath:MPECheckForUpdatesIncludesPrereleases
+				   options:0
+				   context:nil];
 	}
 	return self;
 }
@@ -77,39 +107,7 @@ static AppController *instance = nil;
 
 - (void) awakeFromNib
 {
-	// make sure initialization is not repeated
-	if (preferencesSpecs)
-		return;
-	
-	// create preferences and register application factory presets
-	NSString *specFilePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"Preferences.plist"];
-	preferencesSpecs = [[NSDictionary alloc] initWithContentsOfFile:specFilePath];
-	
-	if (preferencesSpecs) {
-		NSMutableDictionary *defaultsAndConstants = [NSMutableDictionary dictionary];
-		[defaultsAndConstants addEntriesFromDictionary:[preferencesSpecs objectForKey:@"Defaults"]];
-		[defaultsAndConstants addEntriesFromDictionary:[preferencesSpecs objectForKey:@"Constants"]];
-		[[NSUserDefaults standardUserDefaults] registerDefaults:defaultsAndConstants];
-	} else
-		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to load preferences specs."];
-	
-	// pre-load language codes
-	[LanguageCodes sharedInstance];
-	
-	// Work around an issue where the saved open panel size gets ridiculously large,
-	// preventing the open panel from being opened
-	if ([PREFS objectForKey:@"NSNavPanelExpandedSizeForOpenMode"]) {
-		NSSize openSize = NSSizeFromString([PREFS stringForKey:@"NSNavPanelExpandedSizeForOpenMode"]);
-		if (openSize.width > 1e+10 || openSize.height > 1e+10) {
-			[PREFS removeObjectForKey:@"NSNavPanelExpandedSizeForOpenMode"];
-		}
-	}
-	
-	// register for sparkle feed changes
-	[PREFS addObserver:self
-			forKeyPath:MPECheckForUpdatesIncludesPrereleases
-			   options:0
-			   context:nil];
+	//
 }
 
 - (EqualizerController *)equalizerController
