@@ -351,7 +351,7 @@ static unsigned int videoViewId;
 	
 	NSRect win_frame = [[self window] frame];
 	NSSize minSize = [[self window] contentMinSize];
-	NSSize mov_size = [self convertSizeToBase:[self bounds].size];
+	NSSize mov_size = [self convertSize:[self bounds].size toView:nil];
 	NSSize chrome_size = NSMakeSize(win_frame.size.width - mov_size.width, win_frame.size.height - mov_size.height);
 	NSRect screen_frame = [[[playerController playerWindow] screen] visibleFrame];
 	float fitFactor;
