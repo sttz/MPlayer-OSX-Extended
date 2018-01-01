@@ -53,8 +53,6 @@
 	IBOutlet NSDictionaryController *fontsController;
 	IBOutlet NSPopUpButton *fontsMenu;
 	NSMutableDictionary *fonts;
-	IBOutlet NSWindow *cacheStatusWindow;
-	IBOutlet NSProgressIndicator *cacheStatusIndicator;
 	
 	IBOutlet NSPopUpButton *audioDeviceMenu;
 	NSMutableDictionary *outputDevices;
@@ -110,6 +108,7 @@
 
 - (void) loadFonts;
 - (IBAction) changeFont:(NSPopUpButton *)sender;
+- (NSString *)pathForFontFamily:(NSString *)family withStyle:(NSString *)style;
 
 - (void) loadOutputDevices;
 - (IBAction) selectOutputDevice:(NSPopUpButton *)sender;

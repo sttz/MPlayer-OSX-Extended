@@ -27,6 +27,9 @@
 #include <mach-o/arch.h>
 #include <sys/sysctl.h>
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 #import "PreferencesController2.h"
 
 #import "MenuController.h"
@@ -38,7 +41,6 @@
 #import "BinaryBundle.h"
 #import "CocoaAdditions.h"
 
-#import <fontconfig/fontconfig.h>
 #import "RegexKitLite.h"
 #import <Sparkle/Sparkle.h>
 
@@ -93,6 +95,8 @@
 	
 	// Set autosave name here to avoid window loading the frame with an unitialized view
 	[self setWindowFrameAutosaveName:@"MPEPreferencesWindow"];
+	
+	[self loadFonts];
 	
 	// For subtitle colors we want to be able to select alpha
 	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES]; 
@@ -782,98 +786,25 @@
 	return YES;
 }
 
-/** Use FontConfig to generate list of installed fonts.
- */
 - (void)loadFonts
 {
-	FcConfig *config;
-	FcPattern *pat;
-	FcFontSet *set;
-	FcObjectSet *os;
-	
-	// Initialize fontconfig with own config directory
-	setenv("FONTCONFIG_PATH", [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"fonts"] UTF8String], 1);
-	
-	config = FcInitLoadConfig();
-	if (!config)
-		return [Debug log:ASL_LEVEL_ERR withMessage:@"Failed to initialize Fontconfig."];
-	FcConfigSetCurrent(config);
-	
-	// Check if the cache needs to be rebuilt
-	FcStrList *fontDirs = FcConfigGetFontDirs(config);
-	FcChar8 *fontDir;
-	FcBool cachesAreValid = FcTrue;
-	while ((fontDir = FcStrListNext(fontDirs))) {
-		cachesAreValid = (FcDirCacheValid(fontDir) || !FcFileIsDir(fontDir)) && cachesAreValid;
-	}
-    FcStrListDone(fontDirs);
-    
-	// Display rebuilding dialog while Fontconfig is working
-	if (!cachesAreValid) {
-		[cacheStatusIndicator setUsesThreadedAnimation:YES];
-		[cacheStatusIndicator startAnimation:self];
+	NSFontManager *manager = [NSFontManager sharedFontManager];
+	NSArray<NSString *> *families = [manager availableFontFamilies];
+	NSMutableDictionary *mfonts = [[NSMutableDictionary dictionaryWithCapacity:families.count] retain];
+	for (NSString *name in families) {
+		NSArray<NSArray *> *members = [manager availableMembersOfFontFamily:name];
 		
-		if (![[AppController sharedController] activePlayer]) {
-			[Debug log:ASL_LEVEL_WARNING withMessage:@"No active player to show Fontconfig caching status."];
-		} else {
-			[NSApp beginSheet:cacheStatusWindow
-			   modalForWindow:[[[AppController sharedController] activePlayer] playerWindow] 
-				modalDelegate:nil 
-			   didEndSelector:nil 
-				  contextInfo:nil];
-		}
-	}
-	
-	if (!FcConfigBuildFonts(config)) {
-		FcConfigDestroy(config);
-		return [Debug log:ASL_LEVEL_ERR withMessage:@"Failed to build Fontconfig cache."];
-	}
-	
-	if (!cachesAreValid) {
-		[NSApp endSheet:cacheStatusWindow];
-		[cacheStatusWindow orderOut:self];
-	}
-	
-	// Create pattern for all fonts and include family and style information
-	pat = FcPatternCreate();
-	os = FcObjectSetBuild(FC_FAMILY, FC_STYLE, NULL);
-	set = FcFontList(0, pat, os);
-	
-	// Read fonts into dictionary
-	if (set) {
-		NSMutableDictionary *mfonts = [[NSMutableDictionary dictionaryWithCapacity:set->nfont] retain];
-		
-		int i;
-		for (i = 0; i < set->nfont; i++) {
-			
-			FcChar8 *family;
-			FcChar8 *fontstyle;
-			NSMutableArray *styles;
-			
-			if (FcPatternGetString(set->fonts[i], FC_FAMILY, 0, &family) == FcResultMatch) {
-				
-				// For now just take the 0th family and style name, which should be the english one
-				if (![mfonts objectForKey:[NSString stringWithUTF8String:(const char*)family]]) {
-					styles = [NSMutableArray arrayWithCapacity:1];
-					[mfonts setObject:styles	forKey:[NSString stringWithUTF8String:(const char*)family]];
-				} else {
-					styles = [mfonts objectForKey:[NSString stringWithUTF8String:(const char*)family]];
-				}
-				
-				if (FcPatternGetString(set->fonts[i], FC_STYLE, 0, &fontstyle) == FcResultMatch)
-					[styles addObject:[NSString stringWithUTF8String:(const char*)fontstyle]];
-			}
-			
+		NSMutableArray *names = [NSMutableArray arrayWithCapacity:members.count];
+		NSMutableArray *styles = [NSMutableArray arrayWithCapacity:members.count];
+		for (NSArray *member in members) {
+			[names addObject:[member objectAtIndex:0]];
+			[styles addObject:[member objectAtIndex:1]];
 		}
 		
-		for (NSString *key in mfonts) {
-			[[mfonts objectForKey:key] sortUsingSelector:@selector(caseInsensitiveCompare:)];
-		}
-		
-		[self setFonts:mfonts];
-	} else {
-		[Debug log:ASL_LEVEL_ERR withMessage:@"Failed to create font list."];
+		[mfonts setObject:[NSDictionary dictionaryWithObjectsAndKeys:names, @"names", styles, @"styles", nil] forKey:name];
 	}
+	
+	[self setFonts:mfonts];
 	
 	// Load font selection
 	NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -884,15 +815,89 @@
 		defaultFont = @"Helvetica";
 	
 	[fontsController setSelectionIndex:[fontsMenu indexOfItemWithTitle:defaultFont]];
-	
-	FcFontSetDestroy(set);
-	FcObjectSetDestroy(os);
-	FcPatternDestroy(pat);
-	FcConfigDestroy(config);
-	
-	FcFini();
 }
 
+- (NSString *)pathForFontFamily:(NSString *)family withStyle:(NSString *)style
+{
+	// Look up font name for given family and style
+	NSDictionary *fontInfo = [fonts objectForKey:family];
+	if (!fontInfo) {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Could not find font info for family '%@'", family];
+		return nil;
+	}
+
+	NSArray *styles = [fontInfo objectForKey:@"styles"];
+	NSArray *names = [fontInfo objectForKey:@"names"];
+	NSUInteger index = [styles indexOfObject:style];
+	if (index == NSNotFound) {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Could not find face '%@' for font family '%@'", style, family];
+		return nil;
+	}
+	
+	NSString *name = [names objectAtIndex:index];
+	NSFont *font = [NSFont fontWithName:name size:30];
+	if (!font) {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Could not find font for name: %@", name];
+		return nil;
+	}
+	NSURL *url = [[font fontDescriptor] objectForKey:(NSString*)kCTFontURLAttribute];
+	if (!url) {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Could not get url for font: %@", name];
+		return nil;
+	}
+	
+	// Some fonts bundle multiple faces in a single font file, so FreeType in MPlayer needs the face index
+	// to select the right one. There's no API in macOS to get this index, so instead we have to use
+	// FreeType to open the font and check all faces it contains to determine the proper index.
+	// Based on code in libass dealing with the same issue: https://github.com/libass/libass/blob/master/libass/ass_font.c#L195
+	long faceIndex = 0;
+	FT_Error err;
+	FT_Library library;
+	FT_Face face = NULL;
+	
+	err = FT_Init_FreeType(&library);
+	if (err) {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Error initiaizing FreeType: %@", err];
+		return nil;
+	}
+	
+	const char *path = [[url path] UTF8String];
+	err = FT_New_Face(library, path, 0, &face);
+	if (err) {
+		[Debug log:ASL_LEVEL_ERR withMessage:@"Error opening font '%@': %d", url, err];
+		FT_Done_FreeType(library);
+		return nil;
+	}
+	
+	const char *psname = [name UTF8String];
+	if (face->num_faces > 0) {
+		for (int i = 0; i < face->num_faces; i++) {
+			FT_Done_Face(face);
+			err = FT_New_Face(library, path, i, &face);
+			if (err) {
+				[Debug log:ASL_LEVEL_ERR withMessage:@"Error opening font '%@': %d", url, err];
+				FT_Done_FreeType(library);
+				return nil;
+			}
+			
+			const char *face_psname = FT_Get_Postscript_Name(face);
+			if (strcmp(psname, face_psname) == 0) {
+				faceIndex = i;
+				break;
+			}
+		}
+	}
+	
+	FT_Done_Face(face);
+	FT_Done_FreeType(library);
+	
+	if (faceIndex > 0) {
+		return [NSString stringWithFormat:@"%@#%ld", [url path], faceIndex];
+	} else {
+		return [url path];
+	}
+}
+ 
 - (IBAction) changeFont:(NSPopUpButton *)sender
 {
 	[[NSUserDefaults standardUserDefaults] setObject:[sender titleOfSelectedItem] forKey:MPEFont];

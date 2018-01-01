@@ -79,10 +79,8 @@
 		3A7A6AE2139AB7C4006A8B4A /* Player.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A7A6908139AB44D006A8B4A /* Player.xib */; };
 		3A7A6AE3139AB7C4006A8B4A /* Playlist.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A7A690A139AB44D006A8B4A /* Playlist.xib */; };
 		3A7A6AE4139AB7C4006A8B4A /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A7A690C139AB44D006A8B4A /* Preferences.xib */; };
-		3A7A6B3C139AB990006A8B4A /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7A6B3A139AB990006A8B4A /* libfontconfig.1.dylib */; };
 		3A7A6B3D139AB990006A8B4A /* libfreetype.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7A6B3B139AB990006A8B4A /* libfreetype.6.dylib */; };
 		3A7A6B54139ABD51006A8B4A /* MPlayer OSX Help in Resources */ = {isa = PBXBuildFile; fileRef = 3A7A6B52139ABD51006A8B4A /* MPlayer OSX Help */; };
-		3A7A6B56139ABD6C006A8B4A /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 3A7A6B55139ABD6C006A8B4A /* fonts */; };
 		3A7A6B7B139ABE22006A8B4A /* mpextended.mpBinaries in Copy Binaries */ = {isa = PBXBuildFile; fileRef = 3A7A6B7A139ABE20006A8B4A /* mpextended.mpBinaries */; };
 		3AC9A6F2139BFFCB001A3429 /* fc_aslider_bar.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AC9A694139BFFCB001A3429 /* fc_aslider_bar.png */; };
 		3AC9A6F3139BFFCB001A3429 /* fc_aslider_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AC9A695139BFFCB001A3429 /* fc_aslider_icon.png */; };
@@ -267,7 +265,6 @@
 		3A7A6918139AB44D006A8B4A /* License.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = License.rtf; sourceTree = "<group>"; };
 		3A7A6919139AB44D006A8B4A /* NSColor+BWAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSColor+BWAdditions.h"; sourceTree = "<group>"; };
 		3A7A691A139AB44D006A8B4A /* NSColor+BWAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSColor+BWAdditions.m"; sourceTree = "<group>"; };
-		3A7A691D139AB44D006A8B4A /* fontconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fontconfig.h; sourceTree = "<group>"; };
 		3A7A6920139AB44D006A8B4A /* PFMoveApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFMoveApplication.h; sourceTree = "<group>"; };
 		3A7A6921139AB44D006A8B4A /* PFMoveApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFMoveApplication.m; sourceTree = "<group>"; };
 		3A7A6923139AB44D006A8B4A /* License.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = License.rtf; sourceTree = "<group>"; };
@@ -339,10 +336,8 @@
 		3A7A696E139AB44D006A8B4A /* Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Debug.m; sourceTree = "<group>"; };
 		3A7A696F139AB44D006A8B4A /* LocalUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalUserDefaults.h; sourceTree = "<group>"; };
 		3A7A6970139AB44D006A8B4A /* LocalUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalUserDefaults.m; sourceTree = "<group>"; };
-		3A7A6B3A139AB990006A8B4A /* libfontconfig.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfontconfig.1.dylib; path = binaries/mpextended.mpBinaries/Contents/MacOS/lib/libfontconfig.1.dylib; sourceTree = "<group>"; };
 		3A7A6B3B139AB990006A8B4A /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.6.dylib; path = binaries/mpextended.mpBinaries/Contents/MacOS/lib/libfreetype.6.dylib; sourceTree = "<group>"; };
 		3A7A6B53139ABD51006A8B4A /* en */ = {isa = PBXFileReference; lastKnownFileType = folder; name = en; path = "en.lproj/MPlayer OSX Help"; sourceTree = "<group>"; };
-		3A7A6B55139ABD6C006A8B4A /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		3A7A6B79139ABE20006A8B4A /* example.mpBinaries */ = {isa = PBXFileReference; lastKnownFileType = folder; path = example.mpBinaries; sourceTree = "<group>"; };
 		3A7A6B7A139ABE20006A8B4A /* mpextended.mpBinaries */ = {isa = PBXFileReference; lastKnownFileType = folder; path = mpextended.mpBinaries; sourceTree = "<group>"; };
 		3AC9A694139BFFCB001A3429 /* fc_aslider_bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fc_aslider_bar.png; sourceTree = "<group>"; };
@@ -483,7 +478,6 @@
 				3ACDFE3F139AB3D900275362 /* Cocoa.framework in Frameworks */,
 				3A5CE3681699FB8800AA45AB /* AppKit.framework in Frameworks */,
 				3A5CE3691699FB8900AA45AB /* Foundation.framework in Frameworks */,
-				3A7A6B3C139AB990006A8B4A /* libfontconfig.1.dylib in Frameworks */,
 				3A7A6B3D139AB990006A8B4A /* libfreetype.6.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -494,7 +488,6 @@
 		3A7A6852139AB44C006A8B4A /* configuration */ = {
 			isa = PBXGroup;
 			children = (
-				3A7A6B55139ABD6C006A8B4A /* fonts */,
 				3A7A6881139AB44C006A8B4A /* Info.plist */,
 				3A7A6882139AB44C006A8B4A /* iso-639-3.plist */,
 				3A7A6883139AB44C006A8B4A /* iso-639-3.tab */,
@@ -538,7 +531,6 @@
 			children = (
 				3A7A6910139AB44D006A8B4A /* AppleRemote */,
 				3A7A6913139AB44D006A8B4A /* BWToolkit */,
-				3A7A691B139AB44D006A8B4A /* headers */,
 				3A7A691F139AB44D006A8B4A /* MoveApplication */,
 				3A7A6922139AB44D006A8B4A /* RegexKitLite */,
 			);
@@ -564,22 +556,6 @@
 				3A7A691A139AB44D006A8B4A /* NSColor+BWAdditions.m */,
 			);
 			path = BWToolkit;
-			sourceTree = "<group>";
-		};
-		3A7A691B139AB44D006A8B4A /* headers */ = {
-			isa = PBXGroup;
-			children = (
-				3A7A691C139AB44D006A8B4A /* fontconfig */,
-			);
-			path = headers;
-			sourceTree = "<group>";
-		};
-		3A7A691C139AB44D006A8B4A /* fontconfig */ = {
-			isa = PBXGroup;
-			children = (
-				3A7A691D139AB44D006A8B4A /* fontconfig.h */,
-			);
-			path = fontconfig;
 			sourceTree = "<group>";
 		};
 		3A7A691F139AB44D006A8B4A /* MoveApplication */ = {
@@ -934,7 +910,6 @@
 				3A5CE3641699F88C00AA45AB /* CoreAudio.framework */,
 				3A5CE3621699F88600AA45AB /* Security.framework */,
 				3A5CE3601699F88100AA45AB /* IOKit.framework */,
-				3A7A6B3A139AB990006A8B4A /* libfontconfig.1.dylib */,
 				3A7A6B3B139AB990006A8B4A /* libfreetype.6.dylib */,
 				3ACDFE3E139AB3D900275362 /* Cocoa.framework */,
 				3ACDFE40139AB3D900275362 /* Other Frameworks */,
@@ -1016,7 +991,6 @@
 				3A7A6A77139AB77D006A8B4A /* iso-639-3.plist in Resources */,
 				3A7A6A78139AB77D006A8B4A /* Preferences.plist in Resources */,
 				3A7A6B54139ABD51006A8B4A /* MPlayer OSX Help in Resources */,
-				3A7A6B56139ABD6C006A8B4A /* fonts in Resources */,
 				3AC9A6F2139BFFCB001A3429 /* fc_aslider_bar.png in Resources */,
 				3AC9A6F3139BFFCB001A3429 /* fc_aslider_icon.png in Resources */,
 				3AC9A6F4139BFFCB001A3429 /* fc_aslider_icon_on.png in Resources */,

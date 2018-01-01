@@ -1,0 +1,35 @@
+Index: sub/font_load_ft.c
+===================================================================
+--- sub/font_load_ft.c	(revision 38010)
++++ sub/font_load_ft.c	(working copy)
+@@ -1113,10 +1113,10 @@
+     FcPattern *fc_pattern;
+     FcPattern *fc_pattern2;
+     FcChar8 *s;
+-    int face_index;
+     FcBool scalable;
+     FcResult result = FcResultMatch;
+ #endif
++    int face_index = 0;
+     font_desc_t *vo_font = *fontp;
+     vo_image_width = width;
+     vo_image_height = height;
+@@ -1160,5 +1160,17 @@
+         mp_msg(MSGT_OSD, MSGL_ERR, MSGTR_LIBVO_FONT_LOAD_FT_FontconfigNoMatch);
+     }
+ #endif
+-    *fontp=read_font_desc_ft(font_name, 0, width, height, font_scale_factor);
++    
++    // Extract index from hash suffix in pah, e.g. "~/myfont.ttc#3"
++    char *hash = strrchr(font_name, '#');
++    if (hash && *(hash + 1) != '\0') {
++        face_index = atoi(hash + 1);
++        if (face_index < 0) {
++            face_index = 0;
++        } else {
++            *hash = '\0';
++        }
++    }
++    
++    *fontp=read_font_desc_ft(font_name, face_index, width, height, font_scale_factor);
+ }

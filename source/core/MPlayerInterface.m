@@ -432,11 +432,14 @@ static NSArray* statusNames;
 	
 	// add font
 	if ([cPrefs objectForKey:MPEFont]) {
-		NSString *fcPattern = [cPrefs stringForKey:MPEFont];
-		if ([cPrefs stringForKey:MPEFontStyle])
-			fcPattern = [NSString stringWithFormat:@"%@:style=%@", fcPattern, [cPrefs stringForKey:MPEFontStyle]];
-		[params addObject:@"-font"];
-		[params addObject:fcPattern];
+		NSString *family = [PREFS stringForKey:MPEFont];
+		NSString *style = [PREFS stringForKey:MPEFontStyle];
+		
+		NSString *path = [pc pathForFontFamily:family withStyle:style];
+		if (path) {
+			[params addObject:@"-font"];
+			[params addObject:path];
+		}
 	}
 	
 	// guess encoding with enca
@@ -1253,8 +1256,6 @@ static NSArray* statusNames;
 	
 	// enable bind-at-launch behavior for dyld to use DLL codecs
     [env setObject:@"1" forKey:@"DYLD_BIND_AT_LAUNCH"];
-    // set fontconfig path
-	[env setObject:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"fonts"] forKey:@"FONTCONFIG_PATH"];
 	// set mplayer home
 	NSString *appSupport = [AppController userApplicationSupportDirectoryPath];
 	[env setObject:[appSupport stringByAppendingPathComponent:@"MPlayer OSX Extended/MPlayer"] forKey:@"MPLAYER_HOME"];
@@ -1289,7 +1290,6 @@ static NSArray* statusNames;
 	isReading = YES;
 	[self setState:MIStateInitializing];
 	
-	[Debug log:ASL_LEVEL_INFO withMessage:@"Path to fontconfig: %@", [[myMplayerTask environment] objectForKey:@"FONTCONFIG_PATH"]];
 	[Debug log:ASL_LEVEL_INFO withMessage:@"Path to MPlayer home: %@", [[myMplayerTask environment] objectForKey:@"MPLAYER_HOME"]];
 }
 /************************************************************************************/
