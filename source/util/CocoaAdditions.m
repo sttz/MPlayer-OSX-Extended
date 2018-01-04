@@ -117,7 +117,7 @@
 - (void) resizeAndArrangeSubviewsVerticallyWithPadding:(float)padding
 {
 	// calculate total height
-	float totalHeight, maxWidth;
+	float totalHeight = 0, maxWidth = 0;
 	for (NSView *view in [self subviews]) {
 		totalHeight += [view frame].size.height;
 		if ([view frame].size.width > maxWidth)

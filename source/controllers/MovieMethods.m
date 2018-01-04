@@ -138,8 +138,8 @@ static char ** ep_num (char *s);
 						long newEpisodeNumber = strtol(result[0] + 1, NULL, 10);
 						BOOL use = 
 						[[self performSelector:accept 
-								   withObject:[NSNumber numberWithInt:episodeNumber]
-								   withObject:[NSNumber numberWithInt:newEpisodeNumber]] boolValue];
+								   withObject:[NSNumber numberWithLong:episodeNumber]
+								   withObject:[NSNumber numberWithLong:newEpisodeNumber]] boolValue];
 						if (use){
 							nextPath = [dirPath stringByAppendingPathComponent:s];
 							free(result);

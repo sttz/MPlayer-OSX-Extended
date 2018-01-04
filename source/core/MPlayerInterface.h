@@ -122,7 +122,7 @@ extern NSString* const MIStatsDroppedFramesKey;
 	NSString *screenshotPath;
 	
 	// text
-	int osdLevel;
+	NSInteger osdLevel;
 	
 	// volume
 	float playerVolume;
@@ -223,7 +223,7 @@ extern NSString* const MIStatsDroppedFramesKey;
 - (void)sendToMplayersInput:(NSString *)aCommand;
 - (void)terminateMplayer;
 
-- (int)mplayerOSDLevel;
+- (NSInteger)mplayerOSDLevel;
 - (void)reactivateOsdAfterDelay;
 - (void)reactivateOsd;
 

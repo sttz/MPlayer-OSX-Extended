@@ -498,7 +498,7 @@ static NSArray* statusNames;
 		osdLevel = [cPrefs integerForKey:MPEOSDLevel];
 		if ([self mplayerOSDLevel] != 1) {
 			[params addObject:@"-osdlevel"];
-			[params addObject:[NSString stringWithFormat:@"%i",[self mplayerOSDLevel]]];
+			[params addObject:[NSString stringWithFormat:@"%li",(long)[self mplayerOSDLevel]]];
 		}
 	}
 	
@@ -531,7 +531,7 @@ static NSArray* statusNames;
 	
 	// framedrop
 	if ([cPrefs objectForKey:MPEDropFrames]) {
-		int dropFrames = [cPrefs integerForKey:MPEDropFrames];
+		NSInteger dropFrames = [cPrefs integerForKey:MPEDropFrames];
 		if (dropFrames == MPEDropFramesSoft)
 			[params addObject:@"-framedrop"];
 		else if (dropFrames == MPEDropFramesHard)
@@ -546,7 +546,7 @@ static NSArray* statusNames;
 	
 	// deinterlace
 	if ([cPrefs objectForKey:MPEDeinterlaceFilter]) {
-		int deinterlace = [cPrefs integerForKey:MPEDeinterlaceFilter];
+		NSInteger deinterlace = [cPrefs integerForKey:MPEDeinterlaceFilter];
 		if (deinterlace == MPEDeinterlaceFilterYadif)
 			[videoFilters addObject:@"yadif=1"];
 		else if (deinterlace == MPEDeinterlaceFilterKernel)
@@ -561,7 +561,7 @@ static NSArray* statusNames;
 	
 	// postprocessing
 	if ([cPrefs objectForKey:MPEPostprocessingFilter]) {
-		int postprocessing = [cPrefs integerForKey:MPEPostprocessingFilter];
+		NSInteger postprocessing = [cPrefs integerForKey:MPEPostprocessingFilter];
 		if (postprocessing == MPEPostprocessingFilterDefault)
 			[videoFilters addObject:@"pp=default"];
 		else if (postprocessing == MPEPostprocessingFilterFast)
@@ -660,7 +660,7 @@ static NSArray* statusNames;
 	// *** Video filters
 	// add screenshot filter
 	if ([cPrefs objectForKey:MPEScreenshotSaveLocation]) {
-		int screenshot = [cPrefs integerForKey:MPEScreenshotSaveLocation];
+		NSInteger screenshot = [cPrefs integerForKey:MPEScreenshotSaveLocation];
 		
 		if (screenshot != MPEScreenshotsDisabled) {
 			[videoFilters addObject:@"screenshot"];
@@ -862,7 +862,7 @@ static NSArray* statusNames;
 		
 	} else if ([keyPath isEqualToString:MPEOSDLevel]) {
 		osdLevel = [[change objectForKey:NSKeyValueChangeNewKey] intValue];
-		[self sendCommand:[NSString stringWithFormat:@"osd %d",[self mplayerOSDLevel]]];
+		[self sendCommand:[NSString stringWithFormat:@"osd %ld",(long)[self mplayerOSDLevel]]];
 		if (object == [playingItem prefs] && osdLevel < 3)
 			[self sendCommand:[NSString stringWithFormat:@"osd_show_property_text 'OSD: %@'",
 							   [PreferencesController2 osdLevelDescriptionForLevel:osdLevel]]];
@@ -909,7 +909,7 @@ static NSArray* statusNames;
 	
 	[self sendCommand:[NSString stringWithFormat:@"sub_load '%@'", escaped]];
 	// Also select the newly loaded subtitle
-	[self sendCommand:[NSString stringWithFormat:@"sub_file %u",[playingItem subtitleCountForType:SubtitleTypeFile]]];
+	[self sendCommand:[NSString stringWithFormat:@"sub_file %lu",(unsigned long)[playingItem subtitleCountForType:SubtitleTypeFile]]];
 	[self sendCommand:@"get_property sub_file"];
 }
 /************************************************************************************/
@@ -1028,8 +1028,8 @@ static NSArray* statusNames;
 		
 		// Notifiy clients of state change
 		[self notifyClientsWithSelector:@selector(interface:hasChangedStateTo:fromState:) 
-							  andObject:[NSNumber numberWithUnsignedInt:newState]
-							  andObject:[NSNumber numberWithUnsignedInt:oldState]];
+							  andObject:[NSNumber numberWithUnsignedInteger:newState]
+							  andObject:[NSNumber numberWithUnsignedInteger:oldState]];
 	}
 }
 /************************************************************************************/
@@ -1140,7 +1140,7 @@ static NSArray* statusNames;
 		osdSilenced = YES;
 		
 	} else if (!quietCommand && osdSilenced) {
-		[self sendToMplayersInput:[NSString stringWithFormat:@"pausing_keep osd %d\n", [self mplayerOSDLevel]]];
+		[self sendToMplayersInput:[NSString stringWithFormat:@"pausing_keep osd %ld\n", (long)[self mplayerOSDLevel]]];
 		osdSilenced = NO;
 	}
 	
@@ -1167,7 +1167,7 @@ static NSArray* statusNames;
 	[self sendCommands:aCommands withOSD:MISurpressCommandOutputConditionally andPausing:MICommandPausingKeep];
 }
 /************************************************************************************/
-- (int)mplayerOSDLevel
+- (NSInteger)mplayerOSDLevel
 {
 	return (osdLevel < 2 ? osdLevel : osdLevel - 1);
 }
@@ -1180,7 +1180,7 @@ static NSArray* statusNames;
 
 - (void)reactivateOsd {
 	
-	[self sendToMplayersInput:[NSString stringWithFormat:@"pausing_keep osd %d\n", [self mplayerOSDLevel]]];
+	[self sendToMplayersInput:[NSString stringWithFormat:@"pausing_keep osd %ld\n", (long)[self mplayerOSDLevel]]];
 	osdSilenced = NO;
 }
 /************************************************************************************/
@@ -1436,7 +1436,7 @@ static NSArray* statusNames;
 	// Use an intermediate state variable since state changes are
 	// notified immediately and this can cause issues.
 	// The new state is applied at the end of this function.
-	int newState = state;
+	MIState newState = state;
 	
 	BOOL streamsHaveChanged = NO;
 	
@@ -1598,7 +1598,7 @@ static NSArray* statusNames;
 			
 			mySeconds = 0;
 			restartingPlayer = NO;
-			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithFormat:@"Exited with state %d and reason %@",newState,exitType]];
+			[Debug log:ASL_LEVEL_INFO withMessage:[NSString stringWithFormat:@"Exited with state %lu and reason %@",(unsigned long)newState,exitType]];
 			continue;							// continue on next line
 		}
 		
@@ -1642,7 +1642,7 @@ static NSArray* statusNames;
 			if (isStreamSelection) {
 				[self notifyClientsWithSelector:@selector(interface:hasSelectedStream:ofType:)
 									  andObject:[NSNumber numberWithInt:[idValue intValue]]
-									  andObject:[NSNumber numberWithUnsignedInt:streamType]];
+									  andObject:[NSNumber numberWithUnsignedInteger:streamType]];
 				continue;
 			}
 			

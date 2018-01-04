@@ -117,7 +117,7 @@
 - (IBAction) chooseCustomAspectRatio:(NSButton *)sender;
 
 + (float) parseAspectRatio:(NSString *)aspectString;
-+ (NSString *) osdLevelDescriptionForLevel:(int)osdLevel;
++ (NSString *) osdLevelDescriptionForLevel:(NSInteger)osdLevel;
 
 - (NSView *) binarySelectionView;
 - (NSString *) identifierFromSelectionInView;

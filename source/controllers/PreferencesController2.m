@@ -1133,7 +1133,7 @@
 	return 0;
 }
 
-+ (NSString *) osdLevelDescriptionForLevel:(int)osdLevel
++ (NSString *) osdLevelDescriptionForLevel:(NSInteger)osdLevel
 {
 	NSPopUpButton *popup = [[AppController sharedController] preferencesController]->osdLevelPopUp;
 	return [popup itemTitleAtIndex:[popup indexOfItemWithTag:osdLevel]];
