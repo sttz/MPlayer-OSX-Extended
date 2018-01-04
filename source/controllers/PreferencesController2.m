@@ -284,6 +284,14 @@
 	restartIsRequired = NO;
 }
 
+- (NSString *)userBinariesPath
+{
+	NSString *binPath = [AppController userApplicationSupportDirectoryPath];
+	if (!binPath) return nil;
+	
+	return [binPath stringByAppendingPathComponent:@"MPlayer OSX Extended/Binaries"];
+}
+
 /** Scan for binaries.
  *  Scan the application and the user's library for binaries and add new found ones.
  */
@@ -295,12 +303,10 @@
 		binaryUpdaters = [NSMutableDictionary new];
 	}
 	
-	NSString *binPath = [AppController userApplicationSupportDirectoryPath];
-	
-	if (binPath) {
-		binPath = [binPath stringByAppendingPathComponent:@"MPlayer OSX Extended/Binaries"];
-		if ([[NSFileManager defaultManager] fileExistsAtPath:binPath])
-			[self loadBinariesFromDirectory:binPath];
+	// Scan the user application support directory
+	NSString *binPath = [self userBinariesPath];
+	if (binPath && [[NSFileManager defaultManager] fileExistsAtPath:binPath]) {
+		[self loadBinariesFromDirectory:binPath];
 	}
 	
 	// Scan the application's resource directory
@@ -615,14 +621,8 @@
 			return;
 	}
 	
-	
-	NSArray *results = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,
-														   NSUserDomainMask,
-														   YES);
-	
 	NSFileManager *fm = [NSFileManager defaultManager];
-	NSString *installPath = [[results objectAtIndex:0] 
-							 stringByAppendingPathComponent:@"MPlayer OSX Extended/Binaries"];
+	NSString *installPath = [self userBinariesPath];
 	
 	// Remove old binary if it's in the application support folder
 	if ([binaryBundles objectForKey:identifier]) {
