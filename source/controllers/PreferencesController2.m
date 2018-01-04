@@ -725,7 +725,6 @@
 	SUUpdater *updater = [SUUpdater updaterForBundle:bundle];
 	
 	[updater setAutomaticallyChecksForUpdates:autoupdate];
-	[updater setNeedsRelaunchAfterInstall:NO];
 	[updater setDelegate:self];
 	
 	[binaryUpdaters setObject:updater forKey:[bundle bundleIdentifier]];

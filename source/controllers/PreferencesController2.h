@@ -23,10 +23,11 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import <Sparkle/Sparkle.h>
 
 @class SUUpdater, BinaryBundle;
 
-@interface PreferencesController2 : NSWindowController {
+@interface PreferencesController2 : NSWindowController<SUUpdaterDelegate> {
 	
 	IBOutlet NSUserDefaultsController *defaultsController;
 	
