@@ -596,7 +596,7 @@
 	<key>CFBundleHelpBookName</key>
 	<string>MPlayer OSX Help</string>
 	<key>CFBundleHomepage</key>
-	<string>http://mplayerosx.ch/</string>
+	<string>https://mplayerosx.ch/</string>
 	<key>CFBundleIconFile</key>
 	<string>icon</string>
 	<key>CFBundleIdentifier</key>
@@ -689,9 +689,9 @@
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>SUFeedURL</key>
-	<string>http://mplayerosx.ch/updates.xml</string>
+	<string>https://mplayerosx.ch/updates.xml</string>
 	<key>SUPrereleaseFeedURL</key>
-	<string>http://mplayerosx.ch/prereleases.xml</string>
+	<string>https://mplayerosx.ch/prereleases.xml</string>
 	<key>SUPublicDSAKeyFile</key>
 	<string>dsa_pub.pem</string>
 	<key>UTExportedTypeDeclarations</key>
