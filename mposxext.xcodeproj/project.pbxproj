@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3A07B9921FF41E0200CFB0B1 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A07B9911FF41E0200CFB0B1 /* Sparkle.framework */; };
-		3A07B9931FF41E3600CFB0B1 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 3A07B9911FF41E0200CFB0B1 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3A335FD616B098EB0086C243 /* NSString+SymlinksAndAliases.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A335FD516B098EB0086C243 /* NSString+SymlinksAndAliases.m */; };
 		3A4C775F13A51041000EDD78 /* ToggleEditLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A4C775E13A51041000EDD78 /* ToggleEditLabel.m */; };
 		3A4C776313A54D69000EDD78 /* skipLeftTemplate.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A4C776113A54D69000EDD78 /* skipLeftTemplate.png */; };
@@ -168,6 +166,8 @@
 		3AC9A745139BFFCB001A3429 /* stop_button_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AC9A6EA139BFFCB001A3429 /* stop_button_on.png */; };
 		3AC9A748139BFFCB001A3429 /* dialog-warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AC9A6EE139BFFCB001A3429 /* dialog-warning.png */; };
 		3ACDFE3F139AB3D900275362 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ACDFE3E139AB3D900275362 /* Cocoa.framework */; };
+		3AD96DDF1FFE916C003496A8 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A07B9911FF41E0200CFB0B1 /* Sparkle.framework */; };
+		3AD96DE01FFE9172003496A8 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 3A07B9911FF41E0200CFB0B1 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9215958A13F49EC700F0ABCF /* mkv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9215958913F49EC700F0ABCF /* mkv.icns */; };
 		92904706143FC27E00370BD0 /* ssa.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92904704143FC27E00370BD0 /* ssa.icns */; };
 		92904707143FC27E00370BD0 /* srt.icns in Resources */ = {isa = PBXBuildFile; fileRef = 92904705143FC27E00370BD0 /* srt.icns */; };
@@ -205,7 +205,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3A07B9931FF41E3600CFB0B1 /* Sparkle.framework in Copy Frameworks */,
+				3AD96DE01FFE9172003496A8 /* Sparkle.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -466,7 +466,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A07B9921FF41E0200CFB0B1 /* Sparkle.framework in Frameworks */,
+				3AD96DDF1FFE916C003496A8 /* Sparkle.framework in Frameworks */,
 				3A4E61D01C10BBD600B4483A /* libiconv.tbd in Frameworks */,
 				3A4E61CE1C10BBC200B4483A /* Carbon.framework in Frameworks */,
 				3A4E61CC1C10BB4A00B4483A /* OpenGL.framework in Frameworks */,
@@ -957,6 +957,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0920;
+				TargetAttributes = {
+					3ACDFE39139AB3D900275362 = {
+						DevelopmentTeam = DHNHQKSSYT;
+						ProvisioningStyle = Automatic;
+					};
+				};
 			};
 			buildConfigurationList = 3ACDFE2C139AB3A300275362 /* Build configuration list for PBXProject "mposxext" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1319,8 +1325,11 @@
 		3ACDFE56139AB3D900275362 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = DHNHQKSSYT;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					frameworks,
@@ -1337,16 +1346,18 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = source/contrib/headers;
 				INFOPLIST_FILE = configuration/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					binaries/mpextended.mpBinaries/Contents/MacOS/lib,
 					"\"$(SRCROOT)/binaries/mpextended.mpBinaries/Contents/MacOS/lib\"",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_BUNDLE_IDENTIFIER = hu.mplayerhq.mplayerosx.extended;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1355,9 +1366,12 @@
 		3ACDFE57139AB3D900275362 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = DHNHQKSSYT;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					frameworks,
@@ -1370,15 +1384,17 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = source/contrib/headers;
 				INFOPLIST_FILE = configuration/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					binaries/mpextended.mpBinaries/Contents/MacOS/lib,
 					"\"$(SRCROOT)/binaries/mpextended.mpBinaries/Contents/MacOS/lib\"",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_BUNDLE_IDENTIFIER = hu.mplayerhq.mplayerosx.extended;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
