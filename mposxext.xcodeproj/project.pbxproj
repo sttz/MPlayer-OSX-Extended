@@ -1136,7 +1136,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "set -o errexit\n\n# ***\n# Link Fontconfig dylib and depencies from binary to MPlayer OSX\n# ***\n\nextra_library_dir=\"$TARGET_BUILD_DIR/$CONTENTS_FOLDER_PATH/MacOS/lib\"\n\n# Create library directory\nif [ ! -d \"$extra_library_dir\" ]; then\nmkdir \"$extra_library_dir\"\nfi\n\n# Switch to library directory\ncd \"$extra_library_dir\"\n\n# Link libraries\nrel_path=../../Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/lib\n\nln -sf $rel_path/libfontconfig.1.dylib libfontconfig.1.dylib\nln -sf $rel_path/libfreetype.6.dylib libfreetype.6.dylib\nln -sf $rel_path/libharfbuzz.0.dylib libharfbuzz.0.dylib";
+			shellScript = "set -o errexit\n\n# ***\n# Link Fontconfig dylib and depencies from binary to MPlayer OSX\n# ***\n\nextra_library_dir=\"$TARGET_BUILD_DIR/$CONTENTS_FOLDER_PATH/MacOS/lib\"\n\n# Create library directory\nif [ ! -d \"$extra_library_dir\" ]; then\nmkdir \"$extra_library_dir\"\nfi\n\n# Switch to library directory\ncd \"$extra_library_dir\"\n\n# Link libraries\nrel_path=../../Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/lib\n\nln -sf $rel_path/libfreetype.6.dylib libfreetype.6.dylib";
 		};
 /* End PBXShellScriptBuildPhase section */
 
