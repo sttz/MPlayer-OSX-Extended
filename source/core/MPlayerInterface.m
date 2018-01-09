@@ -436,6 +436,9 @@ static NSArray* statusNames;
 		NSString *style = [PREFS stringForKey:MPEFontStyle];
 		
 		NSString *path = [pc pathForFontFamily:family withStyle:style];
+		if (!path) {
+			path = [pc pathForFontFamily:@"Lucida Grande" withStyle:@"Regular"];
+		}
 		if (path) {
 			[params addObject:@"-font"];
 			[params addObject:path];
