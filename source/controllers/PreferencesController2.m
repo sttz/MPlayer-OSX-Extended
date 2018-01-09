@@ -97,6 +97,7 @@
 	[self setWindowFrameAutosaveName:@"MPEPreferencesWindow"];
 	
 	[self loadFonts];
+	[self checkFontSelection];
 	
 	// For subtitle colors we want to be able to select alpha
 	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES]; 
@@ -816,6 +817,40 @@
 	[fontsController setSelectionIndex:[fontsMenu indexOfItemWithTitle:defaultFont]];
 }
 
+- (void)checkFontSelection
+{
+	NSString* family = [PREFS stringForKey:MPEFont];
+	NSString* style = [PREFS stringForKey:MPEFontStyle];
+	
+	NSDictionary *fontInfo = [fonts objectForKey:family];
+	if (!fontInfo) {
+		// Reset family and style to defaults if select font can't be found
+		[Debug log:ASL_LEVEL_INFO withMessage:@"Font '%@' could not be found, reverting to default.", family];
+		family = [[PREFS volatileDomainForName:NSRegistrationDomain] stringForKey:MPEFont];
+		style = [[PREFS volatileDomainForName:NSRegistrationDomain] stringForKey:MPEFontStyle];
+		
+		fontInfo = [fonts objectForKey:family];
+		if (!fontInfo) {
+			[Debug log:ASL_LEVEL_ERR withMessage:@"Default font could not be found: '%@'", family];
+			return;
+		}
+	}
+	
+	NSArray *styles = [fontInfo objectForKey:@"styles"];
+	if (![styles containsObject:style]) {
+		// Reset style to first one if it doesn't exist
+		[Debug log:ASL_LEVEL_INFO withMessage:@"Style '%@' could not be found, reverting to first in font.", style];
+		style = [styles objectAtIndex:0];
+	}
+	
+	if (![family isEqualToString:[PREFS stringForKey:MPEFont]])
+		[PREFS setObject:family forKey:MPEFont];
+	if (![style isEqualToString:[PREFS stringForKey:MPEFontStyle]])
+		[PREFS setObject:style forKey:MPEFontStyle];
+	
+	[fontsController setSelectionIndex:[fontsMenu indexOfItemWithTitle:family]];
+}
+
 - (NSString *)pathForFontFamily:(NSString *)family withStyle:(NSString *)style
 {
 	// Look up font name for given family and style
@@ -899,8 +934,8 @@
  
 - (IBAction) changeFont:(NSPopUpButton *)sender
 {
-	[[NSUserDefaults standardUserDefaults] setObject:[sender titleOfSelectedItem] forKey:MPEFont];
-	
+	[PREFS setObject:[sender titleOfSelectedItem] forKey:MPEFont];
+	[self checkFontSelection];
 	[self requireRestart:sender];
 }
 
