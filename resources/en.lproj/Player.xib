@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9060" systemVersion="15B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9060"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
         <capability name="box content view" minToolsVersion="7.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="AppController"/>
@@ -28,7 +29,6 @@
                                 <textField verticalHuggingPriority="750" id="101">
                                     <rect key="frame" x="11" y="65" width="137" height="14"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <animations/>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="AV sync difference:" id="102">
                                         <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -38,7 +38,6 @@
                                 <textField verticalHuggingPriority="750" id="100">
                                     <rect key="frame" x="11" y="87" width="137" height="14"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <animations/>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Cache usage:" id="103">
                                         <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -48,7 +47,6 @@
                                 <textField verticalHuggingPriority="750" id="99">
                                     <rect key="frame" x="11" y="43" width="137" height="14"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <animations/>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Dropped frames:" id="104">
                                         <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -58,7 +56,6 @@
                                 <textField verticalHuggingPriority="750" id="98">
                                     <rect key="frame" x="11" y="21" width="137" height="14"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <animations/>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Postprocessing:" id="105">
                                         <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -68,7 +65,6 @@
                                 <textField verticalHuggingPriority="750" id="97">
                                     <rect key="frame" x="11" y="131" width="137" height="14"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <animations/>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Player status:" id="106">
                                         <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -78,7 +74,6 @@
                                 <textField verticalHuggingPriority="750" id="96">
                                     <rect key="frame" x="11" y="109" width="137" height="14"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <animations/>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="CPU usage:" id="107">
                                         <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -88,7 +83,6 @@
                                 <textField verticalHuggingPriority="750" id="95">
                                     <rect key="frame" x="150" y="87" width="107" height="14"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <animations/>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="N/A" id="108">
                                         <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -98,7 +92,6 @@
                                 <textField verticalHuggingPriority="750" id="94">
                                     <rect key="frame" x="150" y="43" width="107" height="14"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <animations/>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="N/A" id="109">
                                         <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -108,7 +101,6 @@
                                 <textField verticalHuggingPriority="750" id="93">
                                     <rect key="frame" x="150" y="65" width="107" height="14"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <animations/>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="N/A" id="110">
                                         <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -118,7 +110,6 @@
                                 <textField verticalHuggingPriority="750" id="92">
                                     <rect key="frame" x="150" y="109" width="107" height="14"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <animations/>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="N/A" id="111">
                                         <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -128,7 +119,6 @@
                                 <textField verticalHuggingPriority="750" id="91">
                                     <rect key="frame" x="150" y="21" width="107" height="14"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <animations/>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="N/A" id="112">
                                         <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -138,7 +128,6 @@
                                 <textField verticalHuggingPriority="750" id="90">
                                     <rect key="frame" x="150" y="131" width="107" height="14"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <animations/>
                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="N/A" id="113">
                                         <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -146,14 +135,9 @@
                                     </textFieldCell>
                                 </textField>
                             </subviews>
-                            <animations/>
                         </view>
-                        <animations/>
-                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                        <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </box>
                 </subviews>
-                <animations/>
             </view>
         </window>
         <window title="MPlayer OSX Extended" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="MainWindowState" animationBehavior="default" id="218" userLabel="MainWindow" customClass="PlayerWindow">
@@ -166,88 +150,19 @@
                 <rect key="frame" x="0.0" y="0.0" width="565" height="367"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <slider toolTip="Set Audio Volume" verticalHuggingPriority="750" id="226" customClass="VolumeSlider">
-                        <rect key="frame" x="28" y="9" width="46" height="15"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
-                        <animations/>
-                        <sliderCell key="cell" controlSize="small" alignment="left" maxValue="100" doubleValue="53.125" tickMarkPosition="above" sliderType="linear" id="236">
-                            <font key="font" size="12" name="Helvetica"/>
-                        </sliderCell>
-                        <connections>
-                            <action selector="changeVolume:" target="3" id="261"/>
-                        </connections>
-                    </slider>
                     <openGLView useAuxiliaryDepthBufferStencil="NO" id="220" customClass="VideoOpenGLView">
                         <rect key="frame" x="0.0" y="54" width="565" height="313"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <animations/>
                         <connections>
                             <outlet property="fcControlWindow" destination="5" id="270"/>
                             <outlet property="fullscreenWindow" destination="4" id="271"/>
                             <outlet property="playerController" destination="3" id="273"/>
                         </connections>
                     </openGLView>
-                    <box boxType="oldStyle" borderType="none" titlePosition="noTitle" id="227">
-                        <rect key="frame" x="201" y="-3" width="162" height="53"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES"/>
-                        <view key="contentView" id="ZqB-V3-R6G">
-                            <rect key="frame" x="0.0" y="0.0" width="162" height="53"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <subviews>
-                                <button id="230" customClass="KeyRedirectButton">
-                                    <rect key="frame" x="16" y="10" width="43" height="19"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                    <string key="toolTip">Seek 60 seconds backward
-alt: Seek 10 seconds backward
-shift: Seek 10 minutes backward</string>
-                                    <animations/>
-                                    <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="rwd_button_off" imagePosition="only" alignment="center" alternateImage="rwd_button_on" refusesFirstResponder="YES" id="235">
-                                        <behavior key="behavior" lightByContents="YES"/>
-                                        <font key="font" metaFont="systemBold" size="18"/>
-                                    </buttonCell>
-                                    <connections>
-                                        <action selector="seekBack:" target="3" id="263"/>
-                                    </connections>
-                                </button>
-                                <button id="231" customClass="KeyRedirectButton">
-                                    <rect key="frame" x="101" y="10" width="43" height="19"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                    <string key="toolTip">Seek 60 seconds forward
-alt: Seek 10 seconds forward
-shift: Seek 10 minutes forward</string>
-                                    <animations/>
-                                    <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="ffwd_button_off" imagePosition="only" alignment="center" alternateImage="ffwd_button_on" refusesFirstResponder="YES" id="234">
-                                        <behavior key="behavior" lightByContents="YES"/>
-                                        <font key="font" metaFont="systemBold" size="18"/>
-                                    </buttonCell>
-                                    <connections>
-                                        <action selector="seekFwd:" target="3" id="264"/>
-                                    </connections>
-                                </button>
-                                <button toolTip="Play / pause" id="232" customClass="KeyRedirectButton">
-                                    <rect key="frame" x="59" y="10" width="43" height="19"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                    <animations/>
-                                    <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="play_button_off" imagePosition="only" alignment="center" alternateImage="play_button_on" lineBreakMode="clipping" refusesFirstResponder="YES" inset="2" id="233">
-                                        <behavior key="behavior" lightByContents="YES"/>
-                                        <font key="font" metaFont="systemBold"/>
-                                    </buttonCell>
-                                    <connections>
-                                        <action selector="playPause:" target="3" id="262"/>
-                                    </connections>
-                                </button>
-                            </subviews>
-                            <animations/>
-                        </view>
-                        <animations/>
-                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                        <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    </box>
-                    <button toolTip="Mute audio" id="228" customClass="KeyRedirectButton">
-                        <rect key="frame" x="2" y="7" width="26" height="17"/>
+                    <button toolTip="Mute audio" misplaced="YES" id="228" customClass="KeyRedirectButton">
+                        <rect key="frame" x="10" y="8" width="17" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <animations/>
-                        <buttonCell key="cell" type="recessed" bezelStyle="recessed" image="volume3" imagePosition="only" alignment="center" controlSize="small" refusesFirstResponder="YES" inset="2" id="229">
+                        <buttonCell key="cell" type="recessed" bezelStyle="recessed" image="volume_3" imagePosition="only" alignment="center" controlSize="small" refusesFirstResponder="YES" inset="2" id="229">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="systemBold" size="12"/>
                         </buttonCell>
@@ -255,40 +170,14 @@ shift: Seek 10 minutes forward</string>
                             <action selector="toggleMute:" target="3" id="268"/>
                         </connections>
                     </button>
-                    <button id="225" customClass="KeyRedirectButton">
-                        <rect key="frame" x="478" y="7" width="29" height="19"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <animations/>
-                        <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="fs_off" imagePosition="only" alignment="center" alternateImage="fs_on" enabled="NO" refusesFirstResponder="YES" inset="2" id="237">
-                            <behavior key="behavior" lightByContents="YES"/>
-                            <font key="font" metaFont="system" size="10"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="switchFullscreen:" target="3" id="267"/>
-                        </connections>
-                    </button>
-                    <button id="224" customClass="KeyRedirectButton">
-                        <rect key="frame" x="450" y="7" width="28" height="19"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <animations/>
-                        <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="pl_off" imagePosition="only" alignment="center" alternateImage="pl_on" refusesFirstResponder="YES" inset="2" id="238">
-                            <behavior key="behavior" lightByContents="YES"/>
-                            <font key="font" metaFont="system" size="10"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="togglePlaylist:" target="3" id="269"/>
-                        </connections>
-                    </button>
                     <imageView id="222">
                         <rect key="frame" x="0.0" y="32" width="565" height="1"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                        <animations/>
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="axesIndependently" image="inset" id="239"/>
                     </imageView>
                     <popUpButton id="276" customClass="KeyRedirectPopUpButton">
                         <rect key="frame" x="517" y="5" width="34" height="23"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <animations/>
                         <popUpButtonCell key="cell" type="bevel" bezelStyle="regularSquare" imagePosition="right" alignment="center" refusesFirstResponder="YES" state="on" borderStyle="bezel" inset="2" pullsDown="YES" arrowPosition="noArrow" preferredEdge="maxX" selectedItem="279" id="277">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="menu"/>
@@ -321,11 +210,10 @@ shift: Seek 10 minutes forward</string>
                             </menu>
                         </popUpButtonCell>
                     </popUpButton>
-                    <button id="331" customClass="KeyRedirectButton">
-                        <rect key="frame" x="514" y="7" width="33" height="19"/>
+                    <button misplaced="YES" id="331" customClass="KeyRedirectButton">
+                        <rect key="frame" x="522" y="7" width="33" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <animations/>
-                        <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="options_off" imagePosition="only" alignment="center" alternateImage="options_on" refusesFirstResponder="YES" inset="2" id="332">
+                        <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="settings_off" imagePosition="only" alignment="center" alternateImage="settings_on" refusesFirstResponder="YES" inset="2" id="332">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="system" size="10"/>
                         </buttonCell>
@@ -337,15 +225,13 @@ shift: Seek 10 minutes forward</string>
                         <rect key="frame" x="0.0" y="34" width="565" height="20"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <progressIndicator verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" controlSize="small" style="bar" id="243" customClass="ScrubbingBar">
-                                <rect key="frame" x="78" y="2" width="458" height="12"/>
+                            <progressIndicator wantsLayer="YES" verticalHuggingPriority="750" misplaced="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" controlSize="small" style="bar" id="243" customClass="ScrubbingBar">
+                                <rect key="frame" x="75" y="6" width="466" height="12"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                <animations/>
                             </progressIndicator>
                             <textField verticalHuggingPriority="750" id="244" customClass="TimestampTextField">
                                 <rect key="frame" x="18" y="5" width="52" height="11"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
-                                <animations/>
                                 <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" alignment="right" title="00:00:00" id="245">
                                     <font key="font" metaFont="miniSystem"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -355,8 +241,7 @@ shift: Seek 10 minutes forward</string>
                             <button verticalHuggingPriority="750" id="242" customClass="KeyRedirectButton">
                                 <rect key="frame" x="3" y="1" width="18" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <animations/>
-                                <buttonCell key="cell" type="recessed" bezelStyle="recessed" image="skipLeftTemplate" imagePosition="only" alignment="center" controlSize="small" refusesFirstResponder="YES" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="246">
+                                <buttonCell key="cell" type="recessed" bezelStyle="recessed" image="skip_back" imagePosition="only" alignment="center" controlSize="small" refusesFirstResponder="YES" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="246">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="systemBold" size="12"/>
                                 </buttonCell>
@@ -364,11 +249,10 @@ shift: Seek 10 minutes forward</string>
                                     <action selector="seekPrevious:" target="3" id="266"/>
                                 </connections>
                             </button>
-                            <button verticalHuggingPriority="750" id="241" customClass="KeyRedirectButton">
+                            <button verticalHuggingPriority="750" misplaced="YES" id="241" customClass="KeyRedirectButton">
                                 <rect key="frame" x="543" y="1" width="18" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                <animations/>
-                                <buttonCell key="cell" type="recessed" bezelStyle="recessed" image="skipRightTemplate" imagePosition="only" alignment="center" controlSize="small" refusesFirstResponder="YES" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="247">
+                                <buttonCell key="cell" type="recessed" bezelStyle="recessed" image="skip_forard" imagePosition="only" alignment="center" controlSize="small" refusesFirstResponder="YES" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="247">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="systemBold" size="12"/>
                                 </buttonCell>
@@ -376,23 +260,97 @@ shift: Seek 10 minutes forward</string>
                                     <action selector="seekNext:" target="3" id="265"/>
                                 </connections>
                             </button>
-                            <imageView id="240">
-                                <rect key="frame" x="78" y="6" width="458" height="1"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <animations/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="axesIndependently" image="inset" id="248"/>
-                            </imageView>
                         </subviews>
-                        <animations/>
                     </customView>
+                    <slider toolTip="Set Audio Volume" verticalHuggingPriority="750" misplaced="YES" id="226" customClass="VolumeSlider">
+                        <rect key="frame" x="34" y="9" width="74" height="15"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
+                        <sliderCell key="cell" controlSize="small" alignment="left" maxValue="100" doubleValue="53.125" tickMarkPosition="above" sliderType="linear" id="236">
+                            <font key="font" size="12" name="Helvetica"/>
+                        </sliderCell>
+                        <connections>
+                            <action selector="changeVolume:" target="3" id="261"/>
+                        </connections>
+                    </slider>
+                    <box misplaced="YES" boxType="oldStyle" borderType="none" titlePosition="noTitle" id="227">
+                        <rect key="frame" x="219" y="7" width="128" height="19"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES"/>
+                        <view key="contentView" id="ZqB-V3-R6G">
+                            <rect key="frame" x="0.0" y="0.0" width="128" height="19"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <button misplaced="YES" id="231" customClass="KeyRedirectButton">
+                                    <rect key="frame" x="84" y="0.0" width="44" height="19"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <string key="toolTip">Seek 60 seconds forward
+alt: Seek 10 seconds forward
+shift: Seek 10 minutes forward</string>
+                                    <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="forward_off" imagePosition="only" alignment="center" alternateImage="forward_on" refusesFirstResponder="YES" id="234">
+                                        <behavior key="behavior" lightByContents="YES"/>
+                                        <font key="font" metaFont="systemBold" size="18"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="seekFwd:" target="3" id="264"/>
+                                    </connections>
+                                </button>
+                                <button toolTip="Play / pause" misplaced="YES" id="232" customClass="KeyRedirectButton">
+                                    <rect key="frame" x="43" y="0.0" width="41" height="19"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="play_off" imagePosition="only" alignment="center" alternateImage="play_on" lineBreakMode="clipping" refusesFirstResponder="YES" inset="2" id="233">
+                                        <behavior key="behavior" lightByContents="YES"/>
+                                        <font key="font" metaFont="systemBold"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="playPause:" target="3" id="262"/>
+                                    </connections>
+                                </button>
+                                <button misplaced="YES" id="230" customClass="KeyRedirectButton">
+                                    <rect key="frame" x="0.0" y="0.0" width="43" height="19"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <string key="toolTip">Seek 60 seconds backward
+alt: Seek 10 seconds backward
+shift: Seek 10 minutes backward</string>
+                                    <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="backward_off" imagePosition="overlaps" alignment="center" alternateImage="backward_on" refusesFirstResponder="YES" id="235">
+                                        <behavior key="behavior" lightByContents="YES"/>
+                                        <font key="font" metaFont="systemBold" size="18"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="seekBack:" target="3" id="263"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </view>
+                    </box>
+                    <button misplaced="YES" id="225" customClass="KeyRedirectButton">
+                        <rect key="frame" x="486" y="7" width="29" height="19"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                        <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="fullscreen_off" imagePosition="only" alignment="center" alternateImage="fullscreen_on" enabled="NO" refusesFirstResponder="YES" inset="2" id="237">
+                            <behavior key="behavior" lightByContents="YES"/>
+                            <font key="font" metaFont="system" size="10"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="switchFullscreen:" target="3" id="267"/>
+                        </connections>
+                    </button>
+                    <button misplaced="YES" id="224" customClass="KeyRedirectButton">
+                        <rect key="frame" x="457" y="7" width="29" height="19"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                        <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="playlist_off" imagePosition="only" alignment="center" alternateImage="playlist_on" refusesFirstResponder="YES" inset="2" id="238">
+                            <behavior key="behavior" lightByContents="YES"/>
+                            <font key="font" metaFont="system" size="10"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="togglePlaylist:" target="3" id="269"/>
+                        </connections>
+                    </button>
                 </subviews>
-                <animations/>
             </view>
             <contentBorderThickness minY="34"/>
             <connections>
                 <outlet property="delegate" destination="3" id="250"/>
                 <outlet property="playerController" destination="3" id="251"/>
             </connections>
+            <point key="canvasLocation" x="131.5" y="161.5"/>
         </window>
         <customObject id="3" userLabel="PlayerController" customClass="PlayerController">
             <connections>
@@ -421,7 +379,6 @@ shift: Seek 10 minutes forward</string>
             <view key="contentView" id="32">
                 <rect key="frame" x="0.0" y="0.0" width="360" height="240"/>
                 <autoresizingMask key="autoresizingMask"/>
-                <animations/>
             </view>
             <connections>
                 <outlet property="delegate" destination="3" id="127"/>
@@ -441,7 +398,6 @@ shift: Seek 10 minutes forward</string>
                     <button id="19">
                         <rect key="frame" x="30" y="56" width="388" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="fc_scrub_bg" imagePosition="only" alignment="center" alternateImage="fc_scrub_bg" refusesFirstResponder="YES" inset="2" id="20">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -450,12 +406,10 @@ shift: Seek 10 minutes forward</string>
                     <progressIndicator verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" controlSize="small" style="bar" id="18" customClass="FullscreenControlsScrubbingBar">
                         <rect key="frame" x="109" y="62" width="303" height="12"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                        <animations/>
                     </progressIndicator>
                     <textField verticalHuggingPriority="750" id="17" customClass="TimestampTextField">
                         <rect key="frame" x="29" y="60" width="76" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
-                        <animations/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="00:00:00" id="21">
                             <font key="font" metaFont="systemBold"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -465,7 +419,6 @@ shift: Seek 10 minutes forward</string>
                     <button toolTip="Seek back for 10 seconds" id="16" customClass="KeyRedirectButton">
                         <rect key="frame" x="163" y="10" width="42" height="38"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="fc_fast_rewind" imagePosition="only" alignment="center" alternateImage="fc_fast_rewind_on" refusesFirstResponder="YES" id="22">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="systemBold" size="18"/>
@@ -477,7 +430,6 @@ shift: Seek 10 minutes forward</string>
                     <button toolTip="Seek forward for 10 seconds" id="15" customClass="KeyRedirectButton">
                         <rect key="frame" x="242" y="10" width="50" height="38"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="fc_fast_forward" imagePosition="only" alignment="center" alternateImage="fc_fast_forward_on" refusesFirstResponder="YES" id="23">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="systemBold" size="18"/>
@@ -489,7 +441,6 @@ shift: Seek 10 minutes forward</string>
                     <button toolTip="Play / pause" id="14" customClass="KeyRedirectButton">
                         <rect key="frame" x="204" y="8" width="41" height="42"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="fc_play" imagePosition="only" alignment="center" alternateImage="fc_play_on" lineBreakMode="clipping" refusesFirstResponder="YES" inset="2" id="24">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="systemBold"/>
@@ -501,7 +452,6 @@ shift: Seek 10 minutes forward</string>
                     <button toolTip="Goto end of file" id="13" customClass="KeyRedirectButton">
                         <rect key="frame" x="417" y="54" width="29" height="30"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="fc_skip_right" imagePosition="only" alignment="center" alternateImage="fc_skip_right_on" refusesFirstResponder="YES" id="25">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="systemBold" size="18"/>
@@ -513,7 +463,6 @@ shift: Seek 10 minutes forward</string>
                     <button toolTip="Goto beggining of file" id="12" customClass="KeyRedirectButton">
                         <rect key="frame" x="2" y="54" width="29" height="30"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="fc_skip_left" imagePosition="only" alignment="center" alternateImage="fc_skip_left_on" refusesFirstResponder="YES" id="26">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="systemBold" size="18"/>
@@ -525,7 +474,6 @@ shift: Seek 10 minutes forward</string>
                     <button id="11" customClass="KeyRedirectButton">
                         <rect key="frame" x="397" y="17" width="31" height="23"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="fc_audio" imagePosition="only" alignment="center" alternateImage="fc_audio_on" refusesFirstResponder="YES" id="27">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="systemBold" size="18"/>
@@ -537,7 +485,6 @@ shift: Seek 10 minutes forward</string>
                     <button id="10" customClass="KeyRedirectButton">
                         <rect key="frame" x="364" y="17" width="31" height="23"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="fc_subtitles" imagePosition="only" alignment="center" alternateImage="fc_subtitles_on" refusesFirstResponder="YES" id="28">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="systemBold" size="18"/>
@@ -549,7 +496,6 @@ shift: Seek 10 minutes forward</string>
                     <button id="9" customClass="KeyRedirectButton">
                         <rect key="frame" x="331" y="17" width="31" height="23"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="fc_fullscreen" imagePosition="only" alignment="center" alternateImage="fc_fullscreen_on" refusesFirstResponder="YES" id="29">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="systemBold" size="18"/>
@@ -561,7 +507,6 @@ shift: Seek 10 minutes forward</string>
                     <slider toolTip="Set Audio Volume" verticalHuggingPriority="750" id="8" customClass="FullscreenControlsVolumeSlider">
                         <rect key="frame" x="36" y="21" width="74" height="15"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
-                        <animations/>
                         <sliderCell key="cell" controlSize="small" alignment="left" maxValue="100" doubleValue="51.694917678833008" tickMarkPosition="above" sliderType="linear" id="30">
                             <font key="font" metaFont="smallSystem"/>
                         </sliderCell>
@@ -572,7 +517,6 @@ shift: Seek 10 minutes forward</string>
                     <button id="7" customClass="KeyRedirectButton">
                         <rect key="frame" x="18" y="18" width="13" height="19"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="fc_aslider_icon" imagePosition="only" alignment="center" alternateImage="fc_aslider_icon_on" refusesFirstResponder="YES" id="31">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="systemBold" size="18"/>
@@ -582,7 +526,6 @@ shift: Seek 10 minutes forward</string>
                         </connections>
                     </button>
                 </subviews>
-                <animations/>
             </view>
             <connections>
                 <outlet property="delegate" destination="3" id="149"/>
@@ -599,6 +542,8 @@ shift: Seek 10 minutes forward</string>
         </window>
     </objects>
     <resources>
+        <image name="backward_off" width="43" height="19"/>
+        <image name="backward_on" width="43" height="19"/>
         <image name="fc_aslider_icon" width="12" height="19"/>
         <image name="fc_aslider_icon_on" width="12" height="19"/>
         <image name="fc_audio" width="30" height="23"/>
@@ -618,21 +563,19 @@ shift: Seek 10 minutes forward</string>
         <image name="fc_skip_right_on" width="16" height="20"/>
         <image name="fc_subtitles" width="30" height="23"/>
         <image name="fc_subtitles_on" width="30" height="23"/>
-        <image name="ffwd_button_off" width="42" height="19"/>
-        <image name="ffwd_button_on" width="42" height="19"/>
-        <image name="fs_off" width="29" height="19"/>
-        <image name="fs_on" width="29" height="19"/>
+        <image name="forward_off" width="44" height="19"/>
+        <image name="forward_on" width="44" height="19"/>
+        <image name="fullscreen_off" width="29" height="19"/>
+        <image name="fullscreen_on" width="29" height="19"/>
         <image name="inset" width="1" height="1"/>
-        <image name="options_off" width="32" height="19"/>
-        <image name="options_on" width="32" height="19"/>
-        <image name="pl_off" width="28" height="19"/>
-        <image name="pl_on" width="28" height="19"/>
-        <image name="play_button_off" width="43" height="19"/>
-        <image name="play_button_on" width="43" height="19"/>
-        <image name="rwd_button_off" width="42" height="19"/>
-        <image name="rwd_button_on" width="42" height="19"/>
-        <image name="skipLeftTemplate" width="50" height="50"/>
-        <image name="skipRightTemplate" width="50" height="50"/>
-        <image name="volume3" width="18" height="17"/>
+        <image name="play_off" width="41" height="19"/>
+        <image name="play_on" width="41" height="19"/>
+        <image name="playlist_off" width="29" height="19"/>
+        <image name="playlist_on" width="29" height="19"/>
+        <image name="settings_off" width="33" height="19"/>
+        <image name="settings_on" width="33" height="19"/>
+        <image name="skip_back" width="8" height="9"/>
+        <image name="skip_forard" width="8" height="9"/>
+        <image name="volume_3" width="17" height="17"/>
     </resources>
 </document>

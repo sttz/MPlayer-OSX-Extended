@@ -43,6 +43,7 @@ typedef enum _NSScrubbingBarStyle {
 	
 	float xBadgeOffset, yBadgeOffset;
 	float barRightInset;
+	int leftClip;
 	int rightClip;
 }
 - (void) loadImages;

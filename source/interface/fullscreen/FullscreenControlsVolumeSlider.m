@@ -32,7 +32,7 @@
 	// knobOff/On are released in [super dealloc]
 	knobOff = [[NSImage imageNamed:@"fc_aslider_knob"] retain];
 	knobOn = [[NSImage imageNamed:@"fc_aslider_knob_on"] retain];
-	knobOffset = -3;
+	knobOffsetY = -3;
 	barImage = [[NSImage imageNamed:@"fc_aslider_bar"] retain];
 }
 

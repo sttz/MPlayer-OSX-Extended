@@ -53,17 +53,15 @@
 
 - (void) loadImages
 {
-	scrubBarEnds = [[NSImage alloc] initWithContentsOfFile:
-					[[NSBundle mainBundle] pathForResource:@"scrub_bar_ends" ofType:@"png"]];
-	scrubBarRun = [[NSImage alloc] initWithContentsOfFile:
-				   [[NSBundle mainBundle] pathForResource:@"scrub_bar_run" ofType:@"png"]];
-	scrubBarBadge = [[NSImage alloc] initWithContentsOfFile:
-					 [[NSBundle mainBundle] pathForResource:@"scrub_bar_badge" ofType:@"png"]];
-	scrubBarAnimFrame = [[NSImage alloc] initWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"scrub_bar_anim" ofType:@"png"]];
+	scrubBarEnds = [[NSImage imageNamed:@"bar_ends"] retain];
+	scrubBarRun = [[NSImage imageNamed:@"bar_run"] retain];
+	scrubBarBadge = [[NSImage imageNamed:@"bar_pointer"] retain];
+	scrubBarAnimFrame = [[NSImage imageNamed:@"bar_inter"] retain];;
 	
 	yBadgeOffset = 0;
-	xBadgeOffset = 3.5;
-	rightClip = 1;
+	xBadgeOffset = 7;
+	leftClip = 2;
+	rightClip = 2;
 }
 
 - (void) dealloc
@@ -140,14 +138,24 @@
 	
 	if ([self scrubStyle] == MPEScrubbingBarPositionStyle) {
 		// calculate actual x-position of badge with badge offset and shadow
-		float badgePosX = (viewSize.width - rightClip) * theValue - xBadgeOffset;
-		// limit the badge width not to draw into the shadow on the rigth side
-		float badgeWidth = viewSize.width - badgePosX - rightClip;
-		if (badgeWidth > [scrubBarBadge size].width)
-			badgeWidth = [scrubBarBadge size].width;
+		CGFloat badgePosX = (viewSize.width - rightClip - leftClip) * theValue + leftClip - xBadgeOffset;
+		
+		NSSize badgeSize = [scrubBarBadge size];
+		NSRect badgeRect = NSMakeRect(0, 0, badgeSize.width, badgeSize.height);
+		
+		// Clip the badge when on the far left/right side to make it disappear behind the chrome
+		if (badgePosX < leftClip) {
+			CGFloat amount = leftClip - badgePosX;
+			badgeRect.size.width -= amount;
+			badgeRect.origin.x += amount;
+			badgePosX = leftClip;
+		} else if (badgePosX + badgeSize.width > viewSize.width - rightClip) {
+			CGFloat amount = (badgePosX + badgeSize.width) - (viewSize.width - rightClip);
+			badgeRect.size.width = fmax(badgeRect.size.width - amount, 0);
+		}
 		
         [scrubBarBadge drawAtPoint:NSMakePoint(badgePosX, yBadgeOffset)
-                          fromRect:NSMakeRect(0, 0, badgeWidth, [scrubBarBadge size].height)
+                          fromRect:badgeRect
                          operation:NSCompositeSourceOver
                           fraction:1.0];
 		

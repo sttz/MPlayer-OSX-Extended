@@ -63,10 +63,10 @@
 	subtitleVobStreamId = -1;
 	
 	// load images
-	playImageOn = [[NSImage imageNamed:@"play_button_on"] retain];
-	playImageOff = [[NSImage imageNamed:@"play_button_off"] retain];
-	pauseImageOn = [[NSImage imageNamed:@"pause_button_on"] retain];
-	pauseImageOff = [[NSImage imageNamed:@"pause_button_off"] retain];
+	playImageOn = [[NSImage imageNamed:@"play_on"] retain];
+	playImageOff = [[NSImage imageNamed:@"play_off"] retain];
+	pauseImageOn = [[NSImage imageNamed:@"pause_on"] retain];
+	pauseImageOff = [[NSImage imageNamed:@"pause_off"] retain];
 	
 	// create menus
 	videoStreamsMenu     = [NSMenu new];
@@ -537,16 +537,16 @@
 		
 	//set volume icon
 	if (volume == 0)
-		volumeImage = [NSImage imageNamed:@"volume0"];
+		volumeImage = [NSImage imageNamed:@"volume_0"];
 	
 	 else if (volume > 66)
-		volumeImage = [NSImage imageNamed:@"volume3"];
+		volumeImage = [NSImage imageNamed:@"volume_3"];
 	
 	else if (volume > 33 && volume < 67)
-		volumeImage = [NSImage imageNamed:@"volume2"];
+		volumeImage = [NSImage imageNamed:@"volume_2"];
 	
 	else
-		volumeImage = [NSImage imageNamed:@"volume1"];
+		volumeImage = [NSImage imageNamed:@"volume_1"];
 	
 	
 	[volumeSlider setDoubleValue:volume];

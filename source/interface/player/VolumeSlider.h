@@ -7,7 +7,8 @@
 	NSImage *knobOff;
 	NSImage *knobOn;
 	
-	int knobOffset;
+	int knobOffsetX;
+	int knobOffsetY;
 	
 	BOOL isKnobSelected;
 }

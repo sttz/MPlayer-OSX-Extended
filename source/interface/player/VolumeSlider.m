@@ -27,9 +27,10 @@
 
 - (void)loadImages
 {
-	knobOff = [[NSImage imageNamed:@"volumeKnobOff"] retain];
-	knobOn = [[NSImage imageNamed:@"volumeKnobOn"] retain];
-	knobOffset = -1;
+	knobOff = [[NSImage imageNamed:@"volume_knob_off"] retain];
+	knobOn = [[NSImage imageNamed:@"volume_knob_on"] retain];
+	knobOffsetX = 1;
+	knobOffsetY = -2;
 }
 
 - (void)drawKnob:(NSRect)knobRect
@@ -41,7 +42,7 @@
 	else
 		knob = knobOff;
 
-    [knob drawAtPoint:NSMakePoint(knobRect.origin.x, knobRect.origin.y - knobOffset)
+    [knob drawAtPoint:NSMakePoint(knobRect.origin.x + knobOffsetX, knobRect.origin.y - knobOffsetY)
             fromRect:NSZeroRect
            operation:NSCompositeSourceOver
             fraction:1.0
