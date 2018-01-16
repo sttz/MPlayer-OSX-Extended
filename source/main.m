@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 	signal(SIGPIPE, SIG_IGN);
 	
 #ifdef DEBUG
-	[Debug setSharedDebuggerConnectsStderr:YES];
+	[Debug setSharedDebuggerConnectsStderr:NO];
 #endif
 	
 	Debug *logger = [Debug sharedDebugger];
