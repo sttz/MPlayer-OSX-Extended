@@ -518,7 +518,7 @@
 		<key>MPEGoToFullscreenOn</key>
 		<integer>0</integer>
 		<key>MPEGuessTextEncoding</key>
-		<string>disabled</string>
+		<string>__</string>
 		<key>MPEHardwareAC3Passthrough</key>
 		<false/>
 		<key>MPEHardwareDTSPassthrough</key>
