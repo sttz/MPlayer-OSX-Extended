@@ -409,6 +409,7 @@ static AppController *instance = nil;
 {
 	NSURL *theUrl = [NSURL URLWithString:[video_tsBox stringValue]];
 	if ([[theUrl scheme] caseInsensitiveCompare:@"http"] == NSOrderedSame ||
+			[[theUrl scheme] caseInsensitiveCompare:@"https"] == NSOrderedSame ||
 			[[theUrl scheme] caseInsensitiveCompare:@"ftp"] == NSOrderedSame ||
 			[[theUrl scheme] caseInsensitiveCompare:@"rtsp"] == NSOrderedSame ||
 			[[theUrl scheme] caseInsensitiveCompare:@"dvd"] == NSOrderedSame ||
@@ -427,6 +428,7 @@ static AppController *instance = nil;
 {
 	NSURL *theUrl = [NSURL URLWithString:[locationBox stringValue]];
 	if ([[theUrl scheme] caseInsensitiveCompare:@"http"] == NSOrderedSame ||
+			[[theUrl scheme] caseInsensitiveCompare:@"https"] == NSOrderedSame ||
 			[[theUrl scheme] caseInsensitiveCompare:@"ftp"] == NSOrderedSame ||
 			[[theUrl scheme] caseInsensitiveCompare:@"rtsp"] == NSOrderedSame ||
 			[[theUrl scheme] caseInsensitiveCompare:@"dvd"] == NSOrderedSame ||

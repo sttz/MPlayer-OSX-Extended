@@ -636,6 +636,7 @@
 				<string>ftp</string>
 				<string>http_proxy</string>
 				<string>http</string>
+				<string>https</string>
 			</array>
 		</dict>
 		<dict>
