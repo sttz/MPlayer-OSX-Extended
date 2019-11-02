@@ -1,3 +1,15 @@
+Retirement Notice
+-----------------
+
+**MPlayer OSX Extended has been retired and won't receive any future updates.**
+
+After development of MPlayer OSX Extended has been slow for many years and development of the underlying MPlayer project has moved on to mpv, I have decided that it doesn't make sense to invest more time into this project.
+
+Consider using one of the following alternatives for video playback on macOS:
+* [IINA](https://iina.io/): Great UI for mpv
+* [mpv](https://mpv.io/): Has its own UI but is a bit cryptic
+* [VLC](http://www.videolan.org/): Feature-packed but clunky interface
+
 MPlayer OSX Extended
 ====================
 
